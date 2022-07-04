@@ -6,11 +6,12 @@ import (
 )
 
 type Resource struct {
-	CreatedAt          time.Time `bun:",nullzero,notnull,default:current_timestamp"`
-	UpdatedAt          time.Time `bun:",nullzero,notnull,default:current_timestamp"`
-	ID                 int64     `bun:"id,pk,autoincrement"`
-	SyllabusAttachedID int64     `bun:"syllabus_attached_id,notnull" yaml:"syllabus_attached_id"`
-	Name               string    `bun:"name,notnull"`
+	ID        int64     `bun:"id,pk,autoincrement" json:"id"`
+	CreatedAt time.Time `bun:",nullzero,notnull,default:current_timestamp" json:"created_at"`
+	UpdatedAt time.Time `bun:",nullzero,notnull,default:current_timestamp" json:"updated_at"`
+
+	SyllabusAttachedID int64  `bun:"syllabus_attached_id,notnull" yaml:"syllabus_attached_id" json:"syllabus_attached_id"`
+	Name               string `bun:"name,notnull" json:"name"`
 }
 
 func GetAllResources() ([]Resource, error) {

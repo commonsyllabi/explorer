@@ -100,6 +100,15 @@ func setupRouter() (*gin.Engine, error) {
 		syllabi.DELETE("/:id", handlers.DeleteSyllabus)
 	}
 
+	users := router.Group("/users")
+	{
+		users.GET("/", handlers.AllUsers)
+		users.POST("/", handlers.NewUser)
+		users.PATCH("/:id", handlers.UpdateUser)
+		users.GET("/:id", handlers.GetUser)
+		users.DELETE("/:id", handlers.DeleteUser)
+	}
+
 	router.Use(handleNotFound)
 
 	return router, nil

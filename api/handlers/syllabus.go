@@ -33,7 +33,7 @@ func AllSyllabi(c *gin.Context) {
 
 func NewSyllabus(c *gin.Context) {
 
-	err := sanitizeInput(c)
+	err := sanitizeSyllabus(c)
 	if err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 		zero.Error(err.Error())
@@ -145,7 +145,7 @@ func GetSyllabus(c *gin.Context) {
 	syll, err := models.GetSyllabus(id)
 	if err != nil {
 		zero.Errorf("error getting syllabus %v: %s", id, err)
-		c.HTML(http.StatusOK, "Error", gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"msg": "We couldn't find the syllabus.",
 		})
 
@@ -178,9 +178,9 @@ func DeleteSyllabus(c *gin.Context) {
 	})
 }
 
-func sanitizeInput(c *gin.Context) error {
+func sanitizeSyllabus(c *gin.Context) error {
 
-	if c.PostForm("title") == "" || c.PostForm("email") == "" {
+	if c.PostForm("title") == "" {
 		zero.Error("Cannot have empty title, description or email")
 		return fmt.Errorf("cannot have empty title, description or email")
 
@@ -196,11 +196,6 @@ func sanitizeInput(c *gin.Context) error {
 	// 	err = fmt.Errorf("the description of the syllabus should be between 10 and 500 characters: %d", len(c.PostForm("description")))
 	// 	return err
 	// }
-
-	if len(c.PostForm("email")) < 10 && len(c.PostForm("email")) > 50 {
-		zero.Errorf("the email of the syllabus should be between 10 and 50 characters: %d", len(c.PostForm("email")))
-		return fmt.Errorf("the email of the syllabus should be between 10 and 50 characters: %d", len(c.PostForm("email")))
-	}
 
 	_, err := mail.ParseAddress(c.PostForm("email"))
 	return err
