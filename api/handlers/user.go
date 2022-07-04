@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/mail"
@@ -13,25 +12,18 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func AllUsers(c *gin.Context) {
-	syllabi, err := models.GetAllSyllabi()
+func GetAllUsers(c *gin.Context) {
+	users, err := models.GetAllUsers()
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
-		zero.Errorf("error getting syllabi: %v", err)
+		zero.Errorf("error getting users: %v", err)
 		return
 	}
 
-	bytes, err := json.Marshal(syllabi)
-	if err != nil {
-		c.String(http.StatusInternalServerError, err.Error())
-		zero.Errorf("error marshalling users: %v", err)
-		return
-	}
-
-	c.JSON(http.StatusOK, string(bytes))
+	c.JSON(http.StatusOK, users)
 }
 
-func NewUser(c *gin.Context) {
+func CreateUser(c *gin.Context) {
 
 	err := sanitizeUser(c)
 	if err != nil {
@@ -51,7 +43,7 @@ func NewUser(c *gin.Context) {
 	user.CreatedAt = time.Now()
 	user.UpdatedAt = time.Now()
 
-	user, err = models.AddNewUser(&user)
+	user, err = models.CreateUser(&user)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		zero.Errorf("error creating User: %v", err)

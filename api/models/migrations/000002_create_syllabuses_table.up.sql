@@ -4,5 +4,5 @@ CREATE TABLE IF NOT EXISTS syllabuses (
  updated_at timestamp NOT NULL,
  title VARCHAR NOT NULL,
  user_id BIGINT NOT NULL,
- syllabus_collection_id BIGINT NOT NULL
+ collection_id BIGINT NOT NULL
 );

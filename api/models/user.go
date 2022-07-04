@@ -15,32 +15,32 @@ type User struct {
 	Collections []*Collection `bun:"rel:has-many" json:"collections"`
 }
 
-func GetAllUsers() ([]User, error) {
-	ctx := context.Background()
-	syllabi := make([]User, 0)
-
-	err := db.NewSelect().Model(&syllabi).Scan(ctx, &syllabi)
-	return syllabi, err
-}
-
-func AddNewUser(syll *User) (User, error) {
+func CreateUser(syll *User) (User, error) {
 	ctx := context.Background()
 
 	_, err := db.NewInsert().Model(syll).Exec(ctx)
 	return *syll, err
 }
 
-func UpdateUser(id int, syll *User) (User, error) {
+func GetAllUsers() ([]User, error) {
 	ctx := context.Background()
-	_, err := db.NewUpdate().Model(syll).OmitZero().Where("id = ?", id).Exec(ctx)
-	return *syll, err
+	users := make([]User, 0)
+
+	err := db.NewSelect().Model(&users).Relation("Syllabi").Relation("Collections").Scan(ctx)
+	return users, err
 }
 
 func GetUser(id int) (User, error) {
 	ctx := context.Background()
-	var syll User
-	err := db.NewSelect().Model(&syll).Where("id = ?", id).Relation("Syllabi").Relation("Collections").Scan(ctx)
-	return syll, err
+	var user User
+	err := db.NewSelect().Model(&user).Where("id = ?", id).Relation("Syllabi").Relation("Collections").Scan(ctx)
+	return user, err
+}
+
+func UpdateUser(id int, user *User) (User, error) {
+	ctx := context.Background()
+	_, err := db.NewUpdate().Model(user).OmitZero().Where("id = ?", id).Exec(ctx)
+	return *user, err
 }
 
 func DeleteUser(id int) error {

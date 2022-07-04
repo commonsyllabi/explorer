@@ -3,5 +3,5 @@ CREATE TABLE IF NOT EXISTS collections (
  created_at timestamp NOT NULL,
  updated_at timestamp NOT NULL,
  name VARCHAR NOT NULL,
- user_created_id BIGINT NOT NULL
+ user_id BIGINT NOT NULL
 );

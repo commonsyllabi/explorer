@@ -93,8 +93,8 @@ func setupRouter() (*gin.Engine, error) {
 
 	syllabi := router.Group("/syllabi")
 	{
-		syllabi.GET("/", handlers.AllSyllabi)
-		syllabi.POST("/", handlers.NewSyllabus)
+		syllabi.GET("/", handlers.GetAllSyllabi)
+		syllabi.POST("/", handlers.CreateSyllabus)
 		syllabi.PATCH("/:id", handlers.UpdateSyllabus)
 		syllabi.GET("/:id", handlers.GetSyllabus)
 		syllabi.DELETE("/:id", handlers.DeleteSyllabus)
@@ -102,11 +102,29 @@ func setupRouter() (*gin.Engine, error) {
 
 	users := router.Group("/users")
 	{
-		users.GET("/", handlers.AllUsers)
-		users.POST("/", handlers.NewUser)
+		users.GET("/", handlers.GetAllUsers)
+		users.POST("/", handlers.CreateUser)
 		users.PATCH("/:id", handlers.UpdateUser)
 		users.GET("/:id", handlers.GetUser)
 		users.DELETE("/:id", handlers.DeleteUser)
+	}
+
+	resources := router.Group("/resources")
+	{
+		resources.GET("/", handlers.GetAllResources)
+		resources.POST("/", handlers.CreateResource)
+		resources.PATCH("/:id", handlers.UpdateResource)
+		resources.GET("/:id", handlers.GetResource)
+		resources.DELETE("/:id", handlers.DeleteResource)
+	}
+
+	collections := router.Group("/collections")
+	{
+		collections.GET("/", handlers.GetAllCollections)
+		collections.POST("/", handlers.CreateCollection)
+		collections.PATCH("/:id", handlers.UpdateCollection)
+		collections.GET("/:id", handlers.GetCollection)
+		collections.DELETE("/:id", handlers.DeleteCollection)
 	}
 
 	router.Use(handleNotFound)

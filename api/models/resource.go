@@ -10,37 +10,39 @@ type Resource struct {
 	CreatedAt time.Time `bun:",nullzero,notnull,default:current_timestamp" json:"created_at"`
 	UpdatedAt time.Time `bun:",nullzero,notnull,default:current_timestamp" json:"updated_at"`
 
-	SyllabusAttachedID int64  `bun:"syllabus_attached_id,notnull" yaml:"syllabus_attached_id" json:"syllabus_attached_id"`
-	Name               string `bun:"name,notnull" json:"name"`
+	SyllabusID int64     `bun:"syllabus_id,notnull" yaml:"syllabus_id" json:"syllabus_id"`
+	Syllabus   *Syllabus `bun:"rel:belongs-to,join:syllabus_id=id" json:"syllabus"`
+
+	Name string `bun:"name,notnull" json:"name"`
+}
+
+func CreateResource(res *Resource) (Resource, error) {
+	ctx := context.Background()
+
+	_, err := db.NewInsert().Model(res).Exec(ctx)
+	return *res, err
 }
 
 func GetAllResources() ([]Resource, error) {
 	ctx := context.Background()
-	att := make([]Resource, 0)
+	res := make([]Resource, 0)
 
-	err := db.NewSelect().Model(&att).Scan(ctx, &att)
-	return att, err
-}
-
-func AddNewResource(att *Resource) (Resource, error) {
-	ctx := context.Background()
-
-	_, err := db.NewInsert().Model(att).Exec(ctx)
-	return *att, err
-}
-
-func UpdateResource(id int, att *Resource) (Resource, error) {
-	ctx := context.Background()
-	_, err := db.NewUpdate().Model(att).OmitZero().Where("id = ?", id).Exec(ctx)
-	return *att, err
+	err := db.NewSelect().Model(&res).Relation("Syllabus").Scan(ctx)
+	return res, err
 }
 
 func GetResource(id int) (Resource, error) {
 	ctx := context.Background()
 	table := new(Resource)
-	var att Resource
-	err := db.NewSelect().Model(table).Where("id = ?", id).Scan(ctx, &att)
-	return att, err
+	var res Resource
+	err := db.NewSelect().Model(table).Where("id = ?", id).Relation("Syllabus").Scan(ctx)
+	return res, err
+}
+
+func UpdateResource(id int, res *Resource) (Resource, error) {
+	ctx := context.Background()
+	_, err := db.NewUpdate().Model(res).OmitZero().Where("id = ?", id).Exec(ctx)
+	return *res, err
 }
 
 func DeleteResource(id int) error {

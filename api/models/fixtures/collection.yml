@@ -1,7 +1,7 @@
 - model: Collection
   rows:
     - id: 1
-      name: "Fixture Collection"
       created_at: '{{ now }}'
       updated_at: '{{ now }}'
-      user_created_id: 1
+      name: "Fixture Collection"
+      user_id: 1

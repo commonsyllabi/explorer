@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/mail"
@@ -13,7 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func AllSyllabi(c *gin.Context) {
+func GetAllSyllabi(c *gin.Context) {
 	syllabi, err := models.GetAllSyllabi()
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
@@ -21,17 +20,10 @@ func AllSyllabi(c *gin.Context) {
 		return
 	}
 
-	bytes, err := json.Marshal(syllabi)
-	if err != nil {
-		c.String(http.StatusInternalServerError, err.Error())
-		zero.Errorf("error marshalling syllabus: %v", err)
-		return
-	}
-
-	c.JSON(http.StatusOK, string(bytes))
+	c.JSON(http.StatusOK, syllabi)
 }
 
-func NewSyllabus(c *gin.Context) {
+func CreateSyllabus(c *gin.Context) {
 
 	err := sanitizeSyllabus(c)
 	if err != nil {
@@ -58,7 +50,7 @@ func NewSyllabus(c *gin.Context) {
 	syll.CreatedAt = time.Now()
 	syll.UpdatedAt = time.Now()
 
-	syll, err = models.AddNewSyllabus(&syll)
+	syll, err = models.CreateSyllabus(&syll)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		zero.Errorf("error creating syllabus: %v", err)
@@ -87,13 +79,13 @@ func NewSyllabus(c *gin.Context) {
 		// }
 
 		resource := models.Resource{
-			CreatedAt:          time.Now(),
-			UpdatedAt:          time.Now(),
-			Name:               f.Filename,
-			SyllabusAttachedID: syll.ID,
+			CreatedAt:  time.Now(),
+			UpdatedAt:  time.Now(),
+			Name:       f.Filename,
+			SyllabusID: syll.ID,
 		}
 
-		att, err := models.AddNewResource(&resource)
+		att, err := models.CreateResource(&resource)
 		if err != nil {
 			zero.Warnf("error adding resource: %s", err)
 		}

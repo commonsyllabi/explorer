@@ -5,4 +5,4 @@
       updated_at: '{{ now }}'
       title: "Fixture syllabus"
       user_id: 1
-      syllabus_collection_id: 1
+      collection_id: 1
