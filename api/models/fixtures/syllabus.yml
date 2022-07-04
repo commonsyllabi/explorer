@@ -1,0 +1,8 @@
+- model: Syllabus
+  rows:
+    - id: 1
+      created_at: '{{ now }}'
+      updated_at: '{{ now }}'
+      title: "Fixture syllabus"
+      user_id: 1
+      syllabus_collection_id: 1

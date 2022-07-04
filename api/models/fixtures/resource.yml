@@ -1,0 +1,7 @@
+- model: Resource
+  rows:
+    - id: 1
+      name: "Resource fixture 1"
+      syllabus_attached_id: 1
+      created_at: '{{ now }}'
+      updated_at: '{{ now }}'   

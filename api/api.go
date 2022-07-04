@@ -14,7 +14,8 @@ import (
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 
-	zero "github.com/commonsyllabi/explorer/api/logger"
+	"github.com/commonsyllabi/explorer/api/handlers"
+	zero "github.com/commonsyllabi/explorer/logger"
 )
 
 var conf Config
@@ -90,13 +91,14 @@ func setupRouter() (*gin.Engine, error) {
 
 	router.Use(static.Serve("/", static.LocalFile(publicPath, false)))
 
-	// api := router.Group("/api")
-	// {
-	// 	api.POST("/upload", handleUpload)
-	// 	api.GET("/resource/:id", handleResource)
-	// 	api.GET("/file/:id", handleFile)
-	// 	api.POST("/magic-link", mailer.HandleMagicLink)
-	// }
+	syllabi := router.Group("/syllabi")
+	{
+		syllabi.GET("/", handlers.AllSyllabi)
+		syllabi.POST("/", handlers.NewSyllabus)
+		syllabi.PATCH("/:id", handlers.UpdateSyllabus)
+		syllabi.GET("/:id", handlers.GetSyllabus)
+		syllabi.DELETE("/:id", handlers.DeleteSyllabus)
+	}
 
 	router.Use(handleNotFound)
 

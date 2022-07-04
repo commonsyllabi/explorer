@@ -5,7 +5,8 @@ import (
 	"os"
 
 	"github.com/commonsyllabi/explorer/api"
-	zero "github.com/commonsyllabi/explorer/api/logger"
+	"github.com/commonsyllabi/explorer/api/models"
+	zero "github.com/commonsyllabi/explorer/logger"
 )
 
 func main() {
@@ -43,12 +44,12 @@ func main() {
 		port = "8080"
 	}
 
-	// _, err := models.InitDB(url)
-	// if err != nil {
-	// 	zero.Log.Fatal().Msgf("Error initializing D: %v", err)
-	// }
+	_, err := models.InitDB(url)
+	if err != nil {
+		zero.Log.Fatal().Msgf("Error initializing D: %v", err)
+	}
 
-	err := api.StartServer(port, debug, conf)
+	err = api.StartServer(port, debug, conf)
 	if err != nil {
 		zero.Log.Fatal().Msgf("Error starting server: %v", err)
 	}
