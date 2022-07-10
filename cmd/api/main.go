@@ -7,19 +7,21 @@ import (
 	"github.com/commonsyllabi/explorer/api"
 	"github.com/commonsyllabi/explorer/api/models"
 	zero "github.com/commonsyllabi/explorer/logger"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	debug := false
-	switch os.Getenv("DEBUG") {
-	case "true":
-		debug = true
+	mode := gin.ReleaseMode
+	switch os.Getenv("API_MODE") {
+	case "debug":
+		mode = gin.DebugMode
 		zero.InitLog(0)
-	case "false":
-		debug = false
+	case "test":
+		mode = gin.TestMode
 		zero.InitLog(1)
 	default:
 		zero.Log.Warn().Msg("Missing env DEBUG, defaulting to false")
+		mode = gin.ReleaseMode
 		zero.InitLog(1)
 	}
 
@@ -49,7 +51,7 @@ func main() {
 		zero.Log.Fatal().Msgf("Error initializing D: %v", err)
 	}
 
-	err = api.StartServer(port, debug, conf)
+	err = api.StartServer(port, mode, conf)
 	if err != nil {
 		zero.Log.Fatal().Msgf("Error starting server: %v", err)
 	}

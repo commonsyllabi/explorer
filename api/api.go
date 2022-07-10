@@ -21,14 +21,9 @@ import (
 var conf Config
 
 // StartServer gets his port and debug in the environment, registers the router, and registers the database closing on exit.
-func StartServer(port string, debug bool, c Config) error {
+func StartServer(port string, mode string, c Config) error {
 	conf = c
-
-	if debug {
-		gin.SetMode(gin.DebugMode)
-	} else {
-		gin.SetMode(gin.ReleaseMode)
-	}
+	gin.SetMode(mode)
 
 	router, err := setupRouter()
 	if err != nil {
@@ -50,10 +45,11 @@ func StartServer(port string, debug bool, c Config) error {
 		}
 	}()
 
-	ch := make(chan os.Signal, 2)
-	signal.Notify(ch, os.Interrupt, syscall.SIGTERM)
-
-	<-ch // block until signal received
+	if gin.Mode() != gin.TestMode {
+		ch := make(chan os.Signal, 2)
+		signal.Notify(ch, os.Interrupt, syscall.SIGTERM)
+		<-ch // block until signal received
+	}
 
 	zero.Info("shutting down...")
 	s.Shutdown(context.Background())
@@ -90,6 +86,8 @@ func setupRouter() (*gin.Engine, error) {
 	publicPath := filepath.Join(cwd, conf.PublicDir)
 
 	router.Use(static.Serve("/", static.LocalFile(publicPath, false)))
+
+	router.GET("/ping", handlePing)
 
 	syllabi := router.Group("/syllabi")
 	{
@@ -132,8 +130,12 @@ func setupRouter() (*gin.Engine, error) {
 	return router, nil
 }
 
+func handlePing(c *gin.Context) {
+	c.String(200, "pong")
+}
+
 func handleNotFound(c *gin.Context) {
-	c.HTML(http.StatusOK, "Error", gin.H{
+	c.HTML(http.StatusNotFound, "Error", gin.H{
 		"msg": "We couldn't find the requested information, sorry :(.",
 	})
 }
