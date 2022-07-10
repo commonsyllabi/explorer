@@ -18,24 +18,21 @@ type Resource struct {
 
 func CreateResource(res *Resource) (Resource, error) {
 	ctx := context.Background()
-
 	_, err := db.NewInsert().Model(res).Exec(ctx)
 	return *res, err
+}
+
+func GetResource(id int) (Resource, error) {
+	ctx := context.Background()
+	var res Resource
+	err := db.NewSelect().Model(&res).Where("id = ?", id).Relation("Syllabus").Scan(ctx)
+	return res, err
 }
 
 func GetAllResources() ([]Resource, error) {
 	ctx := context.Background()
 	res := make([]Resource, 0)
-
 	err := db.NewSelect().Model(&res).Relation("Syllabus").Scan(ctx)
-	return res, err
-}
-
-func GetResource(id int) (Resource, error) {
-	ctx := context.Background()
-	table := new(Resource)
-	var res Resource
-	err := db.NewSelect().Model(table).Where("id = ?", id).Relation("Syllabus").Scan(ctx)
 	return res, err
 }
 
@@ -47,8 +44,7 @@ func UpdateResource(id int, res *Resource) (Resource, error) {
 
 func DeleteResource(id int) error {
 	ctx := context.Background()
-	table := new(Resource)
-	_, err := db.NewDelete().Model(table).Where("id = ?", id).Exec(ctx)
-
+	var res Resource
+	_, err := db.NewDelete().Model(&res).Where("id = ?", id).Exec(ctx)
 	return err
 }

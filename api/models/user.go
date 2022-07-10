@@ -17,7 +17,6 @@ type User struct {
 
 func CreateUser(syll *User) (User, error) {
 	ctx := context.Background()
-
 	_, err := db.NewInsert().Model(syll).Exec(ctx)
 	return *syll, err
 }
@@ -25,7 +24,6 @@ func CreateUser(syll *User) (User, error) {
 func GetAllUsers() ([]User, error) {
 	ctx := context.Background()
 	users := make([]User, 0)
-
 	err := db.NewSelect().Model(&users).Relation("Syllabi").Relation("Collections").Scan(ctx)
 	return users, err
 }
@@ -45,8 +43,8 @@ func UpdateUser(id int, user *User) (User, error) {
 
 func DeleteUser(id int) error {
 	ctx := context.Background()
-	table := new(User)
-	_, err := db.NewDelete().Model(table).Where("id = ?", id).Exec(ctx) //-- what to do with dangling attachments?
+	var user User
+	_, err := db.NewDelete().Model(&user).Where("id = ?", id).Exec(ctx) //-- what to do with dangling collections and syllabi?
 
 	return err
 }

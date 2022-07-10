@@ -19,24 +19,21 @@ type Collection struct {
 
 func CreateCollection(coll *Collection) (Collection, error) {
 	ctx := context.Background()
-
 	_, err := db.NewInsert().Model(coll).Exec(ctx)
 	return *coll, err
+}
+
+func GetCollection(id int) (Collection, error) {
+	ctx := context.Background()
+	var coll Collection
+	err := db.NewSelect().Model(&coll).Where("collection.id = ?", id).Relation("Syllabi").Relation("User").Scan(ctx)
+	return coll, err
 }
 
 func GetAllCollections() ([]Collection, error) {
 	ctx := context.Background()
 	coll := make([]Collection, 0)
-
 	err := db.NewSelect().Model(&coll).Relation("User").Scan(ctx, &coll)
-	return coll, err
-}
-
-func GetCollection(id int) (Collection, error) {
-	ctx := context.Background()
-	table := new(Collection)
-	var coll Collection
-	err := db.NewSelect().Model(table).Where("collection.id = ?", id).Relation("Syllabi").Relation("User").Scan(ctx, &coll)
 	return coll, err
 }
 
@@ -48,8 +45,7 @@ func UpdateCollection(id int, coll *Collection) (Collection, error) {
 
 func DeleteCollection(id int) error {
 	ctx := context.Background()
-	table := new(Collection)
-	_, err := db.NewDelete().Model(table).Where("id = ?", id).Exec(ctx)
-
+	var coll Collection
+	_, err := db.NewDelete().Model(&coll).Where("id = ?", id).Exec(ctx)
 	return err
 }

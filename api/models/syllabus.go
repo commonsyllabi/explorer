@@ -21,7 +21,6 @@ type Syllabus struct {
 
 func CreateSyllabus(syll *Syllabus) (Syllabus, error) {
 	ctx := context.Background()
-
 	_, err := db.NewInsert().Model(syll).Exec(ctx)
 	return *syll, err
 }
@@ -36,7 +35,6 @@ func GetSyllabus(id int) (Syllabus, error) {
 func GetAllSyllabi() ([]Syllabus, error) {
 	ctx := context.Background()
 	syllabi := make([]Syllabus, 0)
-
 	err := db.NewSelect().Model(&syllabi).Relation("Resources").Relation("User").Scan(ctx)
 	return syllabi, err
 }
@@ -49,8 +47,7 @@ func UpdateSyllabus(id int, syll *Syllabus) (Syllabus, error) {
 
 func DeleteSyllabus(id int) error {
 	ctx := context.Background()
-	table := new(Syllabus)
-	_, err := db.NewDelete().Model(table).Where("id = ?", id).Exec(ctx) //-- what to do with dangling attachments?
-
+	var syll Syllabus
+	_, err := db.NewDelete().Model(&syll).Where("id = ?", id).Exec(ctx) //-- what to do with dangling resources?
 	return err
 }
