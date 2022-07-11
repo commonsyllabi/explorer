@@ -52,6 +52,27 @@ func TestCollectionHandler(t *testing.T) {
 		assert.Equal(t, http.StatusCreated, res.Code)
 	})
 
+	t.Run("Test create collection malformed input", func(t *testing.T) {
+		var body bytes.Buffer
+		w := multipart.NewWriter(&body)
+		w.WriteField("name", "Test")
+		w.Close()
+
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "POST"
+		c.Request.Header.Set("Content-Type", w.FormDataContentType())
+		c.Request.Body = io.NopCloser(&body)
+
+		handlers.CreateCollection(c)
+
+		assert.Equal(t, http.StatusBadRequest, res.Code)
+	})
+
 	t.Run("Test get collection", func(t *testing.T) {
 		res := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(res)
@@ -69,6 +90,44 @@ func TestCollectionHandler(t *testing.T) {
 
 		handlers.GetCollection(c)
 		assert.Equal(t, http.StatusOK, res.Code)
+	})
+
+	t.Run("Test get collection non-existent ID", func(t *testing.T) {
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "GET"
+		c.Params = []gin.Param{
+			{
+				Key:   "id",
+				Value: "999",
+			},
+		}
+
+		handlers.GetCollection(c)
+		assert.Equal(t, http.StatusNotFound, res.Code)
+	})
+
+	t.Run("Test get collection malformed ID", func(t *testing.T) {
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "GET"
+		c.Params = []gin.Param{
+			{
+				Key:   "id",
+				Value: "wrong",
+			},
+		}
+
+		handlers.GetCollection(c)
+		assert.Equal(t, http.StatusBadRequest, res.Code)
 	})
 
 	t.Run("Test update collection", func(t *testing.T) {
@@ -102,6 +161,58 @@ func TestCollectionHandler(t *testing.T) {
 		assert.Equal(t, "Updated", coll.Name)
 	})
 
+	t.Run("Test update collection non-existant ID", func(t *testing.T) {
+		var body bytes.Buffer
+		w := multipart.NewWriter(&body)
+		w.WriteField("name", "Updated Name")
+		w.Close()
+
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "PATCH"
+		c.Request.Header.Set("Content-Type", w.FormDataContentType())
+		c.Request.Body = io.NopCloser(&body)
+		c.Params = []gin.Param{
+			{
+				Key:   "id",
+				Value: "999",
+			},
+		}
+
+		handlers.UpdateCollection(c)
+		assert.Equal(t, http.StatusNotFound, res.Code)
+	})
+
+	t.Run("Test update collection malformed ID", func(t *testing.T) {
+		var body bytes.Buffer
+		w := multipart.NewWriter(&body)
+		w.WriteField("name", "Updated Name")
+		w.Close()
+
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "PATCH"
+		c.Request.Header.Set("Content-Type", w.FormDataContentType())
+		c.Request.Body = io.NopCloser(&body)
+		c.Params = []gin.Param{
+			{
+				Key:   "id",
+				Value: "wrong",
+			},
+		}
+
+		handlers.UpdateCollection(c)
+		assert.Equal(t, http.StatusBadRequest, res.Code)
+	})
+
 	t.Run("Test delete collection", func(t *testing.T) {
 		res := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(res)
@@ -118,7 +229,44 @@ func TestCollectionHandler(t *testing.T) {
 		}
 
 		handlers.DeleteCollection(c)
-		assert.Equal(t, res.Code, http.StatusOK)
+		assert.Equal(t, http.StatusOK, res.Code)
 	})
 
+	t.Run("Test delete collection non-existant ID", func(t *testing.T) {
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "DELETE"
+		c.Params = []gin.Param{
+			{
+				Key:   "id",
+				Value: "999",
+			},
+		}
+
+		handlers.DeleteCollection(c)
+		assert.Equal(t, http.StatusNotFound, res.Code)
+	})
+
+	t.Run("Test delete collection", func(t *testing.T) {
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "DELETE"
+		c.Params = []gin.Param{
+			{
+				Key:   "id",
+				Value: "wrong",
+			},
+		}
+
+		handlers.DeleteCollection(c)
+		assert.Equal(t, http.StatusBadRequest, res.Code)
+	})
 }

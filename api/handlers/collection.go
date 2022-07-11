@@ -23,7 +23,6 @@ func GetAllCollections(c *gin.Context) {
 }
 
 func CreateCollection(c *gin.Context) {
-
 	err := sanitizeCollection(c)
 	if err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -40,7 +39,6 @@ func CreateCollection(c *gin.Context) {
 
 	coll.CreatedAt = time.Now()
 	coll.UpdatedAt = time.Now()
-
 	coll, err = models.CreateCollection(&coll)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
@@ -67,10 +65,9 @@ func UpdateCollection(c *gin.Context) {
 	}
 
 	coll.UpdatedAt = time.Now()
-
-	_, err = models.UpdateCollection(id, &coll)
+	_, err = models.UpdateCollection(int64(id), &coll)
 	if err != nil {
-		c.String(http.StatusInternalServerError, err.Error())
+		c.String(http.StatusNotFound, err.Error())
 		zero.Errorf("error updating Collection %d: %v", id, err)
 		return
 	}
@@ -79,7 +76,6 @@ func UpdateCollection(c *gin.Context) {
 }
 
 func GetCollection(c *gin.Context) {
-
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -87,10 +83,10 @@ func GetCollection(c *gin.Context) {
 		return
 	}
 
-	coll, err := models.GetCollection(id)
+	coll, err := models.GetCollection(int64(id))
 	if err != nil {
 		zero.Errorf("error getting Collection %v: %s", id, err)
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(http.StatusNotFound, gin.H{
 			"msg": "We couldn't find the Collection.",
 		})
 
@@ -98,7 +94,6 @@ func GetCollection(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, coll)
-
 }
 
 func DeleteCollection(c *gin.Context) {
@@ -109,27 +104,18 @@ func DeleteCollection(c *gin.Context) {
 		return
 	}
 
-	err = models.DeleteCollection(id)
+	err = models.DeleteCollection(int64(id))
 	if err != nil {
-		c.String(http.StatusInternalServerError, err.Error())
+		c.String(http.StatusNotFound, err.Error())
 		zero.Errorf("error getting Collection %d: %v", id, err)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"id": id,
-	})
+	c.JSON(http.StatusOK, gin.H{"id": id})
 }
 
 func sanitizeCollection(c *gin.Context) error {
-
-	if c.PostForm("name") == "" {
-		zero.Error("Cannot have empty name")
-		return fmt.Errorf("cannot have empty name")
-
-	}
-
-	if len(c.PostForm("name")) < 10 && len(c.PostForm("name")) > 50 {
+	if len(c.PostForm("name")) < 10 || len(c.PostForm("name")) > 50 {
 		zero.Errorf("the name of the Collection should be between 10 and 50 characters: %d", len(c.PostForm("name")))
 		return fmt.Errorf("the name of the Collection should be between 10 and 50 characters: %d", len(c.PostForm("name")))
 	}

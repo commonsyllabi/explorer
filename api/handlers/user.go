@@ -58,6 +58,13 @@ func UpdateUser(c *gin.Context) {
 		return
 	}
 
+	err = sanitizeUser(c)
+	if err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		zero.Error(err.Error())
+		return
+	}
+
 	var user models.User
 	err = c.Bind(&user)
 	if err != nil {
@@ -66,7 +73,6 @@ func UpdateUser(c *gin.Context) {
 	}
 
 	user.UpdatedAt = time.Now()
-
 	_, err = models.UpdateUser(int64(id), &user)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
@@ -89,7 +95,7 @@ func GetUser(c *gin.Context) {
 	user, err := models.GetUser(int64(id))
 	if err != nil {
 		zero.Errorf("error getting User %v: %s", id, err)
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(http.StatusNotFound, gin.H{
 			"msg": "We couldn't find the User.",
 		})
 
@@ -110,16 +116,13 @@ func DeleteUser(c *gin.Context) {
 
 	err = models.DeleteUser(int64(id))
 	if err != nil {
-		c.String(http.StatusInternalServerError, err.Error())
+		c.String(http.StatusNotFound, err.Error())
 		zero.Errorf("error getting User %d: %v", id, err)
 		return
 	}
 
 	//-- TODO delete any associated resources?
-
-	c.JSON(http.StatusOK, gin.H{
-		"id": id,
-	})
+	c.JSON(http.StatusOK, gin.H{"id": id})
 }
 
 func sanitizeUser(c *gin.Context) error {
@@ -130,7 +133,7 @@ func sanitizeUser(c *gin.Context) error {
 
 	}
 
-	if len(c.PostForm("email")) < 10 && len(c.PostForm("email")) > 50 {
+	if len(c.PostForm("email")) < 10 || len(c.PostForm("email")) > 50 {
 		zero.Errorf("the email of the User should be between 10 and 50 characters: %d", len(c.PostForm("email")))
 		return fmt.Errorf("the email of the User should be between 10 and 50 characters: %d", len(c.PostForm("email")))
 	}

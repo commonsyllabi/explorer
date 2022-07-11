@@ -52,6 +52,91 @@ func TestUserHandler(t *testing.T) {
 		assert.Equal(t, http.StatusCreated, res.Code)
 	})
 
+	t.Run("Test create user with wrong field", func(t *testing.T) {
+		var body bytes.Buffer
+		w := multipart.NewWriter(&body)
+		w.WriteField("non-existant", "testing@user.com")
+		w.Close()
+
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "POST"
+		c.Request.Header.Set("Content-Type", w.FormDataContentType())
+		c.Request.Body = io.NopCloser(&body)
+
+		handlers.CreateUser(c)
+
+		assert.Equal(t, http.StatusBadRequest, res.Code)
+	})
+
+	t.Run("Test create user with wrong fields", func(t *testing.T) {
+		var body bytes.Buffer
+		w := multipart.NewWriter(&body)
+		w.WriteField("email", "testing@user.com")
+		w.WriteField("non-existant", "testing@user.com")
+		w.Close()
+
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "POST"
+		c.Request.Header.Set("Content-Type", w.FormDataContentType())
+		c.Request.Body = io.NopCloser(&body)
+
+		handlers.CreateUser(c)
+
+		assert.Equal(t, http.StatusInternalServerError, res.Code)
+	})
+
+	t.Run("Test create user malformed email", func(t *testing.T) {
+		var body bytes.Buffer
+		w := multipart.NewWriter(&body)
+		w.WriteField("email", "testinguser.com")
+		w.Close()
+
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "POST"
+		c.Request.Header.Set("Content-Type", w.FormDataContentType())
+		c.Request.Body = io.NopCloser(&body)
+
+		handlers.CreateUser(c)
+
+		assert.Equal(t, http.StatusBadRequest, res.Code)
+	})
+
+	t.Run("Test create user malformed email", func(t *testing.T) {
+		var body bytes.Buffer
+		w := multipart.NewWriter(&body)
+		w.WriteField("email", "short")
+		w.Close()
+
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "POST"
+		c.Request.Header.Set("Content-Type", w.FormDataContentType())
+		c.Request.Body = io.NopCloser(&body)
+
+		handlers.CreateUser(c)
+
+		assert.Equal(t, http.StatusBadRequest, res.Code)
+	})
+
 	t.Run("Test get user", func(t *testing.T) {
 		res := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(res)
@@ -69,6 +154,44 @@ func TestUserHandler(t *testing.T) {
 
 		handlers.GetUser(c)
 		assert.Equal(t, http.StatusOK, res.Code)
+	})
+
+	t.Run("Test get user malformed id", func(t *testing.T) {
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "GET"
+		c.Params = []gin.Param{
+			{
+				Key:   "id",
+				Value: "malformed",
+			},
+		}
+
+		handlers.GetUser(c)
+		assert.Equal(t, http.StatusBadRequest, res.Code)
+	})
+
+	t.Run("Test get user non-existant id", func(t *testing.T) {
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "GET"
+		c.Params = []gin.Param{
+			{
+				Key:   "id",
+				Value: "999",
+			},
+		}
+
+		handlers.GetUser(c)
+		assert.Equal(t, http.StatusNotFound, res.Code)
 	})
 
 	t.Run("Test update user", func(t *testing.T) {
@@ -102,6 +225,85 @@ func TestUserHandler(t *testing.T) {
 		assert.Equal(t, "updated@user.com", user.Email)
 	})
 
+	t.Run("Test update user wrong id", func(t *testing.T) {
+		var body bytes.Buffer
+		w := multipart.NewWriter(&body)
+		w.WriteField("email", "updated@user.com")
+		w.Close()
+
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "PATCH"
+		c.Request.Header.Set("Content-Type", w.FormDataContentType())
+		c.Request.Body = io.NopCloser(&body)
+		c.Params = []gin.Param{
+			{
+				Key:   "id",
+				Value: "wrong",
+			},
+		}
+
+		handlers.UpdateUser(c)
+		assert.Equal(t, http.StatusBadRequest, res.Code)
+	})
+
+	t.Run("Test update user wrong field", func(t *testing.T) {
+		var body bytes.Buffer
+		w := multipart.NewWriter(&body)
+		w.WriteField("wrong-field", "updated@user.com")
+		w.Close()
+
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "PATCH"
+		c.Request.Header.Set("Content-Type", w.FormDataContentType())
+		c.Request.Body = io.NopCloser(&body)
+		c.Params = []gin.Param{
+			{
+				Key:   "id",
+				Value: userID,
+			},
+		}
+
+		handlers.UpdateUser(c)
+		assert.Equal(t, http.StatusBadRequest, res.Code)
+	})
+
+	t.Run("Test update user malformed field", func(t *testing.T) {
+		var body bytes.Buffer
+		w := multipart.NewWriter(&body)
+		w.WriteField("email", "updatedusercom")
+		w.WriteField("wrong-field", "updatedusercom")
+		w.Close()
+
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "PATCH"
+		c.Request.Header.Set("Content-Type", w.FormDataContentType())
+		c.Request.Body = io.NopCloser(&body)
+		c.Params = []gin.Param{
+			{
+				Key:   "id",
+				Value: userID,
+			},
+		}
+
+		handlers.UpdateUser(c)
+		assert.Equal(t, http.StatusBadRequest, res.Code)
+	})
+
 	t.Run("Test delete user", func(t *testing.T) {
 		res := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(res)
@@ -118,7 +320,45 @@ func TestUserHandler(t *testing.T) {
 		}
 
 		handlers.DeleteUser(c)
-		assert.Equal(t, res.Code, http.StatusOK)
+		assert.Equal(t, http.StatusOK, res.Code)
+	})
+
+	t.Run("Test delete user malformed ID", func(t *testing.T) {
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "DELETE"
+		c.Params = []gin.Param{
+			{
+				Key:   "id",
+				Value: "wrong",
+			},
+		}
+
+		handlers.DeleteUser(c)
+		assert.Equal(t, http.StatusBadRequest, res.Code)
+	})
+
+	t.Run("Test delete user non-existing ID", func(t *testing.T) {
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "DELETE"
+		c.Params = []gin.Param{
+			{
+				Key:   "id",
+				Value: "999",
+			},
+		}
+
+		handlers.DeleteUser(c)
+		assert.Equal(t, http.StatusNotFound, res.Code)
 	})
 
 }

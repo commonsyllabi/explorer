@@ -51,7 +51,6 @@ func CreateSyllabus(c *gin.Context) {
 
 	syll.CreatedAt = time.Now()
 	syll.UpdatedAt = time.Now()
-
 	syll, err = models.CreateSyllabus(&syll)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
@@ -109,7 +108,7 @@ func GetSyllabus(c *gin.Context) {
 	syll, err := models.GetSyllabus(int64(id))
 	if err != nil {
 		zero.Errorf("error getting syllabus %v: %s", id, err)
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(http.StatusNotFound, gin.H{
 			"msg": "We couldn't find the syllabus.",
 		})
 
@@ -120,6 +119,13 @@ func GetSyllabus(c *gin.Context) {
 }
 
 func UpdateSyllabus(c *gin.Context) {
+	err := sanitizeSyllabus(c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		zero.Error(err.Error())
+		return
+	}
+
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -135,16 +141,12 @@ func UpdateSyllabus(c *gin.Context) {
 	}
 
 	syll.UpdatedAt = time.Now()
-	fmt.Printf("binding: %+v\n", syll)
-
 	s, err := models.UpdateSyllabus(int64(id), &syll)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		zero.Errorf("error updating syllabus %d: %v", id, err)
 		return
 	}
-
-	fmt.Printf("returning: %+v\n", s)
 
 	c.JSON(http.StatusOK, s)
 }
@@ -159,7 +161,7 @@ func DeleteSyllabus(c *gin.Context) {
 
 	err = models.DeleteSyllabus(int64(id))
 	if err != nil {
-		c.String(http.StatusInternalServerError, err.Error())
+		c.String(http.StatusNotFound, err.Error())
 		zero.Errorf("error deleting syllabus %d: %v", id, err)
 		return
 	}
@@ -172,13 +174,7 @@ func DeleteSyllabus(c *gin.Context) {
 }
 
 func sanitizeSyllabus(c *gin.Context) error {
-	if c.PostForm("title") == "" {
-		zero.Error("Cannot have empty title, description or email")
-		return fmt.Errorf("cannot have empty title")
-
-	}
-
-	if len(c.PostForm("title")) < minSyllabusTitleLength &&
+	if len(c.PostForm("title")) < minSyllabusTitleLength ||
 		len(c.PostForm("title")) > maxSyllabusTitleLength {
 		zero.Errorf("the title of the syllabus should be between 10 and 200 characters: %d", len(c.PostForm("title")))
 		return fmt.Errorf("the title of the syllabus should be between 10 and 200 characters: %d", len(c.PostForm("title")))

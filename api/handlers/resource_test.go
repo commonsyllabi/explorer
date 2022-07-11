@@ -52,6 +52,48 @@ func TestResourceHandler(t *testing.T) {
 		assert.Equal(t, http.StatusCreated, res.Code)
 	})
 
+	t.Run("Test create resource malformed input", func(t *testing.T) {
+		var body bytes.Buffer
+		w := multipart.NewWriter(&body)
+		w.WriteField("name", "Short")
+		w.Close()
+
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "POST"
+		c.Request.Header.Set("Content-Type", w.FormDataContentType())
+		c.Request.Body = io.NopCloser(&body)
+
+		handlers.CreateResource(c)
+
+		assert.Equal(t, http.StatusBadRequest, res.Code)
+	})
+
+	t.Run("Test create resource wrong field", func(t *testing.T) {
+		var body bytes.Buffer
+		w := multipart.NewWriter(&body)
+		w.WriteField("wrong-field", "Updated Name")
+		w.Close()
+
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "POST"
+		c.Request.Header.Set("Content-Type", w.FormDataContentType())
+		c.Request.Body = io.NopCloser(&body)
+
+		handlers.CreateResource(c)
+
+		assert.Equal(t, http.StatusBadRequest, res.Code)
+	})
+
 	t.Run("Test get resource", func(t *testing.T) {
 		res := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(res)
@@ -71,10 +113,48 @@ func TestResourceHandler(t *testing.T) {
 		assert.Equal(t, http.StatusOK, res.Code)
 	})
 
+	t.Run("Test get resource malformed ID", func(t *testing.T) {
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "GET"
+		c.Params = []gin.Param{
+			{
+				Key:   "id",
+				Value: "wrong",
+			},
+		}
+
+		handlers.GetResource(c)
+		assert.Equal(t, http.StatusBadRequest, res.Code)
+	})
+
+	t.Run("Test get resource non-existant ID", func(t *testing.T) {
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "GET"
+		c.Params = []gin.Param{
+			{
+				Key:   "id",
+				Value: "999",
+			},
+		}
+
+		handlers.GetResource(c)
+		assert.Equal(t, http.StatusNotFound, res.Code)
+	})
+
 	t.Run("Test update resource", func(t *testing.T) {
 		var body bytes.Buffer
 		w := multipart.NewWriter(&body)
-		w.WriteField("name", "Updated")
+		w.WriteField("name", "Updated Name")
 		w.Close()
 
 		res := httptest.NewRecorder()
@@ -99,7 +179,85 @@ func TestResourceHandler(t *testing.T) {
 		var resource models.Resource
 		err := c.Bind(&resource)
 		require.Nil(t, err)
-		assert.Equal(t, "Updated", resource.Name)
+		assert.Equal(t, "Updated Name", resource.Name)
+	})
+
+	t.Run("Test update resource malformed ID", func(t *testing.T) {
+		var body bytes.Buffer
+		w := multipart.NewWriter(&body)
+		w.WriteField("name", "Updated Name")
+		w.Close()
+
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "PATCH"
+		c.Request.Header.Set("Content-Type", w.FormDataContentType())
+		c.Request.Body = io.NopCloser(&body)
+		c.Params = []gin.Param{
+			{
+				Key:   "id",
+				Value: "wrong",
+			},
+		}
+
+		handlers.UpdateResource(c)
+		assert.Equal(t, http.StatusBadRequest, res.Code)
+	})
+
+	t.Run("Test update resource non-existent ID", func(t *testing.T) {
+		var body bytes.Buffer
+		w := multipart.NewWriter(&body)
+		w.WriteField("name", "Updated Name")
+		w.Close()
+
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "PATCH"
+		c.Request.Header.Set("Content-Type", w.FormDataContentType())
+		c.Request.Body = io.NopCloser(&body)
+		c.Params = []gin.Param{
+			{
+				Key:   "id",
+				Value: "999",
+			},
+		}
+
+		handlers.UpdateResource(c)
+		assert.Equal(t, http.StatusInternalServerError, res.Code)
+	})
+
+	t.Run("Test update resource malformed name", func(t *testing.T) {
+		var body bytes.Buffer
+		w := multipart.NewWriter(&body)
+		w.WriteField("name", "Short")
+		w.Close()
+
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "PATCH"
+		c.Request.Header.Set("Content-Type", w.FormDataContentType())
+		c.Request.Body = io.NopCloser(&body)
+		c.Params = []gin.Param{
+			{
+				Key:   "id",
+				Value: resourceID,
+			},
+		}
+
+		handlers.UpdateResource(c)
+		assert.Equal(t, http.StatusBadRequest, res.Code)
 	})
 
 	t.Run("Test delete resource", func(t *testing.T) {
@@ -118,7 +276,45 @@ func TestResourceHandler(t *testing.T) {
 		}
 
 		handlers.DeleteResource(c)
-		assert.Equal(t, res.Code, http.StatusOK)
+		assert.Equal(t, http.StatusOK, res.Code)
+	})
+
+	t.Run("Test delete malformed resource", func(t *testing.T) {
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "DELETE"
+		c.Params = []gin.Param{
+			{
+				Key:   "id",
+				Value: "wrong",
+			},
+		}
+
+		handlers.DeleteResource(c)
+		assert.Equal(t, http.StatusBadRequest, res.Code)
+	})
+
+	t.Run("Test delete non-existant resource", func(t *testing.T) {
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "DELETE"
+		c.Params = []gin.Param{
+			{
+				Key:   "id",
+				Value: "999",
+			},
+		}
+
+		handlers.DeleteResource(c)
+		assert.Equal(t, http.StatusInternalServerError, res.Code)
 	})
 
 }

@@ -23,7 +23,7 @@ func CreateCollection(coll *Collection) (Collection, error) {
 	return *coll, err
 }
 
-func GetCollection(id int) (Collection, error) {
+func GetCollection(id int64) (Collection, error) {
 	ctx := context.Background()
 	var coll Collection
 	err := db.NewSelect().Model(&coll).Where("collection.id = ?", id).Relation("Syllabi").Relation("User").Scan(ctx)
@@ -37,15 +37,24 @@ func GetAllCollections() ([]Collection, error) {
 	return coll, err
 }
 
-func UpdateCollection(id int, coll *Collection) (Collection, error) {
+func UpdateCollection(id int64, coll *Collection) (Collection, error) {
 	ctx := context.Background()
-	_, err := db.NewUpdate().Model(coll).OmitZero().Where("id = ?", id).Exec(ctx)
+	err := db.NewSelect().Model(coll).Where("id = ?", id).Scan(ctx)
+	if err != nil {
+		return *coll, err
+	}
+	_, err = db.NewUpdate().Model(coll).OmitZero().Where("id = ?", id).Exec(ctx)
 	return *coll, err
 }
 
-func DeleteCollection(id int) error {
+func DeleteCollection(id int64) error {
 	ctx := context.Background()
 	var coll Collection
-	_, err := db.NewDelete().Model(&coll).Where("id = ?", id).Exec(ctx)
+	err := db.NewSelect().Model(&coll).Where("id = ?", id).Scan(ctx)
+	if err != nil {
+		return err
+	}
+
+	_, err = db.NewDelete().Model(&coll).Where("id = ?", id).Exec(ctx)
 	return err
 }

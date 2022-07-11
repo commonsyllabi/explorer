@@ -50,6 +50,13 @@ func CreateResource(c *gin.Context) {
 }
 
 func UpdateResource(c *gin.Context) {
+	err := sanitizeResource(c)
+	if err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		zero.Error(err.Error())
+		return
+	}
+
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -65,7 +72,6 @@ func UpdateResource(c *gin.Context) {
 	}
 
 	res.UpdatedAt = time.Now()
-
 	_, err = models.UpdateResource(int64(id), &res)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
@@ -88,7 +94,7 @@ func GetResource(c *gin.Context) {
 	res, err := models.GetResource(int64(id))
 	if err != nil {
 		zero.Errorf("error getting Resource %v: %s", id, err)
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(http.StatusNotFound, gin.H{
 			"msg": "We couldn't find the Resource.",
 		})
 
@@ -96,7 +102,6 @@ func GetResource(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, res)
-
 }
 
 func DeleteResource(c *gin.Context) {
@@ -120,14 +125,7 @@ func DeleteResource(c *gin.Context) {
 }
 
 func sanitizeResource(c *gin.Context) error {
-
-	if c.PostForm("name") == "" {
-		zero.Error("Cannot have empty name")
-		return fmt.Errorf("cannot have empty name")
-
-	}
-
-	if len(c.PostForm("name")) < 10 && len(c.PostForm("name")) > 50 {
+	if len(c.PostForm("name")) < 10 || len(c.PostForm("name")) > 50 {
 		zero.Errorf("the name of the Resource should be between 10 and 50 characters: %d", len(c.PostForm("name")))
 		return fmt.Errorf("the name of the Resource should be between 10 and 50 characters: %d", len(c.PostForm("name")))
 	}
