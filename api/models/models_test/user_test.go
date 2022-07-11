@@ -1,6 +1,7 @@
 package models_test
 
 import (
+	"fmt"
 	"testing"
 	"time"
 
@@ -77,14 +78,14 @@ func TestUserModel(t *testing.T) {
 		assert.True(t, updated.CreatedAt.IsZero())
 	})
 
-	// t.Run("Test delete user", func(t *testing.T) {
-	// 	err := models.DeleteUser(userID)
-	// 	assert.Nil(t, err)
-	// })
+	t.Run("Test delete user", func(t *testing.T) {
+		err := models.DeleteUser(userID)
+		assert.Nil(t, err)
+	})
 
-	// t.Run("Test delete wrong user", func(t *testing.T) {
-	// 	err := models.DeleteUser(userWrongID)
-	// 	fmt.Println(err)
-	// 	assert.NotNil(t, err)
-	// })
+	t.Run("Test delete wrong user", func(t *testing.T) {
+		err := models.DeleteUser(userWrongID)
+		fmt.Println(err)
+		assert.NotNil(t, err)
+	})
 }

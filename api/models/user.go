@@ -49,7 +49,7 @@ func UpdateUser(id int64, user *User) (User, error) {
 func DeleteUser(id int64) error {
 	ctx := context.Background()
 	var user User
-	err := db.NewSelect().Model(user).Where("id = ?", id).Scan(ctx)
+	err := db.NewSelect().Model(&user).Where("id = ?", id).Scan(ctx)
 	if err != nil {
 		return err
 	}
