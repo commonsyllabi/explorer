@@ -11,6 +11,12 @@ figure out proper has-many/belongs-to relations in bun
 
 ## questions
 
+### API
 - [ ] does creating a syllabus require a user account? does it do it automatically (i.e., taking the associated email with the syllabus, automatically generating a password and sending it via email?)
 - [ ] what is an appropriate level of nestedness when returning things from an API?
 - [ ] do we make resources first-class citizens? aka does a user profile return the set of resources associated with it?
+
+### sessions
+
+- what is the "secret" that is given when creating a cookie store?
+- what is the name of the session?
