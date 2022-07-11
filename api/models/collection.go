@@ -11,7 +11,7 @@ type Collection struct {
 	UpdatedAt time.Time `bun:",nullzero,notnull,default:current_timestamp" json:"updated_at"`
 
 	Syllabi []*Syllabus `bun:"rel:has-many,join:id=collection_id" json:"syllabi"` //-- todo many to many
-	Name    string      `json:"name"`
+	Name    string      `json:"name" form:"name" binding:"required"`
 
 	UserID int64 `bun:"user_id" yaml:"user_id" json:"user_id"`
 	User   *User `bun:"rel:belongs-to,join:user_id=id" json:"user"`

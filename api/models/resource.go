@@ -13,7 +13,7 @@ type Resource struct {
 	SyllabusID int64     `bun:"syllabus_id,notnull" yaml:"syllabus_id" json:"syllabus_id"`
 	Syllabus   *Syllabus `bun:"rel:belongs-to,join:syllabus_id=id" json:"syllabus"`
 
-	Name string `bun:"name,notnull" json:"name"`
+	Name string `bun:"name,notnull" json:"name" form:"name" binding:"required"`
 }
 
 func CreateResource(res *Resource) (Resource, error) {

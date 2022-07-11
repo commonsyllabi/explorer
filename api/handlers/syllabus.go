@@ -3,13 +3,17 @@ package handlers
 import (
 	"fmt"
 	"net/http"
-	"net/mail"
 	"strconv"
 	"time"
 
 	"github.com/commonsyllabi/explorer/api/models"
 	zero "github.com/commonsyllabi/explorer/logger"
 	"github.com/gin-gonic/gin"
+)
+
+var (
+	minSyllabusTitleLength = 10
+	maxSyllabusTitleLength = 100
 )
 
 func GetAllSyllabi(c *gin.Context) {
@@ -24,10 +28,9 @@ func GetAllSyllabi(c *gin.Context) {
 }
 
 func CreateSyllabus(c *gin.Context) {
-
 	err := sanitizeSyllabus(c)
 	if err != nil {
-		c.String(http.StatusBadRequest, err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		zero.Error(err.Error())
 		return
 	}
@@ -56,7 +59,7 @@ func CreateSyllabus(c *gin.Context) {
 		return
 	}
 
-	var resources []models.Resource
+	var resources []*models.Resource
 	files := form.File["resources[]"]
 
 	zero.Warnf("%d resources found on new syllabus", len(files))
@@ -84,48 +87,18 @@ func CreateSyllabus(c *gin.Context) {
 			SyllabusID: syll.ID,
 		}
 
-		att, err := models.CreateResource(&resource)
+		res, err := models.CreateResource(&resource)
 		if err != nil {
 			zero.Warnf("error adding resource: %s", err)
 		}
-		resources = append(resources, att)
+		resources = append(resources, &res)
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"syllabus":  syll,
-		"resources": resources,
-	})
-}
-
-func UpdateSyllabus(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.String(http.StatusBadRequest, err.Error())
-		zero.Errorf("not a valid id %d", id)
-		return
-	}
-
-	var syll models.Syllabus
-	err = c.Bind(&syll)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	syll.UpdatedAt = time.Now()
-
-	_, err = models.UpdateSyllabus(int64(id), &syll)
-	if err != nil {
-		c.String(http.StatusInternalServerError, err.Error())
-		zero.Errorf("error updating syllabus %d: %v", id, err)
-		return
-	}
-
-	c.JSON(http.StatusOK, syll)
+	syll.Resources = resources
+	c.JSON(http.StatusCreated, syll)
 }
 
 func GetSyllabus(c *gin.Context) {
-
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -144,6 +117,36 @@ func GetSyllabus(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, syll)
+}
+
+func UpdateSyllabus(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		zero.Errorf("not a valid id %d", id)
+		return
+	}
+
+	syll := models.Syllabus{}
+	err = c.Bind(&syll)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	syll.UpdatedAt = time.Now()
+	fmt.Printf("binding: %+v\n", syll)
+
+	s, err := models.UpdateSyllabus(int64(id), &syll)
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+		zero.Errorf("error updating syllabus %d: %v", id, err)
+		return
+	}
+
+	fmt.Printf("returning: %+v\n", s)
+
+	c.JSON(http.StatusOK, s)
 }
 
 func DeleteSyllabus(c *gin.Context) {
@@ -169,18 +172,17 @@ func DeleteSyllabus(c *gin.Context) {
 }
 
 func sanitizeSyllabus(c *gin.Context) error {
-
 	if c.PostForm("title") == "" {
 		zero.Error("Cannot have empty title, description or email")
-		return fmt.Errorf("cannot have empty title, description or email")
+		return fmt.Errorf("cannot have empty title")
 
 	}
 
-	if len(c.PostForm("title")) < 10 && len(c.PostForm("title")) > 200 {
+	if len(c.PostForm("title")) < minSyllabusTitleLength &&
+		len(c.PostForm("title")) > maxSyllabusTitleLength {
 		zero.Errorf("the title of the syllabus should be between 10 and 200 characters: %d", len(c.PostForm("title")))
 		return fmt.Errorf("the title of the syllabus should be between 10 and 200 characters: %d", len(c.PostForm("title")))
 	}
 
-	_, err := mail.ParseAddress(c.PostForm("email"))
-	return err
+	return nil
 }

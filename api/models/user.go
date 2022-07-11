@@ -10,7 +10,7 @@ type User struct {
 	CreatedAt time.Time `bun:",nullzero,notnull,default:current_timestamp" json:"created_at"`
 	UpdatedAt time.Time `bun:",nullzero,notnull,default:current_timestamp" json:"updated_at"`
 
-	Email       string        `json:"email"`
+	Email       string        `json:"email" form:"email" binding:"required"`
 	Syllabi     []*Syllabus   `bun:"syllabi,rel:has-many" form:"syllabi" json:"syllabi"`
 	Collections []*Collection `bun:"rel:has-many" json:"collections"`
 }

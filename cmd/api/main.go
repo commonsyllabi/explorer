@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	mode := gin.ReleaseMode
+	var mode string
 	switch os.Getenv("API_MODE") {
 	case "debug":
 		mode = gin.DebugMode
@@ -20,12 +20,10 @@ func main() {
 		mode = gin.TestMode
 		zero.InitLog(1)
 	default:
-		zero.Log.Warn().Msg("Missing env DEBUG, defaulting to false")
+		zero.Log.Warn().Msg("missing env DEBUG, defaulting to false")
 		mode = gin.ReleaseMode
 		zero.InitLog(1)
 	}
-
-	zero.Info("starting explorer")
 
 	var conf api.Config
 	conf.DefaultConf()
@@ -42,13 +40,13 @@ func main() {
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		zero.Log.Warn().Msg("Missing env PORT, defaulting to 8080")
+		zero.Log.Warn().Msg("missing env PORT, defaulting to 8080")
 		port = "8080"
 	}
 
 	_, err := models.InitDB(url)
 	if err != nil {
-		zero.Log.Fatal().Msgf("Error initializing D: %v", err)
+		zero.Log.Fatal().Msgf("error initializing database: %v", err)
 	}
 
 	err = api.StartServer(port, mode, conf)

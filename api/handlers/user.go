@@ -24,7 +24,6 @@ func GetAllUsers(c *gin.Context) {
 }
 
 func CreateUser(c *gin.Context) {
-
 	err := sanitizeUser(c)
 	if err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -32,7 +31,6 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
-	// save the actual User
 	var user models.User
 	err = c.Bind(&user)
 	if err != nil {
@@ -42,7 +40,6 @@ func CreateUser(c *gin.Context) {
 
 	user.CreatedAt = time.Now()
 	user.UpdatedAt = time.Now()
-
 	user, err = models.CreateUser(&user)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
@@ -50,7 +47,7 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, user)
+	c.JSON(http.StatusCreated, user)
 }
 
 func UpdateUser(c *gin.Context) {

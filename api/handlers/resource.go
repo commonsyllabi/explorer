@@ -23,7 +23,6 @@ func GetAllResources(c *gin.Context) {
 }
 
 func CreateResource(c *gin.Context) {
-
 	err := sanitizeResource(c)
 	if err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -31,7 +30,6 @@ func CreateResource(c *gin.Context) {
 		return
 	}
 
-	// save the actual Resource
 	var res models.Resource
 	err = c.Bind(&res)
 	if err != nil {
@@ -41,7 +39,6 @@ func CreateResource(c *gin.Context) {
 
 	res.CreatedAt = time.Now()
 	res.UpdatedAt = time.Now()
-
 	res, err = models.CreateResource(&res)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
@@ -49,7 +46,7 @@ func CreateResource(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, res)
+	c.JSON(http.StatusCreated, res)
 }
 
 func UpdateResource(c *gin.Context) {

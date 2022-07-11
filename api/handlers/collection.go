@@ -31,7 +31,6 @@ func CreateCollection(c *gin.Context) {
 		return
 	}
 
-	// save the actual Collection
 	var coll models.Collection
 	err = c.Bind(&coll)
 	if err != nil {
@@ -49,7 +48,7 @@ func CreateCollection(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, coll)
+	c.JSON(http.StatusCreated, coll)
 }
 
 func UpdateCollection(c *gin.Context) {

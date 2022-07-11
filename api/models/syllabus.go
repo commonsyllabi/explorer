@@ -15,7 +15,7 @@ type Syllabus struct {
 
 	CollectionID int64       `bun:"collection_id" yaml:"collection_id" json:"collection_id"`
 	Resources    []*Resource `bun:"rel:has-many,join:id=syllabus_id" json:"resources"`
-	Title        string      `bun:",notnull" json:"title"`
+	Title        string      `bun:",notnull" json:"title" form:"title"`
 	//-- todo: how to have many to many relation for collections?
 }
 
