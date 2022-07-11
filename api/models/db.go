@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	zero "github.com/commonsyllabi/explorer/logger"
+	zero "github.com/commonsyllabi/explorer/api/logger"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dbfixture"
 	"github.com/uptrace/bun/dialect/pgdialect"

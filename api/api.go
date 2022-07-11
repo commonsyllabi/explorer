@@ -15,7 +15,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/commonsyllabi/explorer/api/handlers"
-	zero "github.com/commonsyllabi/explorer/logger"
+	zero "github.com/commonsyllabi/explorer/api/logger"
 )
 
 var conf Config

@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"time"
 
+	zero "github.com/commonsyllabi/explorer/api/logger"
 	"github.com/commonsyllabi/explorer/api/models"
-	zero "github.com/commonsyllabi/explorer/logger"
 	"github.com/gin-gonic/gin"
 )
 

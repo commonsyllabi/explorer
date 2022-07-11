@@ -1,0 +1,42 @@
+services:
+  db:
+    image: postgres:alpine
+    user: postgres
+    container_name: db
+    env_file:
+      - ./.env
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+      PGPORT: ${DB_PORT}
+    expose:
+      - ${DB_PORT}
+    volumes:
+      - pgdata_explorer:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER} && psql -U ${DB_USER}" ]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+
+  api:
+    container_name: api
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+     - ${PORT}:${PORT}
+    env_file:
+      - ./.env
+      # - ./.env.secrets
+    environment:
+      DATABASE_URL: "postgres://${DB_USER}:${DB_PASSWORD}@db:${DB_PORT}/${DB_NAME}"
+      DATABASE_TEST_URL: "postgres://${DB_USER}:${DB_PASSWORD}@db:${DB_PORT}/explorer-test"
+    restart: always
+    tmpfs:
+      - /tmp
+
+volumes:
+  pgdata_explorer:

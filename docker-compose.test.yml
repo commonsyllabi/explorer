@@ -1,0 +1,41 @@
+services:
+  db_test:
+    image: postgres:alpine
+    user: postgres
+    container_name: db_test
+    environment:
+      POSTGRES_USER: cosyl
+      POSTGRES_PASSWORD: cosyl
+      POSTGRES_DB: explorer-test
+      PGPORT: "5433"
+    expose:
+      - "5433"
+    volumes:
+      - pgdata_explorer_test:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U cosyl -d explorer-test && psql -U cosyl explorer-test" ]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  backend_test:
+    container_name: backend_test
+    build:
+      context: .
+      dockerfile: tests/Dockertest.back
+    depends_on:
+      db_test:
+        condition: service_healthy
+    ports:
+     - ${PORT}:${PORT}
+    environment:
+      DATABASE_TEST_URL: "postgres://cosyl:cosyl@db_test:5433/explorer-test"
+      PORT: "3046"
+      DB_PORT: "5433"
+      DEBUG: "false"
+      API_MODE: "test"
+    tmpfs:
+      - /tmp
+
+volumes:
+  pgdata_explorer_test:

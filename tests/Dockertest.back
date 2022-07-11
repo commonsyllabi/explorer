@@ -1,0 +1,18 @@
+FROM golang:1.18 AS go
+
+RUN mkdir /app
+COPY go.mod /app
+COPY go.sum /app
+WORKDIR /app
+RUN go mod download
+
+COPY cmd /app/cmd
+COPY api /app/api
+
+RUN chmod -R a+rwX /app
+ENV CGO_ENABLED=0
+RUN mkdir -p /go/tmp
+ENV TMPDIR=/go/tmp
+ENV GIN_MODE=test
+RUN chmod -R a+rwX /go/tmp
+CMD ["go", "test", "./...", "-coverprofile", "cover.out"]
