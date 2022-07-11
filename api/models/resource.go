@@ -6,7 +6,7 @@ import (
 )
 
 type Resource struct {
-	ID        int64     `bun:"id,pk,autoincrement" json:"id"`
+	ID        int64     `bun:",pk,autoincrement" json:"id"`
 	CreatedAt time.Time `bun:",nullzero,notnull,default:current_timestamp" json:"created_at"`
 	UpdatedAt time.Time `bun:",nullzero,notnull,default:current_timestamp" json:"updated_at"`
 
@@ -22,10 +22,10 @@ func CreateResource(res *Resource) (Resource, error) {
 	return *res, err
 }
 
-func GetResource(id int) (Resource, error) {
+func GetResource(id int64) (Resource, error) {
 	ctx := context.Background()
 	var res Resource
-	err := db.NewSelect().Model(&res).Where("id = ?", id).Relation("Syllabus").Scan(ctx)
+	err := db.NewSelect().Model(&res).Where("resource.id = ?", id).Relation("Syllabus").Scan(ctx)
 	return res, err
 }
 
@@ -36,15 +36,24 @@ func GetAllResources() ([]Resource, error) {
 	return res, err
 }
 
-func UpdateResource(id int, res *Resource) (Resource, error) {
+func UpdateResource(id int64, res *Resource) (Resource, error) {
 	ctx := context.Background()
-	_, err := db.NewUpdate().Model(res).OmitZero().Where("id = ?", id).Exec(ctx)
+	err := db.NewSelect().Model(res).Where("id = ?", id).Scan(ctx)
+	if err != nil {
+		return *res, err
+	}
+	_, err = db.NewUpdate().Model(res).OmitZero().Where("id = ?", id).Exec(ctx)
 	return *res, err
 }
 
-func DeleteResource(id int) error {
+func DeleteResource(id int64) error {
 	ctx := context.Background()
 	var res Resource
-	_, err := db.NewDelete().Model(&res).Where("id = ?", id).Exec(ctx)
+	err := db.NewSelect().Model(&res).Where("id = ?", id).Scan(ctx)
+	if err != nil {
+		return err
+	}
+
+	_, err = db.NewDelete().Model(&res).Where("id = ?", id).Exec(ctx)
 	return err
 }

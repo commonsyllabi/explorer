@@ -15,10 +15,17 @@ type User struct {
 	Collections []*Collection `bun:"rel:has-many" json:"collections"`
 }
 
-func CreateUser(syll *User) (User, error) {
+func CreateUser(user *User) (User, error) {
 	ctx := context.Background()
-	_, err := db.NewInsert().Model(syll).Exec(ctx)
-	return *syll, err
+	_, err := db.NewInsert().Model(user).Exec(ctx)
+	return *user, err
+}
+
+func GetUser(id int64) (User, error) {
+	ctx := context.Background()
+	var user User
+	err := db.NewSelect().Model(&user).Where("id = ?", id).Relation("Syllabi").Relation("Collections").Scan(ctx)
+	return user, err
 }
 
 func GetAllUsers() ([]User, error) {
@@ -28,23 +35,25 @@ func GetAllUsers() ([]User, error) {
 	return users, err
 }
 
-func GetUser(id int) (User, error) {
+func UpdateUser(id int64, user *User) (User, error) {
 	ctx := context.Background()
-	var user User
-	err := db.NewSelect().Model(&user).Where("id = ?", id).Relation("Syllabi").Relation("Collections").Scan(ctx)
-	return user, err
-}
+	err := db.NewSelect().Model(user).Where("id = ?", id).Scan(ctx)
+	if err != nil {
+		return *user, err
+	}
 
-func UpdateUser(id int, user *User) (User, error) {
-	ctx := context.Background()
-	_, err := db.NewUpdate().Model(user).OmitZero().Where("id = ?", id).Exec(ctx)
+	_, err = db.NewUpdate().Model(user).OmitZero().WherePK().Exec(ctx)
 	return *user, err
 }
 
-func DeleteUser(id int) error {
+func DeleteUser(id int64) error {
 	ctx := context.Background()
 	var user User
-	_, err := db.NewDelete().Model(&user).Where("id = ?", id).Exec(ctx) //-- what to do with dangling collections and syllabi?
+	err := db.NewSelect().Model(user).Where("id = ?", id).Scan(ctx)
+	if err != nil {
+		return err
+	}
+	_, err = db.NewDelete().Model(&user).Where("id = ?", id).Exec(ctx) //-- what to do with dangling collections and syllabi?
 
 	return err
 }

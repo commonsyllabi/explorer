@@ -49,7 +49,7 @@ func InitDB(url string) (*bun.DB, error) {
 		log.Fatal(err)
 	}
 
-	err = RunFixtures()
+	err = runFixtures()
 	if err != nil {
 		zero.Errorf("error running fixtures: %v", err)
 		log.Fatal(err)
@@ -64,10 +64,6 @@ func runMigrations(url string, sslMode bool) error {
 	}
 
 	migrationsDir := "file://" + Basepath + "/migrations"
-	if os.Getenv("TEST") == "true" {
-		migrationsDir = "file:///app/migrations"
-	}
-
 	m, err := migrate.New(migrationsDir, url)
 	if err != nil {
 		return err
@@ -85,10 +81,8 @@ func runMigrations(url string, sslMode bool) error {
 	return nil
 }
 
-func RunFixtures() error {
-
+func runFixtures() error {
 	fixture := dbfixture.New(db, dbfixture.WithTruncateTables())
-
 	db.RegisterModel(
 		(*Syllabus)(nil),
 		(*Resource)(nil),
@@ -97,8 +91,7 @@ func RunFixtures() error {
 	)
 
 	ctx := context.Background()
-	// dir := "file://" + Basepath + "/fixtures"
-	err := fixture.Load(ctx, os.DirFS("/home/pierre/code/commonsyllabi/explorer/api/models/fixtures"), "syllabus.yml", "resource.yml", "user.yml", "collection.yml")
+	err := fixture.Load(ctx, os.DirFS(Basepath+"/fixtures"), "syllabus.yml", "resource.yml", "user.yml", "collection.yml")
 
 	return err
 }

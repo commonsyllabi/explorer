@@ -32,7 +32,6 @@ func CreateSyllabus(c *gin.Context) {
 		return
 	}
 
-	// save the actual syllabus
 	var syll models.Syllabus
 	err = c.Bind(&syll)
 	if err != nil {
@@ -115,7 +114,7 @@ func UpdateSyllabus(c *gin.Context) {
 
 	syll.UpdatedAt = time.Now()
 
-	_, err = models.UpdateSyllabus(id, &syll)
+	_, err = models.UpdateSyllabus(int64(id), &syll)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		zero.Errorf("error updating syllabus %d: %v", id, err)
@@ -134,7 +133,7 @@ func GetSyllabus(c *gin.Context) {
 		return
 	}
 
-	syll, err := models.GetSyllabus(id)
+	syll, err := models.GetSyllabus(int64(id))
 	if err != nil {
 		zero.Errorf("error getting syllabus %v: %s", id, err)
 		c.JSON(http.StatusOK, gin.H{
@@ -145,7 +144,6 @@ func GetSyllabus(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, syll)
-
 }
 
 func DeleteSyllabus(c *gin.Context) {
@@ -156,10 +154,10 @@ func DeleteSyllabus(c *gin.Context) {
 		return
 	}
 
-	err = models.DeleteSyllabus(id)
+	err = models.DeleteSyllabus(int64(id))
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
-		zero.Errorf("error getting syllabus %d: %v", id, err)
+		zero.Errorf("error deleting syllabus %d: %v", id, err)
 		return
 	}
 
@@ -182,12 +180,6 @@ func sanitizeSyllabus(c *gin.Context) error {
 		zero.Errorf("the title of the syllabus should be between 10 and 200 characters: %d", len(c.PostForm("title")))
 		return fmt.Errorf("the title of the syllabus should be between 10 and 200 characters: %d", len(c.PostForm("title")))
 	}
-
-	// if len(c.PostForm("description")) < 10 && len(c.PostForm("description")) > 500 {
-	// 	zero.Errorf("the description of the syllabus should be between 10 and 500 characters: %d", len(c.PostForm("description")))
-	// 	err = fmt.Errorf("the description of the syllabus should be between 10 and 500 characters: %d", len(c.PostForm("description")))
-	// 	return err
-	// }
 
 	_, err := mail.ParseAddress(c.PostForm("email"))
 	return err

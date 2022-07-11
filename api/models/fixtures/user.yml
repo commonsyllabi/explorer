@@ -1,7 +1,11 @@
 - model: User
   rows:
-    - id: 1
+    - _id: 1
       created_at: '{{ now }}'
       updated_at: '{{ now }}'
-      email: "mo@li.com"
+      email: "one@raz.com"
+    - _id: 2
+      created_at: '{{ now }}'
+      updated_at: '{{ now }}'
+      email: "two@dwa.com"
       

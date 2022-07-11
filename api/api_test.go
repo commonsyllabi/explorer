@@ -68,8 +68,8 @@ func mustSetupRouter() *gin.Engine {
 
 	databaseTestURL := os.Getenv("DATABASE_TEST_URL")
 	if databaseTestURL == "" {
-		fmt.Println("didn't get db test url from env, defaulting to postgres://cosyl:cosyl@localhost:5432/test")
-		databaseTestURL = "postgres://explorer:explorer@localhost:5432/explorer-test"
+		databaseTestURL = "postgres://cosyl:cosyl@localhost:5432/explorer-test"
+		fmt.Printf("didn't get db test url from env, defaulting to %v\n", databaseTestURL)
 	}
 
 	_, err := models.InitDB(databaseTestURL)

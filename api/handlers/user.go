@@ -70,7 +70,7 @@ func UpdateUser(c *gin.Context) {
 
 	user.UpdatedAt = time.Now()
 
-	_, err = models.UpdateUser(id, &user)
+	_, err = models.UpdateUser(int64(id), &user)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		zero.Errorf("error updating User %d: %v", id, err)
@@ -89,7 +89,7 @@ func GetUser(c *gin.Context) {
 		return
 	}
 
-	user, err := models.GetUser(id)
+	user, err := models.GetUser(int64(id))
 	if err != nil {
 		zero.Errorf("error getting User %v: %s", id, err)
 		c.JSON(http.StatusOK, gin.H{
@@ -111,7 +111,7 @@ func DeleteUser(c *gin.Context) {
 		return
 	}
 
-	err = models.DeleteUser(id)
+	err = models.DeleteUser(int64(id))
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		zero.Errorf("error getting User %d: %v", id, err)

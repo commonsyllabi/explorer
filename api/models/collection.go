@@ -6,7 +6,7 @@ import (
 )
 
 type Collection struct {
-	ID        int64     `bun:"id,pk,autoincrement" json:"id"`
+	ID        int64     `bun:",pk,autoincrement" json:"id"`
 	CreatedAt time.Time `bun:",nullzero,notnull,default:current_timestamp" json:"created_at"`
 	UpdatedAt time.Time `bun:",nullzero,notnull,default:current_timestamp" json:"updated_at"`
 

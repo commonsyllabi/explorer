@@ -6,7 +6,7 @@ import (
 )
 
 type Syllabus struct {
-	ID        int64     `bun:"id,pk,autoincrement" json:"id"`
+	ID        int64     `bun:",pk,autoincrement" json:"id"`
 	CreatedAt time.Time `bun:",nullzero,notnull,default:current_timestamp" json:"created_at"`
 	UpdatedAt time.Time `bun:",nullzero,notnull,default:current_timestamp" json:"updated_at"`
 
@@ -25,7 +25,7 @@ func CreateSyllabus(syll *Syllabus) (Syllabus, error) {
 	return *syll, err
 }
 
-func GetSyllabus(id int) (Syllabus, error) {
+func GetSyllabus(id int64) (Syllabus, error) {
 	ctx := context.Background()
 	var syll Syllabus
 	err := db.NewSelect().Model(&syll).Where("syllabus.id = ?", id).Relation("Resources").Relation("User").Scan(ctx)
@@ -39,15 +39,24 @@ func GetAllSyllabi() ([]Syllabus, error) {
 	return syllabi, err
 }
 
-func UpdateSyllabus(id int, syll *Syllabus) (Syllabus, error) {
+func UpdateSyllabus(id int64, syll *Syllabus) (Syllabus, error) {
 	ctx := context.Background()
-	_, err := db.NewUpdate().Model(syll).OmitZero().Where("id = ?", id).Exec(ctx)
+	err := db.NewSelect().Model(syll).Where("id = ?", id).Scan(ctx)
+	if err != nil {
+		return *syll, err
+	}
+
+	_, err = db.NewUpdate().Model(syll).OmitZero().Where("id = ?", id).Exec(ctx)
 	return *syll, err
 }
 
-func DeleteSyllabus(id int) error {
+func DeleteSyllabus(id int64) error {
 	ctx := context.Background()
 	var syll Syllabus
-	_, err := db.NewDelete().Model(&syll).Where("id = ?", id).Exec(ctx) //-- what to do with dangling resources?
+	err := db.NewSelect().Model(&syll).Where("id = ?", id).Scan(ctx)
+	if err != nil {
+		return err
+	}
+	_, err = db.NewDelete().Model(&syll).Where("id = ?", id).Exec(ctx) //-- what to do with dangling resources?
 	return err
 }

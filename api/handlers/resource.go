@@ -69,7 +69,7 @@ func UpdateResource(c *gin.Context) {
 
 	res.UpdatedAt = time.Now()
 
-	_, err = models.UpdateResource(id, &res)
+	_, err = models.UpdateResource(int64(id), &res)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		zero.Errorf("error updating Resource %d: %v", id, err)
@@ -88,7 +88,7 @@ func GetResource(c *gin.Context) {
 		return
 	}
 
-	res, err := models.GetResource(id)
+	res, err := models.GetResource(int64(id))
 	if err != nil {
 		zero.Errorf("error getting Resource %v: %s", id, err)
 		c.JSON(http.StatusOK, gin.H{
@@ -110,7 +110,7 @@ func DeleteResource(c *gin.Context) {
 		return
 	}
 
-	err = models.DeleteResource(id)
+	err = models.DeleteResource(int64(id))
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		zero.Errorf("error getting Resource %d: %v", id, err)
