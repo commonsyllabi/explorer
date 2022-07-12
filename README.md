@@ -8,6 +8,7 @@ figure out proper has-many/belongs-to relations in bun
 
 - add handlers to return everything based on querying a syllabus
 - - right now the user isn't getting picked up, and the collections either: the solution might be to have more complex SQL queries (get the ID of the associated syllabus, the fetch the syllabus, etc.)
+- make just the dashboard private (grouping of user info, syllabi and collections)
 
 ## questions
 
@@ -19,4 +20,8 @@ figure out proper has-many/belongs-to relations in bun
 ### sessions
 
 - what is the "secret" that is given when creating a cookie store?
-- what is the name of the session?
+- what is the name of the session? "authsession" is the name of the cookie
+- the key should be the uuid of the user, and the value the password. the email is just used for initial retrieval
+- how do i prevent access to certain pages?
+- how do i form an api responses based on auth status?
+- not sure what is the difference between 	session.Set("user", "") and session.Delete("user")

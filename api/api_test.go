@@ -16,8 +16,8 @@ import (
 var router *gin.Engine
 
 func setup(t *testing.T) func(t *testing.T) {
-	router = mustSetupRouter()
 	gin.SetMode(gin.TestMode)
+	router = mustSetupRouter()
 	return func(t *testing.T) {
 		t.Log("tearing down api")
 	}
