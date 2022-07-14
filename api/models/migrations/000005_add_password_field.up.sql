@@ -1,1 +1,1 @@
-ALTER TABLE users ADD COLUMN password VARCHAR;
+ALTER TABLE users ADD COLUMN password BYTEA;

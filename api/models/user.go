@@ -11,7 +11,7 @@ type User struct {
 	UpdatedAt time.Time `bun:",nullzero,notnull,default:current_timestamp" json:"updated_at"`
 
 	Email       string        `json:"email" form:"email" binding:"required,email"`
-	Password    string        `json:"password" form:"password" binding:"required,password"`
+	Password    []byte        `json:"password"` // no form binding to prevent storing cleartext
 	Syllabi     []*Syllabus   `bun:"syllabi,rel:has-many" form:"syllabi" json:"syllabi"`
 	Collections []*Collection `bun:"rel:has-many" json:"collections"`
 }
@@ -26,6 +26,13 @@ func GetUser(id int64) (User, error) {
 	ctx := context.Background()
 	var user User
 	err := db.NewSelect().Model(&user).Where("id = ?", id).Relation("Syllabi").Relation("Collections").Scan(ctx)
+	return user, err
+}
+
+func GetUserByEmail(email string) (User, error) {
+	ctx := context.Background()
+	var user User
+	err := db.NewSelect().Model(&user).Where("email = ?", email).Scan(ctx)
 	return user, err
 }
 

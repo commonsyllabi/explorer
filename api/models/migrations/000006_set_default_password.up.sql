@@ -1,1 +1,1 @@
-UPDATE users SET password= 'secret' WHERE password IS NULL;
+UPDATE users SET password= CAST('secret' AS BYTEA) WHERE password IS NULL;

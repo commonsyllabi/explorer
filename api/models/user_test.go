@@ -30,6 +30,7 @@ func TestUserModel(t *testing.T) {
 			CreatedAt: time.Now(),
 			UpdatedAt: time.Now(),
 			Email:     "test@user.com",
+			Password:  []byte("12345678"),
 		}
 		u, err := models.CreateUser(&user)
 		require.Nil(t, err)

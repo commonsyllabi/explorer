@@ -35,6 +35,7 @@ func TestUserHandler(t *testing.T) {
 		var body bytes.Buffer
 		w := multipart.NewWriter(&body)
 		w.WriteField("email", "testing@user.com")
+		w.WriteField("password", "12345678")
 		w.Close()
 
 		res := httptest.NewRecorder()
@@ -77,6 +78,7 @@ func TestUserHandler(t *testing.T) {
 		var body bytes.Buffer
 		w := multipart.NewWriter(&body)
 		w.WriteField("email", "testing@user.com")
+		w.WriteField("password", "12345678")
 		w.WriteField("non-existant", "testing@user.com")
 		w.Close()
 

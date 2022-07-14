@@ -10,6 +10,7 @@ import (
 	zero "github.com/commonsyllabi/explorer/api/logger"
 	"github.com/commonsyllabi/explorer/api/models"
 	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func GetAllUsers(c *gin.Context) {
@@ -24,7 +25,7 @@ func GetAllUsers(c *gin.Context) {
 }
 
 func CreateUser(c *gin.Context) {
-	err := sanitizeUser(c)
+	err := sanitizeUserCreate(c)
 	if err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 		zero.Error(err.Error())
@@ -34,12 +35,22 @@ func CreateUser(c *gin.Context) {
 	var user models.User
 	err = c.Bind(&user)
 	if err != nil {
+		zero.Errorf("error binding user: %v", err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	user.CreatedAt = time.Now()
 	user.UpdatedAt = time.Now()
+
+	hashed, err := bcrypt.GenerateFromPassword([]byte(c.PostForm("password")), bcrypt.DefaultCost)
+	if err != nil {
+		zero.Errorf("error hashing password: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error creating user": err.Error()})
+		return
+	}
+	user.Password = hashed
+
 	user, err = models.CreateUser(&user)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
@@ -58,7 +69,7 @@ func UpdateUser(c *gin.Context) {
 		return
 	}
 
-	err = sanitizeUser(c)
+	err = sanitizeUserUpdate(c)
 	if err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 		zero.Error(err.Error())
@@ -68,6 +79,7 @@ func UpdateUser(c *gin.Context) {
 	var user models.User
 	err = c.Bind(&user)
 	if err != nil {
+		zero.Errorf("error binding user: %v", err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -125,10 +137,10 @@ func DeleteUser(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"id": id})
 }
 
-func sanitizeUser(c *gin.Context) error {
+func sanitizeUserCreate(c *gin.Context) error {
 
-	if c.PostForm("email") == "" {
-		zero.Error("Cannot have empty email")
+	if c.PostForm("email") == "" || c.PostForm("password") == "" {
+		zero.Error("Cannot have empty email or password")
 		return fmt.Errorf("cannot have empty title, description or email")
 
 	}
@@ -138,6 +150,16 @@ func sanitizeUser(c *gin.Context) error {
 		return fmt.Errorf("the email of the User should be between 10 and 50 characters: %d", len(c.PostForm("email")))
 	}
 
+	if len(c.PostForm("password")) < 8 || len(c.PostForm("password")) > 20 {
+		zero.Errorf("the email of the User should be between 8 and 20 characters: %d", len(c.PostForm("email")))
+		return fmt.Errorf("the email of the User should be between 10 and 50 characters: %d", len(c.PostForm("email")))
+	}
+
 	_, err := mail.ParseAddress(c.PostForm("email"))
 	return err
+}
+
+func sanitizeUserUpdate(c *gin.Context) error {
+	zero.Warn("implement me!")
+	return nil
 }
