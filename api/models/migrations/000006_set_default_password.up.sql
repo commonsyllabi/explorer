@@ -1,0 +1,1 @@
+UPDATE users SET password= 'secret' WHERE password IS NULL;
