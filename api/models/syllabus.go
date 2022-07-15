@@ -52,13 +52,13 @@ func UpdateSyllabus(id uuid.UUID, syll *Syllabus) (Syllabus, error) {
 	return *syll, err
 }
 
-func DeleteSyllabus(id uuid.UUID) error {
+func DeleteSyllabus(id uuid.UUID) (Syllabus, error) {
 	ctx := context.Background()
 	var syll Syllabus
 	err := db.NewSelect().Model(&syll).Where("id = ?", id).Scan(ctx)
 	if err != nil {
-		return err
+		return syll, err
 	}
 	_, err = db.NewDelete().Model(&syll).Where("id = ?", id).Exec(ctx) //-- what to do with dangling resources?
-	return err
+	return syll, err
 }

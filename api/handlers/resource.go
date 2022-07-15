@@ -133,16 +133,14 @@ func DeleteResource(c *gin.Context) {
 		return
 	}
 
-	err = models.DeleteResource(uid)
+	res, err := models.DeleteResource(uid)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		zero.Errorf("error getting Resource %d: %v", id, err)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"id": id,
-	})
+	c.JSON(http.StatusOK, res)
 }
 
 func sanitizeResource(c *gin.Context) error {

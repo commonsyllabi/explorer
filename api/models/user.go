@@ -56,14 +56,14 @@ func UpdateUser(id uuid.UUID, user *User) (User, error) {
 	return *user, err
 }
 
-func DeleteUser(id uuid.UUID) error {
+func DeleteUser(id uuid.UUID) (User, error) {
 	ctx := context.Background()
 	var user User
 	err := db.NewSelect().Model(&user).Where("id = ?", id).Scan(ctx)
 	if err != nil {
-		return err
+		return user, err
 	}
 	_, err = db.NewDelete().Model(&user).Where("id = ?", id).Exec(ctx) //-- what to do with dangling collections and syllabi?
 
-	return err
+	return user, err
 }

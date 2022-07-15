@@ -48,14 +48,14 @@ func UpdateResource(id uuid.UUID, res *Resource) (Resource, error) {
 	return *res, err
 }
 
-func DeleteResource(id uuid.UUID) error {
+func DeleteResource(id uuid.UUID) (Resource, error) {
 	ctx := context.Background()
 	var res Resource
 	err := db.NewSelect().Model(&res).Where("id = ?", id).Scan(ctx)
 	if err != nil {
-		return err
+		return res, err
 	}
 
 	_, err = db.NewDelete().Model(&res).Where("id = ?", id).Exec(ctx)
-	return err
+	return res, err
 }

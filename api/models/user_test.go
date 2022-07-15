@@ -1,7 +1,6 @@
 package models_test
 
 import (
-	"fmt"
 	"testing"
 	"time"
 
@@ -75,13 +74,14 @@ func TestUserModel(t *testing.T) {
 	})
 
 	t.Run("Test delete user", func(t *testing.T) {
-		err := models.DeleteUser(userID)
+		user, err := models.DeleteUser(userID)
+		assert.NotNil(t, user)
 		assert.Nil(t, err)
 	})
 
 	t.Run("Test delete wrong user", func(t *testing.T) {
-		err := models.DeleteUser(userNonExistentID)
-		fmt.Println(err)
+		user, err := models.DeleteUser(userNonExistentID)
+		assert.Zero(t, user)
 		assert.NotNil(t, err)
 	})
 }

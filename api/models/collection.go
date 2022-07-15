@@ -49,14 +49,14 @@ func UpdateCollection(id uuid.UUID, coll *Collection) (Collection, error) {
 	return *coll, err
 }
 
-func DeleteCollection(id uuid.UUID) error {
+func DeleteCollection(id uuid.UUID) (Collection, error) {
 	ctx := context.Background()
 	var coll Collection
 	err := db.NewSelect().Model(&coll).Where("id = ?", id).Scan(ctx)
 	if err != nil {
-		return err
+		return coll, err
 	}
 
 	_, err = db.NewDelete().Model(&coll).Where("id = ?", id).Exec(ctx)
-	return err
+	return coll, err
 }

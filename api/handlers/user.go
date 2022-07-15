@@ -147,7 +147,7 @@ func DeleteUser(c *gin.Context) {
 		return
 	}
 
-	err = models.DeleteUser(uid)
+	user, err := models.DeleteUser(uid)
 	if err != nil {
 		c.String(http.StatusNotFound, err.Error())
 		zero.Errorf("error getting User %d: %v", id, err)
@@ -155,7 +155,7 @@ func DeleteUser(c *gin.Context) {
 	}
 
 	//-- TODO delete any associated resources?
-	c.JSON(http.StatusOK, gin.H{"id": id})
+	c.JSON(http.StatusOK, gin.H{"user": user})
 }
 
 func sanitizeUserCreate(c *gin.Context) error {

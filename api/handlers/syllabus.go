@@ -177,7 +177,7 @@ func DeleteSyllabus(c *gin.Context) {
 		zero.Errorf("not a valid id %d", err)
 		return
 	}
-	err = models.DeleteSyllabus(uid)
+	syll, err := models.DeleteSyllabus(uid)
 	if err != nil {
 		c.String(http.StatusNotFound, err.Error())
 		zero.Errorf("error deleting syllabus %d: %v", id, err)
@@ -186,9 +186,7 @@ func DeleteSyllabus(c *gin.Context) {
 
 	//-- TODO delete any associated resources?
 
-	c.JSON(http.StatusOK, gin.H{
-		"id": id,
-	})
+	c.JSON(http.StatusOK, syll)
 }
 
 func sanitizeSyllabus(c *gin.Context) error {

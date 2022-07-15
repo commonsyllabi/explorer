@@ -78,12 +78,14 @@ func TestResourceModel(t *testing.T) {
 	})
 
 	t.Run("Test delete resource", func(t *testing.T) {
-		err := models.DeleteResource(resourceID)
+		res, err := models.DeleteResource(resourceID)
+		assert.NotNil(t, res)
 		assert.Nil(t, err)
 	})
 
 	t.Run("Test delete wrong resource", func(t *testing.T) {
-		err := models.DeleteResource(resourceNonExistingID)
+		res, err := models.DeleteResource(resourceNonExistingID)
+		assert.Zero(t, res)
 		fmt.Println(err)
 		assert.NotNil(t, err)
 	})

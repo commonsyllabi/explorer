@@ -78,12 +78,14 @@ func TestSyllabusModel(t *testing.T) {
 	})
 
 	t.Run("Test delete syllabus", func(t *testing.T) {
-		err := models.DeleteSyllabus(syllabusID)
+		syll, err := models.DeleteSyllabus(syllabusID)
+		assert.NotNil(t, syll)
 		assert.Nil(t, err)
 	})
 
 	t.Run("Test delete wrong syllabus", func(t *testing.T) {
-		err := models.DeleteSyllabus(syllabusNonExistingID)
+		syll, err := models.DeleteSyllabus(syllabusNonExistingID)
+		assert.Zero(t, syll)
 		assert.NotNil(t, err)
 	})
 }

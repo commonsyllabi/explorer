@@ -125,14 +125,14 @@ func DeleteCollection(c *gin.Context) {
 		return
 	}
 
-	err = models.DeleteCollection(uid)
+	coll, err := models.DeleteCollection(uid)
 	if err != nil {
 		c.String(http.StatusNotFound, err.Error())
 		zero.Errorf("error getting Collection %d: %v", id, err)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"id": id})
+	c.JSON(http.StatusOK, coll)
 }
 
 func sanitizeCollection(c *gin.Context) error {
