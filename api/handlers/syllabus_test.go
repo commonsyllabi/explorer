@@ -12,16 +12,39 @@ import (
 	"github.com/commonsyllabi/explorer/api/handlers"
 	"github.com/commonsyllabi/explorer/api/models"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 var (
-	syllabusID = "1"
+	syllabusID            uuid.UUID
+	syllabusNonExistingID uuid.UUID
+
+	collectionID            uuid.UUID
+	collectionNonExistingID uuid.UUID
+
+	resourceID            uuid.UUID
+	resourceNonExistingID uuid.UUID
+
+	userID            uuid.UUID
+	userNonExistentID uuid.UUID
 )
 
 func setup(t *testing.T) func(t *testing.T) {
+	syllabusID = uuid.MustParse("46de6a2b-aacb-4c24-b1e1-3495821f846a")
+	syllabusNonExistingID = uuid.New()
+
+	collectionID = uuid.MustParse("b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a7")
+	collectionNonExistingID = uuid.New()
+
+	resourceID = uuid.MustParse("c55f0baf-12b8-4bdb-b5e6-2280bff8ab21")
+	resourceNonExistingID = uuid.New()
+
+	userID = uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c8a8")
+	userNonExistentID = uuid.New()
+
 	mustSeedDB(t)
 	gin.SetMode(gin.TestMode)
 	return func(t *testing.T) {
@@ -113,7 +136,7 @@ func TestSyllabusHandler(t *testing.T) {
 		c.Params = []gin.Param{
 			{
 				Key:   "id",
-				Value: syllabusID,
+				Value: syllabusID.String(),
 			},
 		}
 
@@ -132,7 +155,7 @@ func TestSyllabusHandler(t *testing.T) {
 		c.Params = []gin.Param{
 			{
 				Key:   "id",
-				Value: "999",
+				Value: syllabusNonExistingID.String(),
 			},
 		}
 
@@ -177,7 +200,7 @@ func TestSyllabusHandler(t *testing.T) {
 		c.Params = []gin.Param{
 			{
 				Key:   "id",
-				Value: syllabusID,
+				Value: syllabusID.String(),
 			},
 		}
 
@@ -208,7 +231,7 @@ func TestSyllabusHandler(t *testing.T) {
 		c.Params = []gin.Param{
 			{
 				Key:   "id",
-				Value: syllabusID,
+				Value: syllabusID.String(),
 			},
 		}
 
@@ -234,7 +257,7 @@ func TestSyllabusHandler(t *testing.T) {
 		c.Params = []gin.Param{
 			{
 				Key:   "id",
-				Value: "999",
+				Value: syllabusNonExistingID.String(),
 			},
 		}
 
@@ -279,7 +302,7 @@ func TestSyllabusHandler(t *testing.T) {
 		c.Params = []gin.Param{
 			{
 				Key:   "id",
-				Value: syllabusID,
+				Value: syllabusID.String(),
 			},
 		}
 
@@ -317,7 +340,7 @@ func TestSyllabusHandler(t *testing.T) {
 		c.Params = []gin.Param{
 			{
 				Key:   "id",
-				Value: "999",
+				Value: syllabusNonExistingID.String(),
 			},
 		}
 
@@ -330,7 +353,7 @@ func TestSyllabusHandler(t *testing.T) {
 func mustSeedDB(t *testing.T) {
 	databaseTestURL := os.Getenv("DATABASE_TEST_URL")
 	if databaseTestURL == "" {
-		databaseTestURL = "postgres://cosyl:cosyl@localhost:5432/explorer-test"
+		databaseTestURL = "postgres://postgres:postgres@localhost:5432/explorer-test"
 	}
 	_, err := models.InitDB(databaseTestURL)
 	require.Nil(t, err)

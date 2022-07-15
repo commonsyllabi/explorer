@@ -6,14 +6,8 @@ import (
 	"time"
 
 	"github.com/commonsyllabi/explorer/api/models"
-	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-)
-
-var (
-	resourceID      uuid.UUID = uuid.New()
-	resourceWrongID uuid.UUID = uuid.New()
 )
 
 func TestResourceModel(t *testing.T) {
@@ -55,7 +49,7 @@ func TestResourceModel(t *testing.T) {
 	})
 
 	t.Run("Test get non-existing resource", func(t *testing.T) {
-		res, err := models.GetResource(resourceWrongID)
+		res, err := models.GetResource(resourceNonExistingID)
 		assert.NotNil(t, err)
 		assert.True(t, res.CreatedAt.IsZero())
 	})
@@ -78,7 +72,7 @@ func TestResourceModel(t *testing.T) {
 			UpdatedAt: time.Now(),
 			Name:      "Test Name 1 (updated)",
 		}
-		updated, err := models.UpdateResource(resourceWrongID, &res)
+		updated, err := models.UpdateResource(resourceNonExistingID, &res)
 		assert.NotNil(t, err)
 		assert.True(t, updated.CreatedAt.IsZero())
 	})
@@ -89,7 +83,7 @@ func TestResourceModel(t *testing.T) {
 	})
 
 	t.Run("Test delete wrong resource", func(t *testing.T) {
-		err := models.DeleteResource(resourceWrongID)
+		err := models.DeleteResource(resourceNonExistingID)
 		fmt.Println(err)
 		assert.NotNil(t, err)
 	})

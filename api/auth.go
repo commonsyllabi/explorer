@@ -48,7 +48,7 @@ func login(c *gin.Context) {
 		return
 	}
 
-	session.Set("user", user.ID) // save a unique identifier in the session (should switch to user uuid)
+	session.Set("user", user.ID.String()) // save a unique identifier in the session (should switch to user uuid)
 	if err := session.Save(); err != nil {
 		zero.Error(err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save session"})

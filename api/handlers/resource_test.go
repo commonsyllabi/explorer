@@ -16,10 +16,6 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-var (
-	resourceID = "1"
-)
-
 func TestResourceHandler(t *testing.T) {
 	teardown := setup(t)
 	defer teardown(t)
@@ -105,7 +101,7 @@ func TestResourceHandler(t *testing.T) {
 		c.Params = []gin.Param{
 			{
 				Key:   "id",
-				Value: resourceID,
+				Value: resourceID.String(),
 			},
 		}
 
@@ -143,7 +139,7 @@ func TestResourceHandler(t *testing.T) {
 		c.Params = []gin.Param{
 			{
 				Key:   "id",
-				Value: "999",
+				Value: resourceNonExistingID.String(),
 			},
 		}
 
@@ -169,7 +165,7 @@ func TestResourceHandler(t *testing.T) {
 		c.Params = []gin.Param{
 			{
 				Key:   "id",
-				Value: resourceID,
+				Value: resourceID.String(),
 			},
 		}
 
@@ -226,7 +222,7 @@ func TestResourceHandler(t *testing.T) {
 		c.Params = []gin.Param{
 			{
 				Key:   "id",
-				Value: "999",
+				Value: resourceNonExistingID.String(),
 			},
 		}
 
@@ -252,7 +248,7 @@ func TestResourceHandler(t *testing.T) {
 		c.Params = []gin.Param{
 			{
 				Key:   "id",
-				Value: resourceID,
+				Value: resourceID.String(),
 			},
 		}
 
@@ -271,7 +267,7 @@ func TestResourceHandler(t *testing.T) {
 		c.Params = []gin.Param{
 			{
 				Key:   "id",
-				Value: resourceID,
+				Value: resourceID.String(),
 			},
 		}
 
@@ -309,7 +305,7 @@ func TestResourceHandler(t *testing.T) {
 		c.Params = []gin.Param{
 			{
 				Key:   "id",
-				Value: "999",
+				Value: resourceNonExistingID.String(),
 			},
 		}
 

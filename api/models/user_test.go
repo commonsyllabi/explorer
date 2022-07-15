@@ -6,14 +6,8 @@ import (
 	"time"
 
 	"github.com/commonsyllabi/explorer/api/models"
-	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-)
-
-var (
-	userID      uuid.UUID = uuid.New()
-	userWrongID uuid.UUID = uuid.New()
 )
 
 func TestUserModel(t *testing.T) {
@@ -52,7 +46,7 @@ func TestUserModel(t *testing.T) {
 	})
 
 	t.Run("Test get non-existing user", func(t *testing.T) {
-		user, err := models.GetUser(userWrongID)
+		user, err := models.GetUser(userNonExistentID)
 		assert.NotNil(t, err)
 		assert.True(t, user.CreatedAt.IsZero())
 	})
@@ -75,7 +69,7 @@ func TestUserModel(t *testing.T) {
 			UpdatedAt: time.Now(),
 			Email:     "test@user.updated",
 		}
-		updated, err := models.UpdateUser(userWrongID, &user)
+		updated, err := models.UpdateUser(userNonExistentID, &user)
 		assert.NotNil(t, err)
 		assert.True(t, updated.CreatedAt.IsZero())
 	})
@@ -86,7 +80,7 @@ func TestUserModel(t *testing.T) {
 	})
 
 	t.Run("Test delete wrong user", func(t *testing.T) {
-		err := models.DeleteUser(userWrongID)
+		err := models.DeleteUser(userNonExistentID)
 		fmt.Println(err)
 		assert.NotNil(t, err)
 	})

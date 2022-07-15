@@ -5,14 +5,8 @@ import (
 	"time"
 
 	"github.com/commonsyllabi/explorer/api/models"
-	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-)
-
-var (
-	syllabusID      uuid.UUID = uuid.New()
-	syllabusWrongID uuid.UUID = uuid.New()
 )
 
 func TestSyllabusModel(t *testing.T) {
@@ -55,7 +49,7 @@ func TestSyllabusModel(t *testing.T) {
 	})
 
 	t.Run("Test get non-existing syllabus", func(t *testing.T) {
-		syll, err := models.GetSyllabus(syllabusWrongID)
+		syll, err := models.GetSyllabus(syllabusNonExistingID)
 		assert.NotNil(t, err)
 		assert.True(t, syll.CreatedAt.IsZero())
 	})
@@ -78,7 +72,7 @@ func TestSyllabusModel(t *testing.T) {
 			UpdatedAt: time.Now(),
 			Title:     "Test Title 1 (updated)",
 		}
-		updated, err := models.UpdateSyllabus(syllabusWrongID, &syll)
+		updated, err := models.UpdateSyllabus(syllabusNonExistingID, &syll)
 		assert.NotNil(t, err)
 		assert.True(t, updated.CreatedAt.IsZero())
 	})
@@ -89,7 +83,7 @@ func TestSyllabusModel(t *testing.T) {
 	})
 
 	t.Run("Test delete wrong syllabus", func(t *testing.T) {
-		err := models.DeleteSyllabus(syllabusWrongID)
+		err := models.DeleteSyllabus(syllabusNonExistingID)
 		assert.NotNil(t, err)
 	})
 }

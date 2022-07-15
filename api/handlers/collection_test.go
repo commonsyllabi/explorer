@@ -16,10 +16,6 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-var (
-	collectionID = "1"
-)
-
 func TestCollectionHandler(t *testing.T) {
 	teardown := setup(t)
 	defer teardown(t)
@@ -84,7 +80,7 @@ func TestCollectionHandler(t *testing.T) {
 		c.Params = []gin.Param{
 			{
 				Key:   "id",
-				Value: collectionID,
+				Value: collectionID.String(),
 			},
 		}
 
@@ -103,7 +99,7 @@ func TestCollectionHandler(t *testing.T) {
 		c.Params = []gin.Param{
 			{
 				Key:   "id",
-				Value: "999",
+				Value: collectionNonExistingID.String(),
 			},
 		}
 
@@ -148,7 +144,7 @@ func TestCollectionHandler(t *testing.T) {
 		c.Params = []gin.Param{
 			{
 				Key:   "id",
-				Value: collectionID,
+				Value: collectionID.String(),
 			},
 		}
 
@@ -179,7 +175,7 @@ func TestCollectionHandler(t *testing.T) {
 		c.Params = []gin.Param{
 			{
 				Key:   "id",
-				Value: "999",
+				Value: collectionNonExistingID.String(),
 			},
 		}
 
@@ -224,7 +220,7 @@ func TestCollectionHandler(t *testing.T) {
 		c.Params = []gin.Param{
 			{
 				Key:   "id",
-				Value: collectionID,
+				Value: collectionID.String(),
 			},
 		}
 
@@ -243,7 +239,7 @@ func TestCollectionHandler(t *testing.T) {
 		c.Params = []gin.Param{
 			{
 				Key:   "id",
-				Value: "999",
+				Value: collectionNonExistingID.String(),
 			},
 		}
 

@@ -31,10 +31,10 @@ func TestAuth(t *testing.T) {
 		res := httptest.NewRecorder()
 		router.ServeHTTP(res, req)
 
-		require.NotNil(t, res.Result().Cookies())
+		require.Equal(t, http.StatusOK, res.Code)
+		require.NotNil(t, len(res.Result().Cookies()))
 		cookie = *res.Result().Cookies()[0]
 
-		assert.Equal(t, http.StatusOK, res.Code)
 		assert.Equal(t, cookie.Name, "authsession")
 	})
 

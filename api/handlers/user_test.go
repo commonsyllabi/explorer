@@ -16,10 +16,6 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-var (
-	userID = "1"
-)
-
 func TestUserHandler(t *testing.T) {
 	teardown := setup(t)
 	defer teardown(t)
@@ -150,7 +146,7 @@ func TestUserHandler(t *testing.T) {
 		c.Params = []gin.Param{
 			{
 				Key:   "id",
-				Value: userID,
+				Value: userID.String(),
 			},
 		}
 
@@ -188,7 +184,7 @@ func TestUserHandler(t *testing.T) {
 		c.Params = []gin.Param{
 			{
 				Key:   "id",
-				Value: "999",
+				Value: userNonExistentID.String(),
 			},
 		}
 
@@ -214,7 +210,7 @@ func TestUserHandler(t *testing.T) {
 		c.Params = []gin.Param{
 			{
 				Key:   "id",
-				Value: userID,
+				Value: userID.String(),
 			},
 		}
 
@@ -271,7 +267,7 @@ func TestUserHandler(t *testing.T) {
 		c.Params = []gin.Param{
 			{
 				Key:   "id",
-				Value: userID,
+				Value: userID.String(),
 			},
 		}
 
@@ -298,7 +294,7 @@ func TestUserHandler(t *testing.T) {
 		c.Params = []gin.Param{
 			{
 				Key:   "id",
-				Value: userID,
+				Value: userID.String(),
 			},
 		}
 
@@ -317,7 +313,7 @@ func TestUserHandler(t *testing.T) {
 		c.Params = []gin.Param{
 			{
 				Key:   "id",
-				Value: userID,
+				Value: userID.String(),
 			},
 		}
 
@@ -355,7 +351,7 @@ func TestUserHandler(t *testing.T) {
 		c.Params = []gin.Param{
 			{
 				Key:   "id",
-				Value: "999",
+				Value: userNonExistentID.String(),
 			},
 		}
 
