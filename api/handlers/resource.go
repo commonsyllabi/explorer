@@ -3,12 +3,12 @@ package handlers
 import (
 	"fmt"
 	"net/http"
-	"strconv"
 	"time"
 
 	zero "github.com/commonsyllabi/explorer/api/logger"
 	"github.com/commonsyllabi/explorer/api/models"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 func GetAllResources(c *gin.Context) {
@@ -57,10 +57,17 @@ func UpdateResource(c *gin.Context) {
 		return
 	}
 
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.String(http.StatusBadRequest, err.Error())
+	id := c.Param("id")
+	if len(id) < 25 {
+		c.String(http.StatusBadRequest, "not a valid ID")
 		zero.Errorf("not a valid id %d", id)
+		return
+	}
+
+	uid, err := uuid.Parse(id)
+	if err != nil {
+		c.String(http.StatusBadRequest, "not a valid ID")
+		zero.Errorf("not a valid id %d", err)
 		return
 	}
 
@@ -72,7 +79,7 @@ func UpdateResource(c *gin.Context) {
 	}
 
 	res.UpdatedAt = time.Now()
-	_, err = models.UpdateResource(int64(id), &res)
+	_, err = models.UpdateResource(uid, &res)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		zero.Errorf("error updating Resource %d: %v", id, err)
@@ -84,14 +91,21 @@ func UpdateResource(c *gin.Context) {
 
 func GetResource(c *gin.Context) {
 
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.String(http.StatusBadRequest, err.Error())
+	id := c.Param("id")
+	if len(id) < 25 {
+		c.String(http.StatusBadRequest, "not a valid ID")
 		zero.Errorf("not a valid id %d", id)
 		return
 	}
 
-	res, err := models.GetResource(int64(id))
+	uid, err := uuid.Parse(id)
+	if err != nil {
+		c.String(http.StatusBadRequest, "not a valid ID")
+		zero.Errorf("not a valid id %d", err)
+		return
+	}
+
+	res, err := models.GetResource(uid)
 	if err != nil {
 		zero.Errorf("error getting Resource %v: %s", id, err)
 		c.JSON(http.StatusNotFound, gin.H{
@@ -105,14 +119,21 @@ func GetResource(c *gin.Context) {
 }
 
 func DeleteResource(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.String(http.StatusBadRequest, err.Error())
+	id := c.Param("id")
+	if len(id) < 25 {
+		c.String(http.StatusBadRequest, "not a valid ID")
 		zero.Errorf("not a valid id %d", id)
 		return
 	}
 
-	err = models.DeleteResource(int64(id))
+	uid, err := uuid.Parse(id)
+	if err != nil {
+		c.String(http.StatusBadRequest, "not a valid ID")
+		zero.Errorf("not a valid id %d", err)
+		return
+	}
+
+	err = models.DeleteResource(uid)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		zero.Errorf("error getting Resource %d: %v", id, err)

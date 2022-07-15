@@ -3,10 +3,12 @@ package models
 import (
 	"context"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 type User struct {
-	ID        int64     `bun:",pk,autoincrement" json:"id"`
+	ID        uuid.UUID `bun:",pk,type:uuid,default:uuid_generate_v4()"`
 	CreatedAt time.Time `bun:",nullzero,notnull,default:current_timestamp" json:"created_at"`
 	UpdatedAt time.Time `bun:",nullzero,notnull,default:current_timestamp" json:"updated_at"`
 
@@ -22,7 +24,7 @@ func CreateUser(user *User) (User, error) {
 	return *user, err
 }
 
-func GetUser(id int64) (User, error) {
+func GetUser(id uuid.UUID) (User, error) {
 	ctx := context.Background()
 	var user User
 	err := db.NewSelect().Model(&user).Where("id = ?", id).Relation("Syllabi").Relation("Collections").Scan(ctx)
@@ -43,7 +45,7 @@ func GetAllUsers() ([]User, error) {
 	return users, err
 }
 
-func UpdateUser(id int64, user *User) (User, error) {
+func UpdateUser(id uuid.UUID, user *User) (User, error) {
 	ctx := context.Background()
 	err := db.NewSelect().Model(user).Where("id = ?", id).Scan(ctx)
 	if err != nil {
@@ -54,7 +56,7 @@ func UpdateUser(id int64, user *User) (User, error) {
 	return *user, err
 }
 
-func DeleteUser(id int64) error {
+func DeleteUser(id uuid.UUID) error {
 	ctx := context.Background()
 	var user User
 	err := db.NewSelect().Model(&user).Where("id = ?", id).Scan(ctx)

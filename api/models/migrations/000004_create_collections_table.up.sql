@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS collections (
- id SERIAL PRIMARY KEY,
+ id uuid DEFAULT gen_random_uuid(),
  created_at timestamp NOT NULL,
  updated_at timestamp NOT NULL,
  name VARCHAR NOT NULL,
- user_id BIGINT NOT NULL
+ user_id uuid DEFAULT gen_random_uuid()
 );

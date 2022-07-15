@@ -6,13 +6,14 @@ import (
 	"time"
 
 	"github.com/commonsyllabi/explorer/api/models"
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 var (
-	userID      int64 = 1
-	userWrongID int64 = 2046
+	userID      uuid.UUID = uuid.New()
+	userWrongID uuid.UUID = uuid.New()
 )
 
 func TestUserModel(t *testing.T) {

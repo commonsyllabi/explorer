@@ -3,12 +3,12 @@ package handlers
 import (
 	"fmt"
 	"net/http"
-	"strconv"
 	"time"
 
 	zero "github.com/commonsyllabi/explorer/api/logger"
 	"github.com/commonsyllabi/explorer/api/models"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 func GetAllCollections(c *gin.Context) {
@@ -50,10 +50,17 @@ func CreateCollection(c *gin.Context) {
 }
 
 func UpdateCollection(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.String(http.StatusBadRequest, err.Error())
+	id := c.Param("id")
+	if len(id) < 25 {
+		c.String(http.StatusBadRequest, "not a valid ID")
 		zero.Errorf("not a valid id %d", id)
+		return
+	}
+
+	uid, err := uuid.Parse(id)
+	if err != nil {
+		c.String(http.StatusBadRequest, "not a valid ID")
+		zero.Errorf("not a valid id %d", err)
 		return
 	}
 
@@ -65,7 +72,7 @@ func UpdateCollection(c *gin.Context) {
 	}
 
 	coll.UpdatedAt = time.Now()
-	_, err = models.UpdateCollection(int64(id), &coll)
+	_, err = models.UpdateCollection(uid, &coll)
 	if err != nil {
 		c.String(http.StatusNotFound, err.Error())
 		zero.Errorf("error updating Collection %d: %v", id, err)
@@ -76,14 +83,21 @@ func UpdateCollection(c *gin.Context) {
 }
 
 func GetCollection(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.String(http.StatusBadRequest, err.Error())
+	id := c.Param("id")
+	if len(id) < 25 {
+		c.String(http.StatusBadRequest, "not a valid ID")
 		zero.Errorf("not a valid id %d", id)
 		return
 	}
 
-	coll, err := models.GetCollection(int64(id))
+	uid, err := uuid.Parse(id)
+	if err != nil {
+		c.String(http.StatusBadRequest, "not a valid ID")
+		zero.Errorf("not a valid id %d", err)
+		return
+	}
+
+	coll, err := models.GetCollection(uid)
 	if err != nil {
 		zero.Errorf("error getting Collection %v: %s", id, err)
 		c.JSON(http.StatusNotFound, gin.H{
@@ -97,14 +111,21 @@ func GetCollection(c *gin.Context) {
 }
 
 func DeleteCollection(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.String(http.StatusBadRequest, err.Error())
+	id := c.Param("id")
+	if len(id) < 25 {
+		c.String(http.StatusBadRequest, "not a valid ID")
 		zero.Errorf("not a valid id %d", id)
 		return
 	}
 
-	err = models.DeleteCollection(int64(id))
+	uid, err := uuid.Parse(id)
+	if err != nil {
+		c.String(http.StatusBadRequest, "not a valid ID")
+		zero.Errorf("not a valid id %d", err)
+		return
+	}
+
+	err = models.DeleteCollection(uid)
 	if err != nil {
 		c.String(http.StatusNotFound, err.Error())
 		zero.Errorf("error getting Collection %d: %v", id, err)

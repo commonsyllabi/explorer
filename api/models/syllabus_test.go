@@ -5,13 +5,14 @@ import (
 	"time"
 
 	"github.com/commonsyllabi/explorer/api/models"
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 var (
-	syllabusID      int64 = 1
-	syllabusWrongID int64 = 2046
+	syllabusID      uuid.UUID = uuid.New()
+	syllabusWrongID uuid.UUID = uuid.New()
 )
 
 func TestSyllabusModel(t *testing.T) {

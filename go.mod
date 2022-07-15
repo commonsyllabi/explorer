@@ -8,12 +8,14 @@ require (
 	github.com/gin-contrib/static v0.0.1
 	github.com/gin-gonic/gin v1.8.1
 	github.com/golang-migrate/migrate/v4 v4.15.2
+	github.com/google/uuid v1.3.0
 	github.com/rs/zerolog v1.27.0
 	github.com/stretchr/testify v1.7.1
 	github.com/uptrace/bun v1.1.5
 	github.com/uptrace/bun/dbfixture v1.1.5
 	github.com/uptrace/bun/dialect/pgdialect v1.1.5
 	github.com/uptrace/bun/driver/pgdriver v1.1.5
+	golang.org/x/crypto v0.0.0-20220511200225-c6db032c6c88
 	gopkg.in/yaml.v2 v2.4.0
 )
 
@@ -44,7 +46,6 @@ require (
 	github.com/vmihailenco/msgpack/v5 v5.3.5 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
-	golang.org/x/crypto v0.0.0-20220511200225-c6db032c6c88 // indirect
 	golang.org/x/net v0.0.0-20220225172249-27dd8689420f // indirect
 	golang.org/x/sys v0.0.0-20220503163025-988cb79eb6c6 // indirect
 	golang.org/x/text v0.3.7 // indirect

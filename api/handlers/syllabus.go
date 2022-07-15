@@ -3,12 +3,12 @@ package handlers
 import (
 	"fmt"
 	"net/http"
-	"strconv"
 	"time"
 
 	zero "github.com/commonsyllabi/explorer/api/logger"
 	"github.com/commonsyllabi/explorer/api/models"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 var (
@@ -98,14 +98,20 @@ func CreateSyllabus(c *gin.Context) {
 }
 
 func GetSyllabus(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.String(http.StatusBadRequest, err.Error())
+	id := c.Param("id")
+	if len(id) < 25 {
+		c.String(http.StatusBadRequest, "not a valid ID")
 		zero.Errorf("not a valid id %d", id)
 		return
 	}
 
-	syll, err := models.GetSyllabus(int64(id))
+	uid, err := uuid.Parse(id)
+	if err != nil {
+		c.String(http.StatusBadRequest, "not a valid ID")
+		zero.Errorf("not a valid id %d", err)
+		return
+	}
+	syll, err := models.GetSyllabus(uid)
 	if err != nil {
 		zero.Errorf("error getting syllabus %v: %s", id, err)
 		c.JSON(http.StatusNotFound, gin.H{
@@ -126,9 +132,9 @@ func UpdateSyllabus(c *gin.Context) {
 		return
 	}
 
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.String(http.StatusBadRequest, err.Error())
+	id := c.Param("id")
+	if len(id) < 25 {
+		c.String(http.StatusBadRequest, "not a valid ID")
 		zero.Errorf("not a valid id %d", id)
 		return
 	}
@@ -141,7 +147,13 @@ func UpdateSyllabus(c *gin.Context) {
 	}
 
 	syll.UpdatedAt = time.Now()
-	s, err := models.UpdateSyllabus(int64(id), &syll)
+	uid, err := uuid.Parse(id)
+	if err != nil {
+		c.String(http.StatusBadRequest, "not a valid ID")
+		zero.Errorf("not a valid id %d", err)
+		return
+	}
+	s, err := models.UpdateSyllabus(uid, &syll)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		zero.Errorf("error updating syllabus %d: %v", id, err)
@@ -152,14 +164,20 @@ func UpdateSyllabus(c *gin.Context) {
 }
 
 func DeleteSyllabus(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.String(http.StatusBadRequest, err.Error())
+	id := c.Param("id")
+	if len(id) < 25 {
+		c.String(http.StatusBadRequest, "not a valid ID")
 		zero.Errorf("not a valid id %d", id)
 		return
 	}
 
-	err = models.DeleteSyllabus(int64(id))
+	uid, err := uuid.Parse(id)
+	if err != nil {
+		c.String(http.StatusBadRequest, "not a valid ID")
+		zero.Errorf("not a valid id %d", err)
+		return
+	}
+	err = models.DeleteSyllabus(uid)
 	if err != nil {
 		c.String(http.StatusNotFound, err.Error())
 		zero.Errorf("error deleting syllabus %d: %v", id, err)

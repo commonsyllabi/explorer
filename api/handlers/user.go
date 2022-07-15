@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"net/http"
 	"net/mail"
-	"strconv"
 	"time"
 
 	zero "github.com/commonsyllabi/explorer/api/logger"
 	"github.com/commonsyllabi/explorer/api/models"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -62,10 +62,17 @@ func CreateUser(c *gin.Context) {
 }
 
 func UpdateUser(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.String(http.StatusBadRequest, err.Error())
+	id := c.Param("id")
+	if len(id) < 25 {
+		c.String(http.StatusBadRequest, "not a valid ID")
 		zero.Errorf("not a valid id %d", id)
+		return
+	}
+
+	uid, err := uuid.Parse(id)
+	if err != nil {
+		c.String(http.StatusBadRequest, "not a valid ID")
+		zero.Errorf("not a valid id %d", err)
 		return
 	}
 
@@ -85,7 +92,7 @@ func UpdateUser(c *gin.Context) {
 	}
 
 	user.UpdatedAt = time.Now()
-	_, err = models.UpdateUser(int64(id), &user)
+	_, err = models.UpdateUser(uid, &user)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		zero.Errorf("error updating User %d: %v", id, err)
@@ -97,14 +104,21 @@ func UpdateUser(c *gin.Context) {
 
 func GetUser(c *gin.Context) {
 
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.String(http.StatusBadRequest, err.Error())
+	id := c.Param("id")
+	if len(id) < 25 {
+		c.String(http.StatusBadRequest, "not a valid ID")
 		zero.Errorf("not a valid id %d", id)
 		return
 	}
 
-	user, err := models.GetUser(int64(id))
+	uid, err := uuid.Parse(id)
+	if err != nil {
+		c.String(http.StatusBadRequest, "not a valid ID")
+		zero.Errorf("not a valid id %d", err)
+		return
+	}
+
+	user, err := models.GetUser(uid)
 	if err != nil {
 		zero.Errorf("error getting User %v: %s", id, err)
 		c.JSON(http.StatusNotFound, gin.H{
@@ -119,14 +133,21 @@ func GetUser(c *gin.Context) {
 }
 
 func DeleteUser(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.String(http.StatusBadRequest, err.Error())
+	id := c.Param("id")
+	if len(id) < 25 {
+		c.String(http.StatusBadRequest, "not a valid ID")
 		zero.Errorf("not a valid id %d", id)
 		return
 	}
 
-	err = models.DeleteUser(int64(id))
+	uid, err := uuid.Parse(id)
+	if err != nil {
+		c.String(http.StatusBadRequest, "not a valid ID")
+		zero.Errorf("not a valid id %d", err)
+		return
+	}
+
+	err = models.DeleteUser(uid)
 	if err != nil {
 		c.String(http.StatusNotFound, err.Error())
 		zero.Errorf("error getting User %d: %v", id, err)

@@ -6,13 +6,14 @@ import (
 	"time"
 
 	"github.com/commonsyllabi/explorer/api/models"
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 var (
-	resourceID      int64 = 1
-	resourceWrongID int64 = 2046
+	resourceID      uuid.UUID = uuid.New()
+	resourceWrongID uuid.UUID = uuid.New()
 )
 
 func TestResourceModel(t *testing.T) {

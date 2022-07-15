@@ -3,14 +3,16 @@ package models
 import (
 	"context"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 type Resource struct {
-	ID        int64     `bun:",pk,autoincrement" json:"id"`
+	ID        uuid.UUID `bun:",pk,type:uuid,default:uuid_generate_v4()"`
 	CreatedAt time.Time `bun:",nullzero,notnull,default:current_timestamp" json:"created_at"`
 	UpdatedAt time.Time `bun:",nullzero,notnull,default:current_timestamp" json:"updated_at"`
 
-	SyllabusID int64     `bun:"syllabus_id,notnull" yaml:"syllabus_id" json:"syllabus_id"`
+	SyllabusID uuid.UUID `bun:"syllabus_id,notnull" yaml:"syllabus_id" json:"syllabus_id"`
 	Syllabus   *Syllabus `bun:"rel:belongs-to,join:syllabus_id=id" json:"syllabus"`
 
 	Name string `bun:"name,notnull" json:"name" form:"name" binding:"required"`
@@ -22,7 +24,7 @@ func CreateResource(res *Resource) (Resource, error) {
 	return *res, err
 }
 
-func GetResource(id int64) (Resource, error) {
+func GetResource(id uuid.UUID) (Resource, error) {
 	ctx := context.Background()
 	var res Resource
 	err := db.NewSelect().Model(&res).Where("resource.id = ?", id).Relation("Syllabus").Scan(ctx)
@@ -36,7 +38,7 @@ func GetAllResources() ([]Resource, error) {
 	return res, err
 }
 
-func UpdateResource(id int64, res *Resource) (Resource, error) {
+func UpdateResource(id uuid.UUID, res *Resource) (Resource, error) {
 	ctx := context.Background()
 	err := db.NewSelect().Model(res).Where("id = ?", id).Scan(ctx)
 	if err != nil {
@@ -46,7 +48,7 @@ func UpdateResource(id int64, res *Resource) (Resource, error) {
 	return *res, err
 }
 
-func DeleteResource(id int64) error {
+func DeleteResource(id uuid.UUID) error {
 	ctx := context.Background()
 	var res Resource
 	err := db.NewSelect().Model(&res).Where("id = ?", id).Scan(ctx)

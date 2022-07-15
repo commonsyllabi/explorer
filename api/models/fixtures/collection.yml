@@ -1,7 +1,7 @@
 - model: Collection
   rows:
-    - _id: 1
+    - id: "b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a7"
       created_at: '{{ now }}'
       updated_at: '{{ now }}'
       name: "Fixture Collection"
-      user_id: 1
+      user_id: "e7b74bcd-c864-41ee-b5a7-d3031f76c8a8"
