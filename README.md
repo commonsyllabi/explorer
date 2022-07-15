@@ -8,7 +8,8 @@ figure out proper has-many/belongs-to relations in bun
 
 - add handlers to return everything based on querying a syllabus
 - - right now the user isn't getting picked up, and the collections either: the solution might be to have more complex SQL queries (get the ID of the associated syllabus, the fetch the syllabus, etc.)
-- make just the dashboard private (grouping of user info, syllabi and collections)
+- make just the dashboard private (which is just a grouping of user info, syllabi and collections)
+- what do we do with dangling resources? if a user deletes their account, do we offer to keep the collection with a ghost account? i think it's fair (we just anonimyze the account)
 
 ## questions
 
@@ -29,3 +30,13 @@ figure out proper has-many/belongs-to relations in bun
 ### todo
 
 - better organize test utils
+- think about user input validation/sanitization
+
+### tasks
+
+- have a confirmed field on the user model
+- tests
+- - user create/confirmation flow (implement)
+- - request recovery
+- - recovery without password
+- - receovery with password

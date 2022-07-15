@@ -16,6 +16,7 @@ import (
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 
+	"github.com/commonsyllabi/explorer/api/auth"
 	"github.com/commonsyllabi/explorer/api/handlers"
 	zero "github.com/commonsyllabi/explorer/api/logger"
 )
@@ -94,18 +95,25 @@ func SetupRouter() (*gin.Engine, error) {
 
 	router.GET("/ping", handlePing)
 
-	router.POST("/login", login)
-	router.GET("/logout", logout)
-	router.GET("/dashboard", authenticate(), dashboard)
+	router.POST("/login", auth.Login)
+	router.GET("/logout", auth.Logout)
+	router.GET("/dashboard", auth.Authenticate(), auth.Dashboard)
+
+	a := router.Group("/auth")
+	{
+		a.GET("/confirm", auth.Confirm)
+		a.POST("/recover", auth.RequestCredientalChange)
+		a.GET("/check-recover", auth.Recover)
+	}
 
 	syllabi := router.Group("/syllabi")
 	{
 		syllabi.GET("/", handlers.GetAllSyllabi)
 		syllabi.GET("/:id", handlers.GetSyllabus)
 
-		syllabi.POST("/", authenticate(), handlers.CreateSyllabus)
-		syllabi.PATCH("/:id", authenticate(), handlers.UpdateSyllabus)
-		syllabi.DELETE("/:id", authenticate(), handlers.DeleteSyllabus)
+		syllabi.POST("/", auth.Authenticate(), handlers.CreateSyllabus)
+		syllabi.PATCH("/:id", auth.Authenticate(), handlers.UpdateSyllabus)
+		syllabi.DELETE("/:id", auth.Authenticate(), handlers.DeleteSyllabus)
 	}
 
 	users := router.Group("/users")
@@ -114,8 +122,8 @@ func SetupRouter() (*gin.Engine, error) {
 		users.GET("/:id", handlers.GetUser)
 		users.POST("/", handlers.CreateUser)
 
-		users.PATCH("/:id", authenticate(), handlers.UpdateUser)
-		users.DELETE("/:id", authenticate(), handlers.DeleteUser)
+		users.PATCH("/:id", auth.Authenticate(), handlers.UpdateUser)
+		users.DELETE("/:id", auth.Authenticate(), handlers.DeleteUser)
 	}
 
 	resources := router.Group("/resources")
@@ -123,9 +131,9 @@ func SetupRouter() (*gin.Engine, error) {
 		resources.GET("/", handlers.GetAllResources)
 		resources.GET("/:id", handlers.GetResource)
 
-		resources.POST("/", authenticate(), handlers.CreateResource)
-		resources.PATCH("/:id", authenticate(), handlers.UpdateResource)
-		resources.DELETE("/:id", authenticate(), handlers.DeleteResource)
+		resources.POST("/", auth.Authenticate(), handlers.CreateResource)
+		resources.PATCH("/:id", auth.Authenticate(), handlers.UpdateResource)
+		resources.DELETE("/:id", auth.Authenticate(), handlers.DeleteResource)
 	}
 
 	collections := router.Group("/collections")
@@ -133,9 +141,9 @@ func SetupRouter() (*gin.Engine, error) {
 		collections.GET("/", handlers.GetAllCollections)
 		collections.GET("/:id", handlers.GetCollection)
 
-		collections.POST("/", authenticate(), handlers.CreateCollection)
-		collections.PATCH("/:id", authenticate(), handlers.UpdateCollection)
-		collections.DELETE("/:id", authenticate(), handlers.DeleteCollection)
+		collections.POST("/", auth.Authenticate(), handlers.CreateCollection)
+		collections.PATCH("/:id", auth.Authenticate(), handlers.UpdateCollection)
+		collections.DELETE("/:id", auth.Authenticate(), handlers.DeleteCollection)
 	}
 
 	router.Use(handleNotFound)

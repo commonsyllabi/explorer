@@ -12,7 +12,7 @@ import (
 
 const DOMAIN = "post.enframed.net"
 
-func SendMail(_dest string, _body string, _subject string) error {
+func SendMail(_dest string, _subject string, _body string) error {
 	mg := mailgun.NewMailgun(DOMAIN, os.Getenv("MAILGUN_PRIVATE_API_KEY"))
 	mg.SetAPIBase("https://api.eu.mailgun.net/v3") //-- rgpd mon amour
 

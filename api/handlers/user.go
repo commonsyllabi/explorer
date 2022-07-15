@@ -8,6 +8,7 @@ import (
 
 	zero "github.com/commonsyllabi/explorer/api/logger"
 	"github.com/commonsyllabi/explorer/api/models"
+	"github.com/commonsyllabi/explorer/mailer"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
@@ -58,6 +59,17 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
+	if gin.Mode() != gin.TestMode {
+		token, err := models.CreateToken(user.ID)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, err)
+			zero.Errorf(err.Error())
+			return
+		}
+		body := fmt.Sprintf("the user %s was successfully created with token %v!", user.ID, token.Token)
+		mailer.SendMail(user.Email, "user created", body)
+	}
+
 	c.JSON(http.StatusCreated, user)
 }
 
@@ -71,14 +83,14 @@ func UpdateUser(c *gin.Context) {
 
 	uid, err := uuid.Parse(id)
 	if err != nil {
-		c.String(http.StatusBadRequest, "not a valid ID")
-		zero.Errorf("not a valid id %d", err)
+		c.JSON(http.StatusBadRequest, err)
+		zero.Errorf(err.Error())
 		return
 	}
 
 	err = sanitizeUserUpdate(c)
 	if err != nil {
-		c.String(http.StatusBadRequest, err.Error())
+		c.JSON(http.StatusBadRequest, err)
 		zero.Error(err.Error())
 		return
 	}
@@ -155,6 +167,11 @@ func DeleteUser(c *gin.Context) {
 	}
 
 	//-- TODO delete any associated resources?
+	if gin.Mode() != gin.TestMode {
+		body := fmt.Sprintf("the user %s was successfully deleted!", user.ID)
+		mailer.SendMail(user.Email, "user deleted", body)
+	}
+
 	c.JSON(http.StatusOK, gin.H{"user": user})
 }
 

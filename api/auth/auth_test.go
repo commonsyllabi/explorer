@@ -1,15 +1,33 @@
-package api
+package auth_test
 
 import (
 	"bytes"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
+	"os"
 	"testing"
 
+	"github.com/commonsyllabi/explorer/api"
+	"github.com/commonsyllabi/explorer/api/models"
+	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"github.com/uptrace/bun"
 )
+
+var router *gin.Engine
+
+func setup(t *testing.T) func(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+	router = mustSetupRouter()
+	mustInitDB()
+
+	return func(t *testing.T) {
+		t.Log("tearing down api")
+	}
+}
 
 func TestAuth(t *testing.T) {
 	teardown := setup(t)
@@ -65,4 +83,32 @@ func TestAuth(t *testing.T) {
 		assert.Equal(t, http.StatusUnauthorized, res.Code)
 	})
 
+}
+
+func mustSetupRouter() *gin.Engine {
+	var conf api.Config
+	conf.DefaultConf()
+	conf.TemplatesDir = "../api/templates"
+	conf.FixturesDir = "../api/models/fixtures"
+
+	router, err := api.SetupRouter()
+	if err != nil {
+		panic(err)
+	}
+	return router
+}
+
+func mustInitDB() *bun.DB {
+	databaseTestURL := os.Getenv("DATABASE_TEST_URL")
+	if databaseTestURL == "" {
+		databaseTestURL = "postgres://postgres:postgres@localhost:5432/explorer-test"
+		fmt.Printf("didn't get db test url from env, defaulting to %v\n", databaseTestURL)
+	}
+
+	db, err := models.InitDB(databaseTestURL)
+	if err != nil {
+		panic(err)
+	}
+
+	return db
 }
