@@ -302,6 +302,16 @@ func TestUserHandler(t *testing.T) {
 		assert.Equal(t, http.StatusBadRequest, res.Code)
 	})
 
+	t.Run("Test delete user unauthorized", func(t *testing.T) {
+		path := "/users/" + userID.String()
+		req := httptest.NewRequest(http.MethodDelete, path, nil)
+
+		res := httptest.NewRecorder()
+		router.ServeHTTP(res, req)
+
+		assert.Equal(t, http.StatusUnauthorized, res.Code)
+	})
+
 	t.Run("Test delete user", func(t *testing.T) {
 		res := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(res)

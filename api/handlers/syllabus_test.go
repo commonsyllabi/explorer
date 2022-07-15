@@ -9,6 +9,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/commonsyllabi/explorer/api"
 	"github.com/commonsyllabi/explorer/api/handlers"
 	"github.com/commonsyllabi/explorer/api/models"
 	"github.com/gin-gonic/gin"
@@ -32,6 +33,8 @@ var (
 	userNonExistentID uuid.UUID
 )
 
+var router *gin.Engine
+
 func setup(t *testing.T) func(t *testing.T) {
 	syllabusID = uuid.MustParse("46de6a2b-aacb-4c24-b1e1-3495821f846a")
 	syllabusNonExistingID = uuid.New()
@@ -47,6 +50,7 @@ func setup(t *testing.T) func(t *testing.T) {
 
 	mustSeedDB(t)
 	gin.SetMode(gin.TestMode)
+	router = mustSetupRouter()
 	return func(t *testing.T) {
 		models.RemoveFixtures(t)
 	}
@@ -291,6 +295,16 @@ func TestSyllabusHandler(t *testing.T) {
 		assert.Equal(t, http.StatusBadRequest, res.Code)
 	})
 
+	t.Run("Test delete syllabus unauthorized", func(t *testing.T) {
+		path := "/syllabi/" + syllabusID.String()
+		req := httptest.NewRequest(http.MethodDelete, path, nil)
+
+		res := httptest.NewRecorder()
+		router.ServeHTTP(res, req)
+
+		assert.Equal(t, http.StatusUnauthorized, res.Code)
+	})
+
 	t.Run("Test delete syllabus", func(t *testing.T) {
 		res := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(res)
@@ -357,4 +371,15 @@ func mustSeedDB(t *testing.T) {
 	}
 	_, err := models.InitDB(databaseTestURL)
 	require.Nil(t, err)
+}
+
+func mustSetupRouter() *gin.Engine {
+	var conf api.Config
+	conf.DefaultConf()
+
+	router, err := api.SetupRouter()
+	if err != nil {
+		panic(err)
+	}
+	return router
 }

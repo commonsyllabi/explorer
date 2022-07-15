@@ -27,7 +27,7 @@ func StartServer(port string, mode string, c Config) error {
 	conf = c
 	gin.SetMode(mode)
 
-	router, err := setupRouter()
+	router, err := SetupRouter()
 	if err != nil {
 		return err
 	}
@@ -60,14 +60,18 @@ func StartServer(port string, mode string, c Config) error {
 	return err
 }
 
-// setupRouter registers all route groups
-func setupRouter() (*gin.Engine, error) {
+// SetupRouter registers all middleware, templates, logging route groups and settings
+func SetupRouter() (*gin.Engine, error) {
 	router := gin.New()
 	store := cookie.NewStore([]byte("secret"))
 	router.Use(sessions.Sessions("authsession", store))
 
 	router.Use(cors.Default())
-	router.LoadHTMLGlob(conf.TemplatesDir + "/*")
+	if conf.TemplatesDir != "" {
+		router.LoadHTMLGlob(conf.TemplatesDir + "/*")
+	} else {
+		zero.Warn("got empty templates directory, skipping load...")
+	}
 
 	router.Use(gin.LoggerWithFormatter(func(param gin.LogFormatterParams) string {
 		return fmt.Sprintf("%s - [%s] \"%s %s %s %d %s \"%s\" %s\"\n",
@@ -97,37 +101,41 @@ func setupRouter() (*gin.Engine, error) {
 	syllabi := router.Group("/syllabi")
 	{
 		syllabi.GET("/", handlers.GetAllSyllabi)
-		syllabi.POST("/", handlers.CreateSyllabus)
-		syllabi.PATCH("/:id", handlers.UpdateSyllabus)
 		syllabi.GET("/:id", handlers.GetSyllabus)
-		syllabi.DELETE("/:id", handlers.DeleteSyllabus)
+
+		syllabi.POST("/", authenticate(), handlers.CreateSyllabus)
+		syllabi.PATCH("/:id", authenticate(), handlers.UpdateSyllabus)
+		syllabi.DELETE("/:id", authenticate(), handlers.DeleteSyllabus)
 	}
 
 	users := router.Group("/users")
 	{
 		users.GET("/", handlers.GetAllUsers)
-		users.POST("/", handlers.CreateUser)
-		users.PATCH("/:id", handlers.UpdateUser)
 		users.GET("/:id", handlers.GetUser)
-		users.DELETE("/:id", handlers.DeleteUser)
+		users.POST("/", handlers.CreateUser)
+
+		users.PATCH("/:id", authenticate(), handlers.UpdateUser)
+		users.DELETE("/:id", authenticate(), handlers.DeleteUser)
 	}
 
 	resources := router.Group("/resources")
 	{
 		resources.GET("/", handlers.GetAllResources)
-		resources.POST("/", handlers.CreateResource)
-		resources.PATCH("/:id", handlers.UpdateResource)
 		resources.GET("/:id", handlers.GetResource)
-		resources.DELETE("/:id", handlers.DeleteResource)
+
+		resources.POST("/", authenticate(), handlers.CreateResource)
+		resources.PATCH("/:id", authenticate(), handlers.UpdateResource)
+		resources.DELETE("/:id", authenticate(), handlers.DeleteResource)
 	}
 
 	collections := router.Group("/collections")
 	{
 		collections.GET("/", handlers.GetAllCollections)
-		collections.POST("/", handlers.CreateCollection)
-		collections.PATCH("/:id", handlers.UpdateCollection)
 		collections.GET("/:id", handlers.GetCollection)
-		collections.DELETE("/:id", handlers.DeleteCollection)
+
+		collections.POST("/", authenticate(), handlers.CreateCollection)
+		collections.PATCH("/:id", authenticate(), handlers.UpdateCollection)
+		collections.DELETE("/:id", authenticate(), handlers.DeleteCollection)
 	}
 
 	router.Use(handleNotFound)

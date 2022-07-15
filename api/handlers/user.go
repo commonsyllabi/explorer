@@ -111,8 +111,6 @@ func GetUser(c *gin.Context) {
 		return
 	}
 
-	fmt.Println(id)
-
 	uid, err := uuid.Parse(id)
 	if err != nil {
 		c.String(http.StatusBadRequest, "not a valid ID")

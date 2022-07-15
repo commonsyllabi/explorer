@@ -76,7 +76,7 @@ func mustSetupRouter() *gin.Engine {
 	if err != nil {
 		panic(err)
 	}
-	router, err := setupRouter()
+	router, err := SetupRouter()
 	if err != nil {
 		panic(err)
 	}

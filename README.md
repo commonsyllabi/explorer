@@ -25,3 +25,7 @@ figure out proper has-many/belongs-to relations in bun
 - how do i prevent access to certain pages?
 - how do i form an api responses based on auth status?
 - not sure what is the difference between 	session.Set("user", "") and session.Delete("user")
+
+### todo
+
+- better organize test utils

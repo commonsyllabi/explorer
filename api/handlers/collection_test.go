@@ -209,6 +209,16 @@ func TestCollectionHandler(t *testing.T) {
 		assert.Equal(t, http.StatusBadRequest, res.Code)
 	})
 
+	t.Run("Test delete collection unauthorized", func(t *testing.T) {
+		path := "/collections/" + collectionID.String()
+		req := httptest.NewRequest(http.MethodDelete, path, nil)
+
+		res := httptest.NewRecorder()
+		router.ServeHTTP(res, req)
+
+		assert.Equal(t, http.StatusUnauthorized, res.Code)
+	})
+
 	t.Run("Test delete collection", func(t *testing.T) {
 		res := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(res)

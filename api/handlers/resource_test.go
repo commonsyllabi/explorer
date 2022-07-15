@@ -256,6 +256,16 @@ func TestResourceHandler(t *testing.T) {
 		assert.Equal(t, http.StatusBadRequest, res.Code)
 	})
 
+	t.Run("Test delete resources unauthorized", func(t *testing.T) {
+		path := "/resources/" + resourceID.String()
+		req := httptest.NewRequest(http.MethodDelete, path, nil)
+
+		res := httptest.NewRecorder()
+		router.ServeHTTP(res, req)
+
+		assert.Equal(t, http.StatusUnauthorized, res.Code)
+	})
+
 	t.Run("Test delete resource", func(t *testing.T) {
 		res := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(res)
