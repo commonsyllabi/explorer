@@ -9,15 +9,31 @@ import (
 
 	"github.com/commonsyllabi/explorer/api/models"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
+	"github.com/uptrace/bun"
 
 	"github.com/stretchr/testify/assert"
 )
 
 var router *gin.Engine
 
+var (
+	syllabusID   uuid.UUID
+	collectionID uuid.UUID
+	resourceID   uuid.UUID
+	userID       uuid.UUID
+)
+
 func setup(t *testing.T) func(t *testing.T) {
+	syllabusID = uuid.MustParse("46de6a2b-aacb-4c24-b1e1-3495821f846a")
+	collectionID = uuid.MustParse("b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a7")
+	resourceID = uuid.MustParse("c55f0baf-12b8-4bdb-b5e6-2280bff8ab21")
+	userID = uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c8a8")
+
 	gin.SetMode(gin.TestMode)
 	router = mustSetupRouter()
+	mustInitDB()
+
 	return func(t *testing.T) {
 		t.Log("tearing down api")
 	}
@@ -61,24 +77,72 @@ func TestLoadConfig(t *testing.T) {
 	assert.NotNil(t, err)
 }
 
+func TestRoutes(t *testing.T) {
+	t.Run("Test delete collection unauthorized", func(t *testing.T) {
+		path := "/collections/" + collectionID.String()
+		req := httptest.NewRequest(http.MethodDelete, path, nil)
+
+		res := httptest.NewRecorder()
+		router.ServeHTTP(res, req)
+
+		assert.Equal(t, http.StatusUnauthorized, res.Code)
+	})
+
+	t.Run("Test delete syllabus unauthorized", func(t *testing.T) {
+		path := "/syllabi/" + syllabusID.String()
+		req := httptest.NewRequest(http.MethodDelete, path, nil)
+
+		res := httptest.NewRecorder()
+		router.ServeHTTP(res, req)
+
+		assert.Equal(t, http.StatusUnauthorized, res.Code)
+	})
+
+	t.Run("Test delete user unauthorized", func(t *testing.T) {
+		path := "/users/" + userID.String()
+		req := httptest.NewRequest(http.MethodDelete, path, nil)
+
+		res := httptest.NewRecorder()
+		router.ServeHTTP(res, req)
+
+		assert.Equal(t, http.StatusUnauthorized, res.Code)
+	})
+
+	t.Run("Test delete resources unauthorized", func(t *testing.T) {
+		path := "/resources/" + resourceID.String()
+		req := httptest.NewRequest(http.MethodDelete, path, nil)
+
+		res := httptest.NewRecorder()
+		router.ServeHTTP(res, req)
+
+		assert.Equal(t, http.StatusUnauthorized, res.Code)
+	})
+
+}
+
 func mustSetupRouter() *gin.Engine {
 	conf.DefaultConf()
 	conf.TemplatesDir = "../api/templates"
 	conf.FixturesDir = "../api/models/fixtures"
 
+	router, err := SetupRouter()
+	if err != nil {
+		panic(err)
+	}
+	return router
+}
+
+func mustInitDB() *bun.DB {
 	databaseTestURL := os.Getenv("DATABASE_TEST_URL")
 	if databaseTestURL == "" {
 		databaseTestURL = "postgres://postgres:postgres@localhost:5432/explorer-test"
 		fmt.Printf("didn't get db test url from env, defaulting to %v\n", databaseTestURL)
 	}
 
-	_, err := models.InitDB(databaseTestURL)
+	db, err := models.InitDB(databaseTestURL)
 	if err != nil {
 		panic(err)
 	}
-	router, err := SetupRouter()
-	if err != nil {
-		panic(err)
-	}
-	return router
+
+	return db
 }
