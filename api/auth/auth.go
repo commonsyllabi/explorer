@@ -19,7 +19,6 @@ func Authenticate() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		session := sessions.Default(c)
 		sessionID := session.Get("user")
-		fmt.Println("getting session id", sessionID)
 		if sessionID == nil {
 			c.JSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})
 			c.Abort()

@@ -25,6 +25,7 @@ var (
 	syllabusNonExistingID uuid.UUID
 
 	collectionID            uuid.UUID
+	collectionDeleteID      uuid.UUID
 	collectionNonExistingID uuid.UUID
 
 	resourceID            uuid.UUID
@@ -39,6 +40,7 @@ func setup(t *testing.T) func(t *testing.T) {
 	syllabusNonExistingID = uuid.New()
 
 	collectionID = uuid.MustParse("b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a7")
+	collectionDeleteID = uuid.MustParse("b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a9")
 	collectionNonExistingID = uuid.New()
 
 	resourceID = uuid.MustParse("c55f0baf-12b8-4bdb-b5e6-2280bff8ab21")

@@ -37,7 +37,7 @@ func TestAuth(t *testing.T) {
 
 	t.Run("Testing login", func(t *testing.T) {
 		data := url.Values{}
-		data.Add("email", "one@raz.com")
+		data.Add("email", "two@dwa.com")
 		data.Add("password", "12345678")
 		body := bytes.NewBuffer([]byte(data.Encode()))
 
@@ -49,8 +49,10 @@ func TestAuth(t *testing.T) {
 		router.ServeHTTP(res, req)
 
 		require.Equal(t, http.StatusOK, res.Code)
-		require.NotNil(t, len(res.Result().Cookies()))
-		cookie = *res.Result().Cookies()[0]
+		require.NotZero(t, len(res.Result().Cookies()))
+		if len(res.Result().Cookies()) > 0 {
+			cookie = *res.Result().Cookies()[0]
+		}
 
 		assert.Equal(t, cookie.Name, "cosyl_auth")
 	})
@@ -71,8 +73,12 @@ func TestAuth(t *testing.T) {
 		res := httptest.NewRecorder()
 		router.ServeHTTP(res, req)
 
-		cookie = *res.Result().Cookies()[0]
 		assert.Equal(t, http.StatusOK, res.Code)
+
+		require.NotZero(t, len(res.Result().Cookies()))
+		if len(res.Result().Cookies()) > 0 {
+			cookie = *res.Result().Cookies()[0]
+		}
 
 		req = httptest.NewRequest(http.MethodGet, "/dashboard", nil)
 		req.AddCookie(&cookie)

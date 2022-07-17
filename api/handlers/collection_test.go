@@ -250,7 +250,7 @@ func TestCollectionHandler(t *testing.T) {
 		c.Params = []gin.Param{
 			{
 				Key:   "id",
-				Value: collectionID.String(),
+				Value: collectionDeleteID.String(),
 			},
 		}
 

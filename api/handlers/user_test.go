@@ -54,7 +54,7 @@ func TestUserHandler(t *testing.T) {
 	t.Run("Test create user with wrong field", func(t *testing.T) {
 		var body bytes.Buffer
 		w := multipart.NewWriter(&body)
-		w.WriteField("non-existant", "testing@user.com")
+		w.WriteField("non-existant", "testing-wrong@user.com")
 		w.Close()
 
 		res := httptest.NewRecorder()
@@ -75,8 +75,6 @@ func TestUserHandler(t *testing.T) {
 	t.Run("Test create user with wrong fields", func(t *testing.T) {
 		var body bytes.Buffer
 		w := multipart.NewWriter(&body)
-		w.WriteField("email", "testing@user.com")
-		w.WriteField("password", "12345678")
 		w.WriteField("non-existant", "testing@user.com")
 		w.Close()
 
@@ -92,7 +90,7 @@ func TestUserHandler(t *testing.T) {
 
 		handlers.CreateUser(c)
 
-		assert.Equal(t, http.StatusInternalServerError, res.Code)
+		assert.Equal(t, http.StatusBadRequest, res.Code)
 	})
 
 	t.Run("Test create user malformed email", func(t *testing.T) {
