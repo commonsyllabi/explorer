@@ -34,7 +34,7 @@ figure out proper has-many/belongs-to relations in bun
 ### tasks
 
 - have a confirmed field on the user model
-- -  this led to discovering that the model wasn't properly updating due to `OmitZero()` bug. this led to refactoring of first getting the model, updating the required fields, and then calling update to the database.
+- -  this led to discovering that the model wasn't properly updating due to `OmitZero()` bug. this led to refactoring of first getting the model, updating the required fields, and then calling update to the database. the question: is it ok to just send the full entity client side?
 - so now i'm updating all the tests for the handlers in order to comply with this new approach
 - tests
 - - user create/confirmation flow (implement)

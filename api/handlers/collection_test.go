@@ -8,10 +8,11 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"encoding/json"
+
 	"github.com/commonsyllabi/explorer/api/handlers"
 	"github.com/commonsyllabi/explorer/api/models"
 	"github.com/gin-gonic/gin"
-	"github.com/goccy/go-json"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
