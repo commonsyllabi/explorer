@@ -2,9 +2,17 @@ package models
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
+)
+
+const (
+	UserPending   string = "pending"
+	UserConfirmed string = "confirmed"
+	UserDeleted   string = "deleted"
 )
 
 type User struct {
@@ -16,6 +24,7 @@ type User struct {
 	Password    []byte        `json:"password"` // no form binding to prevent storing cleartext
 	Syllabi     []*Syllabus   `bun:"syllabi,rel:has-many" form:"syllabi" json:"syllabi"`
 	Collections []*Collection `bun:"rel:has-many" json:"collections"`
+	Status      string        `bun:",default:'pending'" json:"status"`
 }
 
 func CreateUser(user *User) (User, error) {
@@ -46,13 +55,27 @@ func GetAllUsers() ([]User, error) {
 }
 
 func UpdateUser(id uuid.UUID, user *User) (User, error) {
-	ctx := context.Background()
-	err := db.NewSelect().Model(user).Where("id = ?", id).Scan(ctx)
+	//-- check if user actually has a uuid
+	//-- as a way to know if we're getting a full model
+	user_id, err := uuid.Parse(user.ID.String())
 	if err != nil {
 		return *user, err
 	}
 
-	_, err = db.NewUpdate().Model(user).OmitZero().WherePK().Exec(ctx)
+	if user_id == uuid.Nil {
+		return *user, errors.New("User not found")
+	}
+
+	ctx := context.Background()
+	existing := new(User)
+	err = db.NewSelect().Model(existing).Where("id = ?", id).Scan(ctx)
+	if err != nil {
+		return *user, err
+	}
+
+	user.UpdatedAt = time.Now()
+	_, err = db.NewUpdate().Model(user).WherePK().Exec(ctx)
+	fmt.Println("returning", user)
 	return *user, err
 }
 

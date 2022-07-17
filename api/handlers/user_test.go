@@ -11,6 +11,7 @@ import (
 	"github.com/commonsyllabi/explorer/api/handlers"
 	"github.com/commonsyllabi/explorer/api/models"
 	"github.com/gin-gonic/gin"
+	"github.com/goccy/go-json"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -218,15 +219,16 @@ func TestUserHandler(t *testing.T) {
 		assert.Equal(t, http.StatusOK, res.Code)
 
 		var user models.User
-		err := c.Bind(&user)
+		err := json.Unmarshal(res.Body.Bytes(), &user)
 		require.Nil(t, err)
 		assert.Equal(t, "updated@user.com", user.Email)
+		assert.NotZero(t, user.ID)
 	})
 
 	t.Run("Test update user wrong id", func(t *testing.T) {
 		var body bytes.Buffer
 		w := multipart.NewWriter(&body)
-		w.WriteField("email", "updated@user.com")
+		w.WriteField("email", "updated-wrong-id@user.com")
 		w.Close()
 
 		res := httptest.NewRecorder()
@@ -249,10 +251,10 @@ func TestUserHandler(t *testing.T) {
 		assert.Equal(t, http.StatusBadRequest, res.Code)
 	})
 
-	t.Run("Test update user wrong field", func(t *testing.T) {
+	t.Run("Test update user missing field", func(t *testing.T) {
 		var body bytes.Buffer
 		w := multipart.NewWriter(&body)
-		w.WriteField("wrong-field", "updated@user.com")
+		w.WriteField("not-field", "updated-no-field@user.com")
 		w.Close()
 
 		res := httptest.NewRecorder()

@@ -43,11 +43,13 @@ func GetAllSyllabi() ([]Syllabus, error) {
 
 func UpdateSyllabus(id uuid.UUID, syll *Syllabus) (Syllabus, error) {
 	ctx := context.Background()
-	err := db.NewSelect().Model(syll).Where("id = ?", id).Scan(ctx)
+	existing := new(Syllabus)
+	err := db.NewSelect().Model(existing).Where("id = ?", id).Scan(ctx)
 	if err != nil {
 		return *syll, err
 	}
 
+	syll.UpdatedAt = time.Now()
 	_, err = db.NewUpdate().Model(syll).OmitZero().Where("id = ?", id).Exec(ctx)
 	return *syll, err
 }

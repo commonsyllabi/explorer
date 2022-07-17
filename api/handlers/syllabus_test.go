@@ -12,6 +12,7 @@ import (
 	"github.com/commonsyllabi/explorer/api/handlers"
 	"github.com/commonsyllabi/explorer/api/models"
 	"github.com/gin-gonic/gin"
+	"github.com/goccy/go-json"
 	"github.com/google/uuid"
 
 	"github.com/stretchr/testify/assert"
@@ -208,7 +209,7 @@ func TestSyllabusHandler(t *testing.T) {
 		assert.Equal(t, res.Code, http.StatusOK)
 
 		var syll models.Syllabus
-		err := c.Bind(&syll)
+		err := json.Unmarshal(res.Body.Bytes(), &syll)
 		require.Nil(t, err)
 		assert.Equal(t, "Updated Title", syll.Title)
 	})
@@ -262,7 +263,7 @@ func TestSyllabusHandler(t *testing.T) {
 		}
 
 		handlers.UpdateSyllabus(c)
-		assert.Equal(t, http.StatusInternalServerError, res.Code)
+		assert.Equal(t, http.StatusNotFound, res.Code)
 	})
 
 	t.Run("Test update syllabus malformed ID", func(t *testing.T) {

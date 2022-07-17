@@ -50,13 +50,6 @@ func CreateResource(c *gin.Context) {
 }
 
 func UpdateResource(c *gin.Context) {
-	err := sanitizeResource(c)
-	if err != nil {
-		c.String(http.StatusBadRequest, err.Error())
-		zero.Error(err.Error())
-		return
-	}
-
 	id := c.Param("id")
 	if len(id) < 25 {
 		c.String(http.StatusBadRequest, "not a valid ID")
@@ -71,26 +64,43 @@ func UpdateResource(c *gin.Context) {
 		return
 	}
 
-	var res models.Resource
+	err = sanitizeResource(c)
+	if err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		zero.Error(err.Error())
+		return
+	}
+
+	var input models.Resource
+	err = c.Bind(&input)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	res, err := models.GetResource(uid)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
 	err = c.Bind(&res)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	res.UpdatedAt = time.Now()
-	_, err = models.UpdateResource(uid, &res)
+	updated, err := models.UpdateResource(uid, &res)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		zero.Errorf("error updating Resource %d: %v", id, err)
 		return
 	}
 
-	c.JSON(http.StatusOK, res)
+	c.JSON(http.StatusOK, updated)
 }
 
 func GetResource(c *gin.Context) {
-
 	id := c.Param("id")
 	if len(id) < 25 {
 		c.String(http.StatusBadRequest, "not a valid ID")
@@ -135,7 +145,7 @@ func DeleteResource(c *gin.Context) {
 
 	res, err := models.DeleteResource(uid)
 	if err != nil {
-		c.String(http.StatusInternalServerError, err.Error())
+		c.String(http.StatusNotFound, err.Error())
 		zero.Errorf("error getting Resource %d: %v", id, err)
 		return
 	}

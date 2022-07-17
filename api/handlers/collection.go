@@ -64,22 +64,38 @@ func UpdateCollection(c *gin.Context) {
 		return
 	}
 
-	var coll models.Collection
-	err = c.Bind(&coll)
+	var input models.Collection
+	err = c.Bind(&input)
 	if err != nil {
+		zero.Errorf("error binding collection: %v", err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	coll.UpdatedAt = time.Now()
-	_, err = models.UpdateCollection(uid, &coll)
+	//-- get existing entity
+	coll, err := models.GetCollection(uid)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	//-- then bind with the incoming request
+	err = c.Bind(&coll)
+	if err != nil {
+		zero.Errorf("error binding user: %v", err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	//-- then do the actual full update
+	updated, err := models.UpdateCollection(uid, &coll)
 	if err != nil {
 		c.String(http.StatusNotFound, err.Error())
 		zero.Errorf("error updating Collection %d: %v", id, err)
 		return
 	}
 
-	c.JSON(http.StatusOK, coll)
+	c.JSON(http.StatusOK, updated)
 }
 
 func GetCollection(c *gin.Context) {

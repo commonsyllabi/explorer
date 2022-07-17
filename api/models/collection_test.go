@@ -24,7 +24,7 @@ func TestCollectionModel(t *testing.T) {
 		user := models.User{
 			CreatedAt: time.Now(),
 			UpdatedAt: time.Now(),
-			Email:     "testing@create.com",
+			Email:     "test@collection-create.com",
 			Password:  []byte("12345678"),
 		}
 		_, err := models.CreateUser(&user) //-- todo bug here there is always an issue with conflicting keys
@@ -56,15 +56,17 @@ func TestCollectionModel(t *testing.T) {
 	})
 
 	t.Run("Test update collection", func(t *testing.T) {
-		res := models.Collection{
-			UpdatedAt: time.Now(),
-			Name:      "Test Name 1 (updated)",
+		base, err := models.GetCollection(collectionID)
+		if err != nil {
+			t.Error(err)
 		}
-		updated, err := models.UpdateCollection(collectionID, &res)
+
+		base.Name = "updated"
+		updated, err := models.UpdateCollection(collectionID, &base)
+
 		require.Nil(t, err)
 		require.False(t, updated.CreatedAt.IsZero())
-
-		assert.Equal(t, updated.Name, res.Name)
+		assert.Equal(t, updated.Name, base.Name)
 		assert.NotEqual(t, updated.CreatedAt, updated.UpdatedAt, "Expected the CreatedAt and the UpdatedAt values to be different")
 	})
 

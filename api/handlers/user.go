@@ -66,7 +66,7 @@ func CreateUser(c *gin.Context) {
 			zero.Errorf(err.Error())
 			return
 		}
-		body := fmt.Sprintf("the user %s was successfully created with token %v!", user.ID, token.Token)
+		body := fmt.Sprintf("the user %s was successfully created with token %v!", user.ID, token.ID.String())
 		mailer.SendMail(user.Email, "user created", body)
 	}
 
@@ -95,7 +95,20 @@ func UpdateUser(c *gin.Context) {
 		return
 	}
 
-	var user models.User
+	var input models.User
+	err = c.Bind(&input)
+	if err != nil {
+		zero.Errorf("error binding user: %v", err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	user, err := models.GetUser(uid)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
 	err = c.Bind(&user)
 	if err != nil {
 		zero.Errorf("error binding user: %v", err)
@@ -103,15 +116,14 @@ func UpdateUser(c *gin.Context) {
 		return
 	}
 
-	user.UpdatedAt = time.Now()
-	_, err = models.UpdateUser(uid, &user)
+	updated, err := models.UpdateUser(uid, &user)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		zero.Errorf("error updating User %d: %v", id, err)
 		return
 	}
 
-	c.JSON(http.StatusOK, user)
+	c.JSON(http.StatusOK, updated)
 }
 
 func GetUser(c *gin.Context) {

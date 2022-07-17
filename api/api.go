@@ -65,7 +65,7 @@ func StartServer(port string, mode string, c Config) error {
 func SetupRouter() (*gin.Engine, error) {
 	router := gin.New()
 	store := cookie.NewStore([]byte("secret"))
-	router.Use(sessions.Sessions("authsession", store))
+	router.Use(sessions.Sessions("cosyl_auth", store))
 
 	router.Use(cors.Default())
 	if conf.TemplatesDir != "" {

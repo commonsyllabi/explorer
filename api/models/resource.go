@@ -40,10 +40,13 @@ func GetAllResources() ([]Resource, error) {
 
 func UpdateResource(id uuid.UUID, res *Resource) (Resource, error) {
 	ctx := context.Background()
-	err := db.NewSelect().Model(res).Where("id = ?", id).Scan(ctx)
+	existing := new(Resource)
+	err := db.NewSelect().Model(existing).Where("id = ?", id).Scan(ctx)
 	if err != nil {
 		return *res, err
 	}
+
+	res.UpdatedAt = time.Now()
 	_, err = db.NewUpdate().Model(res).OmitZero().Where("id = ?", id).Exec(ctx)
 	return *res, err
 }

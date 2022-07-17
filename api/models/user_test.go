@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/commonsyllabi/explorer/api/models"
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -23,7 +24,7 @@ func TestUserModel(t *testing.T) {
 		user := models.User{
 			CreatedAt: time.Now(),
 			UpdatedAt: time.Now(),
-			Email:     "test@user.com",
+			Email:     "test@user-create.com",
 			Password:  []byte("12345678"),
 		}
 		u, err := models.CreateUser(&user)
@@ -51,14 +52,15 @@ func TestUserModel(t *testing.T) {
 	})
 
 	t.Run("Test update user", func(t *testing.T) {
-		user := models.User{
-			UpdatedAt: time.Now(),
-			Email:     "test@user.updated",
+		user, err := models.GetUser(userID)
+		if err != nil {
+			t.Error(err)
 		}
+		user.Email = "test@user.updated"
 		updated, err := models.UpdateUser(userID, &user)
+
 		require.Nil(t, err)
 		require.False(t, updated.CreatedAt.IsZero())
-
 		assert.Equal(t, updated.Email, user.Email)
 		assert.NotEqual(t, updated.CreatedAt, updated.UpdatedAt, "Expected the CreatedAt and the UpdatedAt values to be different")
 	})
@@ -70,7 +72,7 @@ func TestUserModel(t *testing.T) {
 		}
 		updated, err := models.UpdateUser(userNonExistentID, &user)
 		assert.NotNil(t, err)
-		assert.True(t, updated.CreatedAt.IsZero())
+		assert.Equal(t, uuid.Nil, updated.ID)
 	})
 
 	t.Run("Test delete user", func(t *testing.T) {

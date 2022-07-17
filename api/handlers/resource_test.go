@@ -227,7 +227,7 @@ func TestResourceHandler(t *testing.T) {
 		}
 
 		handlers.UpdateResource(c)
-		assert.Equal(t, http.StatusInternalServerError, res.Code)
+		assert.Equal(t, http.StatusNotFound, res.Code)
 	})
 
 	t.Run("Test update resource malformed name", func(t *testing.T) {
@@ -310,7 +310,7 @@ func TestResourceHandler(t *testing.T) {
 		}
 
 		handlers.DeleteResource(c)
-		assert.Equal(t, http.StatusInternalServerError, res.Code)
+		assert.Equal(t, http.StatusNotFound, res.Code)
 	})
 
 }

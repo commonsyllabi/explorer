@@ -11,6 +11,7 @@ import (
 	"github.com/commonsyllabi/explorer/api/handlers"
 	"github.com/commonsyllabi/explorer/api/models"
 	"github.com/gin-gonic/gin"
+	"github.com/goccy/go-json"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -152,9 +153,10 @@ func TestCollectionHandler(t *testing.T) {
 		assert.Equal(t, http.StatusOK, res.Code)
 
 		var coll models.Collection
-		err := c.Bind(&coll)
+		err := json.Unmarshal(res.Body.Bytes(), &coll)
 		require.Nil(t, err)
 		assert.Equal(t, "Updated", coll.Name)
+		assert.NotZero(t, coll.ID)
 	})
 
 	t.Run("Test update collection non-existant ID", func(t *testing.T) {

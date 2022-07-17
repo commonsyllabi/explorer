@@ -2,31 +2,36 @@ package models
 
 import (
 	"context"
+	"fmt"
+	"time"
 
 	zero "github.com/commonsyllabi/explorer/api/logger"
 	"github.com/google/uuid"
 )
 
 type Token struct {
-	Token  string    `bun:",pk"`
-	UserID uuid.UUID `bun:",type:uuid"`
+	ID        uuid.UUID `bun:",pk,type:uuid,default:uuid_generate_v4()"`
+	CreatedAt time.Time `bun:",nullzero,notnull,default:current_timestamp" json:"created_at"`
+	UserID    uuid.UUID `bun:"user_id,type:uuid" yaml:"user_id" json:"user_id"`
 }
 
 func CreateToken(_id uuid.UUID) (Token, error) {
 	// generate hash
-	hash := "eroifj"
-	token := Token{hash, _id}
+	hash := uuid.New()
+	fmt.Println(hash)
+	token := Token{hash, time.Now(), _id}
 	ctx := context.Background()
 	_, err := db.NewInsert().Model(&token).Exec(ctx)
 	return token, err
 }
 
-func GetTokenUser(_token string) (User, error) {
+// GetTokenUser takes a token and returns the full user associated with it
+func GetTokenUser(_id uuid.UUID) (User, error) {
 	var user User
 	var token Token
 
 	ctx := context.Background()
-	err := db.NewSelect().Model(&token).Where("token = ?", _token).Scan(ctx)
+	err := db.NewSelect().Model(&token).Where("id = ?", _id).Scan(ctx)
 	if err != nil {
 		zero.Error(err.Error())
 		return user, err
@@ -41,9 +46,14 @@ func GetTokenUser(_token string) (User, error) {
 	return user, err
 }
 
-func DeleteToken(_token string) error {
+func DeleteToken(_id uuid.UUID) error {
 	ctx := context.Background()
 	var token Token
-	err := db.NewSelect().Model(&token).Where("token = ?", _token).Scan(ctx)
+	err := db.NewSelect().Model(&token).Where("id = ?", _id).Scan(ctx)
+	if err != nil {
+		return err
+	}
+
+	_, err = db.NewDelete().Model(&token).Where("id = ?", _id).Exec(ctx)
 	return err
 }

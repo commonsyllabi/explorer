@@ -11,6 +11,7 @@ import (
 	"github.com/commonsyllabi/explorer/mailer"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -38,7 +39,7 @@ func Login(c *gin.Context) {
 	}
 
 	user, err := models.GetUserByEmail(email)
-	if err != nil {
+	if err != nil || user.Status == models.UserPending {
 		zero.Error(err.Error())
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Authentication failed"})
 		return
@@ -51,7 +52,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	session.Set("user", user.ID.String()) // save a unique identifier in the session (should switch to user uuid)
+	session.Set("user", user.ID.String())
 	if err := session.Save(); err != nil {
 		zero.Error(err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save session"})
@@ -68,7 +69,6 @@ func Logout(c *gin.Context) {
 		return
 	}
 
-	session.Set("user", "")
 	session.Delete("user")
 	if err := session.Save(); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save session"})
@@ -79,12 +79,39 @@ func Logout(c *gin.Context) {
 }
 
 func Confirm(c *gin.Context) {
-	zero.Warn("i'm supposed to take a user id and a confirm token, check the token is correct and mark the user as confirmed")
+	token, err := uuid.Parse(c.Query("token"))
+	if err != nil {
+		c.String(http.StatusNotFound, err.Error())
+		zero.Errorf(err.Error())
+		return
+	}
+
+	user, err := models.GetTokenUser(token)
+	if err != nil {
+		c.String(http.StatusNotFound, err.Error())
+		zero.Errorf(err.Error())
+		return
+	}
+
+	user.Status = models.UserConfirmed
+	user, err = models.UpdateUser(user.ID, &user)
+	if err != nil {
+		c.String(http.StatusNotFound, err.Error())
+		zero.Errorf(err.Error())
+		return
+	}
+
+	err = models.DeleteToken(token)
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+		zero.Errorf(err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, user)
 }
 
 func RequestCredientalChange(c *gin.Context) {
-
-	// check for user email
 	email, err := mail.ParseAddress(c.PostForm("email"))
 	if err != nil {
 		c.String(http.StatusBadRequest, "not a valid email address")
@@ -99,18 +126,16 @@ func RequestCredientalChange(c *gin.Context) {
 		return
 	}
 
-	// generate token, store in separate table, the table should contain the user id as well
 	token, err := models.CreateToken(user.ID)
 	if err != nil {
 		c.String(http.StatusNotFound, err.Error())
 		zero.Errorf(err.Error())
 		return
 	}
-	zero.Warn("create the token table, then store the token,uuid pair!")
 
 	// send email with link
 	if gin.Mode() != gin.TestMode {
-		body := fmt.Sprintf("here is your update link :%v!", token.Token)
+		body := fmt.Sprintf("here is your update link :%v!", token.ID.String())
 		mailer.SendMail(email.Address, "user created", body)
 	}
 
@@ -122,7 +147,13 @@ func RequestCredientalChange(c *gin.Context) {
 func Recover(c *gin.Context) {
 	zero.Warn("i'm supposed to take a recovery token and check if it is valid, then return yes or no. the actual password modification happens as a regular PATCH to the user, with the unique token as an authentication method")
 	// check if recovery token is valid
-	token := c.Param("token") //todo unsafe
+	token, err := uuid.Parse(c.Param("token"))
+	if err != nil {
+		c.String(http.StatusNotFound, "token not found")
+		zero.Errorf("token not found %s", err)
+		return
+	}
+
 	user, err := models.GetTokenUser(token)
 	if err != nil {
 		c.String(http.StatusNotFound, "token not found")

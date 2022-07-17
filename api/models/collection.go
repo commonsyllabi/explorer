@@ -41,11 +41,14 @@ func GetAllCollections() ([]Collection, error) {
 
 func UpdateCollection(id uuid.UUID, coll *Collection) (Collection, error) {
 	ctx := context.Background()
-	err := db.NewSelect().Model(coll).Where("id = ?", id).Scan(ctx)
+	existing := new(Collection)
+	err := db.NewSelect().Model(existing).Where("id = ?", id).Scan(ctx)
 	if err != nil {
 		return *coll, err
 	}
-	_, err = db.NewUpdate().Model(coll).OmitZero().Where("id = ?", id).Exec(ctx)
+
+	coll.UpdatedAt = time.Now()
+	_, err = db.NewUpdate().Model(coll).WherePK().Exec(ctx)
 	return *coll, err
 }
 

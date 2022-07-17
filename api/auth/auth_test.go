@@ -36,7 +36,6 @@ func TestAuth(t *testing.T) {
 	var cookie http.Cookie
 
 	t.Run("Testing login", func(t *testing.T) {
-
 		data := url.Values{}
 		data.Add("email", "one@raz.com")
 		data.Add("password", "12345678")
@@ -53,7 +52,7 @@ func TestAuth(t *testing.T) {
 		require.NotNil(t, len(res.Result().Cookies()))
 		cookie = *res.Result().Cookies()[0]
 
-		assert.Equal(t, cookie.Name, "authsession")
+		assert.Equal(t, cookie.Name, "cosyl_auth")
 	})
 
 	t.Run("Testing authorized access", func(t *testing.T) {

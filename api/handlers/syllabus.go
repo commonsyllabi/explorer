@@ -125,13 +125,6 @@ func GetSyllabus(c *gin.Context) {
 }
 
 func UpdateSyllabus(c *gin.Context) {
-	err := sanitizeSyllabus(c)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		zero.Error(err.Error())
-		return
-	}
-
 	id := c.Param("id")
 	if len(id) < 25 {
 		c.String(http.StatusBadRequest, "not a valid ID")
@@ -139,28 +132,48 @@ func UpdateSyllabus(c *gin.Context) {
 		return
 	}
 
-	syll := models.Syllabus{}
-	err = c.Bind(&syll)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	syll.UpdatedAt = time.Now()
 	uid, err := uuid.Parse(id)
 	if err != nil {
 		c.String(http.StatusBadRequest, "not a valid ID")
 		zero.Errorf("not a valid id %d", err)
 		return
 	}
-	s, err := models.UpdateSyllabus(uid, &syll)
+
+	err = sanitizeSyllabus(c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		zero.Error(err.Error())
+		return
+	}
+
+	var input models.Syllabus
+	err = c.Bind(&input)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	syll, err := models.GetSyllabus(uid)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	err = c.Bind(&syll)
+	if err != nil {
+		zero.Errorf("error binding syllabus: %v", err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	updated, err := models.UpdateSyllabus(uid, &syll)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		zero.Errorf("error updating syllabus %d: %v", id, err)
 		return
 	}
 
-	c.JSON(http.StatusOK, s)
+	c.JSON(http.StatusOK, updated)
 }
 
 func DeleteSyllabus(c *gin.Context) {

@@ -55,11 +55,13 @@ func TestSyllabusModel(t *testing.T) {
 	})
 
 	t.Run("Test update syllabus", func(t *testing.T) {
-		syll := models.Syllabus{
-			UpdatedAt: time.Now(),
-			Title:     "Test Title 1 (updated)",
+		syll, err := models.GetSyllabus(syllabusID)
+		if err != nil {
+			t.Error(err)
 		}
+		syll.Title = "Test Title 1 (updated)"
 		updated, err := models.UpdateSyllabus(syllabusID, &syll)
+
 		require.Nil(t, err)
 		require.False(t, updated.CreatedAt.IsZero())
 
