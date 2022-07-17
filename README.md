@@ -27,6 +27,7 @@ figure out proper has-many/belongs-to relations in bun
 
 - better organize test utils
 - think about user input validation/sanitization
+- - make sure every handler is binding the input to check for wrong fields
 - take a look at the kinds of tests which should be in the handlers, and in the models (re: input validation, etc.)
 - in the test, have separateID for resources to delete, because it makes the tests randomly fail
 - also in the tests, harmonize what is being tested across models (i.e. syll handler is not testing for inexisting, valid uuid)
@@ -35,6 +36,7 @@ figure out proper has-many/belongs-to relations in bun
 
 - have a confirmed field on the user model
 - -  this led to discovering that the model wasn't properly updating due to `OmitZero()` bug. this led to refactoring of first getting the model, updating the required fields, and then calling update to the database. the question: is it ok to just send the full entity client side?
+- - the way this is solved is by figuring out update with omitzero: to do that, we have to remove the `not_null` constraint on the created_at (adding a default of current_timestamp as a countermeasure)
 - so now i'm updating all the tests for the handlers in order to comply with this new approach
 - tests
 - - user create/confirmation flow (implement)

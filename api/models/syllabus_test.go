@@ -55,11 +55,9 @@ func TestSyllabusModel(t *testing.T) {
 	})
 
 	t.Run("Test update syllabus", func(t *testing.T) {
-		syll, err := models.GetSyllabus(syllabusID)
-		if err != nil {
-			t.Error(err)
-		}
+		var syll models.Syllabus
 		syll.Title = "Test Title 1 (updated)"
+
 		updated, err := models.UpdateSyllabus(syllabusID, &syll)
 
 		require.Nil(t, err)
@@ -71,8 +69,7 @@ func TestSyllabusModel(t *testing.T) {
 
 	t.Run("Test update non-existing syllabus", func(t *testing.T) {
 		syll := models.Syllabus{
-			UpdatedAt: time.Now(),
-			Title:     "Test Title 1 (updated)",
+			Title: "Test Title 1 (updated)",
 		}
 		updated, err := models.UpdateSyllabus(syllabusNonExistingID, &syll)
 		assert.NotNil(t, err)

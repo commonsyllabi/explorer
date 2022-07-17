@@ -55,11 +55,7 @@ func TestResourceModel(t *testing.T) {
 	})
 
 	t.Run("Test update resource", func(t *testing.T) {
-		res, err := models.GetResource(resourceID)
-		if err != nil {
-			t.Error(err)
-		}
-
+		var res models.Resource
 		res.Name = "Test Name 1 (updated)"
 		updated, err := models.UpdateResource(resourceID, &res)
 		require.Nil(t, err)

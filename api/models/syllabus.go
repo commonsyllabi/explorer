@@ -50,7 +50,7 @@ func UpdateSyllabus(id uuid.UUID, syll *Syllabus) (Syllabus, error) {
 	}
 
 	syll.UpdatedAt = time.Now()
-	_, err = db.NewUpdate().Model(syll).OmitZero().Where("id = ?", id).Exec(ctx)
+	_, err = db.NewUpdate().Model(syll).OmitZero().Where("id = ?", id).Returning("*").Exec(ctx)
 	return *syll, err
 }
 

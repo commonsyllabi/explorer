@@ -47,7 +47,7 @@ func UpdateResource(id uuid.UUID, res *Resource) (Resource, error) {
 	}
 
 	res.UpdatedAt = time.Now()
-	_, err = db.NewUpdate().Model(res).OmitZero().Where("id = ?", id).Exec(ctx)
+	_, err = db.NewUpdate().Model(res).OmitZero().Where("id = ?", id).Returning("*").Exec(ctx)
 	return *res, err
 }
 

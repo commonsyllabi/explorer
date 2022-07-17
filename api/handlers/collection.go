@@ -3,6 +3,7 @@ package handlers
 import (
 	"fmt"
 	"net/http"
+	"reflect"
 	"time"
 
 	zero "github.com/commonsyllabi/explorer/api/logger"
@@ -64,9 +65,10 @@ func UpdateCollection(c *gin.Context) {
 		return
 	}
 
+	var empty = new(models.Collection)
 	var input models.Collection
 	err = c.Bind(&input)
-	if err != nil {
+	if err != nil || reflect.DeepEqual(&input, empty) {
 		zero.Errorf("error binding collection: %v", err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

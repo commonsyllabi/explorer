@@ -48,7 +48,7 @@ func UpdateCollection(id uuid.UUID, coll *Collection) (Collection, error) {
 	}
 
 	coll.UpdatedAt = time.Now()
-	_, err = db.NewUpdate().Model(coll).WherePK().Exec(ctx)
+	_, err = db.NewUpdate().Model(coll).Where("id = ?", id).Returning("*").Exec(ctx)
 	return *coll, err
 }
 

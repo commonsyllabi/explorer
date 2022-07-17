@@ -2,8 +2,6 @@ package models
 
 import (
 	"context"
-	"errors"
-	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -20,7 +18,7 @@ type User struct {
 	CreatedAt time.Time `bun:",nullzero,notnull,default:current_timestamp" json:"created_at"`
 	UpdatedAt time.Time `bun:",nullzero,notnull,default:current_timestamp" json:"updated_at"`
 
-	Email       string        `json:"email" form:"email" binding:"required,email"`
+	Email       string        `json:"email" form:"email"`
 	Password    []byte        `json:"password"` // no form binding to prevent storing cleartext
 	Syllabi     []*Syllabus   `bun:"syllabi,rel:has-many" form:"syllabi" json:"syllabi"`
 	Collections []*Collection `bun:"rel:has-many" json:"collections"`
@@ -55,27 +53,16 @@ func GetAllUsers() ([]User, error) {
 }
 
 func UpdateUser(id uuid.UUID, user *User) (User, error) {
-	//-- check if user actually has a uuid
-	//-- as a way to know if we're getting a full model
-	user_id, err := uuid.Parse(user.ID.String())
-	if err != nil {
-		return *user, err
-	}
-
-	if user_id == uuid.Nil {
-		return *user, errors.New("User not found")
-	}
-
 	ctx := context.Background()
 	existing := new(User)
-	err = db.NewSelect().Model(existing).Where("id = ?", id).Scan(ctx)
+	err := db.NewSelect().Model(existing).Where("id = ?", id).Scan(ctx)
 	if err != nil {
 		return *user, err
 	}
 
 	user.UpdatedAt = time.Now()
-	_, err = db.NewUpdate().Model(user).WherePK().Exec(ctx)
-	fmt.Println("returning", user)
+	_, err = db.NewUpdate().Model(user).OmitZero().Where("id = ?", existing.ID).Returning("*").Exec(ctx)
+
 	return *user, err
 }
 

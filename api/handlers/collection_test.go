@@ -212,6 +212,33 @@ func TestCollectionHandler(t *testing.T) {
 		assert.Equal(t, http.StatusBadRequest, res.Code)
 	})
 
+	t.Run("Test update collection wrong field", func(t *testing.T) {
+		var body bytes.Buffer
+		w := multipart.NewWriter(&body)
+		w.WriteField("name", "Updated Name")
+		w.WriteField("wrong-field", "mailicious")
+		w.Close()
+
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "PATCH"
+		c.Request.Header.Set("Content-Type", w.FormDataContentType())
+		c.Request.Body = io.NopCloser(&body)
+		c.Params = []gin.Param{
+			{
+				Key:   "id",
+				Value: "wrong",
+			},
+		}
+
+		handlers.UpdateCollection(c)
+		assert.Equal(t, http.StatusBadRequest, res.Code)
+	})
+
 	t.Run("Test delete collection", func(t *testing.T) {
 		res := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(res)

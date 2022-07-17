@@ -3,6 +3,7 @@ package handlers
 import (
 	"fmt"
 	"net/http"
+	"reflect"
 	"time"
 
 	zero "github.com/commonsyllabi/explorer/api/logger"
@@ -146,9 +147,10 @@ func UpdateSyllabus(c *gin.Context) {
 		return
 	}
 
+	var empty = new(models.Syllabus)
 	var input models.Syllabus
 	err = c.Bind(&input)
-	if err != nil {
+	if err != nil || reflect.DeepEqual(&input, empty) { // deep equal checks for wrong input fields
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}

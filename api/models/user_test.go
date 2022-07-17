@@ -57,12 +57,14 @@ func TestUserModel(t *testing.T) {
 			t.Error(err)
 		}
 		user.Email = "test@user.updated"
-		updated, err := models.UpdateUser(userID, &user)
+		var other models.User
+		other.Email = "other@updated.com"
+
+		updated, err := models.UpdateUser(userID, &other)
 
 		require.Nil(t, err)
 		require.False(t, updated.CreatedAt.IsZero())
-		assert.Equal(t, updated.Email, user.Email)
-		assert.NotEqual(t, updated.CreatedAt, updated.UpdatedAt, "Expected the CreatedAt and the UpdatedAt values to be different")
+		assert.Equal(t, other.Email, updated.Email)
 	})
 
 	t.Run("Test update non-existing user", func(t *testing.T) {

@@ -3,6 +3,7 @@ package handlers
 import (
 	"fmt"
 	"net/http"
+	"reflect"
 	"time"
 
 	zero "github.com/commonsyllabi/explorer/api/logger"
@@ -71,9 +72,10 @@ func UpdateResource(c *gin.Context) {
 		return
 	}
 
+	var empty = new(models.Resource)
 	var input models.Resource
 	err = c.Bind(&input)
-	if err != nil {
+	if err != nil || reflect.DeepEqual(&input, empty) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}

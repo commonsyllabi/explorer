@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/mail"
+	"reflect"
 	"time"
 
 	zero "github.com/commonsyllabi/explorer/api/logger"
@@ -95,17 +96,18 @@ func UpdateUser(c *gin.Context) {
 		return
 	}
 
+	var empty = new(models.User)
 	var input models.User
 	err = c.Bind(&input)
-	if err != nil {
+	if err != nil || reflect.DeepEqual(&input, empty) {
 		zero.Errorf("error binding user: %v", err)
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, err)
 		return
 	}
 
 	user, err := models.GetUser(uid)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, err)
 		return
 	}
 
