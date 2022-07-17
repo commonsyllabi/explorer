@@ -215,10 +215,36 @@ func TestSyllabusHandler(t *testing.T) {
 		assert.Equal(t, "Updated Title", syll.Title)
 	})
 
+	t.Run("Test update syllabus malformed title", func(t *testing.T) {
+		var body bytes.Buffer
+		w := multipart.NewWriter(&body)
+		w.WriteField("title", "U")
+		w.Close()
+
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "PATCH"
+		c.Request.Header.Set("Content-Type", w.FormDataContentType())
+		c.Request.Body = io.NopCloser(&body)
+		c.Params = []gin.Param{
+			{
+				Key:   "id",
+				Value: syllabusID.String(),
+			},
+		}
+
+		handlers.UpdateSyllabus(c)
+		assert.Equal(t, http.StatusBadRequest, res.Code)
+	})
+
 	t.Run("Test update syllabus malformed field", func(t *testing.T) {
 		var body bytes.Buffer
 		w := multipart.NewWriter(&body)
-		w.WriteField("title", "Updated")
+		w.WriteField("wrong-field", "malicious")
 		w.Close()
 
 		res := httptest.NewRecorder()
