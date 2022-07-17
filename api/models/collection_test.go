@@ -77,11 +77,11 @@ func TestCollectionModel(t *testing.T) {
 		}
 		updated, err := models.UpdateCollection(collectionNonExistingID, &res)
 		assert.NotNil(t, err)
-		assert.True(t, updated.CreatedAt.IsZero()) //todo fix
+		assert.True(t, updated.CreatedAt.IsZero())
 	})
 
 	t.Run("Test delete collection", func(t *testing.T) {
-		res, err := models.DeleteCollection(collectionID)
+		res, err := models.DeleteCollection(collectionDeleteID)
 		assert.NotNil(t, res)
 		assert.Nil(t, err)
 	})

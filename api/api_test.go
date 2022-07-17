@@ -139,7 +139,7 @@ func mustInitDB() *bun.DB {
 		fmt.Printf("didn't get db test url from env, defaulting to %v\n", databaseTestURL)
 	}
 
-	db, err := models.InitDB(databaseTestURL)
+	db, err := models.InitTestDB(databaseTestURL)
 	if err != nil {
 		panic(err)
 	}

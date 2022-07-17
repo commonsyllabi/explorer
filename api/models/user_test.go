@@ -42,7 +42,7 @@ func TestUserModel(t *testing.T) {
 	t.Run("Test get user with syllabus", func(t *testing.T) {
 		user, err := models.GetUser(userID)
 		require.Nil(t, err)
-		assert.Equal(t, 1, len(user.Syllabi))
+		assert.Equal(t, 2, len(user.Syllabi))
 	})
 
 	t.Run("Test get non-existing user", func(t *testing.T) {
@@ -78,7 +78,7 @@ func TestUserModel(t *testing.T) {
 	})
 
 	t.Run("Test delete user", func(t *testing.T) {
-		user, err := models.DeleteUser(userID)
+		user, err := models.DeleteUser(userDeleteID)
 		assert.NotNil(t, user)
 		assert.Nil(t, err)
 	})

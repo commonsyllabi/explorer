@@ -8,7 +8,6 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
-	"testing"
 
 	zero "github.com/commonsyllabi/explorer/api/logger"
 	"github.com/uptrace/bun"
@@ -52,7 +51,43 @@ func InitDB(url string) (*bun.DB, error) {
 	err = runFixtures()
 	if err != nil {
 		zero.Errorf("error running fixtures: %v", err)
+		return db, err
+	}
+
+	return db, err
+}
+
+func InitTestDB(url string) (*bun.DB, error) {
+	zero.Infof("connecting: %s", url) //-- todo this should not be logged
+	sslMode := false
+	if strings.HasSuffix(url, "sslmode=require") {
+		sslMode = true
+	}
+
+	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(url), pgdriver.WithInsecure(!sslMode)))
+
+	// mockdb, _, err := sqlmock.New()
+	// if err != nil {
+	// 	panic(err)
+	// }
+
+	db = bun.NewDB(sqldb, pgdialect.New())
+
+	err := db.Ping()
+	if err != nil {
+		return db, err
+	}
+
+	err = runMigrations(url, sslMode)
+	if err != nil {
+		zero.Errorf("error running migrations: %v", err)
 		log.Fatal(err)
+	}
+
+	err = runFixtures()
+	if err != nil {
+		zero.Errorf("error running fixtures: %v", err)
+		return db, err
 	}
 
 	return db, err
@@ -91,17 +126,8 @@ func runFixtures() error {
 	)
 
 	ctx := context.Background()
-	err := fixture.Load(ctx, os.DirFS(Basepath+"/fixtures"), "syllabus.yml", "resource.yml", "user.yml", "collection.yml")
-
-	return err
-}
-
-func RemoveFixtures(t *testing.T) {
-	ctx := context.Background()
-	db.NewTruncateTable().Model((*Syllabus)(nil)).Cascade().Exec(ctx)
-	db.NewTruncateTable().Model((*Resource)(nil)).Cascade().Exec(ctx)
-	db.NewTruncateTable().Model((*User)(nil)).Cascade().Exec(ctx)
-	db.NewTruncateTable().Model((*Collection)(nil)).Cascade().Exec(ctx)
+	_ = fixture.Load(ctx, os.DirFS(Basepath+"/fixtures"), "syllabus.yml", "resource.yml", "user.yml", "collection.yml")
+	return nil
 }
 
 func Shutdown() error {

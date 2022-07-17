@@ -28,9 +28,11 @@ figure out proper has-many/belongs-to relations in bun
 - better organize test utils
 - think about user input validation/sanitization
 - - make sure every handler is binding the input to check for wrong fields
-- take a look at the kinds of tests which should be in the handlers, and in the models (re: input validation, etc.)
-- in the test, have separateID for resources to delete, because it makes the tests randomly fail
-- also in the tests, harmonize what is being tested across models (i.e. syll handler is not testing for inexisting, valid uuid)
+- tests
+    - take a look at the kinds of tests which should be in the handlers, and in the models (re: input validation, etc.)
+    - deal with fixtures more properly
+    - harmonize what is being tested across models (i.e. syll handler is not testing for inexisting, valid uuid)
+
 
 ### tasks
 

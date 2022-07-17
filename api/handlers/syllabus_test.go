@@ -22,6 +22,7 @@ import (
 
 var (
 	syllabusID            uuid.UUID
+	syllabusDeleteID      uuid.UUID
 	syllabusNonExistingID uuid.UUID
 
 	collectionID            uuid.UUID
@@ -29,14 +30,17 @@ var (
 	collectionNonExistingID uuid.UUID
 
 	resourceID            uuid.UUID
+	resourceDeleteID      uuid.UUID
 	resourceNonExistingID uuid.UUID
 
 	userID            uuid.UUID
+	userDeleteID      uuid.UUID
 	userNonExistentID uuid.UUID
 )
 
 func setup(t *testing.T) func(t *testing.T) {
 	syllabusID = uuid.MustParse("46de6a2b-aacb-4c24-b1e1-3495821f846a")
+	syllabusDeleteID = uuid.MustParse("46de6a2b-aacb-4c24-b1e1-3495821f8469")
 	syllabusNonExistingID = uuid.New()
 
 	collectionID = uuid.MustParse("b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a7")
@@ -44,15 +48,17 @@ func setup(t *testing.T) func(t *testing.T) {
 	collectionNonExistingID = uuid.New()
 
 	resourceID = uuid.MustParse("c55f0baf-12b8-4bdb-b5e6-2280bff8ab21")
+	resourceDeleteID = uuid.MustParse("c55f0baf-12b8-4bdb-b5e6-2280bff8ab29")
 	resourceNonExistingID = uuid.New()
 
 	userID = uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c8a8")
+	userDeleteID = uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c8a9")
 	userNonExistentID = uuid.New()
 
 	mustSeedDB(t)
 	gin.SetMode(gin.TestMode)
 	return func(t *testing.T) {
-		models.RemoveFixtures(t)
+
 	}
 }
 
@@ -385,6 +391,6 @@ func mustSeedDB(t *testing.T) {
 	if databaseTestURL == "" {
 		databaseTestURL = "postgres://postgres:postgres@localhost:5432/explorer-test"
 	}
-	_, err := models.InitDB(databaseTestURL)
+	_, err := models.InitTestDB(databaseTestURL)
 	require.Nil(t, err)
 }

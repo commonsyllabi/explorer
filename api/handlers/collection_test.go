@@ -277,7 +277,7 @@ func TestCollectionHandler(t *testing.T) {
 		assert.Equal(t, http.StatusNotFound, res.Code)
 	})
 
-	t.Run("Test delete collection", func(t *testing.T) {
+	t.Run("Test delete collection wrong input", func(t *testing.T) {
 		res := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(res)
 		c.Request = &http.Request{
