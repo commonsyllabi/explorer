@@ -102,8 +102,8 @@ func SetupRouter() (*gin.Engine, error) {
 	a := router.Group("/auth")
 	{
 		a.GET("/confirm", auth.Confirm)
-		a.POST("/recover", auth.RequestCredientalChange)
-		a.GET("/check-recover", auth.Recover)
+		a.POST("/request-recover", auth.RequestRecover)
+		a.POST("/check-recover", auth.Recover)
 	}
 
 	syllabi := router.Group("/syllabi")

@@ -2,7 +2,6 @@ package models
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	zero "github.com/commonsyllabi/explorer/api/logger"
@@ -16,9 +15,7 @@ type Token struct {
 }
 
 func CreateToken(_id uuid.UUID) (Token, error) {
-	// generate hash
 	hash := uuid.New()
-	fmt.Println(hash)
 	token := Token{hash, time.Now(), _id}
 	ctx := context.Background()
 	_, err := db.NewInsert().Model(&token).Exec(ctx)

@@ -247,7 +247,7 @@ func TestUserHandler(t *testing.T) {
 		}
 
 		handlers.UpdateUser(c)
-		assert.Equal(t, http.StatusBadRequest, res.Code)
+		assert.Equal(t, http.StatusNotFound, res.Code)
 	})
 
 	t.Run("Test update user wrong field", func(t *testing.T) {

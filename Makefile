@@ -1,4 +1,7 @@
 run:
+	godotenv -f ".env,.secrets" go run cmd/api/main.go
+
+docker-run:
 	docker compose down --volumes
 	docker compose up
 

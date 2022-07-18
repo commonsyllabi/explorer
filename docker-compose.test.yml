@@ -28,6 +28,8 @@ services:
         condition: service_healthy
     ports:
      - ${PORT}:${PORT}
+    env_file:
+     - ./.secrets
     environment:
       DATABASE_TEST_URL: "postgres://cosyl:cosyl@db_test_explorer:5433/explorer-test"
       PORT: "3046"

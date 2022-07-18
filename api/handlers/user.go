@@ -107,7 +107,7 @@ func UpdateUser(c *gin.Context) {
 
 	user, err := models.GetUser(uid)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, err)
+		c.JSON(http.StatusNotFound, err)
 		return
 	}
 
@@ -180,7 +180,6 @@ func DeleteUser(c *gin.Context) {
 		return
 	}
 
-	//-- TODO delete any associated resources?
 	if gin.Mode() != gin.TestMode {
 		body := fmt.Sprintf("the user %s was successfully deleted!", user.ID)
 		mailer.SendMail(user.Email, "user deleted", body)
@@ -212,6 +211,6 @@ func sanitizeUserCreate(c *gin.Context) error {
 }
 
 func sanitizeUserUpdate(c *gin.Context) error {
-	zero.Warn("implement me!")
+	zero.Warn("implement the sanitization of user update! for instance, check if the email address is correct")
 	return nil
 }

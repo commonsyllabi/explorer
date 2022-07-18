@@ -29,15 +29,14 @@ func Authenticate() gin.HandlerFunc {
 
 func Login(c *gin.Context) {
 	session := sessions.Default(c)
-	email := c.PostForm("email")
 	password := c.PostForm("password")
-
-	if strings.Trim(email, " ") == "" || strings.Trim(password, " ") == "" {
+	email, err := mail.ParseAddress(c.PostForm("email"))
+	if err != nil || strings.Trim(password, " ") == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Parameters can't be empty"})
 		return
 	}
 
-	user, err := models.GetUserByEmail(email)
+	user, err := models.GetUserByEmail(email.Address)
 	if err != nil || user.Status == models.UserPending {
 		zero.Error(err.Error())
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Authentication failed"})
@@ -110,7 +109,7 @@ func Confirm(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
-func RequestCredientalChange(c *gin.Context) {
+func RequestRecover(c *gin.Context) {
 	email, err := mail.ParseAddress(c.PostForm("email"))
 	if err != nil {
 		c.String(http.StatusBadRequest, "not a valid email address")
@@ -134,19 +133,16 @@ func RequestCredientalChange(c *gin.Context) {
 
 	// send email with link
 	if gin.Mode() != gin.TestMode {
-		body := fmt.Sprintf("here is your update link :%v!", token.ID.String())
-		mailer.SendMail(email.Address, "user created", body)
+		body := fmt.Sprintf("here is your recover link :%v!", token.ID.String())
+		mailer.SendMail(email.Address, "account recovery", body)
 	}
 
 	c.String(http.StatusOK, "recovery email sent!")
-
 }
 
 // Recover takes a token and checks if it exists in the token table, and an optional password to update the associated user password
 func Recover(c *gin.Context) {
-	zero.Warn("i'm supposed to take a recovery token and check if it is valid, then return yes or no. the actual password modification happens as a regular PATCH to the user, with the unique token as an authentication method")
-	// check if recovery token is valid
-	token, err := uuid.Parse(c.Param("token"))
+	token, err := uuid.Parse(c.Query("token"))
 	if err != nil {
 		c.String(http.StatusNotFound, "token not found")
 		zero.Errorf("token not found %s", err)
@@ -161,23 +157,23 @@ func Recover(c *gin.Context) {
 	}
 
 	var password struct {
-		value string `form:"password"`
+		Value string `form:"password"`
 	}
 
-	err = c.Bind(password)
+	err = c.ShouldBind(&password)
 	if err != nil {
 		c.String(http.StatusBadRequest, "couldn't parse password")
 		zero.Errorf("couldn't parse password %s", err)
 		return
 	}
 
-	if password.value == "" {
-		c.String(http.StatusAccepted, "token found")
+	if password.Value == "" {
+		c.String(http.StatusNotModified, "password not modified")
 		return
 	}
 
 	// hash and update the password
-	hashed, err := bcrypt.GenerateFromPassword([]byte(password.value), bcrypt.DefaultCost)
+	hashed, err := bcrypt.GenerateFromPassword([]byte(password.Value), bcrypt.DefaultCost)
 	if err != nil {
 		zero.Errorf("error hashing password: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error updating user": err.Error()})
@@ -188,6 +184,13 @@ func Recover(c *gin.Context) {
 	if err != nil {
 		c.String(http.StatusBadRequest, "couldn't update password")
 		zero.Errorf("couldn't update password %s", err)
+		return
+	}
+
+	err = models.DeleteToken(token)
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+		zero.Errorf(err.Error())
 		return
 	}
 

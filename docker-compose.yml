@@ -30,7 +30,7 @@ services:
      - ${PORT}:${PORT}
     env_file:
       - ./.env
-      # - ./.env.secrets
+      - ./.secrets
     environment:
       DATABASE_URL: "postgres://${DB_USER}:${DB_PASSWORD}@db:${DB_PORT}/${DB_NAME}"
       DATABASE_TEST_URL: "postgres://${DB_USER}:${DB_PASSWORD}@db:${DB_PORT}/explorer-test"
