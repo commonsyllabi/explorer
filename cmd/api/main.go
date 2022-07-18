@@ -49,8 +49,5 @@ func main() {
 		zero.Log.Fatal().Msgf("error initializing database: %v", err)
 	}
 
-	err = api.StartServer(port, mode, conf)
-	if err != nil {
-		zero.Log.Fatal().Msgf("Error starting server: %v", err)
-	}
+	api.StartServer(port, mode, conf)
 }

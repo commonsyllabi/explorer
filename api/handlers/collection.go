@@ -100,6 +100,78 @@ func UpdateCollection(c *gin.Context) {
 	c.JSON(http.StatusOK, updated)
 }
 
+func AddCollectionSyllabus(c *gin.Context) {
+	id := c.Param("id")
+	if len(id) < 25 {
+		c.String(http.StatusBadRequest, "not a valid ID")
+		zero.Errorf("not a valid id %d", id)
+		return
+	}
+
+	uid, err := uuid.Parse(id)
+	if err != nil {
+		c.String(http.StatusBadRequest, "not a valid ID")
+		zero.Errorf("not a valid id %d", err)
+		return
+	}
+
+	// check that the syllabus ID is proper
+	syll_id := c.PostForm("syllabus_id")
+	if len(id) < 25 {
+		c.String(http.StatusBadRequest, "not a valid ID")
+		zero.Errorf("not a valid id %d", id)
+		return
+	}
+
+	syll_uid, err := uuid.Parse(syll_id)
+	if err != nil {
+		c.String(http.StatusBadRequest, "not a valid ID")
+		zero.Errorf("not a valid id %d", err)
+		return
+	}
+
+	syll, err := models.GetSyllabus(syll_uid)
+	if err != nil {
+		zero.Errorf("error getting syllabus %v: %s", id, err)
+		c.JSON(http.StatusNotFound, gin.H{
+			"msg": "We couldn't find the syllabus.",
+		})
+		return
+	}
+
+	coll, err := models.GetCollection(uid)
+	if err != nil {
+		zero.Errorf("error getting Collection %v: %s", id, err)
+		c.JSON(http.StatusNotFound, gin.H{
+			"msg": "We couldn't find the Collection.",
+		})
+		return
+	}
+
+	coll.Syllabi = append(coll.Syllabi, &syll)
+	syll.CollectionID = coll.ID
+
+	updated_syll, err := models.UpdateSyllabus(syll.ID, &syll)
+	if err != nil {
+		zero.Errorf("error updating syllabus %v: %s", updated_syll, err)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"msg": "We couldn't complete the update.",
+		})
+		return
+	}
+
+	updated, err := models.UpdateCollection(coll.ID, &coll)
+	if err != nil {
+		zero.Errorf("error updating collection %v: %s", id, err)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"msg": "We couldn't complete the update.",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, updated)
+}
+
 func GetCollection(c *gin.Context) {
 	id := c.Param("id")
 	if len(id) < 25 {
@@ -118,24 +190,68 @@ func GetCollection(c *gin.Context) {
 	coll, err := models.GetCollection(uid)
 	if err != nil {
 		zero.Errorf("error getting Collection %v: %s", id, err)
-		c.JSON(http.StatusNotFound, gin.H{
-			"msg": "We couldn't find the Collection.",
-		})
-
+		c.JSON(http.StatusNotFound, uid)
 		return
 	}
 
 	c.JSON(http.StatusOK, coll)
 }
 
-func DeleteCollection(c *gin.Context) {
+func GetCollectionSyllabi(c *gin.Context) {
 	id := c.Param("id")
-	if len(id) < 25 {
+	uid, err := uuid.Parse(id)
+	if err != nil {
 		c.String(http.StatusBadRequest, "not a valid ID")
-		zero.Errorf("not a valid id %d", id)
+		zero.Errorf("not a valid id %d", err)
 		return
 	}
 
+	coll, err := models.GetCollection(uid)
+	if err != nil {
+		zero.Errorf("error getting Collection %v: %s", id, err)
+		c.JSON(http.StatusNotFound, id)
+		return
+	}
+
+	c.JSON(http.StatusOK, coll.Syllabi)
+}
+
+func GetCollectionSyllabus(c *gin.Context) {
+	coll_id := c.Param("id")
+	coll_uid, err := uuid.Parse(coll_id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, coll_id)
+		zero.Errorf("not a valid id %d", err)
+		return
+	}
+
+	syll_id := c.Param("syll_id")
+	syll_uid, err := uuid.Parse(syll_id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, syll_id)
+		zero.Errorf("not a valid id %d", err)
+		return
+	}
+
+	_, err = models.GetCollection(coll_uid)
+	if err != nil {
+		zero.Errorf("error getting Collection %v: %s", coll_id, err)
+		c.JSON(http.StatusNotFound, coll_id)
+		return
+	}
+
+	syll, err := models.GetSyllabus(syll_uid)
+	if err != nil {
+		zero.Errorf("error getting syllabus %v: %s", syll_id, err)
+		c.JSON(http.StatusNotFound, syll_id)
+		return
+	}
+
+	c.JSON(http.StatusOK, syll)
+}
+
+func DeleteCollection(c *gin.Context) {
+	id := c.Param("id")
 	uid, err := uuid.Parse(id)
 	if err != nil {
 		c.String(http.StatusBadRequest, "not a valid ID")
@@ -151,6 +267,51 @@ func DeleteCollection(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, coll)
+}
+
+func DeleteCollectionSyllabus(c *gin.Context) {
+	coll_id := c.Param("id")
+	coll_uid, err := uuid.Parse(coll_id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, coll_id)
+		zero.Errorf("not a valid id %d", err)
+		return
+	}
+
+	syll_id := c.Param("syll_id")
+	syll_uid, err := uuid.Parse(syll_id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, syll_id)
+		zero.Errorf("not a valid id %d", err)
+		return
+	}
+
+	_, err = models.GetCollection(coll_uid)
+	if err != nil {
+		c.String(http.StatusNotFound, err.Error())
+		zero.Errorf("error getting collection %d: %v", coll_id, err)
+		return
+	}
+
+	syll, err := models.GetSyllabus(syll_uid)
+	if err != nil {
+		c.String(http.StatusNotFound, err.Error())
+		zero.Errorf("error getting syllabus %d: %v", syll_id, err)
+		return
+	}
+
+	zero.Warn("the way to remove a syllabus from a collection needs to be updated")
+	//-- also there is a problem with "omitzero", we cannot unset fields (like setting the UUID to null below, so we do a new())
+	syll.CollectionID = uuid.New()
+	fmt.Println(syll)
+	updated, err := models.UpdateSyllabus(syll.ID, &syll)
+	if err != nil {
+		c.String(http.StatusNotFound, err.Error())
+		zero.Errorf("error updating syllabus %d: %v", syll_id, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, updated)
 }
 
 func sanitizeCollection(c *gin.Context) error {

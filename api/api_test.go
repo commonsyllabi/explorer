@@ -47,8 +47,7 @@ func TestApi(t *testing.T) {
 		var conf Config
 		conf.DefaultConf()
 		conf.TemplatesDir = "./templates"
-		err := StartServer("2046", gin.TestMode, conf)
-		assert.Equal(t, err, nil, "Expected error from start server to be nil, got %v", err)
+		StartServer("2046", gin.TestMode, conf)
 	})
 
 	t.Run("Testing ping", func(t *testing.T) {
@@ -125,10 +124,7 @@ func mustSetupRouter() *gin.Engine {
 	conf.TemplatesDir = "../api/templates"
 	conf.FixturesDir = "../api/models/fixtures"
 
-	router, err := SetupRouter()
-	if err != nil {
-		panic(err)
-	}
+	router := SetupRouter()
 	return router
 }
 

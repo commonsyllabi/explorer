@@ -96,10 +96,7 @@ func mustSetupRouter() *gin.Engine {
 	conf.TemplatesDir = "../api/templates"
 	conf.FixturesDir = "../api/models/fixtures"
 
-	router, err := api.SetupRouter()
-	if err != nil {
-		panic(err)
-	}
+	router := api.SetupRouter()
 	return router
 }
 

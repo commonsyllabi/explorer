@@ -24,15 +24,11 @@ import (
 var conf Config
 
 // StartServer gets his port and debug in the environment, registers the router, and registers the database closing on exit.
-func StartServer(port string, mode string, c Config) error {
+func StartServer(port string, mode string, c Config) {
 	conf = c
 	gin.SetMode(mode)
 
-	router, err := SetupRouter()
-	if err != nil {
-		return err
-	}
-
+	router := SetupRouter()
 	s := &http.Server{
 		Addr:         ":" + port,
 		Handler:      router,
@@ -57,12 +53,10 @@ func StartServer(port string, mode string, c Config) error {
 	zero.Info("shutting down...")
 	s.Shutdown(context.Background())
 	// err = models.Shutdown()
-
-	return err
 }
 
 // SetupRouter registers all middleware, templates, logging route groups and settings
-func SetupRouter() (*gin.Engine, error) {
+func SetupRouter() *gin.Engine {
 	router := gin.New()
 
 	session_opts := sessions.Options{
@@ -149,11 +143,17 @@ func SetupRouter() (*gin.Engine, error) {
 		collections.POST("/", auth.Authenticate(), handlers.CreateCollection)
 		collections.PATCH("/:id", auth.Authenticate(), handlers.UpdateCollection)
 		collections.DELETE("/:id", auth.Authenticate(), handlers.DeleteCollection)
+
+		collections.GET("/:id/syllabi", handlers.GetCollectionSyllabi)
+		collections.POST("/:id/syllabi", handlers.AddCollectionSyllabus)
+
+		collections.GET("/:id/syllabi/:syll_id", handlers.GetCollectionSyllabus)
+		collections.DELETE("/:id/syllabi/:syll_id", handlers.DeleteCollectionSyllabus)
 	}
 
 	router.Use(handleNotFound)
 
-	return router, nil
+	return router
 }
 
 func handlePing(c *gin.Context) {
