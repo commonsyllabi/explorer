@@ -64,7 +64,12 @@ func StartServer(port string, mode string, c Config) error {
 // SetupRouter registers all middleware, templates, logging route groups and settings
 func SetupRouter() (*gin.Engine, error) {
 	router := gin.New()
+
+	session_opts := sessions.Options{
+		HttpOnly: true,
+	}
 	store := cookie.NewStore([]byte("secret"))
+	store.Options(session_opts)
 	router.Use(sessions.Sessions("cosyl_auth", store))
 
 	router.Use(cors.Default())

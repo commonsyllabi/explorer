@@ -43,7 +43,7 @@ func TestAuth(t *testing.T) {
 
 		req := httptest.NewRequest(http.MethodPost, "/login", body)
 		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-		req.Header.Set("Coookie", "Set-Cookie")
+		req.Header.Set("Cookie", "Set-Cookie")
 
 		res := httptest.NewRecorder()
 		router.ServeHTTP(res, req)

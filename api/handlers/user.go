@@ -211,6 +211,18 @@ func sanitizeUserCreate(c *gin.Context) error {
 }
 
 func sanitizeUserUpdate(c *gin.Context) error {
-	zero.Warn("implement the sanitization of user update! for instance, check if the email address is correct")
+	if c.PostForm("email") != "" {
+		_, err := mail.ParseAddress(c.PostForm("email"))
+		if err != nil {
+			return err
+		}
+	}
+
+	if c.PostForm("password") != "" {
+		if len(c.PostForm("password")) < 8 || len(c.PostForm("password")) > 20 {
+			zero.Errorf("the email of the User should be between 8 and 20 characters: %d", len(c.PostForm("email")))
+			return fmt.Errorf("the email of the User should be between 10 and 50 characters: %d", len(c.PostForm("email")))
+		}
+	}
 	return nil
 }

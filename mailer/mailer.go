@@ -5,14 +5,14 @@ import (
 	"os"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/mailgun/mailgun-go/v4"
-
-	zero "github.com/commonsyllabi/explorer/api/logger"
 )
 
 const DOMAIN = "post.enframed.net"
 
 func SendMail(_dest string, _subject string, _body string) error {
+	var err error
 	mg := mailgun.NewMailgun(DOMAIN, os.Getenv("MAILGUN_PRIVATE_API_KEY"))
 	mg.SetAPIBase("https://api.eu.mailgun.net/v3") //-- rgpd mon amour
 
@@ -25,11 +25,9 @@ func SendMail(_dest string, _subject string, _body string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 
-	_, _, err := mg.Send(ctx, message)
-	if err != nil {
-		zero.Errorf("error sending email: %v", err)
-		return err
+	if gin.Mode() != gin.TestMode {
+		_, _, err = mg.Send(ctx, message)
 	}
 
-	return nil
+	return err
 }

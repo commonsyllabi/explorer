@@ -6,8 +6,6 @@ Syllabus exploring and sharing platform
 
 figure out proper has-many/belongs-to relations in bun
 
-- add handlers to return everything based on querying a syllabus
-- - right now the user isn't getting picked up, and the collections either: the solution might be to have more complex SQL queries (get the ID of the associated syllabus, the fetch the syllabus, etc.)
 - make just the dashboard private (which is just a grouping of user info, syllabi and collections)
 - what do we do with dangling resources? if a user deletes their account, do we offer to keep the collection with a ghost account? i think it's fair (we just anonimyze the account)
 

@@ -224,7 +224,7 @@ func TestUserHandler(t *testing.T) {
 		assert.NotZero(t, user.ID)
 	})
 
-	t.Run("Test update user wrong id", func(t *testing.T) {
+	t.Run("Test update user non-existent id", func(t *testing.T) {
 		var body bytes.Buffer
 		w := multipart.NewWriter(&body)
 		w.WriteField("email", "updated-wrong-id@user.com")
@@ -242,7 +242,7 @@ func TestUserHandler(t *testing.T) {
 		c.Params = []gin.Param{
 			{
 				Key:   "id",
-				Value: "wrong",
+				Value: userNonExistentID.String(),
 			},
 		}
 
