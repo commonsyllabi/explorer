@@ -8,6 +8,7 @@ RUN go mod download
 
 COPY cmd /app/cmd
 COPY api /app/api
+COPY mailer /app/mailer
 
 RUN chmod -R a+rwX /app
 ENV CGO_ENABLED=0
@@ -15,4 +16,4 @@ RUN mkdir -p /go/tmp
 ENV TMPDIR=/go/tmp
 ENV GIN_MODE=test
 RUN chmod -R a+rwX /go/tmp
-CMD ["go", "test", "./...", "-coverprofile", "cover.out"]
+CMD ["go", "test", "-p", "1", "./...", "-cover"]

@@ -8,6 +8,7 @@ RUN go mod download
 
 COPY cmd /app/cmd
 COPY api /app/api
+COPY mailer /app/mailer
 
 RUN go build -o bin/api ./cmd/api/main.go
 CMD ["/app/bin/api"]

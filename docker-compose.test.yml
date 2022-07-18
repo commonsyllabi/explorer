@@ -1,8 +1,8 @@
 services:
-  db_test:
+  db_test_explorer:
     image: postgres:alpine
     user: postgres
-    container_name: db_test
+    container_name: db_test_explorer
     environment:
       POSTGRES_USER: cosyl
       POSTGRES_PASSWORD: cosyl
@@ -18,18 +18,18 @@ services:
       timeout: 3s
       retries: 10
 
-  backend_test:
-    container_name: backend_test
+  backend_test_explorer:
+    container_name: backend_test_explorer
     build:
       context: .
       dockerfile: tests/Dockertest.back
     depends_on:
-      db_test:
+      db_test_explorer:
         condition: service_healthy
     ports:
      - ${PORT}:${PORT}
     environment:
-      DATABASE_TEST_URL: "postgres://cosyl:cosyl@db_test:5433/explorer-test"
+      DATABASE_TEST_URL: "postgres://cosyl:cosyl@db_test_explorer:5433/explorer-test"
       PORT: "3046"
       DB_PORT: "5433"
       DEBUG: "false"

@@ -27,7 +27,6 @@ var (
 )
 
 func InitDB(url string) (*bun.DB, error) {
-	zero.Infof("connecting: %s", url) //-- todo this should not be logged
 	sslMode := false
 	if strings.HasSuffix(url, "sslmode=require") {
 		sslMode = true
@@ -58,18 +57,12 @@ func InitDB(url string) (*bun.DB, error) {
 }
 
 func InitTestDB(url string) (*bun.DB, error) {
-	zero.Infof("connecting: %s", url) //-- todo this should not be logged
 	sslMode := false
 	if strings.HasSuffix(url, "sslmode=require") {
 		sslMode = true
 	}
 
 	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(url), pgdriver.WithInsecure(!sslMode)))
-
-	// mockdb, _, err := sqlmock.New()
-	// if err != nil {
-	// 	panic(err)
-	// }
 
 	db = bun.NewDB(sqldb, pgdialect.New())
 

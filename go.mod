@@ -3,7 +3,6 @@ module github.com/commonsyllabi/explorer
 go 1.18
 
 require (
-	github.com/DATA-DOG/go-sqlmock v1.5.0
 	github.com/gin-contrib/cors v1.4.0
 	github.com/gin-contrib/sessions v0.0.5
 	github.com/gin-contrib/static v0.0.1
