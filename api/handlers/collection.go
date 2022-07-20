@@ -269,7 +269,7 @@ func DeleteCollection(c *gin.Context) {
 	c.JSON(http.StatusOK, coll)
 }
 
-func DeleteCollectionSyllabus(c *gin.Context) {
+func RemoveCollectionSyllabus(c *gin.Context) {
 	coll_id := c.Param("id")
 	coll_uid, err := uuid.Parse(coll_id)
 	if err != nil {

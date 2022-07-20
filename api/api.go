@@ -148,7 +148,7 @@ func SetupRouter() *gin.Engine {
 		collections.POST("/:id/syllabi", handlers.AddCollectionSyllabus)
 
 		collections.GET("/:id/syllabi/:syll_id", handlers.GetCollectionSyllabus)
-		collections.DELETE("/:id/syllabi/:syll_id", handlers.DeleteCollectionSyllabus)
+		collections.DELETE("/:id/syllabi/:syll_id", handlers.RemoveCollectionSyllabus)
 	}
 
 	router.Use(handleNotFound)
