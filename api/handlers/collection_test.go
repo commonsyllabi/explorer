@@ -313,11 +313,6 @@ func TestCollectionHandler(t *testing.T) {
 	})
 
 	t.Run("Test remove syllabus from collection", func(t *testing.T) {
-		var body bytes.Buffer
-		w := multipart.NewWriter(&body)
-		w.WriteField("syllabus_id", syllabusID.String())
-		w.Close()
-
 		res := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(res)
 		c.Request = &http.Request{
@@ -325,8 +320,6 @@ func TestCollectionHandler(t *testing.T) {
 		}
 
 		c.Request.Method = "DELETE"
-		c.Request.Header.Set("Content-Type", w.FormDataContentType())
-		c.Request.Body = io.NopCloser(&body)
 		c.Params = []gin.Param{
 			{
 				Key:   "id",

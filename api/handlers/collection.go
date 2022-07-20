@@ -102,12 +102,6 @@ func UpdateCollection(c *gin.Context) {
 
 func AddCollectionSyllabus(c *gin.Context) {
 	id := c.Param("id")
-	if len(id) < 25 {
-		c.String(http.StatusBadRequest, "not a valid ID")
-		zero.Errorf("not a valid id %d", id)
-		return
-	}
-
 	uid, err := uuid.Parse(id)
 	if err != nil {
 		c.String(http.StatusBadRequest, "not a valid ID")
@@ -117,12 +111,6 @@ func AddCollectionSyllabus(c *gin.Context) {
 
 	// check that the syllabus ID is proper
 	syll_id := c.PostForm("syllabus_id")
-	if len(id) < 25 {
-		c.String(http.StatusBadRequest, "not a valid ID")
-		zero.Errorf("not a valid id %d", id)
-		return
-	}
-
 	syll_uid, err := uuid.Parse(syll_id)
 	if err != nil {
 		c.String(http.StatusBadRequest, "not a valid ID")

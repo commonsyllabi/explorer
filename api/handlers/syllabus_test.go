@@ -327,6 +327,107 @@ func TestSyllabusHandler(t *testing.T) {
 		assert.Equal(t, http.StatusBadRequest, res.Code)
 	})
 
+	t.Run("Test add resource to syllabus", func(t *testing.T) {
+		var body bytes.Buffer
+		w := multipart.NewWriter(&body)
+		w.WriteField("resource_id", resourceID.String())
+		w.Close()
+
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "PATCH"
+		c.Request.Header.Set("Content-Type", w.FormDataContentType())
+		c.Request.Body = io.NopCloser(&body)
+		c.Params = []gin.Param{
+			{
+				Key:   "id",
+				Value: syllabusID.String(),
+			},
+		}
+
+		handlers.AddSyllabusResource(c)
+		assert.Equal(t, http.StatusOK, res.Code)
+
+		var syll models.Syllabus
+		err := json.Unmarshal(res.Body.Bytes(), &syll)
+		require.Nil(t, err)
+		assert.Equal(t, 3, len(syll.Resources))
+	})
+
+	t.Run("Test get all resources from syllabus", func(t *testing.T) {
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "GET"
+		c.Params = []gin.Param{
+			{
+				Key:   "id",
+				Value: syllabusID.String(),
+			},
+		}
+
+		handlers.GetSyllabusResources(c)
+		assert.Equal(t, http.StatusOK, res.Code)
+	})
+
+	t.Run("Test get resource from syllabus", func(t *testing.T) {
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "GET"
+		c.Params = []gin.Param{
+			{
+				Key:   "id",
+				Value: syllabusID.String(),
+			},
+			{
+				Key:   "res_id",
+				Value: resourceID.String(),
+			},
+		}
+
+		handlers.GetSyllabusResource(c)
+		assert.Equal(t, http.StatusOK, res.Code)
+	})
+
+	t.Run("Test remove resource from syllabus", func(t *testing.T) {
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "DELETE"
+		c.Params = []gin.Param{
+			{
+				Key:   "id",
+				Value: syllabusID.String(),
+			},
+			{
+				Key:   "res_id",
+				Value: resourceID.String(),
+			},
+		}
+
+		handlers.RemoveSyllabusResource(c)
+		assert.Equal(t, http.StatusOK, res.Code)
+
+		var resource models.Resource
+		err := json.Unmarshal(res.Body.Bytes(), &resource)
+		require.Nil(t, err)
+		assert.Equal(t, resourceID, resource.ID)
+	})
+
 	t.Run("Test delete syllabus", func(t *testing.T) {
 		res := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(res)
