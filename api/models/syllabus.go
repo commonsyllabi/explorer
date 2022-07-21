@@ -1,7 +1,6 @@
 package models
 
 import (
-	"context"
 	"time"
 
 	"github.com/google/uuid"
@@ -22,45 +21,40 @@ type Syllabus struct {
 }
 
 func CreateSyllabus(syll *Syllabus) (Syllabus, error) {
-	ctx := context.Background()
-	_, err := db.NewInsert().Model(syll).Exec(ctx)
-	return *syll, err
+	result := db.Create(syll)
+	return *syll, result.Error
 }
 
 func GetSyllabus(id uuid.UUID) (Syllabus, error) {
-	ctx := context.Background()
 	var syll Syllabus
-	err := db.NewSelect().Model(&syll).Where("syllabus.id = ?", id).Relation("Resources").Relation("User").Scan(ctx)
-	return syll, err
+	result := db.First(&syll, id)
+	return syll, result.Error
 }
 
 func GetAllSyllabi() ([]Syllabus, error) {
-	ctx := context.Background()
-	syllabi := make([]Syllabus, 0)
-	err := db.NewSelect().Model(&syllabi).Relation("Resources").Relation("User").Scan(ctx)
-	return syllabi, err
+	var syllabi []Syllabus
+	result := db.Find(&syllabi)
+	return syllabi, result.Error
 }
 
 func UpdateSyllabus(id uuid.UUID, syll *Syllabus) (Syllabus, error) {
-	ctx := context.Background()
 	existing := new(Syllabus)
-	err := db.NewSelect().Model(existing).Where("id = ?", id).Scan(ctx)
-	if err != nil {
-		return *syll, err
+	result := db.First(&existing, id)
+	if result.Error != nil {
+		return *syll, result.Error
 	}
 
 	syll.UpdatedAt = time.Now()
-	_, err = db.NewUpdate().Model(syll).OmitZero().Where("id = ?", id).Returning("*").Exec(ctx)
-	return *syll, err
+	result = db.Model(Syllabus{}).Where("id = ?", id).Updates(syll)
+	return *syll, result.Error
 }
 
 func DeleteSyllabus(id uuid.UUID) (Syllabus, error) {
-	ctx := context.Background()
 	var syll Syllabus
-	err := db.NewSelect().Model(&syll).Where("id = ?", id).Scan(ctx)
-	if err != nil {
-		return syll, err
+	result := db.First(&syll, id)
+	if result.Error != nil {
+		return syll, result.Error
 	}
-	_, err = db.NewDelete().Model(&syll).Where("id = ?", id).Exec(ctx) //-- what to do with dangling resources?
-	return syll, err
+	result = db.Delete(&syll, id)
+	return syll, result.Error
 }

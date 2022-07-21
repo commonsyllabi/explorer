@@ -14,7 +14,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/uptrace/bun"
+	"gorm.io/gorm"
 )
 
 var router *gin.Engine
@@ -100,7 +100,7 @@ func mustSetupRouter() *gin.Engine {
 	return router
 }
 
-func mustInitDB() *bun.DB {
+func mustInitDB() *gorm.DB {
 	databaseTestURL := os.Getenv("DATABASE_TEST_URL")
 	if databaseTestURL == "" {
 		databaseTestURL = "postgres://postgres:postgres@localhost:5432/explorer-test"

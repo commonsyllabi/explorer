@@ -1,10 +1,10 @@
 package models
 
 import (
-	"context"
 	"time"
 
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 const (
@@ -14,66 +14,57 @@ const (
 )
 
 type User struct {
-	ID        uuid.UUID `bun:",pk,type:uuid,default:uuid_generate_v4()"`
-	CreatedAt time.Time `bun:",nullzero,notnull,default:current_timestamp" json:"created_at"`
-	UpdatedAt time.Time `bun:",nullzero,notnull,default:current_timestamp" json:"updated_at"`
+	gorm.Model
+	UserID uuid.UUID `gorm:"type:uuid;primaryKey;default:uuid_generate_v4()"`
 
-	Email       string        `json:"email" form:"email"`
-	Password    []byte        `json:"password"` // no form binding to prevent storing cleartext
-	Syllabi     []*Syllabus   `bun:"syllabi,rel:has-many" form:"syllabi" json:"syllabi"`
-	Collections []*Collection `bun:"rel:has-many" json:"collections"`
-	Status      string        `bun:",default:'pending'" json:"status"`
+	Email    string
+	Password []byte
+	Status   string
 }
 
 func CreateUser(user *User) (User, error) {
-	ctx := context.Background()
-	_, err := db.NewInsert().Model(user).Exec(ctx)
-	return *user, err
+	result := db.Create(user)
+	return *user, result.Error
 }
 
 func GetUser(id uuid.UUID) (User, error) {
-	ctx := context.Background()
 	var user User
-	err := db.NewSelect().Model(&user).Where("id = ?", id).Relation("Syllabi").Relation("Collections").Scan(ctx)
-	return user, err
+	result := db.First(&user, id)
+	return user, result.Error
 }
 
 func GetUserByEmail(email string) (User, error) {
-	ctx := context.Background()
 	var user User
-	err := db.NewSelect().Model(&user).Where("email = ?", email).Scan(ctx)
-	return user, err
+	result := db.Where("email = ?", email).First(&user)
+	return user, result.Error
 }
 
 func GetAllUsers() ([]User, error) {
-	ctx := context.Background()
 	users := make([]User, 0)
-	err := db.NewSelect().Model(&users).Relation("Syllabi").Relation("Collections").Scan(ctx)
-	return users, err
+	result := db.Find(&users)
+	return users, result.Error
 }
 
 func UpdateUser(id uuid.UUID, user *User) (User, error) {
-	ctx := context.Background()
 	existing := new(User)
-	err := db.NewSelect().Model(existing).Where("id = ?", id).Scan(ctx)
-	if err != nil {
-		return *user, err
+	result := db.First(*existing, id)
+	if result.Error != nil {
+		return *user, result.Error
 	}
 
 	user.UpdatedAt = time.Now()
-	_, err = db.NewUpdate().Model(user).OmitZero().Where("id = ?", existing.ID).Returning("*").Exec(ctx)
+	result = db.Model(User{}).Where("id = ?", id).Updates(user)
 
-	return *user, err
+	return *user, result.Error
 }
 
 func DeleteUser(id uuid.UUID) (User, error) {
-	ctx := context.Background()
 	var user User
-	err := db.NewSelect().Model(&user).Where("id = ?", id).Scan(ctx)
-	if err != nil {
-		return user, err
+	result := db.First(&user, id)
+	if result.Error != nil {
+		return user, result.Error
 	}
-	_, err = db.NewDelete().Model(&user).Where("id = ?", id).Exec(ctx) //-- what to do with dangling collections and syllabi?
+	result = db.Delete(&user, id)
 
-	return user, err
+	return user, result.Error
 }

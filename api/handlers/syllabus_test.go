@@ -492,6 +492,6 @@ func mustSeedDB(t *testing.T) {
 	if databaseTestURL == "" {
 		databaseTestURL = "postgres://postgres:postgres@localhost:5432/explorer-test"
 	}
-	_, err := models.InitTestDB(databaseTestURL)
-	require.Nil(t, err)
+	// _, err := models.InitTestDB(databaseTestURL)
+	// require.Nil(t, err)
 }

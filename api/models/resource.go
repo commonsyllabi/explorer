@@ -1,64 +1,56 @@
 package models
 
 import (
-	"context"
 	"time"
 
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 type Resource struct {
-	ID        uuid.UUID `bun:",pk,type:uuid,default:uuid_generate_v4()"`
-	CreatedAt time.Time `bun:",nullzero,notnull,default:current_timestamp" json:"created_at"`
-	UpdatedAt time.Time `bun:",nullzero,notnull,default:current_timestamp" json:"updated_at"`
+	gorm.Model
 
-	SyllabusID uuid.UUID `bun:"syllabus_id,notnull" yaml:"syllabus_id" json:"syllabus_id"`
-	Syllabus   *Syllabus `bun:"rel:belongs-to,join:syllabus_id=id" json:"syllabus"`
+	ResourceID uuid.UUID `gorm:"type:uuid;primaryKey;default:uuid_generate_v4()"`
 
-	Name string `bun:"name,notnull" json:"name" form:"name" binding:"required"`
+	Name string
 }
 
 func CreateResource(res *Resource) (Resource, error) {
-	ctx := context.Background()
-	_, err := db.NewInsert().Model(res).Exec(ctx)
-	return *res, err
+	result := db.Create(res)
+	return *res, result.Error
 }
 
 func GetResource(id uuid.UUID) (Resource, error) {
-	ctx := context.Background()
 	var res Resource
-	err := db.NewSelect().Model(&res).Where("resource.id = ?", id).Relation("Syllabus").Scan(ctx)
-	return res, err
+	result := db.First(&res, id)
+	return res, result.Error
 }
 
 func GetAllResources() ([]Resource, error) {
-	ctx := context.Background()
 	res := make([]Resource, 0)
-	err := db.NewSelect().Model(&res).Relation("Syllabus").Scan(ctx)
-	return res, err
+	result := db.Find(&res)
+	return res, result.Error
 }
 
 func UpdateResource(id uuid.UUID, res *Resource) (Resource, error) {
-	ctx := context.Background()
 	existing := new(Resource)
-	err := db.NewSelect().Model(existing).Where("id = ?", id).Scan(ctx)
-	if err != nil {
-		return *res, err
+	result := db.First(&existing, id)
+	if result.Error != nil {
+		return *res, result.Error
 	}
 
 	res.UpdatedAt = time.Now()
-	_, err = db.NewUpdate().Model(res).OmitZero().Where("id = ?", id).Returning("*").Exec(ctx)
-	return *res, err
+	result = db.Model(Resource{}).Where("id = ?", id).Updates(res)
+	return *res, result.Error
 }
 
 func DeleteResource(id uuid.UUID) (Resource, error) {
-	ctx := context.Background()
 	var res Resource
-	err := db.NewSelect().Model(&res).Where("id = ?", id).Scan(ctx)
-	if err != nil {
-		return res, err
+	result := db.First(&res, id)
+	if result.Error != nil {
+		return res, result.Error
 	}
 
-	_, err = db.NewDelete().Model(&res).Where("id = ?", id).Exec(ctx)
-	return res, err
+	result = db.Delete(&res, id)
+	return res, result.Error
 }

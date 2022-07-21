@@ -61,7 +61,7 @@ func CreateUser(c *gin.Context) {
 	}
 
 	if gin.Mode() != gin.TestMode {
-		token, err := models.CreateToken(user.ID)
+		token, err := models.CreateToken(user.UserID)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, err)
 			zero.Errorf(err.Error())

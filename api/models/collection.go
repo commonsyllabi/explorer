@@ -1,7 +1,6 @@
 package models
 
 import (
-	"context"
 	"time"
 
 	"github.com/google/uuid"
@@ -20,46 +19,41 @@ type Collection struct {
 }
 
 func CreateCollection(coll *Collection) (Collection, error) {
-	ctx := context.Background()
-	_, err := db.NewInsert().Model(coll).Exec(ctx)
-	return *coll, err
+	result := db.Create(coll)
+	return *coll, result.Error
 }
 
 func GetCollection(id uuid.UUID) (Collection, error) {
-	ctx := context.Background()
 	var coll Collection
-	err := db.NewSelect().Model(&coll).Where("collection.id = ?", id).Relation("Syllabi").Relation("User").Scan(ctx)
-	return coll, err
+	result := db.First(&coll, id)
+	return coll, result.Error
 }
 
 func GetAllCollections() ([]Collection, error) {
-	ctx := context.Background()
 	coll := make([]Collection, 0)
-	err := db.NewSelect().Model(&coll).Relation("User").Scan(ctx, &coll)
-	return coll, err
+	result := db.Find(&coll)
+	return coll, result.Error
 }
 
 func UpdateCollection(id uuid.UUID, coll *Collection) (Collection, error) {
-	ctx := context.Background()
 	existing := new(Collection)
-	err := db.NewSelect().Model(existing).Where("id = ?", id).Scan(ctx)
-	if err != nil {
-		return *coll, err
+	result := db.First(existing, id)
+	if result.Error != nil {
+		return *coll, result.Error
 	}
 
 	coll.UpdatedAt = time.Now()
-	_, err = db.NewUpdate().Model(coll).Where("id = ?", id).Returning("*").Exec(ctx)
-	return *coll, err
+	result = db.Model(Collection{}).Where("id = ?", id).Updates(coll)
+	return *coll, result.Error
 }
 
 func DeleteCollection(id uuid.UUID) (Collection, error) {
-	ctx := context.Background()
 	var coll Collection
-	err := db.NewSelect().Model(&coll).Where("id = ?", id).Scan(ctx)
-	if err != nil {
-		return coll, err
+	result := db.First(&coll, id)
+	if result.Error != nil {
+		return coll, result.Error
 	}
 
-	_, err = db.NewDelete().Model(&coll).Where("id = ?", id).Exec(ctx)
-	return coll, err
+	result = db.Delete(&coll, id)
+	return coll, result.Error
 }

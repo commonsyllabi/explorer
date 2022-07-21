@@ -1,7 +1,6 @@
 package models
 
 import (
-	"context"
 	"time"
 
 	zero "github.com/commonsyllabi/explorer/api/logger"
@@ -17,9 +16,8 @@ type Token struct {
 func CreateToken(_id uuid.UUID) (Token, error) {
 	hash := uuid.New()
 	token := Token{hash, time.Now(), _id}
-	ctx := context.Background()
-	_, err := db.NewInsert().Model(&token).Exec(ctx)
-	return token, err
+	result := db.Create(&token)
+	return token, result.Error
 }
 
 // GetTokenUser takes a token and returns the full user associated with it
@@ -27,14 +25,13 @@ func GetTokenUser(_id uuid.UUID) (User, error) {
 	var user User
 	var token Token
 
-	ctx := context.Background()
-	err := db.NewSelect().Model(&token).Where("id = ?", _id).Scan(ctx)
-	if err != nil {
-		zero.Error(err.Error())
-		return user, err
+	result := db.First(&token, _id)
+	if result.Error != nil {
+		zero.Error(result.Error.Error())
+		return user, result.Error
 	}
 
-	user, err = GetUser(token.UserID)
+	user, err := GetUser(token.UserID)
 	if err != nil {
 		zero.Error(err.Error())
 		return user, err
@@ -44,13 +41,12 @@ func GetTokenUser(_id uuid.UUID) (User, error) {
 }
 
 func DeleteToken(_id uuid.UUID) error {
-	ctx := context.Background()
 	var token Token
-	err := db.NewSelect().Model(&token).Where("id = ?", _id).Scan(ctx)
-	if err != nil {
-		return err
+	result := db.First(&token, _id)
+	if result.Error != nil {
+		return result.Error
 	}
 
-	_, err = db.NewDelete().Model(&token).Where("id = ?", _id).Exec(ctx)
-	return err
+	result = db.Delete(&token, _id)
+	return result.Error
 }

@@ -50,7 +50,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	session.Set("user", user.ID.String())
+	session.Set("user", user.UserID.String())
 	if err := session.Save(); err != nil {
 		zero.Error(err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save session"})
@@ -92,7 +92,7 @@ func Confirm(c *gin.Context) {
 	}
 
 	user.Status = models.UserConfirmed
-	user, err = models.UpdateUser(user.ID, &user)
+	user, err = models.UpdateUser(user.UserID, &user)
 	if err != nil {
 		c.String(http.StatusNotFound, err.Error())
 		zero.Errorf(err.Error())
@@ -124,7 +124,7 @@ func RequestRecover(c *gin.Context) {
 		return
 	}
 
-	token, err := models.CreateToken(user.ID)
+	token, err := models.CreateToken(user.UserID)
 	if err != nil {
 		c.String(http.StatusNotFound, err.Error())
 		zero.Errorf(err.Error())
@@ -180,7 +180,7 @@ func Recover(c *gin.Context) {
 		return
 	}
 	user.Password = hashed
-	updated, err := models.UpdateUser(user.ID, &user)
+	updated, err := models.UpdateUser(user.UserID, &user)
 	if err != nil {
 		c.String(http.StatusBadRequest, "couldn't update password")
 		zero.Errorf("couldn't update password %s", err)

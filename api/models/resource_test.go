@@ -30,16 +30,12 @@ func TestResourceModel(t *testing.T) {
 		require.Nil(t, err)
 
 		res := models.Resource{
-			CreatedAt:  time.Now(),
-			UpdatedAt:  time.Now(),
-			Name:       "Test Name 2",
-			SyllabusID: syll.ID,
-			Syllabus:   &syll,
+			Name: "Test Name 2",
 		}
 		r, err := models.CreateResource(&res)
 		require.Nil(t, err)
 		assert.Equal(t, r.Name, res.Name, "Expected to have equal names, got %v - %v", r.Name, res.Name)
-		assert.Equal(t, syll.Title, r.Syllabus.Title, "Expected to have equal titles for parent syllabus, got %v - %v", syll.Title, r.Syllabus.Title)
+		// assert.Equal(t, syll.Title, r.Syllabus.Title, "Expected to have equal titles for parent syllabus, got %v - %v", syll.Title, r.Syllabus.Title)
 	})
 
 	t.Run("Test get resource", func(t *testing.T) {
@@ -67,8 +63,7 @@ func TestResourceModel(t *testing.T) {
 
 	t.Run("Test update non-existing resource", func(t *testing.T) {
 		res := models.Resource{
-			UpdatedAt: time.Now(),
-			Name:      "Test Name 1 (updated)",
+			Name: "Test Name 1 (updated)",
 		}
 		updated, err := models.UpdateResource(resourceNonExistingID, &res)
 		assert.NotNil(t, err)

@@ -81,10 +81,7 @@ func CreateSyllabus(c *gin.Context) {
 		// }
 
 		resource := models.Resource{
-			CreatedAt:  time.Now(),
-			UpdatedAt:  time.Now(),
-			Name:       f.Filename,
-			SyllabusID: syll.ID,
+			Name: f.Filename,
 		}
 
 		res, err := models.CreateResource(&resource)
@@ -161,16 +158,16 @@ func AddSyllabusResource(c *gin.Context) {
 	}
 
 	syll.Resources = append(syll.Resources, &res)
-	res.SyllabusID = syll.ID
+	// res.SyllabusID = syll.ID
 
-	_, err = models.UpdateResource(res.ID, &res)
-	if err != nil {
-		zero.Errorf("error updating resource: %s", err)
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"msg": "We couldn't complete the update.",
-		})
-		return
-	}
+	// _, err = models.UpdateResource(res.ID, &res)
+	// if err != nil {
+	// 	zero.Errorf("error updating resource: %s", err)
+	// 	c.JSON(http.StatusInternalServerError, gin.H{
+	// 		"msg": "We couldn't complete the update.",
+	// 	})
+	// 	return
+	// }
 
 	updated, err := models.UpdateSyllabus(syll.ID, &syll)
 	if err != nil {
@@ -326,7 +323,7 @@ func RemoveSyllabusResource(c *gin.Context) {
 	}
 
 	res_id := c.Param("res_id")
-	res_uid, err := uuid.Parse(res_id)
+	_, err = uuid.Parse(res_id)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res_id)
 		zero.Errorf("not a valid id %d", err)
@@ -340,23 +337,23 @@ func RemoveSyllabusResource(c *gin.Context) {
 		return
 	}
 
-	res, err := models.GetResource(res_uid)
-	if err != nil {
-		c.String(http.StatusNotFound, err.Error())
-		zero.Errorf("error getting resource %d: %v", res_id, err)
-		return
-	}
+	// res, err := models.GetResource(res_uid)
+	// if err != nil {
+	// 	c.String(http.StatusNotFound, err.Error())
+	// 	zero.Errorf("error getting resource %d: %v", res_id, err)
+	// 	return
+	// }
 
 	//-- also there is a problem with "omitzero", we cannot unset fields (like setting the UUID to null below, so we do a new())
-	res.SyllabusID = uuid.New()
-	updated, err := models.UpdateResource(res.ID, &res)
-	if err != nil {
-		c.String(http.StatusNotFound, err.Error())
-		zero.Errorf("error updating resource %d: %v", res_id, err)
-		return
-	}
+	// res.SyllabusID = uuid.New()
+	// updated, err := models.UpdateResource(res.ID, &res)
+	// if err != nil {
+	// 	c.String(http.StatusNotFound, err.Error())
+	// 	zero.Errorf("error updating resource %d: %v", res_id, err)
+	// 	return
+	// }
 
-	c.JSON(http.StatusOK, updated)
+	c.JSON(http.StatusOK, res_id)
 }
 
 func sanitizeSyllabus(c *gin.Context) error {

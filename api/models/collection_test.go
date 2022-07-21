@@ -22,10 +22,8 @@ func TestCollectionModel(t *testing.T) {
 
 	t.Run("Test create collection", func(t *testing.T) {
 		user := models.User{
-			CreatedAt: time.Now(),
-			UpdatedAt: time.Now(),
-			Email:     "test@collection-create.com",
-			Password:  []byte("12345678"),
+			Email:    "test@collection-create.com",
+			Password: []byte("12345678"),
 		}
 		_, err := models.CreateUser(&user) //-- todo bug here there is always an issue with conflicting keys
 		require.Nil(t, err)
@@ -34,7 +32,7 @@ func TestCollectionModel(t *testing.T) {
 			CreatedAt: time.Now(),
 			UpdatedAt: time.Now(),
 			Name:      "Test Name 2",
-			UserID:    user.ID,
+			UserID:    user.UserID,
 			User:      &user,
 		}
 		r, err := models.CreateCollection(&res)

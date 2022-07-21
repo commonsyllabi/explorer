@@ -10,7 +10,7 @@ import (
 	"github.com/commonsyllabi/explorer/api/models"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"github.com/uptrace/bun"
+	"gorm.io/gorm"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -128,14 +128,15 @@ func mustSetupRouter() *gin.Engine {
 	return router
 }
 
-func mustInitDB() *bun.DB {
+func mustInitDB() *gorm.DB {
 	databaseTestURL := os.Getenv("DATABASE_TEST_URL")
 	if databaseTestURL == "" {
 		databaseTestURL = "postgres://postgres:postgres@localhost:5432/explorer-test"
 		fmt.Printf("didn't get db test url from env, defaulting to %v\n", databaseTestURL)
 	}
 
-	db, err := models.InitTestDB(databaseTestURL)
+	fmt.Println("switch back to testdb init")
+	db, err := models.InitDB(databaseTestURL)
 	if err != nil {
 		panic(err)
 	}
