@@ -22,15 +22,14 @@ var (
 )
 
 func InitDB(url string) (*gorm.DB, error) {
-	// sslMode := false
-	// if strings.HasSuffix(url, "sslmode=require") {
-	// 	sslMode = true
-	// }
-
-	dsn := "host=localhost user=postgres password=postgres dbname=testy port=5432 sslmode=disable"
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open(url), &gorm.Config{})
 	if err != nil {
 		return db, err
+	}
+
+	result := db.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";")
+	if result.Error != nil {
+		return db, result.Error
 	}
 
 	// migration
@@ -41,7 +40,6 @@ func InitDB(url string) (*gorm.DB, error) {
 	}
 
 	// fixtures
-
 	err = runFixtures(db, true)
 	if err != nil {
 		zero.Errorf("error running fixtures: %v", err)
@@ -72,33 +70,49 @@ func runFixtures(_db *gorm.DB, shouldTruncateTables bool) error {
 		return err
 	}
 
+	bytes, err = ioutil.ReadFile(filepath.Join(Basepath, "fixtures", "syllabus.yml"))
+	if err != nil {
+		return err
+	}
+
+	syllabi := make([]Syllabus, 0)
+	err = yaml.Unmarshal(bytes, &syllabi)
+	if err != nil {
+		return err
+	}
+
+	bytes, err = ioutil.ReadFile(filepath.Join(Basepath, "fixtures", "collection.yml"))
+	if err != nil {
+		return err
+	}
+
+	collections := make([]Collection, 0)
+	err = yaml.Unmarshal(bytes, &collections)
+	if err != nil {
+		return err
+	}
+
+	bytes, err = ioutil.ReadFile(filepath.Join(Basepath, "fixtures", "resource.yml"))
+	if err != nil {
+		return err
+	}
+
+	resources := make([]Resource, 0)
+	err = yaml.Unmarshal(bytes, &resources)
+	if err != nil {
+		return err
+	}
+
 	for _, user := range users {
 		result := _db.Create(&user)
 		if result.Error != nil {
 			return err
 		}
 	}
-	// first truncate the tables (might not be necessary with the AutoMigrate call to create tables)
 
-	// then load the yaml
-	// bytes, err := ioutil.ReadFile(filepath.Join(Basepath, "fixtures", "user.yml"))
-	// if err != nil {
-	// 	return err
-	// }
-
-	// users := make([]User, 0)
-	// err = yaml.Unmarshal(bytes, &users)
-	// if err != nil {
-	// 	return err
-	// }
-
-	// for _, user := range users {
-	// 	// then insert them in the db
-	// 	result := db.Create(&user)
-	// 	if result.Error != nil {
-	// 		return err
-	// 	}
-	// }
+	// _db.Model(&users[0]).Association("Syllabi").Append(&syllabi[0])
+	// _db.First(&users[0])
+	// fmt.Printf("user has %d syllabi\n", len(users[0].Syllabi))
 
 	return err
 }

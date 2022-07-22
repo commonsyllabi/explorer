@@ -10,11 +10,11 @@ import (
 
 type Syllabus struct {
 	gorm.Model
-	SyllabusID uuid.UUID `gorm:"index:,unique;type:uuid;primaryKey;default:uuid_generate_v4()" json:"syllabus_id" yaml:"syllabus_id"`
-	Status     string    `gorm:"default:unlisted"`
+	UUID   uuid.UUID `gorm:"uniqueIndex;type:uuid;primaryKey;default:uuid_generate_v4()" json:"uuid" yaml:"uuid"`
+	Status string    `gorm:"default:unlisted"`
 
 	Collections []*Collection `gorm:"many2many:collection_syllabi;"`
-	Resources   []Resource    `gorm:"foreignKey:ResourceID;references:SyllabusID"`
+	Resources   []Resource    `gorm:"foreignKey:UUID;references:UUID"`
 
 	Title         string `gorm:"not null"`
 	Description   string `gorm:"not null"`
@@ -30,6 +30,7 @@ type Syllabus struct {
 	// 	Name string
 	// 	URL  string
 	// }
+
 	LearningOutcomes pq.StringArray `gorm:"type:text[]"`
 	Other            string
 	Readings         pq.StringArray `gorm:"type:text[]"`

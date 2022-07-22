@@ -170,7 +170,7 @@ func AddSyllabusResource(c *gin.Context) {
 	// 	return
 	// }
 
-	updated, err := models.UpdateSyllabus(syll.SyllabusID, &syll)
+	updated, err := models.UpdateSyllabus(syll.UUID, &syll)
 	if err != nil {
 		zero.Errorf("error updating syllabus %v: %s", id, err)
 		c.JSON(http.StatusInternalServerError, gin.H{

@@ -9,8 +9,7 @@ import (
 
 type Resource struct {
 	gorm.Model
-
-	ResourceID uuid.UUID `gorm:"index:,unique;type:uuid;primaryKey;default:uuid_generate_v4()" json:"resource_id" yaml:"resource_id"`
+	UUID uuid.UUID `gorm:"index:,unique;type:uuid;primaryKey;default:uuid_generate_v4()" json:"resource_id" yaml:"resource_id"`
 
 	Name        string `gorm:"not null"`
 	Type        string `gorm:"not null"`

@@ -9,8 +9,8 @@ import (
 
 type Collection struct {
 	gorm.Model
-	CollectionID uuid.UUID `gorm:"index:,unique;type:uuid;primaryKey;default:uuid_generate_v4()" json:"collection_id" yaml:"collection_id"`
-	Status       string    `gorm:"default:unlisted"`
+	UUID   uuid.UUID `gorm:"index:,unique;type:uuid;primaryKey;default:uuid_generate_v4()" json:"collection_id" yaml:"collection_id"`
+	Status string    `gorm:"default:unlisted"`
 
 	Name string `gorm:"not null" json:"name" form:"name" binding:"required"`
 
