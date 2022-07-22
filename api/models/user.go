@@ -18,11 +18,11 @@ type User struct {
 	gorm.Model
 	UserID uuid.UUID `gorm:"index:,unique;type:uuid;primaryKey;default:uuid_generate_v4()"`
 
-	Email    string
-	Password []byte
-	Status   string
+	Email    string `gorm:"unique;not null"`
+	Password []byte `gorm:"not null"`
+	Status   string `gorm:"default:pending"`
 
-	Name      string
+	Name      string `gorm:"not null"`
 	Bio       string
 	Education string
 	// Institutions []struct {

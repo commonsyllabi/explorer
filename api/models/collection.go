@@ -12,10 +12,10 @@ type Collection struct {
 	CollectionID uuid.UUID `gorm:"index:,unique;type:uuid;primaryKey;default:uuid_generate_v4()"`
 	Status       string    `gorm:"default:unlisted"`
 
-	Name string `json:"name" form:"name" binding:"required"`
+	Name string `gorm:"not null" json:"name" form:"name" binding:"required"`
 
 	Syllabi []Syllabus `gorm:"many2many:collection_syllabi;"`
-	UserID  uuid.UUID  `gorm:"index:,unique"`
+	UserID  uuid.UUID  `gorm:"index:,unique;not null"`
 }
 
 func CreateCollection(coll *Collection) (Collection, error) {

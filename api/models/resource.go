@@ -12,13 +12,13 @@ type Resource struct {
 
 	ResourceID uuid.UUID `gorm:"index:,unique;type:uuid;primaryKey;default:uuid_generate_v4()"`
 
-	Name        string
-	Type        string
+	Name        string `gorm:"not null"`
+	Type        string `gorm:"not null"`
 	Description string
-	URL         string
+	URL         string `gorm:"not null"`
 
-	UserID     uuid.UUID `gorm:"index:,unique"`
-	SyllabusID uuid.UUID `gorm:"index:,unique"`
+	UserID     uuid.UUID `gorm:"index:,unique;not null"`
+	SyllabusID uuid.UUID `gorm:"index:,unique;not null"`
 }
 
 func CreateResource(res *Resource) (Resource, error) {

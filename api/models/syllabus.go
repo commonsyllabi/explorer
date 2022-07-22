@@ -17,8 +17,8 @@ type Syllabus struct {
 	Collections []*Collection `gorm:"many2many:collection_syllabi;"`
 	Resources   []Resource    `gorm:"foreignKey:ResourceID;references:SyllabusID"`
 
-	Title         string
-	Description   string
+	Title         string `gorm:"not null"`
+	Description   string `gorm:"not null"`
 	Duration      int
 	GradingRubric string
 
