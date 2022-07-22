@@ -16,9 +16,9 @@ type CollectionToSyllabus struct {
 
 func CreateCollectionSyllabus(coll Collection, syll Syllabus) (Collection, error) {
 	cts := &CollectionToSyllabus{
-		CollectionID: coll.ID,
+		CollectionID: coll.CollectionID,
 		Collection:   &coll,
-		SyllabusID:   syll.ID,
+		SyllabusID:   syll.SyllabusID,
 		Syllabus:     &syll,
 	}
 

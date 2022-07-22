@@ -3,7 +3,6 @@ package models_test
 import (
 	"fmt"
 	"testing"
-	"time"
 
 	"github.com/commonsyllabi/explorer/api/models"
 	"github.com/stretchr/testify/assert"
@@ -29,11 +28,8 @@ func TestCollectionModel(t *testing.T) {
 		require.Nil(t, err)
 
 		res := models.Collection{
-			CreatedAt: time.Now(),
-			UpdatedAt: time.Now(),
-			Name:      "Test Name 2",
-			UserID:    user.UserID,
-			User:      &user,
+			Name: "Test Name 2",
+			User: user,
 		}
 		r, err := models.CreateCollection(&res)
 		require.Nil(t, err)
@@ -70,8 +66,7 @@ func TestCollectionModel(t *testing.T) {
 
 	t.Run("Test update non-existing collection", func(t *testing.T) {
 		res := models.Collection{
-			UpdatedAt: time.Now(),
-			Name:      "Test Name 1 (updated)",
+			Name: "Test Name 1 (updated)",
 		}
 		updated, err := models.UpdateCollection(collectionNonExistingID, &res)
 		assert.NotNil(t, err)

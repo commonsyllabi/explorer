@@ -3,7 +3,6 @@ package models_test
 import (
 	"fmt"
 	"testing"
-	"time"
 
 	"github.com/commonsyllabi/explorer/api/models"
 	"github.com/stretchr/testify/assert"
@@ -22,9 +21,7 @@ func TestResourceModel(t *testing.T) {
 
 	t.Run("Test create resource", func(t *testing.T) {
 		syll := models.Syllabus{
-			CreatedAt: time.Now(),
-			UpdatedAt: time.Now(),
-			Title:     "Test Title 2",
+			Title: "Test Title 2",
 		}
 		_, err := models.CreateSyllabus(&syll) //-- todo bug here there is always an issue with conflicting keys
 		require.Nil(t, err)

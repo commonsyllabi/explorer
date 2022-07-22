@@ -10,9 +10,15 @@ import (
 type Resource struct {
 	gorm.Model
 
-	ResourceID uuid.UUID `gorm:"type:uuid;primaryKey;default:uuid_generate_v4()"`
+	ResourceID uuid.UUID `gorm:"index:,unique;type:uuid;primaryKey;default:uuid_generate_v4()"`
 
-	Name string
+	Name        string
+	Type        string
+	Description string
+	URL         string
+
+	UserID     uuid.UUID `gorm:"index:,unique"`
+	SyllabusID uuid.UUID `gorm:"index:,unique"`
 }
 
 func CreateResource(res *Resource) (Resource, error) {

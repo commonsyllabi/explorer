@@ -133,7 +133,7 @@ func RequestRecover(c *gin.Context) {
 
 	// send email with link
 	if gin.Mode() != gin.TestMode {
-		body := fmt.Sprintf("here is your recover link :%v!", token.ID.String())
+		body := fmt.Sprintf("here is your recover link :%v!", token.TokenID.String())
 		mailer.SendMail(email.Address, "account recovery", body)
 	}
 

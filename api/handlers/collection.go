@@ -136,10 +136,10 @@ func AddCollectionSyllabus(c *gin.Context) {
 		return
 	}
 
-	coll.Syllabi = append(coll.Syllabi, &syll)
-	syll.CollectionID = coll.ID
+	coll.Syllabi = append(coll.Syllabi, syll)
+	syll.Collections = append(syll.Collections, &coll)
 
-	updated_syll, err := models.UpdateSyllabus(syll.ID, &syll)
+	updated_syll, err := models.UpdateSyllabus(syll.SyllabusID, &syll)
 	if err != nil {
 		zero.Errorf("error updating syllabus %v: %s", updated_syll, err)
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -148,7 +148,7 @@ func AddCollectionSyllabus(c *gin.Context) {
 		return
 	}
 
-	updated, err := models.UpdateCollection(coll.ID, &coll)
+	updated, err := models.UpdateCollection(coll.CollectionID, &coll)
 	if err != nil {
 		zero.Errorf("error updating collection %v: %s", id, err)
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -291,8 +291,8 @@ func RemoveCollectionSyllabus(c *gin.Context) {
 	zero.Warn("the way to remove a syllabus from a collection needs to be updated")
 	//-- also there is a problem with "omitzero", we cannot unset fields (like setting the UUID to null below, so we do a new())
 	//-- anyway this will be obsolete when i properly implement many to many
-	syll.CollectionID = uuid.New()
-	updated, err := models.UpdateSyllabus(syll.ID, &syll)
+
+	updated, err := models.UpdateSyllabus(syll.SyllabusID, &syll)
 	if err != nil {
 		c.String(http.StatusNotFound, err.Error())
 		zero.Errorf("error updating syllabus %d: %v", syll_id, err)

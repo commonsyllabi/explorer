@@ -1,10 +1,11 @@
 package models
 
 import (
-	"fmt"
+	"log"
 	"path/filepath"
 	"runtime"
 
+	zero "github.com/commonsyllabi/explorer/api/logger"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 
@@ -30,16 +31,11 @@ func InitDB(url string) (*gorm.DB, error) {
 		return db, err
 	}
 
-	underlying, _ := db.DB()
-	fmt.Printf("%+v", underlying)
-
-	err = db.AutoMigrate(&Resource{})
-
-	// err = runMigrations(url, sslMode)
-	// if err != nil {
-	// 	zero.Errorf("error running migrations: %v", err)
-	// 	log.Fatal(err)
-	// }
+	err = db.AutoMigrate(&User{}, &Collection{}, &Syllabus{}, &Resource{})
+	if err != nil {
+		zero.Errorf("error running migrations: %v", err)
+		log.Fatal(err)
+	}
 
 	// err = runFixtures()
 	// if err != nil {
@@ -50,32 +46,8 @@ func InitDB(url string) (*gorm.DB, error) {
 	return db, err
 }
 
-func runMigrations(url string, sslMode bool) error {
-
-	// if !sslMode {
-	// 	url = url + "?sslmode=disable"
-	// }
-
-	// migrationsDir := "file://" + Basepath + "/migrations"
-	// m, err := migrate.New(migrationsDir, url)
-	// if err != nil {
-	// 	return err
-	// }
-
-	// err = m.Up()
-	// if err != nil && err != migrate.ErrNoChange {
-	// 	return err
-	// }
-
-	// if err == migrate.ErrNoChange {
-	// 	zero.Debug("Running migrations with no change")
-	// }
-
-	// return err
-	return nil
-}
-
 func runFixtures() error {
+	var err error
 	// fixture := dbfixture.New(db, dbfixture.WithTruncateTables())
 	// db.RegisterModel(
 	// 	(*Syllabus)(nil),
@@ -86,7 +58,7 @@ func runFixtures() error {
 
 	// ctx := context.Background()
 	// _ = fixture.Load(ctx, os.DirFS(Basepath+"/fixtures"), "syllabus.yml", "resource.yml", "user.yml", "collection.yml")
-	return nil
+	return err
 }
 
 func Shutdown() error {

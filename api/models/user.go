@@ -15,11 +15,27 @@ const (
 
 type User struct {
 	gorm.Model
-	UserID uuid.UUID `gorm:"type:uuid;primaryKey;default:uuid_generate_v4()"`
+	UserID uuid.UUID `gorm:"index:,unique;type:uuid;primaryKey;default:uuid_generate_v4()"`
 
 	Email    string
 	Password []byte
 	Status   string
+
+	Name      string
+	Bio       string
+	Education string
+	// Institutions []struct {
+	// 	Name     string
+	// 	Position string
+	// }
+	URLs string
+
+	ResourceID   uuid.UUID    `gorm:"index:,unique"`
+	Resources    []Resource   `gorm:"foreignKey:UserID;references:ResourceID"`
+	CollectionID uuid.UUID    `gorm:"index:,unique"`
+	Collections  []Collection `gorm:"foreignKey:UserID;references:CollectionID"`
+	SyllabusID   uuid.UUID    `gorm:"index:,unique"`
+	Syllabi      []Syllabus   `gorm:"foreignKey:UserID;references:SyllabusID"`
 }
 
 func CreateUser(user *User) (User, error) {

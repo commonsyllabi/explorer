@@ -67,7 +67,7 @@ func CreateUser(c *gin.Context) {
 			zero.Errorf(err.Error())
 			return
 		}
-		body := fmt.Sprintf("the user %s was successfully created with token %v!", user.ID, token.ID.String())
+		body := fmt.Sprintf("the user %s was successfully created with token %s!", user.UserID, token.TokenID)
 		mailer.SendMail(user.Email, "user created", body)
 	}
 

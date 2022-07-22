@@ -4,20 +4,37 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 type Syllabus struct {
-	ID        uuid.UUID `bun:",pk,type:uuid,default:uuid_generate_v4()"`
-	CreatedAt time.Time `bun:",nullzero,notnull,default:current_timestamp" json:"created_at"`
-	UpdatedAt time.Time `bun:",nullzero,notnull,default:current_timestamp" json:"updated_at"`
+	gorm.Model
+	SyllabusID uuid.UUID `gorm:"index:,unique;type:uuid;primaryKey;default:uuid_generate_v4()"`
+	Status     string    `gorm:"default:unlisted"`
 
-	UserID uuid.UUID `bun:"user_id" yaml:"user_id" json:"user_id"`
-	User   *User     `bun:"rel:belongs-to,join:user_id=id" json:"user"`
+	UserID      uuid.UUID     `gorm:"index:,unique"`
+	Collections []*Collection `gorm:"many2many:collection_syllabi;"`
+	Resources   []Resource    `gorm:"foreignKey:ResourceID;references:SyllabusID"`
 
-	CollectionID uuid.UUID   `bun:"collection_id" yaml:"collection_id" json:"collection_id"`
-	Resources    []*Resource `bun:"rel:has-many,join:id=syllabus_id" json:"resources"`
-	Title        string      `bun:",notnull" json:"title" form:"title"`
-	//-- todo: how to have many to many relation for collections?
+	Title         string
+	Description   string
+	Duration      int
+	GradingRubric string
+
+	// Institutions []struct {
+	// 	Country string //-- iso 3166
+	// 	Date    struct {
+	// 		Term string
+	// 		Year int
+	// 	}
+	// 	Name string
+	// 	URL  string
+	// }
+	LearningOutcomes string
+	Other            string
+	Readings         string
+	Tags             string
+	TopicOutlines    string
 }
 
 func CreateSyllabus(syll *Syllabus) (Syllabus, error) {

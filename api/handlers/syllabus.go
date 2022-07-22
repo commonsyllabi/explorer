@@ -91,7 +91,8 @@ func CreateSyllabus(c *gin.Context) {
 		resources = append(resources, &res)
 	}
 
-	syll.Resources = resources
+	zero.Warn("resources not correctly added to syll create")
+	// syll.Resources = resources
 	c.JSON(http.StatusCreated, syll)
 }
 
@@ -157,7 +158,7 @@ func AddSyllabusResource(c *gin.Context) {
 		return
 	}
 
-	syll.Resources = append(syll.Resources, &res)
+	syll.Resources = append(syll.Resources, res)
 	// res.SyllabusID = syll.ID
 
 	// _, err = models.UpdateResource(res.ID, &res)
@@ -169,7 +170,7 @@ func AddSyllabusResource(c *gin.Context) {
 	// 	return
 	// }
 
-	updated, err := models.UpdateSyllabus(syll.ID, &syll)
+	updated, err := models.UpdateSyllabus(syll.SyllabusID, &syll)
 	if err != nil {
 		zero.Errorf("error updating syllabus %v: %s", id, err)
 		c.JSON(http.StatusInternalServerError, gin.H{

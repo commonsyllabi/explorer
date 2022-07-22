@@ -2,7 +2,6 @@ package models_test
 
 import (
 	"testing"
-	"time"
 
 	"github.com/commonsyllabi/explorer/api/models"
 	"github.com/stretchr/testify/assert"
@@ -21,19 +20,15 @@ func TestSyllabusModel(t *testing.T) {
 
 	t.Run("Test create bare syllabus", func(t *testing.T) {
 		syll := models.Syllabus{
-			CreatedAt: time.Now(),
-			UpdatedAt: time.Now(),
-			Title:     "Test Title 2",
+			Title: "Test Title 2",
 		}
 		_, err := models.CreateSyllabus(&syll)
 		assert.Nil(t, err)
 	})
 
 	t.Run("Test create syllabus with resources", func(t *testing.T) {
-		resources := make([]*models.Resource, 3)
+		resources := make([]models.Resource, 3)
 		syll := models.Syllabus{
-			CreatedAt: time.Now(),
-			UpdatedAt: time.Now(),
 			Title:     "Test Title with Resources",
 			Resources: resources,
 		}

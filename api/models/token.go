@@ -1,21 +1,20 @@
 package models
 
 import (
-	"time"
-
 	zero "github.com/commonsyllabi/explorer/api/logger"
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 type Token struct {
-	ID        uuid.UUID `bun:",pk,type:uuid,default:uuid_generate_v4()"`
-	CreatedAt time.Time `bun:",nullzero,notnull,default:current_timestamp" json:"created_at"`
-	UserID    uuid.UUID `bun:"user_id,type:uuid" yaml:"user_id" json:"user_id"`
+	gorm.Model
+	TokenID uuid.UUID `gorm:"type:uuid;primaryKey;default:uuid_generate_v4()"`
+	UserID  uuid.UUID `bun:"user_id,type:uuid" yaml:"user_id" json:"user_id"`
 }
 
 func CreateToken(_id uuid.UUID) (Token, error) {
 	hash := uuid.New()
-	token := Token{hash, time.Now(), _id}
+	token := Token{gorm.Model{}, hash, _id}
 	result := db.Create(&token)
 	return token, result.Error
 }

@@ -8,6 +8,7 @@ figure out proper has-many/belongs-to relations in bun
 
 - make just the dashboard private (which is just a grouping of user info, syllabi and collections)
 - what do we do with dangling resources? if a user deletes their account, do we offer to keep the collection with a ghost account? i think it's fair (we just anonimyze the account)
+- for migrations: `CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`
 
 ## questions
 

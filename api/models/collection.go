@@ -4,18 +4,18 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 type Collection struct {
-	ID        uuid.UUID `bun:",pk,type:uuid,default:uuid_generate_v4()"`
-	CreatedAt time.Time `bun:",nullzero,notnull,default:current_timestamp" json:"created_at"`
-	UpdatedAt time.Time `bun:",nullzero,notnull,default:current_timestamp" json:"updated_at"`
+	gorm.Model
+	CollectionID uuid.UUID `gorm:"index:,unique;type:uuid;primaryKey;default:uuid_generate_v4()"`
+	Status       string    `gorm:"default:unlisted"`
 
-	Syllabi []*Syllabus `bun:"rel:has-many,join:id=collection_id" json:"syllabi"` //-- todo many to many
-	Name    string      `json:"name" form:"name" binding:"required"`
+	Name string `json:"name" form:"name" binding:"required"`
 
-	UserID uuid.UUID `bun:"user_id" yaml:"user_id" json:"user_id"`
-	User   *User     `bun:"rel:belongs-to,join:user_id=id" json:"user"`
+	Syllabi []Syllabus `gorm:"many2many:collection_syllabi;"`
+	UserID  uuid.UUID  `gorm:"index:,unique"`
 }
 
 func CreateCollection(coll *Collection) (Collection, error) {
