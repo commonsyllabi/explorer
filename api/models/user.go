@@ -16,7 +16,7 @@ const (
 
 type User struct {
 	gorm.Model
-	UserID uuid.UUID `gorm:"index:,unique;type:uuid;primaryKey;default:uuid_generate_v4()"`
+	UserID uuid.UUID `gorm:"index:,unique;type:uuid;primaryKey;default:uuid_generate_v4()" json:"user_id" yaml:"user_id"`
 
 	Email    string `gorm:"unique;not null"`
 	Password []byte `gorm:"not null"`
@@ -25,18 +25,15 @@ type User struct {
 	Name      string `gorm:"not null"`
 	Bio       string
 	Education string
-	// Institutions []struct {
+	// Position []struct {
 	// 	Name     string
-	// 	Position string
+	// 	Institution Institution
 	// }
 	URLs pq.StringArray `gorm:"type:text[]"`
 
-	ResourceID   uuid.UUID    `gorm:"index:,unique"`
-	Resources    []Resource   `gorm:"foreignKey:UserID;references:ResourceID"`
-	CollectionID uuid.UUID    `gorm:"index:,unique"`
-	Collections  []Collection `gorm:"foreignKey:UserID;references:CollectionID"`
-	SyllabusID   uuid.UUID    `gorm:"index:,unique"`
-	Syllabi      []Syllabus   `gorm:"foreignKey:UserID;references:SyllabusID"`
+	Resources   []Resource   `gorm:"foreignKey:ResourceID;references:UserID"`
+	Collections []Collection `gorm:"foreignKey:CollectionID;references:UserID"`
+	Syllabi     []Syllabus   `gorm:"foreignKey:SyllabusID;references:UserID"`
 }
 
 func CreateUser(user *User) (User, error) {

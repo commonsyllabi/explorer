@@ -10,10 +10,9 @@ import (
 
 type Syllabus struct {
 	gorm.Model
-	SyllabusID uuid.UUID `gorm:"index:,unique;type:uuid;primaryKey;default:uuid_generate_v4()"`
+	SyllabusID uuid.UUID `gorm:"index:,unique;type:uuid;primaryKey;default:uuid_generate_v4()" json:"syllabus_id" yaml:"syllabus_id"`
 	Status     string    `gorm:"default:unlisted"`
 
-	UserID      uuid.UUID     `gorm:"index:,unique"`
 	Collections []*Collection `gorm:"many2many:collection_syllabi;"`
 	Resources   []Resource    `gorm:"foreignKey:ResourceID;references:SyllabusID"`
 

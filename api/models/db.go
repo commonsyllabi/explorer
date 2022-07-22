@@ -1,6 +1,7 @@
 package models
 
 import (
+	"io/ioutil"
 	"log"
 	"path/filepath"
 	"runtime"
@@ -8,6 +9,7 @@ import (
 	zero "github.com/commonsyllabi/explorer/api/logger"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
+	"gopkg.in/yaml.v2"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -31,33 +33,73 @@ func InitDB(url string) (*gorm.DB, error) {
 		return db, err
 	}
 
+	// migration
 	err = db.AutoMigrate(&User{}, &Collection{}, &Syllabus{}, &Resource{})
 	if err != nil {
 		zero.Errorf("error running migrations: %v", err)
 		log.Fatal(err)
 	}
 
-	// err = runFixtures()
-	// if err != nil {
-	// 	zero.Errorf("error running fixtures: %v", err)
-	// 	return db, err
-	// }
+	// fixtures
+
+	err = runFixtures(db, true)
+	if err != nil {
+		zero.Errorf("error running fixtures: %v", err)
+		return db, err
+	}
 
 	return db, err
 }
 
-func runFixtures() error {
+func runFixtures(_db *gorm.DB, shouldTruncateTables bool) error {
 	var err error
-	// fixture := dbfixture.New(db, dbfixture.WithTruncateTables())
-	// db.RegisterModel(
-	// 	(*Syllabus)(nil),
-	// 	(*Resource)(nil),
-	// 	(*User)(nil),
-	// 	(*Collection)(nil),
-	// )
 
-	// ctx := context.Background()
-	// _ = fixture.Load(ctx, os.DirFS(Basepath+"/fixtures"), "syllabus.yml", "resource.yml", "user.yml", "collection.yml")
+	if shouldTruncateTables {
+		result := _db.Exec("TRUNCATE TABLE users CASCADE")
+		if result.Error != nil {
+			return result.Error
+		}
+	}
+
+	bytes, err := ioutil.ReadFile(filepath.Join(Basepath, "fixtures", "user.yml"))
+	if err != nil {
+		return err
+	}
+
+	users := make([]User, 0)
+	err = yaml.Unmarshal(bytes, &users)
+	if err != nil {
+		return err
+	}
+
+	for _, user := range users {
+		result := _db.Create(&user)
+		if result.Error != nil {
+			return err
+		}
+	}
+	// first truncate the tables (might not be necessary with the AutoMigrate call to create tables)
+
+	// then load the yaml
+	// bytes, err := ioutil.ReadFile(filepath.Join(Basepath, "fixtures", "user.yml"))
+	// if err != nil {
+	// 	return err
+	// }
+
+	// users := make([]User, 0)
+	// err = yaml.Unmarshal(bytes, &users)
+	// if err != nil {
+	// 	return err
+	// }
+
+	// for _, user := range users {
+	// 	// then insert them in the db
+	// 	result := db.Create(&user)
+	// 	if result.Error != nil {
+	// 		return err
+	// 	}
+	// }
+
 	return err
 }
 
