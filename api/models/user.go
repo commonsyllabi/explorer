@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/lib/pq"
 	"gorm.io/gorm"
 )
 
@@ -28,7 +29,7 @@ type User struct {
 	// 	Name     string
 	// 	Position string
 	// }
-	URLs string
+	URLs pq.StringArray `gorm:"type:text[]"`
 
 	ResourceID   uuid.UUID    `gorm:"index:,unique"`
 	Resources    []Resource   `gorm:"foreignKey:UserID;references:ResourceID"`

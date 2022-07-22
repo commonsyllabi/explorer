@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/lib/pq"
 	"gorm.io/gorm"
 )
 
@@ -30,11 +31,11 @@ type Syllabus struct {
 	// 	Name string
 	// 	URL  string
 	// }
-	LearningOutcomes string
+	LearningOutcomes pq.StringArray `gorm:"type:text[]"`
 	Other            string
-	Readings         string
-	Tags             string
-	TopicOutlines    string
+	Readings         pq.StringArray `gorm:"type:text[]"`
+	Tags             pq.StringArray `gorm:"type:text[]"`
+	TopicOutlines    pq.StringArray `gorm:"type:text[]"`
 }
 
 func CreateSyllabus(syll *Syllabus) (Syllabus, error) {
