@@ -1,7 +1,6 @@
 package models_test
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/commonsyllabi/explorer/api/models"
@@ -23,22 +22,22 @@ func TestResourceModel(t *testing.T) {
 		syll := models.Syllabus{
 			Title: "Test Title 2",
 		}
-		_, err := models.CreateSyllabus(&syll) //-- todo bug here there is always an issue with conflicting keys
+		result, err := models.CreateSyllabus(userID, &syll)
 		require.Nil(t, err)
-
+		t.Log(result.UUID)
 		res := models.Resource{
 			Name: "Test Name 2",
 		}
-		r, err := models.CreateResource(&res)
+		r, err := models.CreateResource(result.UUID, &res)
 		require.Nil(t, err)
 		assert.Equal(t, r.Name, res.Name, "Expected to have equal names, got %v - %v", r.Name, res.Name)
-		// assert.Equal(t, syll.Title, r.Syllabus.Title, "Expected to have equal titles for parent syllabus, got %v - %v", syll.Title, r.Syllabus.Title)
+		assert.Equal(t, syll.Title, r.Syllabus.Title, "Expected to have equal titles for parent syllabus, got %v - %v", syll.Title, r.Syllabus.Title)
 	})
 
 	t.Run("Test get resource", func(t *testing.T) {
 		res, err := models.GetResource(resourceID)
 		require.Nil(t, err)
-		assert.Equal(t, res.ID, resourceID)
+		assert.Equal(t, res.UUID, resourceID)
 	})
 
 	t.Run("Test get non-existing resource", func(t *testing.T) {
@@ -76,7 +75,6 @@ func TestResourceModel(t *testing.T) {
 	t.Run("Test delete wrong resource", func(t *testing.T) {
 		res, err := models.DeleteResource(resourceNonExistingID)
 		assert.Zero(t, res)
-		fmt.Println(err)
 		assert.NotNil(t, err)
 	})
 }

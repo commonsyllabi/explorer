@@ -22,7 +22,7 @@ func TestSyllabusModel(t *testing.T) {
 		syll := models.Syllabus{
 			Title: "Test Title 2",
 		}
-		_, err := models.CreateSyllabus(&syll)
+		_, err := models.CreateSyllabus(userID, &syll)
 		assert.Nil(t, err)
 	})
 
@@ -32,7 +32,7 @@ func TestSyllabusModel(t *testing.T) {
 			Title:     "Test Title with Resources",
 			Resources: resources,
 		}
-		_, err := models.CreateSyllabus(&syll)
+		_, err := models.CreateSyllabus(userID, &syll)
 		assert.Nil(t, err)
 		assert.Equal(t, len(syll.Resources), len(resources), "Expected the created syllabus to have %d resources, got %d", len(resources), len(syll.Resources))
 	})
@@ -40,7 +40,7 @@ func TestSyllabusModel(t *testing.T) {
 	t.Run("Test get syllabus", func(t *testing.T) {
 		syll, err := models.GetSyllabus(syllabusID)
 		require.Nil(t, err)
-		assert.Equal(t, syll.ID, syllabusID)
+		assert.Equal(t, syll.UUID, syllabusID)
 	})
 
 	t.Run("Test get non-existing syllabus", func(t *testing.T) {
@@ -52,14 +52,12 @@ func TestSyllabusModel(t *testing.T) {
 	t.Run("Test update syllabus", func(t *testing.T) {
 		var syll models.Syllabus
 		syll.Title = "Test Title 1 (updated)"
-
 		updated, err := models.UpdateSyllabus(syllabusID, &syll)
 
 		require.Nil(t, err)
 		require.False(t, updated.CreatedAt.IsZero())
 
 		assert.Equal(t, updated.Title, syll.Title)
-		assert.NotEqual(t, updated.CreatedAt, updated.UpdatedAt, "Expected the CreatedAt and the UpdatedAt values to be different")
 	})
 
 	t.Run("Test update non-existing syllabus", func(t *testing.T) {

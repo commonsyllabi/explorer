@@ -1,8 +1,6 @@
 package models
 
 import (
-	"time"
-
 	"github.com/google/uuid"
 	"github.com/lib/pq"
 	"gorm.io/gorm"
@@ -45,14 +43,19 @@ type Syllabus struct {
 	TopicOutlines    pq.StringArray `gorm:"type:text[]"`
 }
 
-func CreateSyllabus(syll *Syllabus) (Syllabus, error) {
-	result := db.Create(syll)
-	return *syll, result.Error
+func CreateSyllabus(user_uuid uuid.UUID, syll *Syllabus) (Syllabus, error) {
+	user, err := GetUser(user_uuid)
+	if err != nil {
+		return *syll, err
+	}
+
+	err = db.Model(&user).Association("Syllabi").Append(syll)
+	return *syll, err
 }
 
-func GetSyllabus(id uuid.UUID) (Syllabus, error) {
+func GetSyllabus(uuid uuid.UUID) (Syllabus, error) {
 	var syll Syllabus
-	result := db.First(&syll, id)
+	result := db.Where("uuid = ? ", uuid).First(&syll)
 	return syll, result.Error
 }
 
@@ -62,24 +65,23 @@ func GetAllSyllabi() ([]Syllabus, error) {
 	return syllabi, result.Error
 }
 
-func UpdateSyllabus(id uuid.UUID, syll *Syllabus) (Syllabus, error) {
-	existing := new(Syllabus)
-	result := db.First(&existing, id)
+func UpdateSyllabus(uuid uuid.UUID, syll *Syllabus) (Syllabus, error) {
+	var existing Syllabus
+	result := db.Where("uuid = ? ", uuid).First(&existing)
 	if result.Error != nil {
 		return *syll, result.Error
 	}
 
-	syll.UpdatedAt = time.Now()
-	result = db.Model(Syllabus{}).Where("id = ?", id).Updates(syll)
-	return *syll, result.Error
+	result = db.Model(&existing).Where("uuid = ?", uuid).Updates(&syll)
+	return existing, result.Error
 }
 
-func DeleteSyllabus(id uuid.UUID) (Syllabus, error) {
+func DeleteSyllabus(uuid uuid.UUID) (Syllabus, error) {
 	var syll Syllabus
-	result := db.First(&syll, id)
+	result := db.Where("uuid = ? ", uuid).First(&syll)
 	if result.Error != nil {
 		return syll, result.Error
 	}
-	result = db.Delete(&syll, id)
+	result = db.Where("uuid = ? ", uuid).Delete(&syll)
 	return syll, result.Error
 }

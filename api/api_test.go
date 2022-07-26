@@ -135,7 +135,6 @@ func mustInitDB() *gorm.DB {
 		fmt.Printf("didn't get db test url from env, defaulting to %v\n", databaseTestURL)
 	}
 
-	fmt.Println("switch back to testdb init")
 	db, err := models.InitDB(databaseTestURL)
 	if err != nil {
 		panic(err)

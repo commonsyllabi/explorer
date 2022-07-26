@@ -10,7 +10,7 @@ import (
 type Resource struct {
 	gorm.Model
 	UUID uuid.UUID `gorm:"uniqueIndex;type:uuid;primaryKey;default:uuid_generate_v4()" json:"uuid" yaml:"uuid"`
-	//-- belongs to a user
+	//-- belongs to a syllabus
 	SyllabusUUID uuid.UUID `gorm:"type:uuid;primaryKey;default:uuid_generate_v4()" json:"syllabus_uuid" yaml:"syllabus_uuid"`
 	Syllabus     Syllabus  `gorm:"foreignKey:SyllabusUUID;references:UUID"`
 
@@ -20,14 +20,20 @@ type Resource struct {
 	URL         string `gorm:"not null"`
 }
 
-func CreateResource(res *Resource) (Resource, error) {
-	result := db.Create(res)
-	return *res, result.Error
+func CreateResource(syllabus_uuid uuid.UUID, res *Resource) (Resource, error) {
+	syll, err := GetSyllabus(syllabus_uuid)
+	if err != nil {
+		return *res, err
+	}
+
+	res.Syllabus = syll
+	err = db.Model(&syll).Association("Resources").Append(res)
+	return *res, err
 }
 
-func GetResource(id uuid.UUID) (Resource, error) {
+func GetResource(uuid uuid.UUID) (Resource, error) {
 	var res Resource
-	result := db.First(&res, id)
+	result := db.Where("uuid = ?", uuid).First(&res)
 	return res, result.Error
 }
 
@@ -37,25 +43,25 @@ func GetAllResources() ([]Resource, error) {
 	return res, result.Error
 }
 
-func UpdateResource(id uuid.UUID, res *Resource) (Resource, error) {
-	existing := new(Resource)
-	result := db.First(&existing, id)
+func UpdateResource(uuid uuid.UUID, res *Resource) (Resource, error) {
+	var existing Resource
+	result := db.Where("uuid = ?", uuid).First(&existing)
 	if result.Error != nil {
 		return *res, result.Error
 	}
 
 	res.UpdatedAt = time.Now()
-	result = db.Model(Resource{}).Where("id = ?", id).Updates(res)
-	return *res, result.Error
+	result = db.Model(&existing).Where("uuid = ?", uuid).Updates(res)
+	return existing, result.Error
 }
 
-func DeleteResource(id uuid.UUID) (Resource, error) {
+func DeleteResource(uuid uuid.UUID) (Resource, error) {
 	var res Resource
-	result := db.First(&res, id)
+	result := db.Where("uuid = ?", uuid).First(&res)
 	if result.Error != nil {
 		return res, result.Error
 	}
 
-	result = db.Delete(&res, id)
+	result = db.Where("uuid = ? ", uuid).Delete(&res)
 	return res, result.Error
 }

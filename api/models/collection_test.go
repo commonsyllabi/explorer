@@ -24,22 +24,22 @@ func TestCollectionModel(t *testing.T) {
 			Email:    "test@collection-create.com",
 			Password: []byte("12345678"),
 		}
-		_, err := models.CreateUser(&user) //-- todo bug here there is always an issue with conflicting keys
+		user, err := models.CreateUser(&user)
 		require.Nil(t, err)
 
 		res := models.Collection{
 			Name: "Test Name 2",
 		}
-		r, err := models.CreateCollection(&res)
+		r, err := models.CreateCollection(user.UUID, &res)
 		require.Nil(t, err)
 		assert.Equal(t, r.Name, res.Name, "Expected to have equal names, got %v - %v", r.Name, res.Name)
 		// assert.Equal(t, user.Email, r.User.Email, "Expected to have equal titles for parent syllabus, got %v - %v", user.Email, r.User.Email)
 	})
 
 	t.Run("Test get collection", func(t *testing.T) {
-		res, err := models.GetCollection(collectionID)
+		coll, err := models.GetCollection(collectionID)
 		require.Nil(t, err)
-		assert.Equal(t, res.ID, collectionID)
+		assert.Equal(t, coll.UUID, collectionID)
 	})
 
 	t.Run("Test get non-existing collection", func(t *testing.T) {
@@ -49,17 +49,14 @@ func TestCollectionModel(t *testing.T) {
 	})
 
 	t.Run("Test update collection", func(t *testing.T) {
-		base, err := models.GetCollection(collectionID)
-		if err != nil {
-			t.Error(err)
-		}
-
-		base.Name = "updated"
-		updated, err := models.UpdateCollection(collectionID, &base)
+		var coll models.Collection
+		coll.Name = "updated"
+		updated, err := models.UpdateCollection(collectionID, &coll)
 
 		require.Nil(t, err)
 		require.False(t, updated.CreatedAt.IsZero())
-		assert.Equal(t, updated.Name, base.Name)
+
+		assert.Equal(t, updated.Name, coll.Name)
 		assert.NotEqual(t, updated.CreatedAt, updated.UpdatedAt, "Expected the CreatedAt and the UpdatedAt values to be different")
 	})
 

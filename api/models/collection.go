@@ -1,8 +1,6 @@
 package models
 
 import (
-	"time"
-
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
@@ -19,14 +17,19 @@ type Collection struct {
 	Syllabi []Syllabus `gorm:"many2many:collection_syllabi;"`
 }
 
-func CreateCollection(coll *Collection) (Collection, error) {
-	result := db.Create(coll)
-	return *coll, result.Error
+func CreateCollection(user_uuid uuid.UUID, coll *Collection) (Collection, error) {
+	user, err := GetUser(user_uuid)
+	if err != nil {
+		return *coll, err
+	}
+
+	err = db.Model(&user).Association("Collections").Append(coll)
+	return *coll, err
 }
 
-func GetCollection(id uuid.UUID) (Collection, error) {
+func GetCollection(uuid uuid.UUID) (Collection, error) {
 	var coll Collection
-	result := db.First(&coll, id)
+	result := db.Where("uuid = ?", uuid).First(&coll)
 	return coll, result.Error
 }
 
@@ -36,25 +39,24 @@ func GetAllCollections() ([]Collection, error) {
 	return coll, result.Error
 }
 
-func UpdateCollection(id uuid.UUID, coll *Collection) (Collection, error) {
-	existing := new(Collection)
-	result := db.First(existing, id)
+func UpdateCollection(uuid uuid.UUID, coll *Collection) (Collection, error) {
+	var existing Collection
+	result := db.Where("uuid = ?", uuid).First(&existing)
 	if result.Error != nil {
 		return *coll, result.Error
 	}
 
-	coll.UpdatedAt = time.Now()
-	result = db.Model(Collection{}).Where("id = ?", id).Updates(coll)
-	return *coll, result.Error
+	result = db.Model(&existing).Where("uuid = ?", uuid).Updates(&coll)
+	return existing, result.Error
 }
 
-func DeleteCollection(id uuid.UUID) (Collection, error) {
+func DeleteCollection(uuid uuid.UUID) (Collection, error) {
 	var coll Collection
-	result := db.First(&coll, id)
+	result := db.Where("uuid = ?", uuid).First(&coll)
 	if result.Error != nil {
 		return coll, result.Error
 	}
 
-	result = db.Delete(&coll, id)
+	result = db.Where("uuid = ?", uuid).Delete(&coll)
 	return coll, result.Error
 }

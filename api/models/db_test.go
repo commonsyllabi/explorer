@@ -1,7 +1,6 @@
 package models_test
 
 import (
-	"fmt"
 	"os"
 	"testing"
 	"time"
@@ -70,8 +69,6 @@ func mustSeedDB(t *testing.T) {
 	if databaseTestURL == "" {
 		databaseTestURL = "postgres://postgres:postgres@localhost:5432/explorer-test"
 	}
-	// _, err := models.InitTestDB(databaseTestURL)
 	_, err := models.InitDB(databaseTestURL)
-	fmt.Println("switch back to testdb init")
 	require.Nil(t, err)
 }

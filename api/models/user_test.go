@@ -33,50 +33,46 @@ func TestUserModel(t *testing.T) {
 	t.Run("Test get user", func(t *testing.T) {
 		user, err := models.GetUser(userID)
 		require.Nil(t, err)
-		assert.Equal(t, user.ID, userID)
+		assert.Equal(t, user.UUID, userID)
 	})
 
 	t.Run("Test get user with syllabus", func(t *testing.T) {
-		// user, err := models.GetUser(userID)
-		// require.Nil(t, err)
-		// assert.Equal(t, 3, len(user.Syllabi))
+		user, err := models.GetUser(userID)
+		require.Nil(t, err)
+		assert.Equal(t, 2, len(user.Syllabi))
 	})
 
 	t.Run("Test get non-existing user", func(t *testing.T) {
 		user, err := models.GetUser(userNonExistentID)
-		assert.NotNil(t, err)
+		require.NotNil(t, err)
 		assert.True(t, user.CreatedAt.IsZero())
 	})
 
 	t.Run("Test update user", func(t *testing.T) {
 		user, err := models.GetUser(userID)
-		if err != nil {
-			t.Error(err)
-		}
-		user.Email = "test@user.updated"
-		var other models.User
-		other.Email = "other@updated.com"
+		require.Nil(t, err)
 
-		updated, err := models.UpdateUser(userID, &other)
+		user.Email = "test@updated.com"
+		updated, err := models.UpdateUser(userID, &user)
 
 		require.Nil(t, err)
 		require.False(t, updated.CreatedAt.IsZero())
-		assert.Equal(t, other.Email, updated.Email)
+		assert.Equal(t, user.Email, updated.Email)
 	})
 
 	t.Run("Test update non-existing user", func(t *testing.T) {
 		user := models.User{
-			Email: "test@user.updated",
+			Email: "test@user-non-existing.updated",
 		}
 		updated, err := models.UpdateUser(userNonExistentID, &user)
 		assert.NotNil(t, err)
-		assert.Equal(t, uuid.Nil, updated.ID)
+		assert.Equal(t, uuid.Nil, updated.UUID)
 	})
 
 	t.Run("Test delete user", func(t *testing.T) {
 		user, err := models.DeleteUser(userDeleteID)
-		assert.NotNil(t, user)
 		assert.Nil(t, err)
+		assert.NotNil(t, user)
 	})
 
 	t.Run("Test delete wrong user", func(t *testing.T) {

@@ -1,8 +1,6 @@
 package models
 
 import (
-	"time"
-
 	"github.com/google/uuid"
 	"github.com/lib/pq"
 	"gorm.io/gorm"
@@ -63,16 +61,15 @@ func GetAllUsers() ([]User, error) {
 }
 
 func UpdateUser(uuid uuid.UUID, user *User) (User, error) {
-	existing := new(User)
-	result := db.First(*existing, uuid)
+	var existing User
+	result := db.Where("uuid = ?", uuid).First(&existing)
 	if result.Error != nil {
 		return *user, result.Error
 	}
 
-	user.UpdatedAt = time.Now()
-	result = db.Model(User{}).Where("uuid = ?", uuid).Updates(user)
+	result = db.Model(&existing).Where("uuid = ?", uuid).Updates(user)
 
-	return *user, result.Error
+	return existing, result.Error
 }
 
 func DeleteUser(uuid uuid.UUID) (User, error) {
