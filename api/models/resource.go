@@ -9,14 +9,15 @@ import (
 
 type Resource struct {
 	gorm.Model
-	UUID uuid.UUID `gorm:"index:,unique;type:uuid;primaryKey;default:uuid_generate_v4()" json:"resource_id" yaml:"resource_id"`
+	UUID uuid.UUID `gorm:"uniqueIndex;type:uuid;primaryKey;default:uuid_generate_v4()" json:"uuid" yaml:"uuid"`
+	//-- belongs to a user
+	SyllabusUUID uuid.UUID `gorm:"type:uuid;primaryKey;default:uuid_generate_v4()" json:"syllabus_uuid" yaml:"syllabus_uuid"`
+	Syllabus     Syllabus  `gorm:"foreignKey:SyllabusUUID;references:UUID"`
 
 	Name        string `gorm:"not null"`
 	Type        string `gorm:"not null"`
 	Description string
 	URL         string `gorm:"not null"`
-
-	SyllabusID uuid.UUID `gorm:"not null"`
 }
 
 func CreateResource(res *Resource) (Resource, error) {

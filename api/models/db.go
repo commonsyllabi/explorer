@@ -22,7 +22,8 @@ var (
 )
 
 func InitDB(url string) (*gorm.DB, error) {
-	db, err := gorm.Open(postgres.Open(url), &gorm.Config{})
+	var err error
+	db, err = gorm.Open(postgres.Open(url), &gorm.Config{})
 	if err != nil {
 		return db, err
 	}
@@ -40,7 +41,7 @@ func InitDB(url string) (*gorm.DB, error) {
 	}
 
 	// fixtures
-	err = runFixtures(db, true)
+	err = runFixtures(true)
 	if err != nil {
 		zero.Errorf("error running fixtures: %v", err)
 		return db, err
@@ -49,17 +50,17 @@ func InitDB(url string) (*gorm.DB, error) {
 	return db, err
 }
 
-func runFixtures(_db *gorm.DB, shouldTruncateTables bool) error {
+func runFixtures(shouldTruncateTables bool) error {
 	var err error
 
 	if shouldTruncateTables {
-		result := _db.Exec("TRUNCATE TABLE users CASCADE")
+		result := db.Exec("TRUNCATE TABLE users CASCADE")
 		if result.Error != nil {
 			return result.Error
 		}
 	}
 
-	bytes, err := ioutil.ReadFile(filepath.Join(Basepath, "fixtures", "user.yml"))
+	bytes, err := ioutil.ReadFile(filepath.Join(Basepath, "fixtures", "full.yml"))
 	if err != nil {
 		return err
 	}
@@ -70,54 +71,12 @@ func runFixtures(_db *gorm.DB, shouldTruncateTables bool) error {
 		return err
 	}
 
-	bytes, err = ioutil.ReadFile(filepath.Join(Basepath, "fixtures", "syllabus.yml"))
-	if err != nil {
-		return err
-	}
-
-	syllabi := make([]Syllabus, 0)
-	err = yaml.Unmarshal(bytes, &syllabi)
-	if err != nil {
-		return err
-	}
-
-	bytes, err = ioutil.ReadFile(filepath.Join(Basepath, "fixtures", "collection.yml"))
-	if err != nil {
-		return err
-	}
-
-	collections := make([]Collection, 0)
-	err = yaml.Unmarshal(bytes, &collections)
-	if err != nil {
-		return err
-	}
-
-	bytes, err = ioutil.ReadFile(filepath.Join(Basepath, "fixtures", "resource.yml"))
-	if err != nil {
-		return err
-	}
-
-	resources := make([]Resource, 0)
-	err = yaml.Unmarshal(bytes, &resources)
-	if err != nil {
-		return err
-	}
-
-	for _, user := range users {
-		result := _db.Create(&user)
+	for _, u := range users {
+		result := db.Create(&u)
 		if result.Error != nil {
 			return err
 		}
 	}
 
-	// _db.Model(&users[0]).Association("Syllabi").Append(&syllabi[0])
-	// _db.First(&users[0])
-	// fmt.Printf("user has %d syllabi\n", len(users[0].Syllabi))
-
 	return err
-}
-
-func Shutdown() error {
-	// err := db.Close()
-	return nil
 }

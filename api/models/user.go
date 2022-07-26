@@ -18,22 +18,25 @@ type User struct {
 	gorm.Model
 	UUID uuid.UUID `gorm:"uniqueIndex;type:uuid;primaryKey;default:uuid_generate_v4()" json:"uuid" yaml:"uuid"`
 
-	Email    string `gorm:"unique;not null"`
-	Password []byte `gorm:"not null"`
-	Status   string `gorm:"default:pending"`
+	Email    string `gorm:"unique;not null" json:"email"`
+	Password []byte `gorm:"not null" json:"password"`
+	Status   string `gorm:"default:pending" json:"status"`
 
-	Name      string `gorm:"not null"`
-	Bio       string
-	Education string
+	Name      string `gorm:"not null" json:"name"`
+	Bio       string `json:"bio"`
+	Education string `json:"education"`
+
 	// Position []struct {
 	// 	Name     string
 	// 	Institution Institution
 	// }
-	URLs pq.StringArray `gorm:"type:text[]"`
 
-	Resources   []Resource   `gorm:"foreignKey:UUID;references:UUID"`
-	Collections []Collection `gorm:"foreignKey:UUID;references:UUID"`
-	Syllabi     []Syllabus   `gorm:"foreignKey:UUID;references:UUID"`
+	URLs pq.StringArray `gorm:"type:text[]" json:"urls"`
+
+	//-- has many
+	// Resources   []Resource   `gorm:"foreignKey:UserUUID;references:UUID" json:"resources"`
+	Collections []Collection `gorm:"foreignKey:UserUUID;references:UUID" json:"collections"`
+	Syllabi     []Syllabus   `gorm:"foreignKey:UserUUID;references:UUID" json:"syllabi"`
 }
 
 func CreateUser(user *User) (User, error) {
@@ -41,9 +44,9 @@ func CreateUser(user *User) (User, error) {
 	return *user, result.Error
 }
 
-func GetUser(id uuid.UUID) (User, error) {
+func GetUser(uuid uuid.UUID) (User, error) {
 	var user User
-	result := db.First(&user, id)
+	result := db.Preload("Syllabi").Where("uuid = ?", uuid).First(&user)
 	return user, result.Error
 }
 
@@ -59,26 +62,26 @@ func GetAllUsers() ([]User, error) {
 	return users, result.Error
 }
 
-func UpdateUser(id uuid.UUID, user *User) (User, error) {
+func UpdateUser(uuid uuid.UUID, user *User) (User, error) {
 	existing := new(User)
-	result := db.First(*existing, id)
+	result := db.First(*existing, uuid)
 	if result.Error != nil {
 		return *user, result.Error
 	}
 
 	user.UpdatedAt = time.Now()
-	result = db.Model(User{}).Where("id = ?", id).Updates(user)
+	result = db.Model(User{}).Where("uuid = ?", uuid).Updates(user)
 
 	return *user, result.Error
 }
 
-func DeleteUser(id uuid.UUID) (User, error) {
+func DeleteUser(uuid uuid.UUID) (User, error) {
 	var user User
-	result := db.First(&user, id)
+	result := db.Where("uuid = ?", uuid).First(&user)
 	if result.Error != nil {
 		return user, result.Error
 	}
-	result = db.Delete(&user, id)
+	result = db.Where("uuid = ?", uuid).Delete(&user)
 
 	return user, result.Error
 }

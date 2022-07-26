@@ -52,7 +52,6 @@ func StartServer(port string, mode string, c Config) {
 
 	zero.Info("shutting down...")
 	s.Shutdown(context.Background())
-	// err = models.Shutdown()
 }
 
 // SetupRouter registers all middleware, templates, logging route groups and settings

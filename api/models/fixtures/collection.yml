@@ -1,6 +1,4 @@
-- collection_id: 'b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a7'
+- uuid: 'b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a7'
   name: "Fixture Collection"
-  user_id: 'e7b74bcd-c864-41ee-b5a7-d3031f76c8a8'
-- collection_id: 'b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a9'
+- uuid: 'b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a9'
   name: "Fixture Collection (to delete)"
-  user_id: 'e7b74bcd-c864-41ee-b5a7-d3031f76c8a8'

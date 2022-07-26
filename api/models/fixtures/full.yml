@@ -1,0 +1,48 @@
+- uuid: 'e7b74bcd-c864-41ee-b5a7-d3031f76c8a8'
+  status: "confirmed"
+  name: "full user 1"
+  email: "one@raz.com"
+  bio: "this is a full user"
+  password: [36, 50, 97, 36, 49, 48, 36, 121, 72, 53, 79, 110, 76, 51, 98, 57, 112, 80, 81, 53, 49, 104, 54, 100, 74, 121, 54, 79, 101, 47, 117, 119, 78, 76, 57, 103, 107, 100, 88, 51, 90, 111, 73, 75, 80, 117, 113, 57, 104, 69, 102, 103, 85, 67, 51, 73, 56, 88, 113, 67]
+  education: "life education"
+  urls:
+    - "http://test.net"
+    - "http://test.com"
+  syllabi:
+    - uuid: '46de6a2b-aacb-4c24-b1e1-3495821f846a'
+      title: "User-created 1"
+      description: "Lorem ipsum descriptio"
+      duration: 14
+      resources:
+        - name: "User-owned Resource 1"
+          url: "http://localhost/file1.jpg"
+        - name: "User-owned Resource 2"
+          url: "http://localhost/file2.jpg"
+    - uuid: '46de6a2b-aacb-4c24-b1e1-3495821f8469'
+      title: "User-created 2 (with resources)"
+      description: "Lorem ipsum descriptwo"
+      duration: 7
+  collections:
+    - collection_id: 'b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a7'
+      name: "Fixture Collection"
+
+- uuid: 'e7b74bcd-c864-41ee-b5a7-d3031f76c8a9'
+  status: "confirmed"
+  name: "pierre depaz"
+  email: "pierre.depaz@gmail.com"
+  password: [36, 50, 97, 36, 49, 48, 36, 121, 72, 53, 79, 110, 76, 51, 98, 57, 112, 80, 81, 53, 49, 104, 54, 100, 74, 121, 54, 79, 101, 47, 117, 119, 78, 76, 57, 103, 107, 100, 88, 51, 90, 111, 73, 75, 80, 117, 113, 57, 104, 69, 102, 103, 85, 67, 51, 73, 56, 88, 113, 67]
+  education: "the street"
+  urls:
+    - 'http://pierre.net'
+  syllabi:
+    - uuid: '46de6a2b-aacb-4c24-b1e1-3495821f8466'
+      title: "Fixture syllabus 3"
+      description: "Lorem ipsum descriptio"
+  collections:
+    - collection_id: 'b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a9'
+      name: "Fixture Collection (to delete)"
+- uuid: 'e7b74bcd-c864-41ee-b5a7-d3031f76c8a0'
+  status: "confirmed"
+  name: "auth"
+  email: "auth@test.com"
+  password: [36, 50, 97, 36, 49, 48, 36, 121, 72, 53, 79, 110, 76, 51, 98, 57, 112, 80, 81, 53, 49, 104, 54, 100, 74, 121, 54, 79, 101, 47, 117, 119, 78, 76, 57, 103, 107, 100, 88, 51, 90, 111, 73, 75, 80, 117, 113, 57, 104, 69, 102, 103, 85, 67, 51, 73, 56, 88, 113, 67]
