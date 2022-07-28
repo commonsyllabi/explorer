@@ -3,6 +3,7 @@ package models
 import (
 	"io/ioutil"
 	"log"
+	"os"
 	"path/filepath"
 	"runtime"
 
@@ -13,6 +14,7 @@ import (
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 var (
@@ -23,7 +25,13 @@ var (
 
 func InitDB(url string) (*gorm.DB, error) {
 	var err error
-	db, err = gorm.Open(postgres.Open(url), &gorm.Config{})
+
+	conf := &gorm.Config{}
+	if os.Getenv("API_MODE") == "release" {
+		conf.Logger = logger.Default.LogMode(logger.Silent)
+	}
+
+	db, err = gorm.Open(postgres.Open(url), conf)
 	if err != nil {
 		return db, err
 	}
