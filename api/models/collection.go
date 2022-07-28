@@ -90,7 +90,7 @@ func RemoveSyllabusFromCollection(coll_uuid uuid.UUID, syll_uuid uuid.UUID) (Col
 		return coll, result.Error
 	}
 
-	err := db.Model(&coll).Association("Resources").Delete(syll)
+	err := db.Model(&coll).Association("Attachments").Delete(syll)
 	return coll, err
 }
 

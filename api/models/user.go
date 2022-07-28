@@ -32,7 +32,7 @@ type User struct {
 	URLs pq.StringArray `gorm:"type:text[]" json:"urls" form:"urls[]"`
 
 	//-- has many
-	// Resources   []Resource   `gorm:"foreignKey:UserUUID;references:UUID" json:"resources"`
+	// Attachments   []Attachment   `gorm:"foreignKey:UserUUID;references:UUID" json:"attachments"`
 	Collections []Collection `gorm:"foreignKey:UserUUID;references:UUID" json:"collections"`
 	Syllabi     []Syllabus   `gorm:"foreignKey:UserUUID;references:UUID" json:"syllabi"`
 }

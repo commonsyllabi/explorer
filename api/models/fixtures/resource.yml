@@ -1,6 +1,0 @@
-- resource_id: 'c55f0baf-12b8-4bdb-b5e6-2280bff8ab21'
-  name: "Fixture Resource 1"
-  url: "http://localhost/file1.jpg"
-- resource_id: 'c55f0baf-12b8-4bdb-b5e6-2280bff8ab29'
-  name: "Fixture Resource 2"
-  url: "http://localhost/file2.jpg"

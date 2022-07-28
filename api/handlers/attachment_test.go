@@ -16,23 +16,23 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestResourceHandler(t *testing.T) {
+func TestAttachmentHandler(t *testing.T) {
 	teardown := setup(t)
 	defer teardown(t)
 
-	t.Run("Test get all resources", func(t *testing.T) {
+	t.Run("Test get all attachments", func(t *testing.T) {
 		res := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(res)
-		handlers.GetAllResources(c)
+		handlers.GetAllAttachments(c)
 		assert.Equal(t, http.StatusOK, res.Code)
 	})
 
-	t.Run("Test create resource", func(t *testing.T) {
+	t.Run("Test create attachment", func(t *testing.T) {
 		var body bytes.Buffer
 		w := multipart.NewWriter(&body)
-		w.WriteField("name", "Test Resource Handling")
+		w.WriteField("name", "Test Attachment Handling")
 		w.WriteField("type", "weblink")
-		w.WriteField("url", "http://test.com/resource")
+		w.WriteField("url", "http://test.com/attachment")
 		w.Close()
 
 		res := httptest.NewRecorder()
@@ -46,12 +46,13 @@ func TestResourceHandler(t *testing.T) {
 		c.Request.Header.Set("Content-Type", w.FormDataContentType())
 		c.Request.Body = io.NopCloser(&body)
 
-		handlers.CreateResource(c)
+		handlers.CreateAttachment(c)
 
 		assert.Equal(t, http.StatusCreated, res.Code)
+		//-- todo check for value
 	})
 
-	t.Run("Test create resource malformed input", func(t *testing.T) {
+	t.Run("Test create attachment malformed input", func(t *testing.T) {
 		var body bytes.Buffer
 		w := multipart.NewWriter(&body)
 		w.WriteField("name", "Short")
@@ -67,12 +68,12 @@ func TestResourceHandler(t *testing.T) {
 		c.Request.Header.Set("Content-Type", w.FormDataContentType())
 		c.Request.Body = io.NopCloser(&body)
 
-		handlers.CreateResource(c)
+		handlers.CreateAttachment(c)
 
 		assert.Equal(t, http.StatusBadRequest, res.Code)
 	})
 
-	t.Run("Test create resource wrong field", func(t *testing.T) {
+	t.Run("Test create attachment wrong field", func(t *testing.T) {
 		var body bytes.Buffer
 		w := multipart.NewWriter(&body)
 		w.WriteField("wrong-field", "Updated Name")
@@ -88,12 +89,12 @@ func TestResourceHandler(t *testing.T) {
 		c.Request.Header.Set("Content-Type", w.FormDataContentType())
 		c.Request.Body = io.NopCloser(&body)
 
-		handlers.CreateResource(c)
+		handlers.CreateAttachment(c)
 
 		assert.Equal(t, http.StatusBadRequest, res.Code)
 	})
 
-	t.Run("Test get resource", func(t *testing.T) {
+	t.Run("Test get attachment", func(t *testing.T) {
 		res := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(res)
 		c.Request = &http.Request{
@@ -104,15 +105,15 @@ func TestResourceHandler(t *testing.T) {
 		c.Params = []gin.Param{
 			{
 				Key:   "id",
-				Value: resourceID.String(),
+				Value: attachmentID.String(),
 			},
 		}
 
-		handlers.GetResource(c)
+		handlers.GetAttachment(c)
 		assert.Equal(t, http.StatusOK, res.Code)
 	})
 
-	t.Run("Test get resource malformed ID", func(t *testing.T) {
+	t.Run("Test get attachment malformed ID", func(t *testing.T) {
 		res := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(res)
 		c.Request = &http.Request{
@@ -127,11 +128,11 @@ func TestResourceHandler(t *testing.T) {
 			},
 		}
 
-		handlers.GetResource(c)
+		handlers.GetAttachment(c)
 		assert.Equal(t, http.StatusBadRequest, res.Code)
 	})
 
-	t.Run("Test get resource non-existant ID", func(t *testing.T) {
+	t.Run("Test get attachment non-existant ID", func(t *testing.T) {
 		res := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(res)
 		c.Request = &http.Request{
@@ -142,15 +143,15 @@ func TestResourceHandler(t *testing.T) {
 		c.Params = []gin.Param{
 			{
 				Key:   "id",
-				Value: resourceNonExistingID.String(),
+				Value: attachmentNonExistingID.String(),
 			},
 		}
 
-		handlers.GetResource(c)
+		handlers.GetAttachment(c)
 		assert.Equal(t, http.StatusNotFound, res.Code)
 	})
 
-	t.Run("Test update resource", func(t *testing.T) {
+	t.Run("Test update attachment", func(t *testing.T) {
 		var body bytes.Buffer
 		w := multipart.NewWriter(&body)
 		w.WriteField("name", "Updated Name")
@@ -168,20 +169,20 @@ func TestResourceHandler(t *testing.T) {
 		c.Params = []gin.Param{
 			{
 				Key:   "id",
-				Value: resourceID.String(),
+				Value: attachmentID.String(),
 			},
 		}
 
-		handlers.UpdateResource(c)
+		handlers.UpdateAttachment(c)
 		assert.Equal(t, http.StatusOK, res.Code)
 
-		var resource models.Resource
-		err := c.Bind(&resource)
+		var att models.Attachment
+		err := c.Bind(&att)
 		require.Nil(t, err)
-		assert.Equal(t, "Updated Name", resource.Name)
+		assert.Equal(t, "Updated Name", att.Name)
 	})
 
-	t.Run("Test update resource malformed ID", func(t *testing.T) {
+	t.Run("Test update attachment malformed ID", func(t *testing.T) {
 		var body bytes.Buffer
 		w := multipart.NewWriter(&body)
 		w.WriteField("name", "Updated Name")
@@ -203,11 +204,11 @@ func TestResourceHandler(t *testing.T) {
 			},
 		}
 
-		handlers.UpdateResource(c)
+		handlers.UpdateAttachment(c)
 		assert.Equal(t, http.StatusBadRequest, res.Code)
 	})
 
-	t.Run("Test update resource malformed field", func(t *testing.T) {
+	t.Run("Test update attachment malformed field", func(t *testing.T) {
 		var body bytes.Buffer
 		w := multipart.NewWriter(&body)
 		w.WriteField("malicious-field", "Short")
@@ -225,15 +226,15 @@ func TestResourceHandler(t *testing.T) {
 		c.Params = []gin.Param{
 			{
 				Key:   "id",
-				Value: resourceID.String(),
+				Value: attachmentID.String(),
 			},
 		}
 
-		handlers.UpdateResource(c)
+		handlers.UpdateAttachment(c)
 		assert.Equal(t, http.StatusBadRequest, res.Code)
 	})
 
-	t.Run("Test update resource non-existent ID", func(t *testing.T) {
+	t.Run("Test update attachment non-existent ID", func(t *testing.T) {
 		var body bytes.Buffer
 		w := multipart.NewWriter(&body)
 		w.WriteField("name", "Updated Name")
@@ -251,15 +252,15 @@ func TestResourceHandler(t *testing.T) {
 		c.Params = []gin.Param{
 			{
 				Key:   "id",
-				Value: resourceNonExistingID.String(),
+				Value: attachmentNonExistingID.String(),
 			},
 		}
 
-		handlers.UpdateResource(c)
+		handlers.UpdateAttachment(c)
 		assert.Equal(t, http.StatusNotFound, res.Code)
 	})
 
-	t.Run("Test update resource malformed name", func(t *testing.T) {
+	t.Run("Test update attachment malformed name", func(t *testing.T) {
 		var body bytes.Buffer
 		w := multipart.NewWriter(&body)
 		w.WriteField("name", "Short")
@@ -277,15 +278,15 @@ func TestResourceHandler(t *testing.T) {
 		c.Params = []gin.Param{
 			{
 				Key:   "id",
-				Value: resourceID.String(),
+				Value: attachmentID.String(),
 			},
 		}
 
-		handlers.UpdateResource(c)
+		handlers.UpdateAttachment(c)
 		assert.Equal(t, http.StatusBadRequest, res.Code)
 	})
 
-	t.Run("Test delete resource", func(t *testing.T) {
+	t.Run("Test delete attachment", func(t *testing.T) {
 		res := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(res)
 		c.Request = &http.Request{
@@ -296,15 +297,15 @@ func TestResourceHandler(t *testing.T) {
 		c.Params = []gin.Param{
 			{
 				Key:   "id",
-				Value: resourceID.String(),
+				Value: attachmentID.String(),
 			},
 		}
 
-		handlers.DeleteResource(c)
+		handlers.DeleteAttachment(c)
 		assert.Equal(t, http.StatusOK, res.Code)
 	})
 
-	t.Run("Test delete malformed resource", func(t *testing.T) {
+	t.Run("Test delete malformed attachment", func(t *testing.T) {
 		res := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(res)
 		c.Request = &http.Request{
@@ -319,11 +320,11 @@ func TestResourceHandler(t *testing.T) {
 			},
 		}
 
-		handlers.DeleteResource(c)
+		handlers.DeleteAttachment(c)
 		assert.Equal(t, http.StatusBadRequest, res.Code)
 	})
 
-	t.Run("Test delete non-existant resource", func(t *testing.T) {
+	t.Run("Test delete non-existant attachment", func(t *testing.T) {
 		res := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(res)
 		c.Request = &http.Request{
@@ -334,11 +335,11 @@ func TestResourceHandler(t *testing.T) {
 		c.Params = []gin.Param{
 			{
 				Key:   "id",
-				Value: resourceNonExistingID.String(),
+				Value: attachmentNonExistingID.String(),
 			},
 		}
 
-		handlers.DeleteResource(c)
+		handlers.DeleteAttachment(c)
 		assert.Equal(t, http.StatusNotFound, res.Code)
 	})
 

@@ -21,9 +21,9 @@ var (
 	collectionDeleteID      uuid.UUID
 	collectionNonExistingID uuid.UUID
 
-	resourceID            uuid.UUID
-	resourceDeleteID      uuid.UUID
-	resourceNonExistingID uuid.UUID
+	attachmentID            uuid.UUID
+	attachmentDeleteID      uuid.UUID
+	attachmentNonExistingID uuid.UUID
 
 	userID            uuid.UUID
 	userDeleteID      uuid.UUID
@@ -49,9 +49,9 @@ func setup(t *testing.T) func(t *testing.T) {
 	collectionDeleteID = uuid.MustParse("b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a9")
 	collectionNonExistingID = uuid.New()
 
-	resourceID = uuid.MustParse("c55f0baf-12b8-4bdb-b5e6-2280bff8ab21")
-	resourceDeleteID = uuid.MustParse("c55f0baf-12b8-4bdb-b5e6-2280bff8ab30")
-	resourceNonExistingID = uuid.New()
+	attachmentID = uuid.MustParse("c55f0baf-12b8-4bdb-b5e6-2280bff8ab21")
+	attachmentDeleteID = uuid.MustParse("c55f0baf-12b8-4bdb-b5e6-2280bff8ab30")
+	attachmentNonExistingID = uuid.New()
 
 	userID = uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c8a8")
 	userDeleteID = uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c8a9")

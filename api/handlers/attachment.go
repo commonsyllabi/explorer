@@ -11,19 +11,19 @@ import (
 	"github.com/google/uuid"
 )
 
-func GetAllResources(c *gin.Context) {
-	resources, err := models.GetAllResources()
+func GetAllAttachments(c *gin.Context) {
+	attachments, err := models.GetAllAttachments()
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
-		zero.Errorf("error getting resources: %v", err)
+		zero.Errorf("error getting attachments: %v", err)
 		return
 	}
 
-	c.JSON(http.StatusOK, resources)
+	c.JSON(http.StatusOK, attachments)
 }
 
-func CreateResource(c *gin.Context) {
-	err := sanitizeResource(c)
+func CreateAttachment(c *gin.Context) {
+	err := sanitizeAttachment(c)
 	if err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 		zero.Error(err.Error())
@@ -38,24 +38,24 @@ func CreateResource(c *gin.Context) {
 		return
 	}
 
-	var res models.Resource
-	err = c.Bind(&res)
+	var att models.Attachment
+	err = c.Bind(&att)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	res, err = models.CreateResource(syll_id, &res)
+	att, err = models.CreateAttachment(syll_id, &att)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
-		zero.Errorf("error creating Resource: %v", err)
+		zero.Errorf("error creating Attachment: %v", err)
 		return
 	}
 
-	c.JSON(http.StatusCreated, res)
+	c.JSON(http.StatusCreated, att)
 }
 
-func UpdateResource(c *gin.Context) {
+func UpdateAttachment(c *gin.Context) {
 	id := c.Param("id")
 	if len(id) < 25 {
 		c.String(http.StatusBadRequest, "not a valid ID")
@@ -70,22 +70,22 @@ func UpdateResource(c *gin.Context) {
 		return
 	}
 
-	err = sanitizeResource(c)
+	err = sanitizeAttachment(c)
 	if err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 		zero.Error(err.Error())
 		return
 	}
 
-	var empty = new(models.Resource)
-	var input models.Resource
+	var empty = new(models.Attachment)
+	var input models.Attachment
 	err = c.Bind(&input)
 	if err != nil || reflect.DeepEqual(&input, empty) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	res, err := models.GetResource(uid)
+	res, err := models.GetAttachment(uid)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
@@ -97,17 +97,17 @@ func UpdateResource(c *gin.Context) {
 		return
 	}
 
-	updated, err := models.UpdateResource(uid, &res)
+	updated, err := models.UpdateAttachment(uid, &res)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
-		zero.Errorf("error updating Resource %d: %v", id, err)
+		zero.Errorf("error updating Attachment %d: %v", id, err)
 		return
 	}
 
 	c.JSON(http.StatusOK, updated)
 }
 
-func GetResource(c *gin.Context) {
+func GetAttachment(c *gin.Context) {
 	id := c.Param("id")
 	if len(id) < 25 {
 		c.String(http.StatusBadRequest, "not a valid ID")
@@ -122,11 +122,11 @@ func GetResource(c *gin.Context) {
 		return
 	}
 
-	res, err := models.GetResource(uid)
+	res, err := models.GetAttachment(uid)
 	if err != nil {
-		zero.Errorf("error getting Resource %v: %s", id, err)
+		zero.Errorf("error getting Attachment %v: %s", id, err)
 		c.JSON(http.StatusNotFound, gin.H{
-			"msg": "We couldn't find the Resource.",
+			"msg": "We couldn't find the Attachment.",
 		})
 
 		return
@@ -135,7 +135,7 @@ func GetResource(c *gin.Context) {
 	c.JSON(http.StatusOK, res)
 }
 
-func DeleteResource(c *gin.Context) {
+func DeleteAttachment(c *gin.Context) {
 	id := c.Param("id")
 	if len(id) < 25 {
 		c.String(http.StatusBadRequest, "not a valid ID")
@@ -150,20 +150,20 @@ func DeleteResource(c *gin.Context) {
 		return
 	}
 
-	res, err := models.DeleteResource(uid)
+	res, err := models.DeleteAttachment(uid)
 	if err != nil {
 		c.String(http.StatusNotFound, err.Error())
-		zero.Errorf("error getting Resource %d: %v", id, err)
+		zero.Errorf("error getting Attachment %d: %v", id, err)
 		return
 	}
 
 	c.JSON(http.StatusOK, res)
 }
 
-func sanitizeResource(c *gin.Context) error {
+func sanitizeAttachment(c *gin.Context) error {
 	if len(c.PostForm("name")) < 10 || len(c.PostForm("name")) > 50 {
-		zero.Errorf("the name of the Resource should be between 10 and 50 characters: %d", len(c.PostForm("name")))
-		return fmt.Errorf("the name of the Resource should be between 10 and 50 characters: %d", len(c.PostForm("name")))
+		zero.Errorf("the name of the Attachment should be between 10 and 50 characters: %d", len(c.PostForm("name")))
+		return fmt.Errorf("the name of the Attachment should be between 10 and 50 characters: %d", len(c.PostForm("name")))
 	}
 
 	return nil

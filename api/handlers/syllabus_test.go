@@ -29,9 +29,9 @@ var (
 	collectionDeleteID      uuid.UUID
 	collectionNonExistingID uuid.UUID
 
-	resourceID            uuid.UUID
-	resourceDeleteID      uuid.UUID
-	resourceNonExistingID uuid.UUID
+	attachmentID            uuid.UUID
+	attachmentDeleteID      uuid.UUID
+	attachmentNonExistingID uuid.UUID
 
 	userID            uuid.UUID
 	userDeleteID      uuid.UUID
@@ -47,9 +47,9 @@ func setup(t *testing.T) func(t *testing.T) {
 	collectionDeleteID = uuid.MustParse("b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a9")
 	collectionNonExistingID = uuid.New()
 
-	resourceID = uuid.MustParse("c55f0baf-12b8-4bdb-b5e6-2280bff8ab21")
-	resourceDeleteID = uuid.MustParse("c55f0baf-12b8-4bdb-b5e6-2280bff8ab29")
-	resourceNonExistingID = uuid.New()
+	attachmentID = uuid.MustParse("c55f0baf-12b8-4bdb-b5e6-2280bff8ab21")
+	attachmentDeleteID = uuid.MustParse("c55f0baf-12b8-4bdb-b5e6-2280bff8ab29")
+	attachmentNonExistingID = uuid.New()
 
 	userID = uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c8a8")
 	userDeleteID = uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c8a9")
@@ -327,10 +327,10 @@ func TestSyllabusHandler(t *testing.T) {
 		assert.Equal(t, http.StatusBadRequest, res.Code)
 	})
 
-	t.Run("Test add resource to syllabus", func(t *testing.T) {
+	t.Run("Test add attachment to syllabus", func(t *testing.T) {
 		var body bytes.Buffer
 		w := multipart.NewWriter(&body)
-		w.WriteField("resource_id", resourceID.String())
+		w.WriteField("attachment_id", attachmentID.String())
 		w.Close()
 
 		res := httptest.NewRecorder()
@@ -349,7 +349,7 @@ func TestSyllabusHandler(t *testing.T) {
 			},
 		}
 
-		handlers.AddSyllabusResource(c)
+		handlers.AddSyllabusAttachment(c)
 		assert.Equal(t, http.StatusOK, res.Code)
 
 		var syll models.Syllabus
@@ -358,7 +358,7 @@ func TestSyllabusHandler(t *testing.T) {
 		assert.Equal(t, "Updated Title", syll.Title) //-- todo this updated title check relies on the previous test, which is not good practice
 	})
 
-	t.Run("Test get all resources from syllabus", func(t *testing.T) {
+	t.Run("Test get all attachments from syllabus", func(t *testing.T) {
 		res := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(res)
 		c.Request = &http.Request{
@@ -373,11 +373,11 @@ func TestSyllabusHandler(t *testing.T) {
 			},
 		}
 
-		handlers.GetSyllabusResources(c)
+		handlers.GetSyllabusAttachments(c)
 		assert.Equal(t, http.StatusOK, res.Code)
 	})
 
-	t.Run("Test get resource from syllabus", func(t *testing.T) {
+	t.Run("Test get attachment from syllabus", func(t *testing.T) {
 		res := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(res)
 		c.Request = &http.Request{
@@ -392,15 +392,15 @@ func TestSyllabusHandler(t *testing.T) {
 			},
 			{
 				Key:   "res_id",
-				Value: resourceID.String(),
+				Value: attachmentID.String(),
 			},
 		}
 
-		handlers.GetSyllabusResource(c)
+		handlers.GetSyllabusAttachment(c)
 		assert.Equal(t, http.StatusOK, res.Code)
 	})
 
-	t.Run("Test remove resource from syllabus", func(t *testing.T) {
+	t.Run("Test remove attachment from syllabus", func(t *testing.T) {
 		res := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(res)
 		c.Request = &http.Request{
@@ -415,17 +415,17 @@ func TestSyllabusHandler(t *testing.T) {
 			},
 			{
 				Key:   "res_id",
-				Value: resourceID.String(),
+				Value: attachmentID.String(),
 			},
 		}
 
-		handlers.RemoveSyllabusResource(c)
+		handlers.RemoveSyllabusAttachment(c)
 		assert.Equal(t, http.StatusOK, res.Code)
 
-		var resource models.Resource
-		err := json.Unmarshal(res.Body.Bytes(), &resource)
+		var attachment models.Attachment
+		err := json.Unmarshal(res.Body.Bytes(), &attachment)
 		require.Nil(t, err)
-		assert.Equal(t, syllabusID, resource.UUID)
+		assert.Equal(t, syllabusID, attachment.UUID)
 	})
 
 	t.Run("Test delete syllabus", func(t *testing.T) {

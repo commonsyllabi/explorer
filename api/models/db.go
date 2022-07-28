@@ -34,7 +34,7 @@ func InitDB(url string) (*gorm.DB, error) {
 	}
 
 	// migration
-	err = db.AutoMigrate(&User{}, &Collection{}, &Syllabus{}, &Resource{})
+	err = db.AutoMigrate(&User{}, &Collection{}, &Syllabus{}, &Attachment{})
 	if err != nil {
 		zero.Errorf("error running migrations: %v", err)
 		log.Fatal(err)

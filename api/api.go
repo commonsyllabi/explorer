@@ -124,14 +124,14 @@ func SetupRouter() *gin.Engine {
 		users.DELETE("/:id", auth.Authenticate(), handlers.DeleteUser)
 	}
 
-	resources := router.Group("/resources")
+	attachments := router.Group("/attachments")
 	{
-		resources.GET("/", handlers.GetAllResources)
-		resources.GET("/:id", handlers.GetResource)
+		attachments.GET("/", handlers.GetAllAttachments)
+		attachments.GET("/:id", handlers.GetAttachment)
 
-		resources.POST("/", auth.Authenticate(), handlers.CreateResource)
-		resources.PATCH("/:id", auth.Authenticate(), handlers.UpdateResource)
-		resources.DELETE("/:id", auth.Authenticate(), handlers.DeleteResource)
+		attachments.POST("/", auth.Authenticate(), handlers.CreateAttachment)
+		attachments.PATCH("/:id", auth.Authenticate(), handlers.UpdateAttachment)
+		attachments.DELETE("/:id", auth.Authenticate(), handlers.DeleteAttachment)
 	}
 
 	collections := router.Group("/collections")

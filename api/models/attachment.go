@@ -1,13 +1,11 @@
 package models
 
 import (
-	"time"
-
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
-type Resource struct {
+type Attachment struct {
 	gorm.Model
 	UUID uuid.UUID `gorm:"uniqueIndex;type:uuid;primaryKey;default:uuid_generate_v4()" json:"uuid" yaml:"uuid"`
 	//-- belongs to a syllabus
@@ -20,48 +18,47 @@ type Resource struct {
 	URL         string `gorm:"not null" json:"url" form:"url"`
 }
 
-func CreateResource(syllabus_uuid uuid.UUID, res *Resource) (Resource, error) {
+func CreateAttachment(syllabus_uuid uuid.UUID, att *Attachment) (Attachment, error) {
 	syll, err := GetSyllabus(syllabus_uuid)
 	if err != nil {
-		return *res, err
+		return *att, err
 	}
 
-	res.Syllabus = syll
-	err = db.Model(&syll).Association("Resources").Append(res)
-	return *res, err
+	att.Syllabus = syll
+	err = db.Model(&syll).Association("Attachments").Append(att)
+	return *att, err
 }
 
-func GetResource(uuid uuid.UUID) (Resource, error) {
-	var res Resource
-	result := db.Where("uuid = ?", uuid).First(&res)
-	return res, result.Error
+func GetAttachment(uuid uuid.UUID) (Attachment, error) {
+	var att Attachment
+	result := db.Where("uuid = ?", uuid).First(&att)
+	return att, result.Error
 }
 
-func GetAllResources() ([]Resource, error) {
-	res := make([]Resource, 0)
+func GetAllAttachments() ([]Attachment, error) {
+	res := make([]Attachment, 0)
 	result := db.Find(&res)
 	return res, result.Error
 }
 
-func UpdateResource(uuid uuid.UUID, res *Resource) (Resource, error) {
-	var existing Resource
+func UpdateAttachment(uuid uuid.UUID, att *Attachment) (Attachment, error) {
+	var existing Attachment
 	result := db.Where("uuid = ?", uuid).First(&existing)
 	if result.Error != nil {
-		return *res, result.Error
+		return *att, result.Error
 	}
 
-	res.UpdatedAt = time.Now()
-	result = db.Model(&existing).Where("uuid = ?", uuid).Updates(res)
+	result = db.Model(&existing).Where("uuid = ?", uuid).Updates(att)
 	return existing, result.Error
 }
 
-func DeleteResource(uuid uuid.UUID) (Resource, error) {
-	var res Resource
-	result := db.Where("uuid = ?", uuid).First(&res)
+func DeleteAttachment(uuid uuid.UUID) (Attachment, error) {
+	var att Attachment
+	result := db.Where("uuid = ?", uuid).First(&att)
 	if result.Error != nil {
-		return res, result.Error
+		return att, result.Error
 	}
 
-	result = db.Where("uuid = ? ", uuid).Delete(&res)
-	return res, result.Error
+	result = db.Where("uuid = ? ", uuid).Delete(&att)
+	return att, result.Error
 }

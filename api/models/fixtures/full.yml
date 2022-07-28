@@ -13,15 +13,15 @@
       title: "User-created 1"
       description: "Lorem ipsum descriptio"
       duration: 14
-      resources:
+      attachments:
         - uuid: 'c55f0baf-12b8-4bdb-b5e6-2280bff8ab21'
-          name: "Syllabus-owned Resource 1"
+          name: "Syllabus-owned Attachment 1"
           url: "http://localhost/file1.jpg"
         - uuid: 'c55f0baf-12b8-4bdb-b5e6-2280bff8ab30'
-          name: "Syllabus Resource 2 (to delete)"
+          name: "Syllabus Attachment 2 (to delete)"
           url: "http://localhost/delete.jpg"
     - uuid: '46de6a2b-aacb-4c24-b1e1-3495821f8469'
-      title: "User-created 2 (without resources)"
+      title: "User-created 2 (without attachments)"
       description: "Lorem ipsum descriptwo"
       duration: 7
   collections:

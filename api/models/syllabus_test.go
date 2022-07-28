@@ -26,15 +26,15 @@ func TestSyllabusModel(t *testing.T) {
 		assert.Nil(t, err)
 	})
 
-	t.Run("Test create syllabus with resources", func(t *testing.T) {
-		resources := make([]models.Resource, 3)
+	t.Run("Test create syllabus with attachments", func(t *testing.T) {
+		attachments := make([]models.Attachment, 3)
 		syll := models.Syllabus{
-			Title:     "Test Title with Resources",
-			Resources: resources,
+			Title:       "Test Title with Attachments",
+			Attachments: attachments,
 		}
 		_, err := models.CreateSyllabus(userID, &syll)
 		assert.Nil(t, err)
-		assert.Equal(t, len(syll.Resources), len(resources), "Expected the created syllabus to have %d resources, got %d", len(resources), len(syll.Resources))
+		assert.Equal(t, len(syll.Attachments), len(attachments), "Expected the created syllabus to have %d attachments, got %d", len(attachments), len(syll.Attachments))
 	})
 
 	t.Run("Test get syllabus", func(t *testing.T) {

@@ -20,8 +20,8 @@ type Syllabus struct {
 	//-- many collections to many syllabus
 	Collections []*Collection `gorm:"many2many:collections_syllabi;"`
 
-	//-- has many resources
-	Resources []Resource `gorm:"foreignKey:SyllabusUUID;references:UUID"`
+	//-- has many attachments
+	Attachments []Attachment `gorm:"foreignKey:SyllabusUUID;references:UUID"`
 
 	Title         string `gorm:"not null" form:"title"`
 	Description   string `gorm:"not null" form:"description"`
@@ -78,38 +78,38 @@ func UpdateSyllabus(uuid uuid.UUID, syll *Syllabus) (Syllabus, error) {
 	return existing, result.Error
 }
 
-func AddResourceToSyllabus(syll_uuid uuid.UUID, res_uuid uuid.UUID) (Syllabus, error) {
+func AddAttachmentToSyllabus(syll_uuid uuid.UUID, res_uuid uuid.UUID) (Syllabus, error) {
 	var syll Syllabus
 	result := db.Where("uuid = ? ", syll_uuid).First(&syll)
 	if result.Error != nil {
 		return syll, result.Error
 	}
 
-	var res Resource
-	result = db.Where("uuid = ? ", res_uuid).First(&res)
+	var att Attachment
+	result = db.Where("uuid = ? ", res_uuid).First(&att)
 	if result.Error != nil {
 		return syll, result.Error
 	}
 
-	err := db.Model(&syll).Association("Resources").Append(&res)
+	err := db.Model(&syll).Association("Attachments").Append(&att)
 	return syll, err
 }
 
-func RemoveResourceFromSyllabus(syll_uuid uuid.UUID, res_uuid uuid.UUID) (Syllabus, error) {
+func RemoveAttachmentFromSyllabus(syll_uuid uuid.UUID, res_uuid uuid.UUID) (Syllabus, error) {
 	var syll Syllabus
 	result := db.Where("uuid = ? ", syll_uuid).First(&syll)
 	if result.Error != nil {
 		return syll, result.Error
 	}
 
-	var res Resource
-	result = db.Where("uuid = ? ", res_uuid).First(&res)
+	var att Attachment
+	result = db.Where("uuid = ? ", res_uuid).First(&att)
 	if result.Error != nil {
 		return syll, result.Error
 	}
 
-	// err := db.Model(&syll).Association("Resources").Delete(res)
-	fmt.Println("IMPLEMENT ME!") //--  Right now resources require a syllabus to exist, but it should be independent, only tied to a user, and with a many2many relation to syllabi
+	// err := db.Model(&syll).Association("Attachments").Delete(res)
+	fmt.Println("IMPLEMENT ME!") //--  Right now attachments require a syllabus to exist, but it should be independent, only tied to a user, and with a many2many relation to syllabi
 	return syll, nil
 }
 

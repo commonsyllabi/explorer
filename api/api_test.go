@@ -20,14 +20,14 @@ var router *gin.Engine
 var (
 	syllabusID   uuid.UUID
 	collectionID uuid.UUID
-	resourceID   uuid.UUID
+	attachmentID uuid.UUID
 	userID       uuid.UUID
 )
 
 func setup(t *testing.T) func(t *testing.T) {
 	syllabusID = uuid.MustParse("46de6a2b-aacb-4c24-b1e1-3495821f846a")
 	collectionID = uuid.MustParse("b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a7")
-	resourceID = uuid.MustParse("c55f0baf-12b8-4bdb-b5e6-2280bff8ab21")
+	attachmentID = uuid.MustParse("c55f0baf-12b8-4bdb-b5e6-2280bff8ab21")
 	userID = uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c8a8")
 
 	gin.SetMode(gin.TestMode)
@@ -107,8 +107,8 @@ func TestRoutes(t *testing.T) {
 		assert.Equal(t, http.StatusUnauthorized, res.Code)
 	})
 
-	t.Run("Test delete resources unauthorized", func(t *testing.T) {
-		path := "/resources/" + resourceID.String()
+	t.Run("Test delete attachments unauthorized", func(t *testing.T) {
+		path := "/attachments/" + attachmentID.String()
 		req := httptest.NewRequest(http.MethodDelete, path, nil)
 
 		res := httptest.NewRecorder()

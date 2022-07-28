@@ -1,0 +1,6 @@
+- attachment_id: 'c55f0baf-12b8-4bdb-b5e6-2280bff8ab21'
+  name: "Fixture Attachment 1"
+  url: "http://localhost/file1.jpg"
+- attachment_id: 'c55f0baf-12b8-4bdb-b5e6-2280bff8ab29'
+  name: "Fixture Attachment 2"
+  url: "http://localhost/file2.jpg"

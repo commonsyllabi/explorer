@@ -65,10 +65,10 @@ func CreateSyllabus(c *gin.Context) {
 		return
 	}
 
-	var resources []*models.Resource
-	files := form.File["resources[]"]
+	var attachments []*models.Attachment
+	files := form.File["attachments[]"]
 
-	zero.Warnf("%d resources found on new syllabus", len(files))
+	zero.Warnf("%d attachments found on new syllabus", len(files))
 
 	for _, f := range files {
 
@@ -86,19 +86,19 @@ func CreateSyllabus(c *gin.Context) {
 		// 	return
 		// }
 
-		resource := models.Resource{
+		attachment := models.Attachment{
 			Name: f.Filename,
 		}
 
-		res, err := models.CreateResource(syll.UUID, &resource)
+		res, err := models.CreateAttachment(syll.UUID, &attachment)
 		if err != nil {
-			zero.Warnf("error adding resource: %s", err)
+			zero.Warnf("error adding attachment: %s", err)
 		}
-		resources = append(resources, &res)
+		attachments = append(attachments, &res)
 	}
 
-	zero.Warn("resources not correctly added to syll create")
-	// syll.Resources = resources
+	zero.Warn("attachments not correctly added to syll create")
+	// syll.Attachments = attachments
 	c.JSON(http.StatusCreated, syll)
 }
 
@@ -129,7 +129,7 @@ func GetSyllabus(c *gin.Context) {
 	c.JSON(http.StatusOK, syll)
 }
 
-func AddSyllabusResource(c *gin.Context) {
+func AddSyllabusAttachment(c *gin.Context) {
 	syll_id := c.Param("id")
 	syll_uid, err := uuid.Parse(syll_id)
 	if err != nil {
@@ -138,15 +138,15 @@ func AddSyllabusResource(c *gin.Context) {
 		return
 	}
 
-	res_id := c.PostForm("resource_id")
+	res_id := c.PostForm("attachment_id")
 	res_uid, err := uuid.Parse(res_id)
 	if err != nil {
 		c.String(http.StatusBadRequest, "not a valid ID")
-		zero.Errorf("not a valid resource id %d", err)
+		zero.Errorf("not a valid attachment id %d", err)
 		return
 	}
 
-	syll, err := models.AddResourceToSyllabus(syll_uid, res_uid)
+	syll, err := models.AddAttachmentToSyllabus(syll_uid, res_uid)
 	if err != nil {
 		c.String(http.StatusNotFound, err.Error())
 		zero.Errorf("error getting syllabus %d: %v", syll_id, err)
@@ -156,7 +156,7 @@ func AddSyllabusResource(c *gin.Context) {
 	c.JSON(http.StatusOK, syll)
 }
 
-func GetSyllabusResources(c *gin.Context) {
+func GetSyllabusAttachments(c *gin.Context) {
 	id := c.Param("id")
 	uid, err := uuid.Parse(id)
 	if err != nil {
@@ -172,10 +172,10 @@ func GetSyllabusResources(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, coll.Resources)
+	c.JSON(http.StatusOK, coll.Attachments)
 }
 
-func GetSyllabusResource(c *gin.Context) {
+func GetSyllabusAttachment(c *gin.Context) {
 	syll_id := c.Param("id")
 	syll_uid, err := uuid.Parse(syll_id)
 	if err != nil {
@@ -188,7 +188,7 @@ func GetSyllabusResource(c *gin.Context) {
 	res_uid, err := uuid.Parse(res_id)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res_id)
-		zero.Errorf("not a valid resource id %d", err)
+		zero.Errorf("not a valid attachment id %d", err)
 		return
 	}
 
@@ -199,9 +199,9 @@ func GetSyllabusResource(c *gin.Context) {
 		return
 	}
 
-	res, err := models.GetResource(res_uid)
+	res, err := models.GetAttachment(res_uid)
 	if err != nil {
-		zero.Errorf("error getting resource %v: %s", res_id, err)
+		zero.Errorf("error getting attachment %v: %s", res_id, err)
 		c.JSON(http.StatusNotFound, res_id)
 		return
 	}
@@ -286,7 +286,7 @@ func DeleteSyllabus(c *gin.Context) {
 	c.JSON(http.StatusOK, syll)
 }
 
-func RemoveSyllabusResource(c *gin.Context) {
+func RemoveSyllabusAttachment(c *gin.Context) {
 	syll_id := c.Param("id")
 	syll_uid, err := uuid.Parse(syll_id)
 	if err != nil {
@@ -303,7 +303,7 @@ func RemoveSyllabusResource(c *gin.Context) {
 		return
 	}
 
-	syll, err := models.RemoveResourceFromSyllabus(syll_uid, res_uid)
+	syll, err := models.RemoveAttachmentFromSyllabus(syll_uid, res_uid)
 	if err != nil {
 		c.String(http.StatusNotFound, err.Error())
 		zero.Errorf("error getting syllabus %d: %v", syll_id, err)

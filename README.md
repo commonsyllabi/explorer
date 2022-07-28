@@ -7,14 +7,14 @@ Syllabus exploring and sharing platform
 figure out proper has-many/belongs-to relations in bun
 
 - make just the dashboard private (which is just a grouping of user info, syllabi and collections)
-- what do we do with dangling resources? if a user deletes their account, do we offer to keep the collection with a ghost account? i think it's fair (we just anonimyze the account)
+- what do we do with dangling attachments? if a user deletes their account, do we offer to keep the collection with a ghost account? i think it's fair (we just anonimyze the account)
 - for migrations: `CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`
 
 ## questions
 
 ### API
 - [ ] does creating a syllabus require a user account? does it do it automatically (i.e., taking the associated email with the syllabus, automatically generating a password and sending it via email?)
-- [x] do we make resources first-class citizens? aka does a user profile return the set of resources associated with it? __no, but they should all be accessible from regular path etc.
+- [x] do we make attachments first-class citizens? aka does a user profile return the set of attachments associated with it? __no, but they should all be accessible from regular path etc.
 
 ### sessions
 
