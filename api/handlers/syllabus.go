@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"net/http"
 	"reflect"
-	"time"
 
 	zero "github.com/commonsyllabi/explorer/api/logger"
 	"github.com/commonsyllabi/explorer/api/models"
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
@@ -50,9 +50,15 @@ func CreateSyllabus(c *gin.Context) {
 		return
 	}
 
-	syll.CreatedAt = time.Now()
-	syll.UpdatedAt = time.Now()
-	syll, err = models.CreateSyllabus(&syll)
+	var userID uuid.UUID
+	if gin.Mode() != gin.TestMode { //-- todo: handle this properly (ask tobi)
+		session := sessions.Default(c)
+		sessionID := session.Get("user")
+		userID = uuid.MustParse(fmt.Sprintf("%v", sessionID))
+	} else {
+		userID = uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c8a8")
+	}
+	syll, err = models.CreateSyllabus(userID, &syll)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		zero.Errorf("error creating syllabus: %v", err)
@@ -84,7 +90,7 @@ func CreateSyllabus(c *gin.Context) {
 			Name: f.Filename,
 		}
 
-		res, err := models.CreateResource(&resource)
+		res, err := models.CreateResource(syll.UUID, &resource)
 		if err != nil {
 			zero.Warnf("error adding resource: %s", err)
 		}
@@ -124,8 +130,8 @@ func GetSyllabus(c *gin.Context) {
 }
 
 func AddSyllabusResource(c *gin.Context) {
-	id := c.Param("id")
-	uid, err := uuid.Parse(id)
+	syll_id := c.Param("id")
+	syll_uid, err := uuid.Parse(syll_id)
 	if err != nil {
 		c.String(http.StatusBadRequest, "not a valid ID")
 		zero.Errorf("not a valid syllabus id %d", err)
@@ -140,46 +146,14 @@ func AddSyllabusResource(c *gin.Context) {
 		return
 	}
 
-	syll, err := models.GetSyllabus(uid)
+	syll, err := models.AddResourceToSyllabus(syll_uid, res_uid)
 	if err != nil {
-		zero.Errorf("error getting syllabus %v: %s", id, err)
-		c.JSON(http.StatusNotFound, gin.H{
-			"msg": "We couldn't find the syllabus.",
-		})
+		c.String(http.StatusNotFound, err.Error())
+		zero.Errorf("error getting syllabus %d: %v", syll_id, err)
 		return
 	}
 
-	res, err := models.GetResource(res_uid)
-	if err != nil {
-		zero.Errorf("error getting Collection %v: %s", id, err)
-		c.JSON(http.StatusNotFound, gin.H{
-			"msg": "We couldn't find the resource.",
-		})
-		return
-	}
-
-	syll.Resources = append(syll.Resources, res)
-	// res.SyllabusID = syll.ID
-
-	// _, err = models.UpdateResource(res.ID, &res)
-	// if err != nil {
-	// 	zero.Errorf("error updating resource: %s", err)
-	// 	c.JSON(http.StatusInternalServerError, gin.H{
-	// 		"msg": "We couldn't complete the update.",
-	// 	})
-	// 	return
-	// }
-
-	updated, err := models.UpdateSyllabus(syll.UUID, &syll)
-	if err != nil {
-		zero.Errorf("error updating syllabus %v: %s", id, err)
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"msg": "We couldn't complete the update.",
-		})
-		return
-	}
-
-	c.JSON(http.StatusOK, updated)
+	c.JSON(http.StatusOK, syll)
 }
 
 func GetSyllabusResources(c *gin.Context) {
@@ -309,52 +283,34 @@ func DeleteSyllabus(c *gin.Context) {
 		return
 	}
 
-	//-- TODO delete any associated resources?
-
 	c.JSON(http.StatusOK, syll)
 }
 
 func RemoveSyllabusResource(c *gin.Context) {
-	coll_id := c.Param("id")
-	coll_uid, err := uuid.Parse(coll_id)
+	syll_id := c.Param("id")
+	syll_uid, err := uuid.Parse(syll_id)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, coll_id)
+		c.JSON(http.StatusBadRequest, syll_id)
 		zero.Errorf("not a valid id %d", err)
 		return
 	}
 
 	res_id := c.Param("res_id")
-	_, err = uuid.Parse(res_id)
+	res_uid, err := uuid.Parse(res_id)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res_id)
 		zero.Errorf("not a valid id %d", err)
 		return
 	}
 
-	_, err = models.GetSyllabus(coll_uid)
+	syll, err := models.RemoveResourceFromSyllabus(syll_uid, res_uid)
 	if err != nil {
 		c.String(http.StatusNotFound, err.Error())
-		zero.Errorf("error getting syllabus %d: %v", coll_id, err)
+		zero.Errorf("error getting syllabus %d: %v", syll_id, err)
 		return
 	}
 
-	// res, err := models.GetResource(res_uid)
-	// if err != nil {
-	// 	c.String(http.StatusNotFound, err.Error())
-	// 	zero.Errorf("error getting resource %d: %v", res_id, err)
-	// 	return
-	// }
-
-	//-- also there is a problem with "omitzero", we cannot unset fields (like setting the UUID to null below, so we do a new())
-	// res.SyllabusID = uuid.New()
-	// updated, err := models.UpdateResource(res.ID, &res)
-	// if err != nil {
-	// 	c.String(http.StatusNotFound, err.Error())
-	// 	zero.Errorf("error updating resource %d: %v", res_id, err)
-	// 	return
-	// }
-
-	c.JSON(http.StatusOK, res_id)
+	c.JSON(http.StatusOK, syll)
 }
 
 func sanitizeSyllabus(c *gin.Context) error {

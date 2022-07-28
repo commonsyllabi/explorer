@@ -14,10 +14,10 @@ type Resource struct {
 	SyllabusUUID uuid.UUID `gorm:"type:uuid;primaryKey;default:uuid_generate_v4()" json:"syllabus_uuid" yaml:"syllabus_uuid"`
 	Syllabus     Syllabus  `gorm:"foreignKey:SyllabusUUID;references:UUID"`
 
-	Name        string `gorm:"not null"`
-	Type        string `gorm:"not null"`
-	Description string
-	URL         string `gorm:"not null"`
+	Name        string `gorm:"not null" json:"name" form:"name"`
+	Type        string `gorm:"not null" json:"type" form:"type"`
+	Description string `json:"description" form:"description"`
+	URL         string `gorm:"not null" json:"url" form:"url"`
 }
 
 func CreateResource(syllabus_uuid uuid.UUID, res *Resource) (Resource, error) {

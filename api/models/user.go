@@ -16,20 +16,20 @@ type User struct {
 	gorm.Model
 	UUID uuid.UUID `gorm:"uniqueIndex;type:uuid;primaryKey;default:uuid_generate_v4()" json:"uuid" yaml:"uuid"`
 
-	Email    string `gorm:"unique;not null" json:"email"`
+	Email    string `gorm:"unique;not null" json:"email" form:"email"`
 	Password []byte `gorm:"not null" json:"password"`
 	Status   string `gorm:"default:pending" json:"status"`
 
-	Name      string `gorm:"not null" json:"name"`
-	Bio       string `json:"bio"`
-	Education string `json:"education"`
+	Name      string `gorm:"not null" json:"name" form:"name"`
+	Bio       string `json:"bio" form:"bio"`
+	Education string `json:"education" form:"education"`
 
 	// Position []struct {
 	// 	Name     string
 	// 	Institution Institution
 	// }
 
-	URLs pq.StringArray `gorm:"type:text[]" json:"urls"`
+	URLs pq.StringArray `gorm:"type:text[]" json:"urls" form:"urls[]"`
 
 	//-- has many
 	// Resources   []Resource   `gorm:"foreignKey:UserUUID;references:UUID" json:"resources"`

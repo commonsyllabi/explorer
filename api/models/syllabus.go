@@ -1,6 +1,8 @@
 package models
 
 import (
+	"fmt"
+
 	"github.com/google/uuid"
 	"github.com/lib/pq"
 	"gorm.io/gorm"
@@ -16,15 +18,15 @@ type Syllabus struct {
 	User     User      `gorm:"foreignKey:UserUUID;references:UUID"`
 
 	//-- many collections to many syllabus
-	Collections []*Collection `gorm:"many2many:collection_syllabi;"`
+	Collections []*Collection `gorm:"many2many:collections_syllabi;"`
 
 	//-- has many resources
 	Resources []Resource `gorm:"foreignKey:SyllabusUUID;references:UUID"`
 
-	Title         string `gorm:"not null"`
-	Description   string `gorm:"not null"`
-	Duration      int
-	GradingRubric string
+	Title         string `gorm:"not null" form:"title"`
+	Description   string `gorm:"not null" form:"description"`
+	Duration      int    `json:"duration" form:"duration"`
+	GradingRubric string `json:"grading_rubric" form:"grading_rubric"`
 
 	// Institutions []struct {
 	// 	Country string //-- iso 3166
@@ -36,11 +38,11 @@ type Syllabus struct {
 	// 	URL  string
 	// }
 
-	LearningOutcomes pq.StringArray `gorm:"type:text[]"`
-	Other            string
-	Readings         pq.StringArray `gorm:"type:text[]"`
-	Tags             pq.StringArray `gorm:"type:text[]"`
-	TopicOutlines    pq.StringArray `gorm:"type:text[]"`
+	LearningOutcomes pq.StringArray `gorm:"type:text[]" json:"learning_outcomes" form:"learning_outcomes[]"`
+	Other            string         `json:"other" form:"other"`
+	Readings         pq.StringArray `gorm:"type:text[]" json:"readings" form:"readings[]"`
+	Tags             pq.StringArray `gorm:"type:text[]" json:"tags" form:"tags[]"`
+	TopicOutlines    pq.StringArray `gorm:"type:text[]" json:"topic_outlines" form:"topic_outlines[]"`
 }
 
 func CreateSyllabus(user_uuid uuid.UUID, syll *Syllabus) (Syllabus, error) {
@@ -74,6 +76,41 @@ func UpdateSyllabus(uuid uuid.UUID, syll *Syllabus) (Syllabus, error) {
 
 	result = db.Model(&existing).Where("uuid = ?", uuid).Updates(&syll)
 	return existing, result.Error
+}
+
+func AddResourceToSyllabus(syll_uuid uuid.UUID, res_uuid uuid.UUID) (Syllabus, error) {
+	var syll Syllabus
+	result := db.Where("uuid = ? ", syll_uuid).First(&syll)
+	if result.Error != nil {
+		return syll, result.Error
+	}
+
+	var res Resource
+	result = db.Where("uuid = ? ", res_uuid).First(&res)
+	if result.Error != nil {
+		return syll, result.Error
+	}
+
+	err := db.Model(&syll).Association("Resources").Append(&res)
+	return syll, err
+}
+
+func RemoveResourceFromSyllabus(syll_uuid uuid.UUID, res_uuid uuid.UUID) (Syllabus, error) {
+	var syll Syllabus
+	result := db.Where("uuid = ? ", syll_uuid).First(&syll)
+	if result.Error != nil {
+		return syll, result.Error
+	}
+
+	var res Resource
+	result = db.Where("uuid = ? ", res_uuid).First(&res)
+	if result.Error != nil {
+		return syll, result.Error
+	}
+
+	// err := db.Model(&syll).Association("Resources").Delete(res)
+	fmt.Println("IMPLEMENT ME!") //--  Right now resources require a syllabus to exist, but it should be independent, only tied to a user, and with a many2many relation to syllabi
+	return syll, nil
 }
 
 func DeleteSyllabus(uuid uuid.UUID) (Syllabus, error) {

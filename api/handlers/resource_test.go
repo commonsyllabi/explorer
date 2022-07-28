@@ -31,6 +31,8 @@ func TestResourceHandler(t *testing.T) {
 		var body bytes.Buffer
 		w := multipart.NewWriter(&body)
 		w.WriteField("name", "Test Resource Handling")
+		w.WriteField("type", "weblink")
+		w.WriteField("url", "http://test.com/resource")
 		w.Close()
 
 		res := httptest.NewRecorder()
@@ -38,6 +40,7 @@ func TestResourceHandler(t *testing.T) {
 		c.Request = &http.Request{
 			Header: make(http.Header),
 		}
+		c.Set("syllabus_id", syllabusID.String())
 
 		c.Request.Method = "POST"
 		c.Request.Header.Set("Content-Type", w.FormDataContentType())

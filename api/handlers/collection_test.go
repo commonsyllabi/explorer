@@ -27,6 +27,10 @@ func TestCollectionHandler(t *testing.T) {
 		c, _ := gin.CreateTestContext(res)
 		handlers.GetAllCollections(c)
 		assert.Equal(t, http.StatusOK, res.Code)
+
+		colls := make([]models.Collection, 0)
+		err := json.Unmarshal(res.Body.Bytes(), &colls)
+		require.Nil(t, err)
 	})
 
 	t.Run("Test create collection", func(t *testing.T) {
@@ -88,6 +92,11 @@ func TestCollectionHandler(t *testing.T) {
 
 		handlers.GetCollection(c)
 		assert.Equal(t, http.StatusOK, res.Code)
+
+		var coll models.Collection
+		err := json.Unmarshal(res.Body.Bytes(), &coll)
+		require.Nil(t, err)
+		assert.Equal(t, 1, len(coll.Syllabi))
 	})
 
 	t.Run("Test get collection non-existent ID", func(t *testing.T) {
@@ -157,7 +166,7 @@ func TestCollectionHandler(t *testing.T) {
 		err := json.Unmarshal(res.Body.Bytes(), &coll)
 		require.Nil(t, err)
 		assert.Equal(t, "Updated", coll.Name)
-		assert.NotZero(t, coll.ID)
+		assert.NotZero(t, coll.UUID)
 	})
 
 	t.Run("Test update collection non-existant ID", func(t *testing.T) {
@@ -267,7 +276,7 @@ func TestCollectionHandler(t *testing.T) {
 		var coll models.Collection
 		err := json.Unmarshal(res.Body.Bytes(), &coll)
 		require.Nil(t, err)
-		assert.Equal(t, 3, len(coll.Syllabi))
+		assert.Equal(t, 1, len(coll.Syllabi))
 	})
 
 	t.Run("Test get all syllabi from collection", func(t *testing.T) {
@@ -337,7 +346,7 @@ func TestCollectionHandler(t *testing.T) {
 		var syll models.Syllabus
 		err := json.Unmarshal(res.Body.Bytes(), &syll)
 		require.Nil(t, err)
-		assert.Equal(t, syllabusID, syll.ID)
+		assert.Equal(t, syllabusID, syll.UUID)
 	})
 
 	t.Run("Test delete collection", func(t *testing.T) {

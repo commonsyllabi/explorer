@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"net/http"
 	"reflect"
-	"time"
 
 	zero "github.com/commonsyllabi/explorer/api/logger"
 	"github.com/commonsyllabi/explorer/api/models"
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
@@ -15,7 +15,7 @@ import (
 func GetAllCollections(c *gin.Context) {
 	collections, err := models.GetAllCollections()
 	if err != nil {
-		c.String(http.StatusInternalServerError, err.Error())
+		c.JSON(http.StatusInternalServerError, err)
 		zero.Errorf("error getting collections: %v", err)
 		return
 	}
@@ -38,9 +38,16 @@ func CreateCollection(c *gin.Context) {
 		return
 	}
 
-	coll.CreatedAt = time.Now()
-	coll.UpdatedAt = time.Now()
-	coll, err = models.CreateCollection(&coll)
+	var userID uuid.UUID
+	if gin.Mode() != gin.TestMode { //-- todo: handle this properly
+		session := sessions.Default(c)
+		sessionID := session.Get("user")
+		userID = uuid.MustParse(fmt.Sprintf("%v", sessionID))
+	} else {
+		userID = uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c8a8")
+	}
+
+	coll, err = models.CreateCollection(userID, &coll)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		zero.Errorf("error creating Collection: %v", err)
@@ -101,15 +108,14 @@ func UpdateCollection(c *gin.Context) {
 }
 
 func AddCollectionSyllabus(c *gin.Context) {
-	id := c.Param("id")
-	uid, err := uuid.Parse(id)
+	coll_id := c.Param("id")
+	coll_uid, err := uuid.Parse(coll_id)
 	if err != nil {
 		c.String(http.StatusBadRequest, "not a valid ID")
 		zero.Errorf("not a valid id %d", err)
 		return
 	}
 
-	// check that the syllabus ID is proper
 	syll_id := c.PostForm("syllabus_id")
 	syll_uid, err := uuid.Parse(syll_id)
 	if err != nil {
@@ -118,56 +124,13 @@ func AddCollectionSyllabus(c *gin.Context) {
 		return
 	}
 
-	syll, err := models.GetSyllabus(syll_uid)
-	if err != nil {
-		zero.Errorf("error getting syllabus %v: %s", id, err)
-		c.JSON(http.StatusNotFound, gin.H{
-			"msg": "We couldn't find the syllabus.",
-		})
-		return
-	}
+	coll, err := models.AddSyllabusToCollection(coll_uid, syll_uid)
 
-	coll, err := models.GetCollection(uid)
-	if err != nil {
-		zero.Errorf("error getting Collection %v: %s", id, err)
-		c.JSON(http.StatusNotFound, gin.H{
-			"msg": "We couldn't find the Collection.",
-		})
-		return
-	}
-
-	coll.Syllabi = append(coll.Syllabi, syll)
-	syll.Collections = append(syll.Collections, &coll)
-
-	updated_syll, err := models.UpdateSyllabus(syll.UUID, &syll)
-	if err != nil {
-		zero.Errorf("error updating syllabus %v: %s", updated_syll, err)
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"msg": "We couldn't complete the update.",
-		})
-		return
-	}
-
-	updated, err := models.UpdateCollection(coll.UUID, &coll)
-	if err != nil {
-		zero.Errorf("error updating collection %v: %s", id, err)
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"msg": "We couldn't complete the update.",
-		})
-		return
-	}
-
-	c.JSON(http.StatusOK, updated)
+	c.JSON(http.StatusOK, coll)
 }
 
 func GetCollection(c *gin.Context) {
 	id := c.Param("id")
-	if len(id) < 25 {
-		c.String(http.StatusBadRequest, "not a valid ID")
-		zero.Errorf("not a valid id %d", id)
-		return
-	}
-
 	uid, err := uuid.Parse(id)
 	if err != nil {
 		c.String(http.StatusBadRequest, "not a valid ID")
@@ -181,6 +144,7 @@ func GetCollection(c *gin.Context) {
 		c.JSON(http.StatusNotFound, uid)
 		return
 	}
+	fmt.Println(coll)
 
 	c.JSON(http.StatusOK, coll)
 }

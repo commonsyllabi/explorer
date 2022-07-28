@@ -78,5 +78,7 @@ func runFixtures(shouldTruncateTables bool) error {
 		}
 	}
 
+	db.Model(&users[0].Collections[0]).Association("Syllabi").Append(&users[0].Syllabi[0])
+
 	return err
 }

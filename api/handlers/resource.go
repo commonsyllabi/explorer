@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net/http"
 	"reflect"
-	"time"
 
 	zero "github.com/commonsyllabi/explorer/api/logger"
 	"github.com/commonsyllabi/explorer/api/models"
@@ -31,6 +30,14 @@ func CreateResource(c *gin.Context) {
 		return
 	}
 
+	id, exists := c.Get("syllabus_id")
+	syll_id, err := uuid.Parse(fmt.Sprintf("%v", id))
+	if !exists || err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		zero.Errorf(err.Error())
+		return
+	}
+
 	var res models.Resource
 	err = c.Bind(&res)
 	if err != nil {
@@ -38,9 +45,7 @@ func CreateResource(c *gin.Context) {
 		return
 	}
 
-	res.CreatedAt = time.Now()
-	res.UpdatedAt = time.Now()
-	res, err = models.CreateResource(&res)
+	res, err = models.CreateResource(syll_id, &res)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		zero.Errorf("error creating Resource: %v", err)

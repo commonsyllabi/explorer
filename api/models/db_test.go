@@ -50,7 +50,7 @@ func setup(t *testing.T) func(t *testing.T) {
 	collectionNonExistingID = uuid.New()
 
 	resourceID = uuid.MustParse("c55f0baf-12b8-4bdb-b5e6-2280bff8ab21")
-	resourceDeleteID = uuid.MustParse("c55f0baf-12b8-4bdb-b5e6-2280bff8ab29")
+	resourceDeleteID = uuid.MustParse("c55f0baf-12b8-4bdb-b5e6-2280bff8ab30")
 	resourceNonExistingID = uuid.New()
 
 	userID = uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c8a8")

@@ -43,7 +43,7 @@ func setup(t *testing.T) func(t *testing.T) {
 	syllabusDeleteID = uuid.MustParse("46de6a2b-aacb-4c24-b1e1-3495821f8469")
 	syllabusNonExistingID = uuid.New()
 
-	collectionID = uuid.MustParse("b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a7")
+	collectionID = uuid.MustParse("b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a9")
 	collectionDeleteID = uuid.MustParse("b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a9")
 	collectionNonExistingID = uuid.New()
 
@@ -355,7 +355,7 @@ func TestSyllabusHandler(t *testing.T) {
 		var syll models.Syllabus
 		err := json.Unmarshal(res.Body.Bytes(), &syll)
 		require.Nil(t, err)
-		assert.Equal(t, 3, len(syll.Resources))
+		assert.Equal(t, "Updated Title", syll.Title) //-- todo this updated title check relies on the previous test, which is not good practice
 	})
 
 	t.Run("Test get all resources from syllabus", func(t *testing.T) {
@@ -425,7 +425,7 @@ func TestSyllabusHandler(t *testing.T) {
 		var resource models.Resource
 		err := json.Unmarshal(res.Body.Bytes(), &resource)
 		require.Nil(t, err)
-		assert.Equal(t, resourceID, resource.ID)
+		assert.Equal(t, syllabusID, resource.UUID)
 	})
 
 	t.Run("Test delete syllabus", func(t *testing.T) {
@@ -492,6 +492,6 @@ func mustSeedDB(t *testing.T) {
 	if databaseTestURL == "" {
 		databaseTestURL = "postgres://postgres:postgres@localhost:5432/explorer-test"
 	}
-	// _, err := models.InitTestDB(databaseTestURL)
-	// require.Nil(t, err)
+	_, err := models.InitDB(databaseTestURL)
+	require.Nil(t, err)
 }

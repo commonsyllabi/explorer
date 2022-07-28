@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"net/http"
 	"net/mail"
-	"reflect"
-	"time"
 
 	zero "github.com/commonsyllabi/explorer/api/logger"
 	"github.com/commonsyllabi/explorer/api/models"
@@ -36,14 +34,12 @@ func CreateUser(c *gin.Context) {
 
 	var user models.User
 	err = c.Bind(&user)
+	fmt.Println(err)
 	if err != nil {
 		zero.Errorf("error binding user: %v", err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
-	user.CreatedAt = time.Now()
-	user.UpdatedAt = time.Now()
 
 	hashed, err := bcrypt.GenerateFromPassword([]byte(c.PostForm("password")), bcrypt.DefaultCost)
 	if err != nil {
@@ -76,12 +72,6 @@ func CreateUser(c *gin.Context) {
 
 func UpdateUser(c *gin.Context) {
 	id := c.Param("id")
-	if len(id) < 25 {
-		c.String(http.StatusBadRequest, "not a valid ID")
-		zero.Errorf("not a valid id %d", id)
-		return
-	}
-
 	uid, err := uuid.Parse(id)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err)
@@ -96,31 +86,23 @@ func UpdateUser(c *gin.Context) {
 		return
 	}
 
-	var empty = new(models.User)
-	var input models.User
-	err = c.Bind(&input)
-	if err != nil || reflect.DeepEqual(&input, empty) {
-		zero.Errorf("error binding user: %v", err)
-		c.JSON(http.StatusBadRequest, err)
-		return
-	}
-
-	user, err := models.GetUser(uid)
+	_, err = models.GetUser(uid)
 	if err != nil {
 		c.JSON(http.StatusNotFound, err)
 		return
 	}
 
+	var user models.User
 	err = c.Bind(&user)
 	if err != nil {
+		c.JSON(http.StatusBadRequest, err)
 		zero.Errorf("error binding user: %v", err)
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	updated, err := models.UpdateUser(uid, &user)
 	if err != nil {
-		c.String(http.StatusInternalServerError, err.Error())
+		c.JSON(http.StatusInternalServerError, err)
 		zero.Errorf("error updating User %d: %v", id, err)
 		return
 	}
@@ -129,14 +111,7 @@ func UpdateUser(c *gin.Context) {
 }
 
 func GetUser(c *gin.Context) {
-
 	id := c.Param("id")
-	if len(id) < 25 {
-		c.String(http.StatusBadRequest, "not a valid ID")
-		zero.Errorf("not a valid id %d", id)
-		return
-	}
-
 	uid, err := uuid.Parse(id)
 	if err != nil {
 		c.String(http.StatusBadRequest, "not a valid ID")
@@ -181,7 +156,7 @@ func DeleteUser(c *gin.Context) {
 	}
 
 	if gin.Mode() != gin.TestMode {
-		body := fmt.Sprintf("the user %s was successfully deleted!", user.ID)
+		body := fmt.Sprintf("the user %s was successfully deleted!", user.UUID)
 		mailer.SendMail(user.Email, "user deleted", body)
 	}
 
@@ -189,21 +164,10 @@ func DeleteUser(c *gin.Context) {
 }
 
 func sanitizeUserCreate(c *gin.Context) error {
-
-	if c.PostForm("email") == "" || c.PostForm("password") == "" {
-		zero.Error("Cannot have empty email or password")
-		return fmt.Errorf("cannot have empty title, description or email")
-
-	}
-
-	if len(c.PostForm("email")) < 10 || len(c.PostForm("email")) > 50 {
-		zero.Errorf("the email of the User should be between 10 and 50 characters: %d", len(c.PostForm("email")))
-		return fmt.Errorf("the email of the User should be between 10 and 50 characters: %d", len(c.PostForm("email")))
-	}
-
-	if len(c.PostForm("password")) < 8 || len(c.PostForm("password")) > 20 {
-		zero.Errorf("the email of the User should be between 8 and 20 characters: %d", len(c.PostForm("email")))
-		return fmt.Errorf("the email of the User should be between 10 and 50 characters: %d", len(c.PostForm("email")))
+	pw := fmt.Sprintf("%v", c.PostForm("password"))
+	if len(pw) < 8 || len(pw) > 20 {
+		zero.Error("the password should be between 8 and 20 characters")
+		return fmt.Errorf("the password should be between 8 and 20 characters")
 	}
 
 	_, err := mail.ParseAddress(c.PostForm("email"))
@@ -218,11 +182,5 @@ func sanitizeUserUpdate(c *gin.Context) error {
 		}
 	}
 
-	if c.PostForm("password") != "" {
-		if len(c.PostForm("password")) < 8 || len(c.PostForm("password")) > 20 {
-			zero.Errorf("the email of the User should be between 8 and 20 characters: %d", len(c.PostForm("email")))
-			return fmt.Errorf("the email of the User should be between 10 and 50 characters: %d", len(c.PostForm("email")))
-		}
-	}
 	return nil
 }

@@ -14,7 +14,7 @@ type Collection struct {
 	User     User      `gorm:"foreignKey:UserUUID;references:UUID"`
 	Name     string    `gorm:"not null" json:"name" form:"name" binding:"required"`
 
-	Syllabi []Syllabus `gorm:"many2many:collection_syllabi;"`
+	Syllabi []*Syllabus `gorm:"many2many:collections_syllabi;"`
 }
 
 func CreateCollection(user_uuid uuid.UUID, coll *Collection) (Collection, error) {
@@ -30,7 +30,17 @@ func CreateCollection(user_uuid uuid.UUID, coll *Collection) (Collection, error)
 func GetCollection(uuid uuid.UUID) (Collection, error) {
 	var coll Collection
 	result := db.Where("uuid = ?", uuid).First(&coll)
-	return coll, result.Error
+	if result.Error != nil {
+		return coll, result.Error
+	}
+
+	var syllabi []Syllabus
+	err := db.Model(&coll).Association("Syllabi").Find(&syllabi)
+	for _, s := range syllabi {
+		coll.Syllabi = append(coll.Syllabi, &s)
+	}
+
+	return coll, err
 }
 
 func GetAllCollections() ([]Collection, error) {
@@ -48,6 +58,40 @@ func UpdateCollection(uuid uuid.UUID, coll *Collection) (Collection, error) {
 
 	result = db.Model(&existing).Where("uuid = ?", uuid).Updates(&coll)
 	return existing, result.Error
+}
+
+func AddSyllabusToCollection(coll_uuid uuid.UUID, syll_uuid uuid.UUID) (Collection, error) {
+	var coll Collection
+	result := db.Where("uuid = ? ", coll_uuid).First(&coll)
+	if result.Error != nil {
+		return coll, result.Error
+	}
+
+	var syll Syllabus
+	result = db.Where("uuid = ? ", syll_uuid).First(&syll)
+	if result.Error != nil {
+		return coll, result.Error
+	}
+
+	err := db.Model(&coll).Association("Syllabi").Append(&syll)
+	return coll, err
+}
+
+func RemoveSyllabusFromCollection(coll_uuid uuid.UUID, syll_uuid uuid.UUID) (Collection, error) {
+	var coll Collection
+	result := db.Where("uuid = ? ", coll_uuid).First(&coll)
+	if result.Error != nil {
+		return coll, result.Error
+	}
+
+	var syll Syllabus
+	result = db.Where("uuid = ? ", syll_uuid).First(&syll)
+	if result.Error != nil {
+		return coll, result.Error
+	}
+
+	err := db.Model(&coll).Association("Resources").Delete(syll)
+	return coll, err
 }
 
 func DeleteCollection(uuid uuid.UUID) (Collection, error) {
