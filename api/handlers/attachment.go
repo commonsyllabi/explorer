@@ -3,6 +3,8 @@ package handlers
 import (
 	"fmt"
 	"net/http"
+	"net/url"
+	"path/filepath"
 	"reflect"
 
 	zero "github.com/commonsyllabi/explorer/api/logger"
@@ -30,29 +32,78 @@ func CreateAttachment(c *gin.Context) {
 		return
 	}
 
-	id, exists := c.Get("syllabus_id")
-	syll_id, err := uuid.Parse(fmt.Sprintf("%v", id))
-	if !exists || err != nil {
+	id := c.Query("syllabus_id")
+	syll_id, err := uuid.Parse(id)
+	if err != nil {
 		c.String(http.StatusBadRequest, err.Error())
-		zero.Errorf(err.Error())
+		zero.Error(err.Error())
 		return
 	}
 
 	var att models.Attachment
-	err = c.Bind(&att)
+	//-- prepare attachments (could be merged with sanitizeAttachment() ?)
+	name := c.PostForm("name")
+	desc := c.PostForm("description")
+	weblink := c.PostForm("url")
+	file, err := c.FormFile("file")
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.String(http.StatusBadRequest, "error parsing form file %s", err)
+		zero.Errorf("error parsing form file: %s", err)
 		return
 	}
 
-	att, err = models.CreateAttachment(syll_id, &att)
+	if weblink == "" {
+		if file == nil {
+			c.String(http.StatusBadRequest, "attachment must have either URL or File")
+			zero.Error("attachment must have either URL or File")
+			return
+		}
+
+		dest := filepath.Join("/tmp/explorer", file.Filename)
+		err = c.SaveUploadedFile(file, dest)
+		if err != nil {
+			c.String(http.StatusBadRequest, "error saving form file %v", err)
+			zero.Errorf("error saving form file: %v", err)
+			return
+		}
+
+		att = models.Attachment{
+			Name:        name,
+			Description: desc,
+			URL:         dest,
+			Type:        "file",
+		}
+
+	} else {
+		if file != nil {
+			c.String(http.StatusBadRequest, "attachment can either have URL or File, not both")
+			zero.Error("attachment can either have URL or File, not both")
+			return
+		}
+
+		parsed_url, err := url.Parse(weblink)
+		if err != nil {
+			c.String(http.StatusBadRequest, "error parsing weblink %v", err)
+			zero.Errorf("error parsing weblink: %v", err)
+			return
+		}
+
+		att = models.Attachment{
+			Name:        name,
+			Description: desc,
+			URL:         parsed_url.String(),
+			Type:        "weblink",
+		}
+	}
+
+	created, err := models.CreateAttachment(syll_id, &att)
 	if err != nil {
-		c.String(http.StatusInternalServerError, err.Error())
+		c.JSON(http.StatusInternalServerError, err)
 		zero.Errorf("error creating Attachment: %v", err)
 		return
 	}
 
-	c.JSON(http.StatusCreated, att)
+	c.JSON(http.StatusCreated, created)
 }
 
 func UpdateAttachment(c *gin.Context) {
@@ -161,8 +212,7 @@ func DeleteAttachment(c *gin.Context) {
 }
 
 func sanitizeAttachment(c *gin.Context) error {
-	if len(c.PostForm("name")) < 10 || len(c.PostForm("name")) > 50 {
-		zero.Errorf("the name of the Attachment should be between 10 and 50 characters: %d", len(c.PostForm("name")))
+	if len(c.PostForm("name")) < 5 || len(c.PostForm("name")) > 50 {
 		return fmt.Errorf("the name of the Attachment should be between 10 and 50 characters: %d", len(c.PostForm("name")))
 	}
 

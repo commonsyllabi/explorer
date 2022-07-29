@@ -43,13 +43,6 @@ func CreateSyllabus(c *gin.Context) {
 		return
 	}
 
-	form, err := c.MultipartForm()
-	if err != nil {
-		c.String(http.StatusBadRequest, "error parsing form %v", err)
-		zero.Errorf("error parsing form: %v", err)
-		return
-	}
-
 	var userID uuid.UUID
 	if gin.Mode() != gin.TestMode { //-- todo: handle this properly (ask tobi)
 		session := sessions.Default(c)
@@ -58,6 +51,7 @@ func CreateSyllabus(c *gin.Context) {
 	} else {
 		userID = uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c8a8")
 	}
+
 	syll, err = models.CreateSyllabus(userID, &syll)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
@@ -65,40 +59,6 @@ func CreateSyllabus(c *gin.Context) {
 		return
 	}
 
-	var attachments []*models.Attachment
-	files := form.File["attachments[]"]
-
-	zero.Warnf("%d attachments found on new syllabus", len(files))
-
-	for _, f := range files {
-
-		//-- todo handle how to store files?
-		// file, err := f.Open()
-		// if err != nil {
-		// 	c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		// 	return
-		// }
-
-		// bytes, err := ioutil.ReadAll(file)
-		// if err != nil {
-		// 	c.String(http.StatusInternalServerError, err.Error())
-		// 	zero.Errorf("error reading file into bytes: %v", err)
-		// 	return
-		// }
-
-		attachment := models.Attachment{
-			Name: f.Filename,
-		}
-
-		res, err := models.CreateAttachment(syll.UUID, &attachment)
-		if err != nil {
-			zero.Warnf("error adding attachment: %s", err)
-		}
-		attachments = append(attachments, &res)
-	}
-
-	zero.Warn("attachments not correctly added to syll create")
-	// syll.Attachments = attachments
 	c.JSON(http.StatusCreated, syll)
 }
 

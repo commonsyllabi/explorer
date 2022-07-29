@@ -49,7 +49,12 @@ func CreateSyllabus(user_uuid uuid.UUID, syll *Syllabus) (Syllabus, error) {
 	}
 
 	err = db.Model(&user).Association("Syllabi").Append(syll)
-	return *syll, err
+	if err != nil {
+		return *syll, err
+	}
+
+	created, err := GetSyllabus(syll.UUID)
+	return created, err
 }
 
 func GetSyllabus(uuid uuid.UUID) (Syllabus, error) {

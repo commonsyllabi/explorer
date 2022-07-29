@@ -2,10 +2,12 @@ package handlers_test
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"testing"
 
 	"github.com/commonsyllabi/explorer/api/handlers"
@@ -31,8 +33,9 @@ func TestAttachmentHandler(t *testing.T) {
 		var body bytes.Buffer
 		w := multipart.NewWriter(&body)
 		w.WriteField("name", "Test Attachment Handling")
-		w.WriteField("type", "weblink")
+		w.WriteField("desc", "")
 		w.WriteField("url", "http://test.com/attachment")
+		// w.WriteField("file", "") --- TODO
 		w.Close()
 
 		res := httptest.NewRecorder()
@@ -40,7 +43,7 @@ func TestAttachmentHandler(t *testing.T) {
 		c.Request = &http.Request{
 			Header: make(http.Header),
 		}
-		c.Set("syllabus_id", syllabusID.String())
+		c.Request.URL, _ = url.Parse(fmt.Sprintf("?syllabus_id=%s", syllabusID.String()))
 
 		c.Request.Method = "POST"
 		c.Request.Header.Set("Content-Type", w.FormDataContentType())
@@ -49,13 +52,14 @@ func TestAttachmentHandler(t *testing.T) {
 		handlers.CreateAttachment(c)
 
 		assert.Equal(t, http.StatusCreated, res.Code)
+		fmt.Println(string((res.Body.Bytes())))
 		//-- todo check for value
 	})
 
 	t.Run("Test create attachment malformed input", func(t *testing.T) {
 		var body bytes.Buffer
 		w := multipart.NewWriter(&body)
-		w.WriteField("name", "Short")
+		w.WriteField("name", "Shrt")
 		w.Close()
 
 		res := httptest.NewRecorder()
@@ -63,6 +67,7 @@ func TestAttachmentHandler(t *testing.T) {
 		c.Request = &http.Request{
 			Header: make(http.Header),
 		}
+		c.Request.URL, _ = url.Parse(fmt.Sprintf("?syllabus_id=%s", syllabusID.String()))
 
 		c.Request.Method = "POST"
 		c.Request.Header.Set("Content-Type", w.FormDataContentType())
@@ -263,7 +268,7 @@ func TestAttachmentHandler(t *testing.T) {
 	t.Run("Test update attachment malformed name", func(t *testing.T) {
 		var body bytes.Buffer
 		w := multipart.NewWriter(&body)
-		w.WriteField("name", "Short")
+		w.WriteField("name", "Shrt")
 		w.Close()
 
 		res := httptest.NewRecorder()

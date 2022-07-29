@@ -26,12 +26,17 @@ func CreateAttachment(syllabus_uuid uuid.UUID, att *Attachment) (Attachment, err
 
 	att.Syllabus = syll
 	err = db.Model(&syll).Association("Attachments").Append(att)
-	return *att, err
+	if err != nil {
+		return *att, err
+	}
+
+	created, err := GetAttachment(att.UUID)
+	return created, err
 }
 
 func GetAttachment(uuid uuid.UUID) (Attachment, error) {
 	var att Attachment
-	result := db.Where("uuid = ?", uuid).First(&att)
+	result := db.Preload("Syllabus").Where("uuid = ?", uuid).First(&att)
 	return att, result.Error
 }
 
