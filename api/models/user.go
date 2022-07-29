@@ -41,7 +41,7 @@ func CreateUser(user *User) (User, error) {
 
 func GetUser(uuid uuid.UUID) (User, error) {
 	var user User
-	result := db.Preload("Syllabi").Where("uuid = ?", uuid).First(&user)
+	result := db.Preload("Syllabi").Preload("Collections").Where("uuid = ?", uuid).First(&user)
 	return user, result.Error
 }
 

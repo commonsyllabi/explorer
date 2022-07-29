@@ -8,23 +8,23 @@ import (
 
 type Token struct {
 	gorm.Model
-	TokenID uuid.UUID `gorm:"type:uuid;primaryKey;default:uuid_generate_v4()"`
-	UserID  uuid.UUID `bun:"user_id,type:uuid" yaml:"user_id" json:"user_id"`
+	UUID   uuid.UUID `gorm:"uniqueIndex;type:uuid;primaryKey;default:uuid_generate_v4()" json:"uuid" yaml:"uuid"`
+	UserID uuid.UUID `gorm:"type:uuid" yaml:"user_id" json:"user_id"`
 }
 
-func CreateToken(_id uuid.UUID) (Token, error) {
+func CreateToken(token_uuid uuid.UUID) (Token, error) {
 	hash := uuid.New()
-	token := Token{gorm.Model{}, hash, _id}
+	token := Token{gorm.Model{}, hash, token_uuid}
 	result := db.Create(&token)
 	return token, result.Error
 }
 
 // GetTokenUser takes a token and returns the full user associated with it
-func GetTokenUser(_id uuid.UUID) (User, error) {
+func GetTokenUser(token_uuid uuid.UUID) (User, error) {
 	var user User
 	var token Token
 
-	result := db.First(&token, _id)
+	result := db.Where("uuid = ?", token_uuid).First(&token)
 	if result.Error != nil {
 		zero.Error(result.Error.Error())
 		return user, result.Error
@@ -39,13 +39,13 @@ func GetTokenUser(_id uuid.UUID) (User, error) {
 	return user, err
 }
 
-func DeleteToken(_id uuid.UUID) error {
+func DeleteToken(token_uuid uuid.UUID) error {
 	var token Token
-	result := db.First(&token, _id)
+	result := db.Where("uuid = ?", token_uuid).First(&token)
 	if result.Error != nil {
 		return result.Error
 	}
 
-	result = db.Delete(&token, _id)
+	result = db.Where("uuid = ?", token_uuid).Delete(&token)
 	return result.Error
 }

@@ -77,6 +77,8 @@ func TestSyllabusHandler(t *testing.T) {
 		var body bytes.Buffer
 		w := multipart.NewWriter(&body)
 		w.WriteField("title", "Test Syllabus Handling")
+		w.WriteField("academic_fields[]", "media")
+		w.WriteField("academic_fields[]", "communication")
 		w.Close()
 
 		res := httptest.NewRecorder()
@@ -92,27 +94,12 @@ func TestSyllabusHandler(t *testing.T) {
 		handlers.CreateSyllabus(c)
 
 		assert.Equal(t, http.StatusCreated, res.Code)
-	})
 
-	t.Run("Test create syllabus", func(t *testing.T) {
-		var body bytes.Buffer
-		w := multipart.NewWriter(&body)
-		w.WriteField("title", "Test Syllabus Handling")
-		w.Close()
-
-		res := httptest.NewRecorder()
-		c, _ := gin.CreateTestContext(res)
-		c.Request = &http.Request{
-			Header: make(http.Header),
-		}
-
-		c.Request.Method = "POST"
-		c.Request.Header.Set("Content-Type", w.FormDataContentType())
-		c.Request.Body = io.NopCloser(&body)
-
-		handlers.CreateSyllabus(c)
-
-		assert.Equal(t, http.StatusCreated, res.Code)
+		var syll models.Syllabus
+		err := json.Unmarshal(res.Body.Bytes(), &syll)
+		require.Nil(t, err)
+		assert.Equal(t, "Test Syllabus Handling", syll.Title)
+		assert.Equal(t, 2, len(syll.AcademicFields))
 	})
 
 	t.Run("Test create syllabus malformed field", func(t *testing.T) {

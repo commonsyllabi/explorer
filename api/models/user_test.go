@@ -14,9 +14,9 @@ func TestUserModel(t *testing.T) {
 	defer teardown(t)
 
 	t.Run("Test get all users", func(t *testing.T) {
-		user, err := models.GetAllUsers()
+		users, err := models.GetAllUsers()
 		require.Nil(t, err)
-		assert.Equal(t, len(user), 3)
+		assert.Equal(t, 4, len(users))
 	})
 
 	t.Run("Test create user", func(t *testing.T) {
@@ -32,23 +32,18 @@ func TestUserModel(t *testing.T) {
 		assert.Equal(t, result.Name, "Anonymous User")
 	})
 
-	t.Run("Test get user", func(t *testing.T) {
+	t.Run("Test get user with syllabi and collections", func(t *testing.T) {
 		user, err := models.GetUser(userID)
 		require.Nil(t, err)
 		assert.Equal(t, user.Name, userName)
+		assert.Equal(t, 2, len(user.Syllabi))
+		assert.Equal(t, 1, len(user.Collections))
 	})
 
 	t.Run("Test get user by email", func(t *testing.T) {
 		user, err := models.GetUserByEmail(userEmail)
 		require.Nil(t, err)
 		assert.Equal(t, user.Email, userEmail)
-		assert.Equal(t, user.Name, userName)
-	})
-
-	t.Run("Test get user with syllabus", func(t *testing.T) {
-		user, err := models.GetUser(userID)
-		require.Nil(t, err)
-		assert.Equal(t, 2, len(user.Syllabi))
 		assert.Equal(t, user.Name, userName)
 	})
 

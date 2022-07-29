@@ -110,30 +110,31 @@ func Confirm(c *gin.Context) {
 }
 
 func RequestRecover(c *gin.Context) {
+	fmt.Println("email", c.PostForm("email"))
 	email, err := mail.ParseAddress(c.PostForm("email"))
 	if err != nil {
-		c.String(http.StatusBadRequest, "not a valid email address")
+		c.JSON(http.StatusBadRequest, err)
 		zero.Errorf("not a valid email %d", err)
 		return
 	}
 
 	user, err := models.GetUserByEmail(email.Address)
 	if err != nil {
-		c.String(http.StatusNotFound, "user not found")
+		c.JSON(http.StatusNotFound, err)
 		zero.Errorf("user not found %s", err)
 		return
 	}
 
 	token, err := models.CreateToken(user.UUID)
 	if err != nil {
-		c.String(http.StatusNotFound, err.Error())
+		c.JSON(http.StatusNotFound, err)
 		zero.Errorf(err.Error())
 		return
 	}
 
 	// send email with link
 	if gin.Mode() != gin.TestMode {
-		body := fmt.Sprintf("here is your recover link :%v!", token.TokenID.String())
+		body := fmt.Sprintf("here is your recover link :%v!", token.UUID.String())
 		mailer.SendMail(email.Address, "account recovery", body)
 	}
 
@@ -194,7 +195,6 @@ func Recover(c *gin.Context) {
 		return
 	}
 
-	// send success
 	c.JSON(http.StatusPartialContent, updated)
 }
 

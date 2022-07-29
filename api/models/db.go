@@ -10,6 +10,7 @@ import (
 	zero "github.com/commonsyllabi/explorer/api/logger"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
+	"github.com/google/uuid"
 	"gopkg.in/yaml.v2"
 
 	"gorm.io/driver/postgres"
@@ -42,7 +43,7 @@ func InitDB(url string) (*gorm.DB, error) {
 	}
 
 	// migration
-	err = db.AutoMigrate(&User{}, &Collection{}, &Syllabus{}, &Attachment{})
+	err = db.AutoMigrate(&User{}, &Collection{}, &Syllabus{}, &Attachment{}, &Token{})
 	if err != nil {
 		zero.Errorf("error running migrations: %v", err)
 		log.Fatal(err)
@@ -66,6 +67,11 @@ func runFixtures(shouldTruncateTables bool) error {
 		if result.Error != nil {
 			return result.Error
 		}
+
+		result = db.Exec("TRUNCATE TABLE tokens CASCADE")
+		if result.Error != nil {
+			return result.Error
+		}
 	}
 
 	bytes, err := ioutil.ReadFile(filepath.Join(Basepath, "fixtures", "full.yml"))
@@ -82,11 +88,31 @@ func runFixtures(shouldTruncateTables bool) error {
 	for _, u := range users {
 		result := db.Create(&u)
 		if result.Error != nil {
-			return err
+			return result.Error
 		}
 	}
 
 	db.Model(&users[0].Collections[0]).Association("Syllabi").Append(&users[0].Syllabi[0])
+
+	token := Token{
+		UUID:   uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c801"),
+		UserID: uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c800"),
+	}
+
+	token_recovery := Token{
+		UUID:   uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c901"),
+		UserID: uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c800"),
+	}
+
+	result := db.Create(&token)
+	if result.Error != nil {
+		return result.Error
+	}
+
+	result = db.Create(&token_recovery)
+	if result.Error != nil {
+		return result.Error
+	}
 
 	return err
 }

@@ -48,6 +48,12 @@ func TestUserHandler(t *testing.T) {
 
 		handlers.CreateUser(c)
 		assert.Equal(t, http.StatusCreated, res.Code)
+
+		var user models.User
+		err := json.Unmarshal(res.Body.Bytes(), &user)
+		require.Nil(t, err)
+		assert.Equal(t, "testing@user.com", user.Email)
+		assert.NotZero(t, user.UUID)
 	})
 
 	t.Run("Test create user with wrong field", func(t *testing.T) {
