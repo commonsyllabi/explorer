@@ -1,6 +1,7 @@
 package models_test
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/commonsyllabi/explorer/api/models"
@@ -15,7 +16,7 @@ func TestAttachmentModel(t *testing.T) {
 	t.Run("Test get all attachments", func(t *testing.T) {
 		res, err := models.GetAllAttachments()
 		require.Nil(t, err)
-		assert.NotEqual(t, len(res), 0)
+		assert.Equal(t, len(res), 2)
 	})
 
 	t.Run("Test create attachment", func(t *testing.T) {
@@ -24,21 +25,22 @@ func TestAttachmentModel(t *testing.T) {
 		}
 		result, err := models.CreateSyllabus(userID, &syll)
 		require.Nil(t, err)
-		t.Log(result.UUID)
+
 		att := models.Attachment{
 			Name: "Test Name 2",
 		}
 		created, err := models.CreateAttachment(result.UUID, &att)
 		require.Nil(t, err)
-		assert.Equal(t, att.Name, created.Name, "Expected to have equal names, got %v - %v", att.Name, created.Name)
-		assert.Equal(t, syll.Title, created.Syllabus.Title, "Expected to have equal titles for parent syllabus, got %v - %v", syll.Title, created.Syllabus.Title)
+		assert.Equal(t, att.Name, created.Name)
+		assert.Equal(t, syll.Title, created.Syllabus.Title)
 	})
 
 	t.Run("Test get attachment", func(t *testing.T) {
-		res, err := models.GetAttachment(attachmentID)
+		att, err := models.GetAttachment(attachmentID)
 		require.Nil(t, err)
-		assert.Equal(t, res.UUID, attachmentID)
-		// todo test for value
+		assert.Equal(t, att.UUID, attachmentID)
+		assert.Equal(t, attachmentName, att.Name)
+		assert.Equal(t, attachmentURL, att.URL)
 	})
 
 	t.Run("Test get non-existing attachment", func(t *testing.T) {
@@ -49,14 +51,15 @@ func TestAttachmentModel(t *testing.T) {
 
 	t.Run("Test update attachment", func(t *testing.T) {
 		var att models.Attachment
-		att.Name = "Test Name 1 (updated)"
+		updatedName := fmt.Sprintf("%v (updated)", attachmentName)
+		att.Name = updatedName
 		updated, err := models.UpdateAttachment(attachmentID, &att)
 		require.Nil(t, err)
 		require.False(t, updated.CreatedAt.IsZero())
 
-		assert.Equal(t, updated.Name, att.Name)
-		assert.NotEqual(t, updated.CreatedAt, updated.UpdatedAt, "Expected the CreatedAt and the UpdatedAt values to be different")
-		// todo test for value
+		assert.Equal(t, updatedName, updated.Name)
+		assert.Equal(t, attachmentURL, updated.URL)
+		assert.NotEqual(t, updated.CreatedAt, updated.UpdatedAt)
 	})
 
 	t.Run("Test update non-existing attachment", func(t *testing.T) {

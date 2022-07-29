@@ -5,6 +5,9 @@
   bio: "this is a full user"
   password: [36, 50, 97, 36, 49, 48, 36, 121, 72, 53, 79, 110, 76, 51, 98, 57, 112, 80, 81, 53, 49, 104, 54, 100, 74, 121, 54, 79, 101, 47, 117, 119, 78, 76, 57, 103, 107, 100, 88, 51, 90, 111, 73, 75, 80, 117, 113, 57, 104, 69, 102, 103, 85, 67, 51, 73, 56, 88, 113, 67]
   education: "life education"
+  academic_fields:
+    - "media"
+    - "communication"
   urls:
     - "http://test.net"
     - "http://test.com"
@@ -30,7 +33,7 @@
 
 - uuid: 'e7b74bcd-c864-41ee-b5a7-d3031f76c8a9'
   status: "confirmed"
-  name: "pierre depaz"
+  name: "user to be deleted"
   email: "pierre.depaz@gmail.com"
   password: [36, 50, 97, 36, 49, 48, 36, 121, 72, 53, 79, 110, 76, 51, 98, 57, 112, 80, 81, 53, 49, 104, 54, 100, 74, 121, 54, 79, 101, 47, 117, 119, 78, 76, 57, 103, 107, 100, 88, 51, 90, 111, 73, 75, 80, 117, 113, 57, 104, 69, 102, 103, 85, 67, 51, 73, 56, 88, 113, 67]
   education: "the street"
@@ -43,6 +46,7 @@
   collections:
     - uuid: 'b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a7'
       name: "Fixture Collection (to delete)"
+
 - uuid: 'e7b74bcd-c864-41ee-b5a7-d3031f76c8a0'
   status: "confirmed"
   name: "auth"

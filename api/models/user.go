@@ -4,6 +4,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/lib/pq"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 const (
@@ -20,7 +21,7 @@ type User struct {
 	Bio       string         `json:"bio" form:"bio"`
 	Education string         `json:"education" form:"education"`
 	Email     string         `gorm:"unique;not null" json:"email" form:"email"`
-	Name      string         `gorm:"not null" json:"name" form:"name"`
+	Name      string         `gorm:"default:Anonymous User;not null" json:"name" form:"name"`
 	Password  []byte         `gorm:"not null" json:"password"`
 	URLs      pq.StringArray `gorm:"type:text[]" json:"urls" form:"urls[]"`
 
@@ -74,7 +75,7 @@ func DeleteUser(uuid uuid.UUID) (User, error) {
 	if result.Error != nil {
 		return user, result.Error
 	}
-	result = db.Where("uuid = ?", uuid).Delete(&user)
+	result = db.Select(clause.Associations).Where("uuid = ?", uuid).Delete(&user)
 
 	return user, result.Error
 }

@@ -16,7 +16,7 @@ func TestUserModel(t *testing.T) {
 	t.Run("Test get all users", func(t *testing.T) {
 		user, err := models.GetAllUsers()
 		require.Nil(t, err)
-		assert.NotEqual(t, len(user), 0)
+		assert.Equal(t, len(user), 3)
 	})
 
 	t.Run("Test create user", func(t *testing.T) {
@@ -24,22 +24,32 @@ func TestUserModel(t *testing.T) {
 			Email:    "test@user-create.com",
 			Password: []byte("12345678"),
 		}
-		u, err := models.CreateUser(&user)
+		result, err := models.CreateUser(&user)
 		require.Nil(t, err)
 
-		assert.Equal(t, u.Email, user.Email, "Expected to have equal names, got %v - %v", u.Email, user.Email)
+		assert.Equal(t, result.Email, user.Email, "Expected to have equal names, got %v - %v", result.Email, user.Email)
+		assert.Equal(t, result.Status, "pending")
+		assert.Equal(t, result.Name, "Anonymous User")
 	})
 
 	t.Run("Test get user", func(t *testing.T) {
 		user, err := models.GetUser(userID)
 		require.Nil(t, err)
-		assert.Equal(t, user.UUID, userID)
+		assert.Equal(t, user.Name, userName)
+	})
+
+	t.Run("Test get user by email", func(t *testing.T) {
+		user, err := models.GetUserByEmail(userEmail)
+		require.Nil(t, err)
+		assert.Equal(t, user.Email, userEmail)
+		assert.Equal(t, user.Name, userName)
 	})
 
 	t.Run("Test get user with syllabus", func(t *testing.T) {
 		user, err := models.GetUser(userID)
 		require.Nil(t, err)
 		assert.Equal(t, 2, len(user.Syllabi))
+		assert.Equal(t, user.Name, userName)
 	})
 
 	t.Run("Test get non-existing user", func(t *testing.T) {
@@ -58,6 +68,7 @@ func TestUserModel(t *testing.T) {
 		require.Nil(t, err)
 		require.False(t, updated.CreatedAt.IsZero())
 		assert.Equal(t, user.Email, updated.Email)
+		assert.Equal(t, user.Name, userName)
 	})
 
 	t.Run("Test update non-existing user", func(t *testing.T) {
@@ -72,7 +83,7 @@ func TestUserModel(t *testing.T) {
 	t.Run("Test delete user", func(t *testing.T) {
 		user, err := models.DeleteUser(userDeleteID)
 		assert.Nil(t, err)
-		assert.NotNil(t, user)
+		assert.Equal(t, user.Name, userDeleteName)
 	})
 
 	t.Run("Test delete wrong user", func(t *testing.T) {

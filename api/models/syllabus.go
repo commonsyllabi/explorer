@@ -28,6 +28,7 @@ type Syllabus struct {
 	// 	URL  string
 	// }
 
+	AcademicFields   pq.StringArray `gorm:"type:text[]" json:"academic_field" form:"academic_fields[]"`
 	Assignments      pq.StringArray `gorm:"type:text[]" json:"assignments" form:"assignments[]"`
 	Description      string         `gorm:"not null" form:"description"`
 	Duration         int            `json:"duration" form:"duration"`
@@ -53,7 +54,7 @@ func CreateSyllabus(user_uuid uuid.UUID, syll *Syllabus) (Syllabus, error) {
 
 func GetSyllabus(uuid uuid.UUID) (Syllabus, error) {
 	var syll Syllabus
-	result := db.Where("uuid = ? ", uuid).First(&syll)
+	result := db.Preload("User").Where("uuid = ? ", uuid).First(&syll)
 	return syll, result.Error
 }
 
@@ -115,6 +116,6 @@ func DeleteSyllabus(uuid uuid.UUID) (Syllabus, error) {
 	if result.Error != nil {
 		return syll, result.Error
 	}
-	result = db.Where("uuid = ? ", uuid).Delete(&syll)
+	result = db.Select("Attachments").Where("uuid = ? ", uuid).Delete(&syll)
 	return syll, result.Error
 }

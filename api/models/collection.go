@@ -24,12 +24,17 @@ func CreateCollection(user_uuid uuid.UUID, coll *Collection) (Collection, error)
 	}
 
 	err = db.Model(&user).Association("Collections").Append(coll)
-	return *coll, err
+	if err != nil {
+		return *coll, err
+	}
+
+	created, err := GetCollection(coll.UUID)
+	return created, err
 }
 
 func GetCollection(uuid uuid.UUID) (Collection, error) {
 	var coll Collection
-	result := db.Where("uuid = ?", uuid).First(&coll)
+	result := db.Preload("User").Where("uuid = ?", uuid).First(&coll)
 	if result.Error != nil {
 		return coll, result.Error
 	}

@@ -1,6 +1,7 @@
 package models_test
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/commonsyllabi/explorer/api/models"
@@ -15,15 +16,17 @@ func TestSyllabusModel(t *testing.T) {
 	t.Run("Test get all syllabi", func(t *testing.T) {
 		syll, err := models.GetAllSyllabi()
 		require.Nil(t, err)
-		assert.NotEqual(t, len(syll), 0)
+		assert.Equal(t, len(syll), 3)
 	})
 
 	t.Run("Test create bare syllabus", func(t *testing.T) {
 		syll := models.Syllabus{
 			Title: "Test Title 2",
 		}
-		_, err := models.CreateSyllabus(userID, &syll)
-		assert.Nil(t, err)
+		result, err := models.CreateSyllabus(userID, &syll)
+		require.Nil(t, err)
+		assert.Equal(t, syll.Title, result.Title)
+		assert.NotZero(t, result.CreatedAt)
 	})
 
 	t.Run("Test create syllabus with attachments", func(t *testing.T) {
@@ -32,15 +35,17 @@ func TestSyllabusModel(t *testing.T) {
 			Title:       "Test Title with Attachments",
 			Attachments: attachments,
 		}
-		_, err := models.CreateSyllabus(userID, &syll)
+		result, err := models.CreateSyllabus(userID, &syll)
 		assert.Nil(t, err)
-		assert.Equal(t, len(syll.Attachments), len(attachments), "Expected the created syllabus to have %d attachments, got %d", len(attachments), len(syll.Attachments))
+		assert.Equal(t, len(syll.Attachments), len(result.Attachments))
 	})
 
 	t.Run("Test get syllabus", func(t *testing.T) {
 		syll, err := models.GetSyllabus(syllabusID)
 		require.Nil(t, err)
 		assert.Equal(t, syll.UUID, syllabusID)
+		assert.Equal(t, syllabusTitle, syll.Title)
+		assert.Equal(t, syllabusUserName, syll.User.Name)
 	})
 
 	t.Run("Test get non-existing syllabus", func(t *testing.T) {
@@ -51,13 +56,14 @@ func TestSyllabusModel(t *testing.T) {
 
 	t.Run("Test update syllabus", func(t *testing.T) {
 		var syll models.Syllabus
-		syll.Title = "Test Title 1 (updated)"
+		updatedTitle := fmt.Sprintf("%s (updated)", syllabusTitle)
+		syll.Title = updatedTitle
 		updated, err := models.UpdateSyllabus(syllabusID, &syll)
 
 		require.Nil(t, err)
-		require.False(t, updated.CreatedAt.IsZero())
+		require.NotZero(t, updated.CreatedAt)
 
-		assert.Equal(t, updated.Title, syll.Title)
+		assert.Equal(t, updatedTitle, syll.Title)
 	})
 
 	t.Run("Test update non-existing syllabus", func(t *testing.T) {
@@ -66,7 +72,7 @@ func TestSyllabusModel(t *testing.T) {
 		}
 		updated, err := models.UpdateSyllabus(syllabusNonExistingID, &syll)
 		assert.NotNil(t, err)
-		assert.True(t, updated.CreatedAt.IsZero())
+		assert.Zero(t, updated.CreatedAt)
 	})
 
 	t.Run("Test delete syllabus", func(t *testing.T) {
@@ -77,7 +83,7 @@ func TestSyllabusModel(t *testing.T) {
 
 	t.Run("Test delete wrong syllabus", func(t *testing.T) {
 		syll, err := models.DeleteSyllabus(syllabusNonExistingID)
-		assert.Zero(t, syll)
 		assert.NotNil(t, err)
+		assert.Zero(t, syll)
 	})
 }
