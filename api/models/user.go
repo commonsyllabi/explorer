@@ -14,25 +14,21 @@ const (
 
 type User struct {
 	gorm.Model
-	UUID uuid.UUID `gorm:"uniqueIndex;type:uuid;primaryKey;default:uuid_generate_v4()" json:"uuid" yaml:"uuid"`
+	UUID   uuid.UUID `gorm:"uniqueIndex;type:uuid;primaryKey;default:uuid_generate_v4()" json:"uuid" yaml:"uuid"`
+	Status string    `gorm:"default:pending" json:"status"`
 
-	Email    string `gorm:"unique;not null" json:"email" form:"email"`
-	Password []byte `gorm:"not null" json:"password"`
-	Status   string `gorm:"default:pending" json:"status"`
-
-	Name      string `gorm:"not null" json:"name" form:"name"`
-	Bio       string `json:"bio" form:"bio"`
-	Education string `json:"education" form:"education"`
+	Bio       string         `json:"bio" form:"bio"`
+	Education string         `json:"education" form:"education"`
+	Email     string         `gorm:"unique;not null" json:"email" form:"email"`
+	Name      string         `gorm:"not null" json:"name" form:"name"`
+	Password  []byte         `gorm:"not null" json:"password"`
+	URLs      pq.StringArray `gorm:"type:text[]" json:"urls" form:"urls[]"`
 
 	// Position []struct {
 	// 	Name     string
 	// 	Institution Institution
 	// }
 
-	URLs pq.StringArray `gorm:"type:text[]" json:"urls" form:"urls[]"`
-
-	//-- has many
-	// Attachments   []Attachment   `gorm:"foreignKey:UserUUID;references:UUID" json:"attachments"`
 	Collections []Collection `gorm:"foreignKey:UserUUID;references:UUID" json:"collections"`
 	Syllabi     []Syllabus   `gorm:"foreignKey:UserUUID;references:UUID" json:"syllabi"`
 }

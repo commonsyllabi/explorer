@@ -9,12 +9,12 @@ type Collection struct {
 	gorm.Model
 	UUID   uuid.UUID `gorm:"uniqueIndex;type:uuid;primaryKey;default:uuid_generate_v4()" json:"uuid" yaml:"uuid"`
 	Status string    `gorm:"default:unlisted"`
-	//-- belongs to a user
-	UserUUID uuid.UUID `gorm:"type:uuid;primaryKey;default:uuid_generate_v4()" json:"user_uuid" yaml:"user_uuid"`
-	User     User      `gorm:"foreignKey:UserUUID;references:UUID"`
-	Name     string    `gorm:"not null" json:"name" form:"name" binding:"required"`
 
-	Syllabi []*Syllabus `gorm:"many2many:collections_syllabi;"`
+	UserUUID uuid.UUID   `gorm:"type:uuid;primaryKey;default:uuid_generate_v4()" json:"user_uuid" yaml:"user_uuid"`
+	User     User        `gorm:"foreignKey:UserUUID;references:UUID"`
+	Syllabi  []*Syllabus `gorm:"many2many:collections_syllabi;"`
+
+	Name string `gorm:"not null" json:"name" form:"name" binding:"required"`
 }
 
 func CreateCollection(user_uuid uuid.UUID, coll *Collection) (Collection, error) {
