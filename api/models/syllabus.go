@@ -59,7 +59,7 @@ func CreateSyllabus(user_uuid uuid.UUID, syll *Syllabus) (Syllabus, error) {
 
 func GetSyllabus(uuid uuid.UUID) (Syllabus, error) {
 	var syll Syllabus
-	result := db.Preload("User").Where("uuid = ? ", uuid).First(&syll)
+	result := db.Preload("User").Preload("Attachments").Where("uuid = ? ", uuid).First(&syll)
 	return syll, result.Error
 }
 

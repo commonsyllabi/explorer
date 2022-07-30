@@ -34,7 +34,6 @@ func CreateUser(c *gin.Context) {
 
 	var user models.User
 	err = c.Bind(&user)
-	fmt.Println(err)
 	if err != nil {
 		zero.Errorf("error binding user: %v", err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -135,12 +134,6 @@ func GetUser(c *gin.Context) {
 
 func DeleteUser(c *gin.Context) {
 	id := c.Param("id")
-	if len(id) < 25 {
-		c.String(http.StatusBadRequest, "not a valid ID")
-		zero.Errorf("not a valid id %d", id)
-		return
-	}
-
 	uid, err := uuid.Parse(id)
 	if err != nil {
 		c.String(http.StatusBadRequest, "not a valid ID")
@@ -160,7 +153,7 @@ func DeleteUser(c *gin.Context) {
 		mailer.SendMail(user.Email, "user deleted", body)
 	}
 
-	c.JSON(http.StatusOK, gin.H{"user": user})
+	c.JSON(http.StatusOK, user)
 }
 
 func sanitizeUserCreate(c *gin.Context) error {

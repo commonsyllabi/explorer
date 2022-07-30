@@ -110,7 +110,6 @@ func Confirm(c *gin.Context) {
 }
 
 func RequestRecover(c *gin.Context) {
-	fmt.Println("email", c.PostForm("email"))
 	email, err := mail.ParseAddress(c.PostForm("email"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err)

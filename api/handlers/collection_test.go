@@ -31,6 +31,7 @@ func TestCollectionHandler(t *testing.T) {
 		colls := make([]models.Collection, 0)
 		err := json.Unmarshal(res.Body.Bytes(), &colls)
 		require.Nil(t, err)
+		assert.Equal(t, 2, len(colls))
 	})
 
 	t.Run("Test create collection", func(t *testing.T) {
@@ -52,6 +53,12 @@ func TestCollectionHandler(t *testing.T) {
 		handlers.CreateCollection(c)
 
 		assert.Equal(t, http.StatusCreated, res.Code)
+
+		var coll models.Collection
+		err := json.Unmarshal(res.Body.Bytes(), &coll)
+		require.Nil(t, err)
+		assert.Equal(t, "Test Collection Handling", coll.Name)
+		assert.NotZero(t, coll.CreatedAt)
 	})
 
 	t.Run("Test create collection malformed input", func(t *testing.T) {
@@ -96,6 +103,8 @@ func TestCollectionHandler(t *testing.T) {
 		var coll models.Collection
 		err := json.Unmarshal(res.Body.Bytes(), &coll)
 		require.Nil(t, err)
+		assert.Equal(t, collectionID, coll.UUID)
+		assert.Equal(t, "Fixture Collection", coll.Name)
 		assert.Equal(t, 1, len(coll.Syllabi))
 	})
 
@@ -167,6 +176,7 @@ func TestCollectionHandler(t *testing.T) {
 		require.Nil(t, err)
 		assert.Equal(t, "Updated", coll.Name)
 		assert.NotZero(t, coll.UUID)
+		assert.NotZero(t, coll.CreatedAt)
 	})
 
 	t.Run("Test update collection non-existant ID", func(t *testing.T) {
@@ -296,6 +306,11 @@ func TestCollectionHandler(t *testing.T) {
 
 		handlers.GetCollectionSyllabi(c)
 		assert.Equal(t, http.StatusOK, res.Code)
+
+		var sylls = make([]models.Syllabus, 0)
+		err := json.Unmarshal(res.Body.Bytes(), &sylls)
+		require.Nil(t, err)
+		assert.Equal(t, 1, len(sylls))
 	})
 
 	t.Run("Test get syllabus from collection", func(t *testing.T) {
@@ -319,6 +334,10 @@ func TestCollectionHandler(t *testing.T) {
 
 		handlers.GetCollectionSyllabus(c)
 		assert.Equal(t, http.StatusOK, res.Code)
+		var syll models.Syllabus
+		err := json.Unmarshal(res.Body.Bytes(), &syll)
+		require.Nil(t, err)
+		assert.Equal(t, "User-created 1", syll.Title)
 	})
 
 	t.Run("Test remove syllabus from collection", func(t *testing.T) {

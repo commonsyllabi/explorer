@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"path/filepath"
 	"testing"
 
 	"encoding/json"
@@ -32,6 +33,7 @@ var (
 	attachmentID            uuid.UUID
 	attachmentDeleteID      uuid.UUID
 	attachmentNonExistingID uuid.UUID
+	attachmentFilePath      string
 
 	userID            uuid.UUID
 	userDeleteID      uuid.UUID
@@ -48,8 +50,9 @@ func setup(t *testing.T) func(t *testing.T) {
 	collectionNonExistingID = uuid.New()
 
 	attachmentID = uuid.MustParse("c55f0baf-12b8-4bdb-b5e6-2280bff8ab21")
-	attachmentDeleteID = uuid.MustParse("c55f0baf-12b8-4bdb-b5e6-2280bff8ab29")
+	attachmentDeleteID = uuid.MustParse("c55f0baf-12b8-4bdb-b5e6-2280bff8ab30")
 	attachmentNonExistingID = uuid.New()
+	attachmentFilePath = filepath.Join(models.Basepath, "../../tests/files/image.png")
 
 	userID = uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c8a8")
 	userDeleteID = uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c8a9")
@@ -71,6 +74,11 @@ func TestSyllabusHandler(t *testing.T) {
 		c, _ := gin.CreateTestContext(res)
 		handlers.GetAllSyllabi(c)
 		assert.Equal(t, http.StatusOK, res.Code)
+
+		sylls := make([]models.Syllabus, 0)
+		err := json.Unmarshal(res.Body.Bytes(), &sylls)
+		require.Nil(t, err)
+		assert.Equal(t, 3, len(sylls))
 	})
 
 	t.Run("Test create syllabus", func(t *testing.T) {
@@ -139,6 +147,10 @@ func TestSyllabusHandler(t *testing.T) {
 
 		handlers.GetSyllabus(c)
 		assert.Equal(t, http.StatusOK, res.Code)
+		var syll models.Syllabus
+		err := json.Unmarshal(res.Body.Bytes(), &syll)
+		require.Nil(t, err)
+		assert.Equal(t, "User-created 1", syll.Title)
 	})
 
 	t.Run("Test get syllabus non-existant ID", func(t *testing.T) {
@@ -342,7 +354,7 @@ func TestSyllabusHandler(t *testing.T) {
 		var syll models.Syllabus
 		err := json.Unmarshal(res.Body.Bytes(), &syll)
 		require.Nil(t, err)
-		assert.Equal(t, "Updated Title", syll.Title) //-- todo this updated title check relies on the previous test, which is not good practice
+		assert.Equal(t, "Lorem ipsum descriptio", syll.Description)
 	})
 
 	t.Run("Test get all attachments from syllabus", func(t *testing.T) {
@@ -362,6 +374,11 @@ func TestSyllabusHandler(t *testing.T) {
 
 		handlers.GetSyllabusAttachments(c)
 		assert.Equal(t, http.StatusOK, res.Code)
+
+		atts := make([]models.Attachment, 0)
+		err := json.Unmarshal(res.Body.Bytes(), &atts)
+		require.Nil(t, err)
+		assert.Equal(t, 2, len(atts))
 	})
 
 	t.Run("Test get attachment from syllabus", func(t *testing.T) {
@@ -385,6 +402,11 @@ func TestSyllabusHandler(t *testing.T) {
 
 		handlers.GetSyllabusAttachment(c)
 		assert.Equal(t, http.StatusOK, res.Code)
+
+		var att models.Attachment
+		err := json.Unmarshal(res.Body.Bytes(), &att)
+		require.Nil(t, err)
+		assert.Equal(t, "Syllabus-owned Attachment 1", att.Name)
 	})
 
 	t.Run("Test remove attachment from syllabus", func(t *testing.T) {

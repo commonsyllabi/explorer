@@ -20,7 +20,7 @@ var (
 func GetAllSyllabi(c *gin.Context) {
 	syllabi, err := models.GetAllSyllabi()
 	if err != nil {
-		c.String(http.StatusInternalServerError, err.Error())
+		c.JSON(http.StatusInternalServerError, err)
 		zero.Errorf("error getting syllabi: %v", err)
 		return
 	}
@@ -31,7 +31,7 @@ func GetAllSyllabi(c *gin.Context) {
 func CreateSyllabus(c *gin.Context) {
 	err := sanitizeSyllabus(c)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, err)
 		zero.Error(err.Error())
 		return
 	}
@@ -39,7 +39,7 @@ func CreateSyllabus(c *gin.Context) {
 	var syll models.Syllabus
 	err = c.Bind(&syll)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, err)
 		return
 	}
 
@@ -54,7 +54,7 @@ func CreateSyllabus(c *gin.Context) {
 
 	syll, err = models.CreateSyllabus(userID, &syll)
 	if err != nil {
-		c.String(http.StatusInternalServerError, err.Error())
+		c.JSON(http.StatusInternalServerError, err)
 		zero.Errorf("error creating syllabus: %v", err)
 		return
 	}
@@ -64,24 +64,16 @@ func CreateSyllabus(c *gin.Context) {
 
 func GetSyllabus(c *gin.Context) {
 	id := c.Param("id")
-	if len(id) < 25 {
-		c.String(http.StatusBadRequest, "not a valid ID")
-		zero.Errorf("not a valid id %d", id)
-		return
-	}
-
 	uid, err := uuid.Parse(id)
 	if err != nil {
-		c.String(http.StatusBadRequest, "not a valid ID")
+		c.JSON(http.StatusBadRequest, err)
 		zero.Errorf("not a valid id %d", err)
 		return
 	}
 	syll, err := models.GetSyllabus(uid)
 	if err != nil {
 		zero.Errorf("error getting syllabus %v: %s", id, err)
-		c.JSON(http.StatusNotFound, gin.H{
-			"msg": "We couldn't find the syllabus.",
-		})
+		c.JSON(http.StatusNotFound, err)
 
 		return
 	}
@@ -125,14 +117,14 @@ func GetSyllabusAttachments(c *gin.Context) {
 		return
 	}
 
-	coll, err := models.GetSyllabus(uid)
+	syll, err := models.GetSyllabus(uid)
 	if err != nil {
 		zero.Errorf("error getting Syllabus %v: %s", id, err)
 		c.JSON(http.StatusNotFound, id)
 		return
 	}
 
-	c.JSON(http.StatusOK, coll.Attachments)
+	c.JSON(http.StatusOK, syll.Attachments)
 }
 
 func GetSyllabusAttachment(c *gin.Context) {

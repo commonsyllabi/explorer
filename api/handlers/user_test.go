@@ -27,6 +27,11 @@ func TestUserHandler(t *testing.T) {
 		c, _ := gin.CreateTestContext(res)
 		handlers.GetAllUsers(c)
 		assert.Equal(t, http.StatusOK, res.Code)
+
+		users := make([]models.User, 0)
+		err := json.Unmarshal(res.Body.Bytes(), &users)
+		require.Nil(t, err)
+		assert.Equal(t, 4, len(users))
 	})
 
 	t.Run("Test create user", func(t *testing.T) {
@@ -157,6 +162,11 @@ func TestUserHandler(t *testing.T) {
 
 		handlers.GetUser(c)
 		assert.Equal(t, http.StatusOK, res.Code)
+
+		var user models.User
+		err := json.Unmarshal(res.Body.Bytes(), &user)
+		require.Nil(t, err)
+		assert.Equal(t, "full user 1", user.Name)
 	})
 
 	t.Run("Test get user malformed id", func(t *testing.T) {
@@ -272,6 +282,11 @@ func TestUserHandler(t *testing.T) {
 
 		handlers.DeleteUser(c)
 		assert.Equal(t, http.StatusOK, res.Code)
+
+		var user models.User
+		err := json.Unmarshal(res.Body.Bytes(), &user)
+		require.Nil(t, err)
+		assert.Equal(t, "full user 1", user.Name)
 	})
 
 	t.Run("Test delete user malformed ID", func(t *testing.T) {

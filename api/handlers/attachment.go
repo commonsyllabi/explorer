@@ -46,7 +46,7 @@ func CreateAttachment(c *gin.Context) {
 	desc := c.PostForm("description")
 	weblink := c.PostForm("url")
 	file, err := c.FormFile("file")
-	if err != nil {
+	if err != nil && weblink == "" {
 		c.String(http.StatusBadRequest, "error parsing form file %s", err)
 		zero.Errorf("error parsing form file: %s", err)
 		return
@@ -136,19 +136,19 @@ func UpdateAttachment(c *gin.Context) {
 		return
 	}
 
-	res, err := models.GetAttachment(uid)
+	att, err := models.GetAttachment(uid)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
 
-	err = c.Bind(&res)
+	err = c.Bind(&att)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	updated, err := models.UpdateAttachment(uid, &res)
+	updated, err := models.UpdateAttachment(uid, &att)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		zero.Errorf("error updating Attachment %d: %v", id, err)
@@ -160,12 +160,6 @@ func UpdateAttachment(c *gin.Context) {
 
 func GetAttachment(c *gin.Context) {
 	id := c.Param("id")
-	if len(id) < 25 {
-		c.String(http.StatusBadRequest, "not a valid ID")
-		zero.Errorf("not a valid id %d", id)
-		return
-	}
-
 	uid, err := uuid.Parse(id)
 	if err != nil {
 		c.String(http.StatusBadRequest, "not a valid ID")
@@ -173,7 +167,7 @@ func GetAttachment(c *gin.Context) {
 		return
 	}
 
-	res, err := models.GetAttachment(uid)
+	att, err := models.GetAttachment(uid)
 	if err != nil {
 		zero.Errorf("error getting Attachment %v: %s", id, err)
 		c.JSON(http.StatusNotFound, gin.H{
@@ -183,7 +177,7 @@ func GetAttachment(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, res)
+	c.JSON(http.StatusOK, att)
 }
 
 func DeleteAttachment(c *gin.Context) {
@@ -201,14 +195,14 @@ func DeleteAttachment(c *gin.Context) {
 		return
 	}
 
-	res, err := models.DeleteAttachment(uid)
+	att, err := models.DeleteAttachment(uid)
 	if err != nil {
 		c.String(http.StatusNotFound, err.Error())
 		zero.Errorf("error getting Attachment %d: %v", id, err)
 		return
 	}
 
-	c.JSON(http.StatusOK, res)
+	c.JSON(http.StatusOK, att)
 }
 
 func sanitizeAttachment(c *gin.Context) error {

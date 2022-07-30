@@ -144,7 +144,6 @@ func GetCollection(c *gin.Context) {
 		c.JSON(http.StatusNotFound, uid)
 		return
 	}
-	fmt.Println(coll)
 
 	c.JSON(http.StatusOK, coll)
 }

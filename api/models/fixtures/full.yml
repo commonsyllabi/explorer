@@ -5,15 +5,15 @@
   bio: "this is a full user"
   password: [36, 50, 97, 36, 49, 48, 36, 121, 72, 53, 79, 110, 76, 51, 98, 57, 112, 80, 81, 53, 49, 104, 54, 100, 74, 121, 54, 79, 101, 47, 117, 119, 78, 76, 57, 103, 107, 100, 88, 51, 90, 111, 73, 75, 80, 117, 113, 57, 104, 69, 102, 103, 85, 67, 51, 73, 56, 88, 113, 67]
   education: "life education"
-  academic_fields:
-    - "media"
-    - "communication"
   urls:
     - "http://test.net"
     - "http://test.com"
   syllabi:
     - uuid: '46de6a2b-aacb-4c24-b1e1-3495821f846a'
       title: "User-created 1"
+      academic_fields:
+        - "media"
+        - "communication"
       description: "Lorem ipsum descriptio"
       duration: 14
       attachments:
