@@ -96,6 +96,7 @@ func SetupRouter() *gin.Engine {
 	cwd, _ := os.Getwd()
 	publicPath := filepath.Join(cwd, conf.PublicDir)
 	router.Use(static.Serve("/", static.LocalFile(publicPath, false)))
+	router.Use(static.Serve("/uploads", static.LocalFile(conf.UploadsDir, false)))
 
 	router.GET("/ping", handlePing)
 

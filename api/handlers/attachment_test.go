@@ -10,8 +10,10 @@ import (
 	"net/http/httptest"
 	"net/url"
 	"os"
+	"path/filepath"
 	"testing"
 
+	"github.com/commonsyllabi/explorer/api/config"
 	"github.com/commonsyllabi/explorer/api/handlers"
 	"github.com/commonsyllabi/explorer/api/models"
 	"github.com/gin-gonic/gin"
@@ -21,6 +23,9 @@ import (
 )
 
 func TestAttachmentHandler(t *testing.T) {
+	var conf config.Config
+	conf.DefaultConf()
+
 	teardown := setup(t)
 	defer teardown(t)
 
@@ -57,6 +62,7 @@ func TestAttachmentHandler(t *testing.T) {
 
 		res := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(res)
+		c.Set("config", conf)
 		c.Request = &http.Request{
 			Header: make(http.Header),
 		}
@@ -75,6 +81,7 @@ func TestAttachmentHandler(t *testing.T) {
 		require.Nil(t, err)
 		assert.Equal(t, "Test Attachment file", att.Name)
 		assert.Equal(t, "file", att.Type)
+		assert.Contains(t, att.URL, filepath.Base(file.Name()))
 	})
 
 	t.Run("Test create attachment with URL", func(t *testing.T) {
@@ -88,6 +95,7 @@ func TestAttachmentHandler(t *testing.T) {
 
 		res := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(res)
+		c.Set("config", conf)
 		c.Request = &http.Request{
 			Header: make(http.Header),
 		}
@@ -115,6 +123,7 @@ func TestAttachmentHandler(t *testing.T) {
 
 		res := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(res)
+		c.Set("config", conf)
 		c.Request = &http.Request{
 			Header: make(http.Header),
 		}
@@ -137,6 +146,7 @@ func TestAttachmentHandler(t *testing.T) {
 
 		res := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(res)
+		c.Set("config", conf)
 		c.Request = &http.Request{
 			Header: make(http.Header),
 		}
