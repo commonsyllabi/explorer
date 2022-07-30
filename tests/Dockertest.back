@@ -6,6 +6,7 @@ COPY go.sum /app
 WORKDIR /app
 RUN go mod download
 
+COPY tests/files /app/tests/files 
 COPY cmd /app/cmd
 COPY api /app/api
 COPY mailer /app/mailer
