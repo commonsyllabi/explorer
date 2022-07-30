@@ -1,4 +1,4 @@
-package api
+package config
 
 import (
 	"io/ioutil"
@@ -10,15 +10,17 @@ import (
 
 // Config holds port numbers, target directories
 type Config struct {
-	PublicDir    string `yaml:"publicDir"`
-	TemplatesDir string `yaml:"templatesDir"`
-	FixturesDir  string `yaml:"FixturesDir"`
+	PublicDir    string `yaml:"public_dir"`
+	TemplatesDir string `yaml:"templates_dir"`
+	FixturesDir  string `yaml:"fixtures_dir"`
+	UploadsDir   string `yaml:uploads_dir`
 }
 
 // DefaultConf is called if there is an error opening and parsing the config file
 func (c *Config) DefaultConf() {
 	c.PublicDir = "./www/public"
 	c.TemplatesDir = "./api/templates"
+	c.UploadsDir = "/tmp/explorer/uploads"
 }
 
 // LoadConf tries to load a yaml file from disk, and marshals it. Sensible defaults are provided, and loading a file overrides them

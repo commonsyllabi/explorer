@@ -11,6 +11,7 @@ import (
 	"testing"
 
 	"github.com/commonsyllabi/explorer/api"
+	"github.com/commonsyllabi/explorer/api/config"
 	"github.com/commonsyllabi/explorer/api/models"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -144,7 +145,7 @@ func TestAuth(t *testing.T) {
 }
 
 func mustSetupRouter() *gin.Engine {
-	var conf api.Config
+	var conf config.Config
 	conf.DefaultConf()
 	conf.TemplatesDir = "../api/templates"
 	conf.FixturesDir = "../api/models/fixtures"

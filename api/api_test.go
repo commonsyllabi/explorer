@@ -7,6 +7,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/commonsyllabi/explorer/api/config"
 	"github.com/commonsyllabi/explorer/api/models"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -44,7 +45,7 @@ func TestApi(t *testing.T) {
 	defer teardown(t)
 
 	t.Run("Testing server setup", func(t *testing.T) {
-		var conf Config
+		var conf config.Config
 		conf.DefaultConf()
 		conf.TemplatesDir = "./templates"
 		StartServer("2046", gin.TestMode, conf)

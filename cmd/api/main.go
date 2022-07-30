@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/commonsyllabi/explorer/api"
+	"github.com/commonsyllabi/explorer/api/config"
 	zero "github.com/commonsyllabi/explorer/api/logger"
 	"github.com/commonsyllabi/explorer/api/models"
 	"github.com/gin-gonic/gin"
@@ -25,7 +26,7 @@ func main() {
 		zero.InitLog(1)
 	}
 
-	var conf api.Config
+	var conf config.Config
 	conf.DefaultConf()
 
 	url := os.Getenv("DATABASE_URL")

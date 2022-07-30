@@ -17,17 +17,23 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/commonsyllabi/explorer/api/auth"
+	"github.com/commonsyllabi/explorer/api/config"
 	"github.com/commonsyllabi/explorer/api/handlers"
 	zero "github.com/commonsyllabi/explorer/api/logger"
 )
 
-var conf Config
+var conf config.Config
 
 // StartServer gets his port and debug in the environment, registers the router, and registers the database closing on exit.
-func StartServer(port string, mode string, c Config) {
+func StartServer(port string, mode string, c config.Config) {
 	conf = c
-	gin.SetMode(mode)
 
+	err := os.MkdirAll(c.UploadsDir, os.ModePerm)
+	if err != nil {
+		panic(err)
+	}
+
+	gin.SetMode(mode)
 	router := SetupRouter()
 	s := &http.Server{
 		Addr:         ":" + port,
@@ -129,7 +135,7 @@ func SetupRouter() *gin.Engine {
 		attachments.GET("/", handlers.GetAllAttachments)
 		attachments.GET("/:id", handlers.GetAttachment)
 
-		attachments.POST("/", auth.Authenticate(), handlers.CreateAttachment)
+		attachments.POST("/", auth.Authenticate(), injectConfig(), handlers.CreateAttachment)
 		attachments.PATCH("/:id", auth.Authenticate(), handlers.UpdateAttachment)
 		attachments.DELETE("/:id", auth.Authenticate(), handlers.DeleteAttachment)
 	}
@@ -153,6 +159,13 @@ func SetupRouter() *gin.Engine {
 	router.Use(handleNotFound)
 
 	return router
+}
+
+func injectConfig() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Set("config", conf)
+		c.Next()
+	}
 }
 
 func handlePing(c *gin.Context) {

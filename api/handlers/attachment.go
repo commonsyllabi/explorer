@@ -1,12 +1,14 @@
 package handlers
 
 import (
+	"crypto/rand"
 	"fmt"
 	"net/http"
 	"net/url"
 	"path/filepath"
 	"reflect"
 
+	"github.com/commonsyllabi/explorer/api/config"
 	zero "github.com/commonsyllabi/explorer/api/logger"
 	"github.com/commonsyllabi/explorer/api/models"
 	"github.com/gin-gonic/gin"
@@ -25,6 +27,13 @@ func GetAllAttachments(c *gin.Context) {
 }
 
 func CreateAttachment(c *gin.Context) {
+	conf, ok := c.Keys["config"].(config.Config)
+	if !ok {
+		c.String(http.StatusInternalServerError, "could not parse configuration from context")
+		zero.Error("could not parse conf from context")
+		return
+	}
+
 	err := sanitizeAttachment(c)
 	if err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -59,7 +68,10 @@ func CreateAttachment(c *gin.Context) {
 			return
 		}
 
-		dest := filepath.Join("/tmp/explorer", file.Filename)
+		b := make([]byte, 4)
+		rand.Read(b)
+		fname := fmt.Sprintf("%x-%s", b, filepath.Base(file.Filename))
+		dest := filepath.Join(conf.UploadsDir, fname)
 		err = c.SaveUploadedFile(file, dest)
 		if err != nil {
 			c.String(http.StatusBadRequest, "error saving form file %v", err)
