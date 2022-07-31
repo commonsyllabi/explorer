@@ -1,6 +1,8 @@
 import * as React from "react";
+import Link from "next/link";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
+import SyllabusSchoolCodeYear from "components/Syllabus/SyllabusSchoolCodeYear";
 
 interface ISyllabusCardProps {}
 
@@ -8,12 +10,14 @@ const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = (props) => {
   return (
     <Card>
       <Card.Body>
-        <div className="d-flex gap-3">
-          <p className="small">Parson The New School of Design</p>
-          <p className="small">PSAM1028</p>
-          <p className="small">Spring 2019</p>
-        </div>
-        <Card.Title>Web Design Basics</Card.Title>
+        <SyllabusSchoolCodeYear
+          institution="Parson The New School of Design"
+          code="PSAM1028"
+          year="Spring 2019"
+        />
+        <Card.Title>
+          <Link href="/syllabus">Web Design Basics</Link>
+        </Card.Title>
         <p className="course-instructors">Pat Shiu</p>
         <Card.Text className="course-description">
           Web Design Basics is designed to introduce students to programming as
