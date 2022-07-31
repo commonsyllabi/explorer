@@ -27,6 +27,11 @@ func TestCollectionHandler(t *testing.T) {
 		c, _ := gin.CreateTestContext(res)
 		handlers.GetAllCollections(c)
 		assert.Equal(t, http.StatusOK, res.Code)
+
+		colls := make([]models.Collection, 0)
+		err := json.Unmarshal(res.Body.Bytes(), &colls)
+		require.Nil(t, err)
+		assert.Equal(t, 2, len(colls))
 	})
 
 	t.Run("Test create collection", func(t *testing.T) {
@@ -48,6 +53,12 @@ func TestCollectionHandler(t *testing.T) {
 		handlers.CreateCollection(c)
 
 		assert.Equal(t, http.StatusCreated, res.Code)
+
+		var coll models.Collection
+		err := json.Unmarshal(res.Body.Bytes(), &coll)
+		require.Nil(t, err)
+		assert.Equal(t, "Test Collection Handling", coll.Name)
+		assert.NotZero(t, coll.CreatedAt)
 	})
 
 	t.Run("Test create collection malformed input", func(t *testing.T) {
@@ -88,6 +99,13 @@ func TestCollectionHandler(t *testing.T) {
 
 		handlers.GetCollection(c)
 		assert.Equal(t, http.StatusOK, res.Code)
+
+		var coll models.Collection
+		err := json.Unmarshal(res.Body.Bytes(), &coll)
+		require.Nil(t, err)
+		assert.Equal(t, collectionID, coll.UUID)
+		assert.Equal(t, "Fixture Collection", coll.Name)
+		assert.Equal(t, 1, len(coll.Syllabi))
 	})
 
 	t.Run("Test get collection non-existent ID", func(t *testing.T) {
@@ -157,7 +175,8 @@ func TestCollectionHandler(t *testing.T) {
 		err := json.Unmarshal(res.Body.Bytes(), &coll)
 		require.Nil(t, err)
 		assert.Equal(t, "Updated", coll.Name)
-		assert.NotZero(t, coll.ID)
+		assert.NotZero(t, coll.UUID)
+		assert.NotZero(t, coll.CreatedAt)
 	})
 
 	t.Run("Test update collection non-existant ID", func(t *testing.T) {
@@ -237,6 +256,116 @@ func TestCollectionHandler(t *testing.T) {
 
 		handlers.UpdateCollection(c)
 		assert.Equal(t, http.StatusBadRequest, res.Code)
+	})
+
+	t.Run("Test add syllabus to collection", func(t *testing.T) {
+		var body bytes.Buffer
+		w := multipart.NewWriter(&body)
+		w.WriteField("syllabus_id", syllabusID.String())
+		w.Close()
+
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "PATCH"
+		c.Request.Header.Set("Content-Type", w.FormDataContentType())
+		c.Request.Body = io.NopCloser(&body)
+		c.Params = []gin.Param{
+			{
+				Key:   "id",
+				Value: collectionID.String(),
+			},
+		}
+
+		handlers.AddCollectionSyllabus(c)
+		assert.Equal(t, http.StatusOK, res.Code)
+
+		var coll models.Collection
+		err := json.Unmarshal(res.Body.Bytes(), &coll)
+		require.Nil(t, err)
+		assert.Equal(t, 1, len(coll.Syllabi))
+	})
+
+	t.Run("Test get all syllabi from collection", func(t *testing.T) {
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "GET"
+		c.Params = []gin.Param{
+			{
+				Key:   "id",
+				Value: collectionID.String(),
+			},
+		}
+
+		handlers.GetCollectionSyllabi(c)
+		assert.Equal(t, http.StatusOK, res.Code)
+
+		var sylls = make([]models.Syllabus, 0)
+		err := json.Unmarshal(res.Body.Bytes(), &sylls)
+		require.Nil(t, err)
+		assert.Equal(t, 1, len(sylls))
+	})
+
+	t.Run("Test get syllabus from collection", func(t *testing.T) {
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "GET"
+		c.Params = []gin.Param{
+			{
+				Key:   "id",
+				Value: collectionID.String(),
+			},
+			{
+				Key:   "syll_id",
+				Value: syllabusID.String(),
+			},
+		}
+
+		handlers.GetCollectionSyllabus(c)
+		assert.Equal(t, http.StatusOK, res.Code)
+		var syll models.Syllabus
+		err := json.Unmarshal(res.Body.Bytes(), &syll)
+		require.Nil(t, err)
+		assert.Equal(t, "User-created 1", syll.Title)
+	})
+
+	t.Run("Test remove syllabus from collection", func(t *testing.T) {
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "DELETE"
+		c.Params = []gin.Param{
+			{
+				Key:   "id",
+				Value: collectionID.String(),
+			},
+			{
+				Key:   "syll_id",
+				Value: syllabusID.String(),
+			},
+		}
+
+		handlers.RemoveCollectionSyllabus(c)
+		assert.Equal(t, http.StatusOK, res.Code)
+
+		var syll models.Syllabus
+		err := json.Unmarshal(res.Body.Bytes(), &syll)
+		require.Nil(t, err)
+		assert.Equal(t, syllabusID, syll.UUID)
 	})
 
 	t.Run("Test delete collection", func(t *testing.T) {

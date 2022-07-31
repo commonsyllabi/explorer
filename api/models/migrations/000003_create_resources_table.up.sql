@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS resources (
+CREATE TABLE IF NOT EXISTS attachments (
  id uuid DEFAULT gen_random_uuid(),
  created_at timestamp NOT NULL,
  updated_at timestamp NOT NULL,
