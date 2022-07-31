@@ -13,14 +13,11 @@ const SyllabusBreadcrumbs: React.FunctionComponent<
   return (
     <Container className="border-top border-bottom">
       <Row className="pt-2 d-grid gap-2 d-flex justify-content-between align-items-baseline">
-        <Col xs="auto" lg="3" className="border">
+        <Col xs="auto" lg="3">
           <Button variant="link">← Back</Button>
         </Col>
-        <Col
-          id="breadcrumbs"
-          className="d-none d-md-block d-flex justify-content-center border"
-        >
-          <Breadcrumb>
+        <Col id="breadcrumbs" className="d-none d-lg-block">
+          <Breadcrumb className="d-flex justify-content-center">
             <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
             <Breadcrumb.Item active>Web Design Basics</Breadcrumb.Item>
           </Breadcrumb>
@@ -29,7 +26,7 @@ const SyllabusBreadcrumbs: React.FunctionComponent<
           xs="auto"
           lg="3"
           id="syll-user-controls"
-          className="d-flex justify-content-end border"
+          className="d-flex justify-content-end"
         >
           <Button variant="link">Flag</Button>
           <Button variant="link">Add to Collection</Button>
