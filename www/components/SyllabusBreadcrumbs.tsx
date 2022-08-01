@@ -11,7 +11,7 @@ const SyllabusBreadcrumbs: React.FunctionComponent<
   ISyllabusBreadcrumbsProps
 > = (props) => {
   return (
-    <Container className="border-top border-bottom">
+    <Container className="border-bottom">
       <Row className="pt-2 d-grid gap-2 d-flex justify-content-between align-items-baseline">
         <Col xs="auto" lg="3">
           <Button variant="link">← Back</Button>

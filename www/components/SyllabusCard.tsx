@@ -16,7 +16,9 @@ const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = (props) => {
           year="Spring 2019"
         />
         <Card.Title>
-          <Link href="/syllabus">Web Design Basics</Link>
+          <Link href="/syllabus">
+            <a>Web Design Basics</a>
+          </Link>
         </Card.Title>
         <p className="course-instructors">Pat Shiu</p>
         <Card.Text className="course-description">

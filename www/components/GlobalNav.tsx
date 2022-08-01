@@ -9,7 +9,7 @@ export function GlobalNav() {
     <Navbar
       bg="light"
       expand="lg"
-      className="d-flex justify-content-md-between"
+      className="sticky-top d-flex justify-content-md-between border-bottom"
     >
       <Container>
         <Navbar.Brand href="/">Syllabi Explorer</Navbar.Brand>
