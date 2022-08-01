@@ -12,7 +12,7 @@ const SyllabusBreadcrumbs: React.FunctionComponent<
 > = (props) => {
   return (
     <Container className="border-bottom">
-      <Row className="pt-2 d-grid gap-2 d-flex justify-content-between align-items-baseline">
+      <Row className="pt-2 pb-2 pb-lg-0 d-grid gap-2 d-flex justify-content-between align-items-baseline">
         <Col xs="auto" lg="3">
           <Button variant="link">← Back</Button>
         </Col>
