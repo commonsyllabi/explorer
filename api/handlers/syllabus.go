@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"net/http"
 	"reflect"
-	"time"
 
 	zero "github.com/commonsyllabi/explorer/api/logger"
 	"github.com/commonsyllabi/explorer/api/models"
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
@@ -20,7 +20,7 @@ var (
 func GetAllSyllabi(c *gin.Context) {
 	syllabi, err := models.GetAllSyllabi()
 	if err != nil {
-		c.String(http.StatusInternalServerError, err.Error())
+		c.JSON(http.StatusInternalServerError, err)
 		zero.Errorf("error getting syllabi: %v", err)
 		return
 	}
@@ -31,7 +31,7 @@ func GetAllSyllabi(c *gin.Context) {
 func CreateSyllabus(c *gin.Context) {
 	err := sanitizeSyllabus(c)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, err)
 		zero.Error(err.Error())
 		return
 	}
@@ -39,90 +39,126 @@ func CreateSyllabus(c *gin.Context) {
 	var syll models.Syllabus
 	err = c.Bind(&syll)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, err)
 		return
 	}
 
-	form, err := c.MultipartForm()
-	if err != nil {
-		c.String(http.StatusBadRequest, "error parsing form %v", err)
-		zero.Errorf("error parsing form: %v", err)
-		return
+	var userID uuid.UUID
+	if gin.Mode() != gin.TestMode { //-- todo: handle this properly (ask tobi)
+		session := sessions.Default(c)
+		sessionID := session.Get("user")
+		userID = uuid.MustParse(fmt.Sprintf("%v", sessionID))
+	} else {
+		userID = uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c8a8")
 	}
 
-	syll.CreatedAt = time.Now()
-	syll.UpdatedAt = time.Now()
-	syll, err = models.CreateSyllabus(&syll)
+	syll, err = models.CreateSyllabus(userID, &syll)
 	if err != nil {
-		c.String(http.StatusInternalServerError, err.Error())
+		c.JSON(http.StatusInternalServerError, err)
 		zero.Errorf("error creating syllabus: %v", err)
 		return
 	}
 
-	var resources []*models.Resource
-	files := form.File["resources[]"]
-
-	zero.Warnf("%d resources found on new syllabus", len(files))
-
-	for _, f := range files {
-
-		//-- todo handle how to store files?
-		// file, err := f.Open()
-		// if err != nil {
-		// 	c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		// 	return
-		// }
-
-		// bytes, err := ioutil.ReadAll(file)
-		// if err != nil {
-		// 	c.String(http.StatusInternalServerError, err.Error())
-		// 	zero.Errorf("error reading file into bytes: %v", err)
-		// 	return
-		// }
-
-		resource := models.Resource{
-			CreatedAt:  time.Now(),
-			UpdatedAt:  time.Now(),
-			Name:       f.Filename,
-			SyllabusID: syll.ID,
-		}
-
-		res, err := models.CreateResource(&resource)
-		if err != nil {
-			zero.Warnf("error adding resource: %s", err)
-		}
-		resources = append(resources, &res)
-	}
-
-	syll.Resources = resources
 	c.JSON(http.StatusCreated, syll)
 }
 
 func GetSyllabus(c *gin.Context) {
 	id := c.Param("id")
-	if len(id) < 25 {
-		c.String(http.StatusBadRequest, "not a valid ID")
-		zero.Errorf("not a valid id %d", id)
-		return
-	}
-
 	uid, err := uuid.Parse(id)
 	if err != nil {
-		c.String(http.StatusBadRequest, "not a valid ID")
+		c.JSON(http.StatusBadRequest, err)
 		zero.Errorf("not a valid id %d", err)
 		return
 	}
 	syll, err := models.GetSyllabus(uid)
 	if err != nil {
 		zero.Errorf("error getting syllabus %v: %s", id, err)
-		c.JSON(http.StatusNotFound, gin.H{
-			"msg": "We couldn't find the syllabus.",
-		})
+		c.JSON(http.StatusNotFound, err)
 
 		return
 	}
 
 	c.JSON(http.StatusOK, syll)
+}
+
+func AddSyllabusAttachment(c *gin.Context) {
+	syll_id := c.Param("id")
+	syll_uid, err := uuid.Parse(syll_id)
+	if err != nil {
+		c.String(http.StatusBadRequest, "not a valid ID")
+		zero.Errorf("not a valid syllabus id %d", err)
+		return
+	}
+
+	res_id := c.PostForm("attachment_id")
+	res_uid, err := uuid.Parse(res_id)
+	if err != nil {
+		c.String(http.StatusBadRequest, "not a valid ID")
+		zero.Errorf("not a valid attachment id %d", err)
+		return
+	}
+
+	syll, err := models.AddAttachmentToSyllabus(syll_uid, res_uid)
+	if err != nil {
+		c.String(http.StatusNotFound, err.Error())
+		zero.Errorf("error getting syllabus %d: %v", syll_id, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, syll)
+}
+
+func GetSyllabusAttachments(c *gin.Context) {
+	id := c.Param("id")
+	uid, err := uuid.Parse(id)
+	if err != nil {
+		c.String(http.StatusBadRequest, "not a valid ID")
+		zero.Errorf("not a valid id %d", err)
+		return
+	}
+
+	syll, err := models.GetSyllabus(uid)
+	if err != nil {
+		zero.Errorf("error getting Syllabus %v: %s", id, err)
+		c.JSON(http.StatusNotFound, id)
+		return
+	}
+
+	c.JSON(http.StatusOK, syll.Attachments)
+}
+
+func GetSyllabusAttachment(c *gin.Context) {
+	syll_id := c.Param("id")
+	syll_uid, err := uuid.Parse(syll_id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, syll_id)
+		zero.Errorf("not a valid syllabus id %d", err)
+		return
+	}
+
+	res_id := c.Param("res_id")
+	res_uid, err := uuid.Parse(res_id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, res_id)
+		zero.Errorf("not a valid attachment id %d", err)
+		return
+	}
+
+	_, err = models.GetSyllabus(syll_uid)
+	if err != nil {
+		zero.Errorf("error getting syllabus %v: %s", res_id, err)
+		c.JSON(http.StatusNotFound, res_id)
+		return
+	}
+
+	res, err := models.GetAttachment(res_uid)
+	if err != nil {
+		zero.Errorf("error getting attachment %v: %s", res_id, err)
+		c.JSON(http.StatusNotFound, res_id)
+		return
+	}
+
+	c.JSON(http.StatusOK, res)
 }
 
 func UpdateSyllabus(c *gin.Context) {
@@ -199,7 +235,32 @@ func DeleteSyllabus(c *gin.Context) {
 		return
 	}
 
-	//-- TODO delete any associated resources?
+	c.JSON(http.StatusOK, syll)
+}
+
+func RemoveSyllabusAttachment(c *gin.Context) {
+	syll_id := c.Param("id")
+	syll_uid, err := uuid.Parse(syll_id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, syll_id)
+		zero.Errorf("not a valid id %d", err)
+		return
+	}
+
+	res_id := c.Param("res_id")
+	res_uid, err := uuid.Parse(res_id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, res_id)
+		zero.Errorf("not a valid id %d", err)
+		return
+	}
+
+	syll, err := models.RemoveAttachmentFromSyllabus(syll_uid, res_uid)
+	if err != nil {
+		c.String(http.StatusNotFound, err.Error())
+		zero.Errorf("error getting syllabus %d: %v", syll_id, err)
+		return
+	}
 
 	c.JSON(http.StatusOK, syll)
 }

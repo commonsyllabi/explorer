@@ -50,7 +50,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	session.Set("user", user.ID.String())
+	session.Set("user", user.UUID.String())
 	if err := session.Save(); err != nil {
 		zero.Error(err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save session"})
@@ -92,7 +92,7 @@ func Confirm(c *gin.Context) {
 	}
 
 	user.Status = models.UserConfirmed
-	user, err = models.UpdateUser(user.ID, &user)
+	user, err = models.UpdateUser(user.UUID, &user)
 	if err != nil {
 		c.String(http.StatusNotFound, err.Error())
 		zero.Errorf(err.Error())
@@ -112,28 +112,28 @@ func Confirm(c *gin.Context) {
 func RequestRecover(c *gin.Context) {
 	email, err := mail.ParseAddress(c.PostForm("email"))
 	if err != nil {
-		c.String(http.StatusBadRequest, "not a valid email address")
+		c.JSON(http.StatusBadRequest, err)
 		zero.Errorf("not a valid email %d", err)
 		return
 	}
 
 	user, err := models.GetUserByEmail(email.Address)
 	if err != nil {
-		c.String(http.StatusNotFound, "user not found")
+		c.JSON(http.StatusNotFound, err)
 		zero.Errorf("user not found %s", err)
 		return
 	}
 
-	token, err := models.CreateToken(user.ID)
+	token, err := models.CreateToken(user.UUID)
 	if err != nil {
-		c.String(http.StatusNotFound, err.Error())
+		c.JSON(http.StatusNotFound, err)
 		zero.Errorf(err.Error())
 		return
 	}
 
 	// send email with link
 	if gin.Mode() != gin.TestMode {
-		body := fmt.Sprintf("here is your recover link :%v!", token.ID.String())
+		body := fmt.Sprintf("here is your recover link :%v!", token.UUID.String())
 		mailer.SendMail(email.Address, "account recovery", body)
 	}
 
@@ -180,7 +180,7 @@ func Recover(c *gin.Context) {
 		return
 	}
 	user.Password = hashed
-	updated, err := models.UpdateUser(user.ID, &user)
+	updated, err := models.UpdateUser(user.UUID, &user)
 	if err != nil {
 		c.String(http.StatusBadRequest, "couldn't update password")
 		zero.Errorf("couldn't update password %s", err)
@@ -194,7 +194,6 @@ func Recover(c *gin.Context) {
 		return
 	}
 
-	// send success
 	c.JSON(http.StatusPartialContent, updated)
 }
 

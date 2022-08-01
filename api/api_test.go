@@ -7,10 +7,11 @@ import (
 	"os"
 	"testing"
 
+	"github.com/commonsyllabi/explorer/api/config"
 	"github.com/commonsyllabi/explorer/api/models"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"github.com/uptrace/bun"
+	"gorm.io/gorm"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -20,14 +21,14 @@ var router *gin.Engine
 var (
 	syllabusID   uuid.UUID
 	collectionID uuid.UUID
-	resourceID   uuid.UUID
+	attachmentID uuid.UUID
 	userID       uuid.UUID
 )
 
 func setup(t *testing.T) func(t *testing.T) {
 	syllabusID = uuid.MustParse("46de6a2b-aacb-4c24-b1e1-3495821f846a")
 	collectionID = uuid.MustParse("b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a7")
-	resourceID = uuid.MustParse("c55f0baf-12b8-4bdb-b5e6-2280bff8ab21")
+	attachmentID = uuid.MustParse("c55f0baf-12b8-4bdb-b5e6-2280bff8ab21")
 	userID = uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c8a8")
 
 	gin.SetMode(gin.TestMode)
@@ -44,11 +45,10 @@ func TestApi(t *testing.T) {
 	defer teardown(t)
 
 	t.Run("Testing server setup", func(t *testing.T) {
-		var conf Config
+		var conf config.Config
 		conf.DefaultConf()
 		conf.TemplatesDir = "./templates"
-		err := StartServer("2046", gin.TestMode, conf)
-		assert.Equal(t, err, nil, "Expected error from start server to be nil, got %v", err)
+		StartServer("2046", gin.TestMode, conf)
 	})
 
 	t.Run("Testing ping", func(t *testing.T) {
@@ -108,8 +108,8 @@ func TestRoutes(t *testing.T) {
 		assert.Equal(t, http.StatusUnauthorized, res.Code)
 	})
 
-	t.Run("Test delete resources unauthorized", func(t *testing.T) {
-		path := "/resources/" + resourceID.String()
+	t.Run("Test delete attachments unauthorized", func(t *testing.T) {
+		path := "/attachments/" + attachmentID.String()
 		req := httptest.NewRequest(http.MethodDelete, path, nil)
 
 		res := httptest.NewRecorder()
@@ -125,21 +125,18 @@ func mustSetupRouter() *gin.Engine {
 	conf.TemplatesDir = "../api/templates"
 	conf.FixturesDir = "../api/models/fixtures"
 
-	router, err := SetupRouter()
-	if err != nil {
-		panic(err)
-	}
+	router := SetupRouter()
 	return router
 }
 
-func mustInitDB() *bun.DB {
+func mustInitDB() *gorm.DB {
 	databaseTestURL := os.Getenv("DATABASE_TEST_URL")
 	if databaseTestURL == "" {
 		databaseTestURL = "postgres://postgres:postgres@localhost:5432/explorer-test"
 		fmt.Printf("didn't get db test url from env, defaulting to %v\n", databaseTestURL)
 	}
 
-	db, err := models.InitTestDB(databaseTestURL)
+	db, err := models.InitDB(databaseTestURL)
 	if err != nil {
 		panic(err)
 	}

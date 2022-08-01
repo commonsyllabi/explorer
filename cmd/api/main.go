@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/commonsyllabi/explorer/api"
+	"github.com/commonsyllabi/explorer/api/config"
 	zero "github.com/commonsyllabi/explorer/api/logger"
 	"github.com/commonsyllabi/explorer/api/models"
 	"github.com/gin-gonic/gin"
@@ -25,7 +26,7 @@ func main() {
 		zero.InitLog(1)
 	}
 
-	var conf api.Config
+	var conf config.Config
 	conf.DefaultConf()
 
 	url := os.Getenv("DATABASE_URL")
@@ -35,7 +36,7 @@ func main() {
 			zero.Log.Fatal().Msgf("missing env DB_ variables!")
 		}
 
-		url = fmt.Sprintf("postgres://%s:%s@%s:%s/%s", os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_HOST"), os.Getenv("DB_PORT"), os.Getenv("DB_NAME"))
+		url = fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s", os.Getenv("DB_HOST"), os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_NAME"), os.Getenv("DB_PORT"))
 	}
 
 	port := os.Getenv("PORT")
@@ -49,8 +50,5 @@ func main() {
 		zero.Log.Fatal().Msgf("error initializing database: %v", err)
 	}
 
-	err = api.StartServer(port, mode, conf)
-	if err != nil {
-		zero.Log.Fatal().Msgf("Error starting server: %v", err)
-	}
+	api.StartServer(port, mode, conf)
 }

@@ -27,6 +27,11 @@ func TestUserHandler(t *testing.T) {
 		c, _ := gin.CreateTestContext(res)
 		handlers.GetAllUsers(c)
 		assert.Equal(t, http.StatusOK, res.Code)
+
+		users := make([]models.User, 0)
+		err := json.Unmarshal(res.Body.Bytes(), &users)
+		require.Nil(t, err)
+		assert.Equal(t, 4, len(users))
 	})
 
 	t.Run("Test create user", func(t *testing.T) {
@@ -47,8 +52,13 @@ func TestUserHandler(t *testing.T) {
 		c.Request.Body = io.NopCloser(&body)
 
 		handlers.CreateUser(c)
-
 		assert.Equal(t, http.StatusCreated, res.Code)
+
+		var user models.User
+		err := json.Unmarshal(res.Body.Bytes(), &user)
+		require.Nil(t, err)
+		assert.Equal(t, "testing@user.com", user.Email)
+		assert.NotZero(t, user.UUID)
 	})
 
 	t.Run("Test create user with wrong field", func(t *testing.T) {
@@ -152,6 +162,11 @@ func TestUserHandler(t *testing.T) {
 
 		handlers.GetUser(c)
 		assert.Equal(t, http.StatusOK, res.Code)
+
+		var user models.User
+		err := json.Unmarshal(res.Body.Bytes(), &user)
+		require.Nil(t, err)
+		assert.Equal(t, "full user 1", user.Name)
 	})
 
 	t.Run("Test get user malformed id", func(t *testing.T) {
@@ -195,7 +210,7 @@ func TestUserHandler(t *testing.T) {
 	t.Run("Test update user", func(t *testing.T) {
 		var body bytes.Buffer
 		w := multipart.NewWriter(&body)
-		w.WriteField("email", "updated@user.com")
+		w.WriteField("email", "user@updated.com")
 		w.Close()
 
 		res := httptest.NewRecorder()
@@ -220,8 +235,8 @@ func TestUserHandler(t *testing.T) {
 		var user models.User
 		err := json.Unmarshal(res.Body.Bytes(), &user)
 		require.Nil(t, err)
-		assert.Equal(t, "updated@user.com", user.Email)
-		assert.NotZero(t, user.ID)
+		assert.Equal(t, "user@updated.com", user.Email)
+		assert.NotZero(t, user.UUID)
 	})
 
 	t.Run("Test update user non-existent id", func(t *testing.T) {
@@ -250,32 +265,6 @@ func TestUserHandler(t *testing.T) {
 		assert.Equal(t, http.StatusNotFound, res.Code)
 	})
 
-	t.Run("Test update user wrong field", func(t *testing.T) {
-		var body bytes.Buffer
-		w := multipart.NewWriter(&body)
-		w.WriteField("not-field", "malicious-update-no-field@user.com")
-		w.Close()
-
-		res := httptest.NewRecorder()
-		c, _ := gin.CreateTestContext(res)
-		c.Request = &http.Request{
-			Header: make(http.Header),
-		}
-
-		c.Request.Method = "PATCH"
-		c.Request.Header.Set("Content-Type", w.FormDataContentType())
-		c.Request.Body = io.NopCloser(&body)
-		c.Params = []gin.Param{
-			{
-				Key:   "id",
-				Value: userID.String(),
-			},
-		}
-
-		handlers.UpdateUser(c)
-		assert.Equal(t, http.StatusBadRequest, res.Code)
-	})
-
 	t.Run("Test delete user", func(t *testing.T) {
 		res := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(res)
@@ -293,6 +282,11 @@ func TestUserHandler(t *testing.T) {
 
 		handlers.DeleteUser(c)
 		assert.Equal(t, http.StatusOK, res.Code)
+
+		var user models.User
+		err := json.Unmarshal(res.Body.Bytes(), &user)
+		require.Nil(t, err)
+		assert.Equal(t, "full user 1", user.Name)
 	})
 
 	t.Run("Test delete user malformed ID", func(t *testing.T) {

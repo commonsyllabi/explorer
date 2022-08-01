@@ -17,22 +17,24 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/commonsyllabi/explorer/api/auth"
+	"github.com/commonsyllabi/explorer/api/config"
 	"github.com/commonsyllabi/explorer/api/handlers"
 	zero "github.com/commonsyllabi/explorer/api/logger"
 )
 
-var conf Config
+var conf config.Config
 
 // StartServer gets his port and debug in the environment, registers the router, and registers the database closing on exit.
-func StartServer(port string, mode string, c Config) error {
+func StartServer(port string, mode string, c config.Config) {
 	conf = c
-	gin.SetMode(mode)
 
-	router, err := SetupRouter()
+	err := os.MkdirAll(c.UploadsDir, os.ModePerm)
 	if err != nil {
-		return err
+		panic(err)
 	}
 
+	gin.SetMode(mode)
+	router := SetupRouter()
 	s := &http.Server{
 		Addr:         ":" + port,
 		Handler:      router,
@@ -56,13 +58,10 @@ func StartServer(port string, mode string, c Config) error {
 
 	zero.Info("shutting down...")
 	s.Shutdown(context.Background())
-	// err = models.Shutdown()
-
-	return err
 }
 
 // SetupRouter registers all middleware, templates, logging route groups and settings
-func SetupRouter() (*gin.Engine, error) {
+func SetupRouter() *gin.Engine {
 	router := gin.New()
 
 	session_opts := sessions.Options{
@@ -97,6 +96,7 @@ func SetupRouter() (*gin.Engine, error) {
 	cwd, _ := os.Getwd()
 	publicPath := filepath.Join(cwd, conf.PublicDir)
 	router.Use(static.Serve("/", static.LocalFile(publicPath, false)))
+	router.Use(static.Serve("/uploads", static.LocalFile(conf.UploadsDir, false)))
 
 	router.GET("/ping", handlePing)
 
@@ -131,14 +131,14 @@ func SetupRouter() (*gin.Engine, error) {
 		users.DELETE("/:id", auth.Authenticate(), handlers.DeleteUser)
 	}
 
-	resources := router.Group("/resources")
+	attachments := router.Group("/attachments")
 	{
-		resources.GET("/", handlers.GetAllResources)
-		resources.GET("/:id", handlers.GetResource)
+		attachments.GET("/", handlers.GetAllAttachments)
+		attachments.GET("/:id", handlers.GetAttachment)
 
-		resources.POST("/", auth.Authenticate(), handlers.CreateResource)
-		resources.PATCH("/:id", auth.Authenticate(), handlers.UpdateResource)
-		resources.DELETE("/:id", auth.Authenticate(), handlers.DeleteResource)
+		attachments.POST("/", auth.Authenticate(), injectConfig(), handlers.CreateAttachment)
+		attachments.PATCH("/:id", auth.Authenticate(), handlers.UpdateAttachment)
+		attachments.DELETE("/:id", auth.Authenticate(), handlers.DeleteAttachment)
 	}
 
 	collections := router.Group("/collections")
@@ -149,11 +149,24 @@ func SetupRouter() (*gin.Engine, error) {
 		collections.POST("/", auth.Authenticate(), handlers.CreateCollection)
 		collections.PATCH("/:id", auth.Authenticate(), handlers.UpdateCollection)
 		collections.DELETE("/:id", auth.Authenticate(), handlers.DeleteCollection)
+
+		collections.GET("/:id/syllabi", handlers.GetCollectionSyllabi)
+		collections.POST("/:id/syllabi", handlers.AddCollectionSyllabus)
+
+		collections.GET("/:id/syllabi/:syll_id", handlers.GetCollectionSyllabus)
+		collections.DELETE("/:id/syllabi/:syll_id", handlers.RemoveCollectionSyllabus)
 	}
 
 	router.Use(handleNotFound)
 
-	return router, nil
+	return router
+}
+
+func injectConfig() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Set("config", conf)
+		c.Next()
+	}
 }
 
 func handlePing(c *gin.Context) {

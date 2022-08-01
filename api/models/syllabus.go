@@ -1,66 +1,126 @@
 package models
 
 import (
-	"context"
-	"time"
+	"fmt"
 
 	"github.com/google/uuid"
+	"github.com/lib/pq"
+	"gorm.io/gorm"
 )
 
 type Syllabus struct {
-	ID        uuid.UUID `bun:",pk,type:uuid,default:uuid_generate_v4()"`
-	CreatedAt time.Time `bun:",nullzero,notnull,default:current_timestamp" json:"created_at"`
-	UpdatedAt time.Time `bun:",nullzero,notnull,default:current_timestamp" json:"updated_at"`
+	gorm.Model
+	UUID   uuid.UUID `gorm:"uniqueIndex;type:uuid;primaryKey;default:uuid_generate_v4()" json:"uuid" yaml:"uuid"`
+	Status string    `gorm:"default:unlisted"`
 
-	UserID uuid.UUID `bun:"user_id" yaml:"user_id" json:"user_id"`
-	User   *User     `bun:"rel:belongs-to,join:user_id=id" json:"user"`
+	UserUUID    uuid.UUID     `gorm:"type:uuid;primaryKey;default:uuid_generate_v4()" json:"user_uuid" yaml:"user_uuid"`
+	User        User          `gorm:"foreignKey:UserUUID;references:UUID"`
+	Collections []*Collection `gorm:"many2many:collections_syllabi;"`
+	Attachments []Attachment  `gorm:"foreignKey:SyllabusUUID;references:UUID"`
 
-	CollectionID uuid.UUID   `bun:"collection_id" yaml:"collection_id" json:"collection_id"`
-	Resources    []*Resource `bun:"rel:has-many,join:id=syllabus_id" json:"resources"`
-	Title        string      `bun:",notnull" json:"title" form:"title"`
-	//-- todo: how to have many to many relation for collections?
+	// Institutions []struct {
+	// 	Country string //-- iso 3166
+	// 	Date    struct {
+	// 		Term string
+	// 		Year int
+	// 	}
+	// 	Name string
+	// 	URL  string
+	// }
+
+	AcademicFields   pq.StringArray `gorm:"type:text[]" json:"academic_field" form:"academic_fields[]"`
+	Assignments      pq.StringArray `gorm:"type:text[]" json:"assignments" form:"assignments[]"`
+	Description      string         `gorm:"not null" form:"description"`
+	Duration         int            `json:"duration" form:"duration"`
+	GradingRubric    string         `json:"grading_rubric" form:"grading_rubric"`
+	Language         string         `json:"language" form:"language"`
+	LearningOutcomes pq.StringArray `gorm:"type:text[]" json:"learning_outcomes" form:"learning_outcomes[]"`
+	Other            string         `json:"other" form:"other"`
+	Readings         pq.StringArray `gorm:"type:text[]" json:"readings" form:"readings[]"`
+	Tags             pq.StringArray `gorm:"type:text[]" json:"tags" form:"tags[]"`
+	Title            string         `gorm:"not null" form:"title"`
+	TopicOutlines    pq.StringArray `gorm:"type:text[]" json:"topic_outlines" form:"topic_outlines[]"`
 }
 
-func CreateSyllabus(syll *Syllabus) (Syllabus, error) {
-	ctx := context.Background()
-	_, err := db.NewInsert().Model(syll).Exec(ctx)
-	return *syll, err
-}
-
-func GetSyllabus(id uuid.UUID) (Syllabus, error) {
-	ctx := context.Background()
-	var syll Syllabus
-	err := db.NewSelect().Model(&syll).Where("syllabus.id = ?", id).Relation("Resources").Relation("User").Scan(ctx)
-	return syll, err
-}
-
-func GetAllSyllabi() ([]Syllabus, error) {
-	ctx := context.Background()
-	syllabi := make([]Syllabus, 0)
-	err := db.NewSelect().Model(&syllabi).Relation("Resources").Relation("User").Scan(ctx)
-	return syllabi, err
-}
-
-func UpdateSyllabus(id uuid.UUID, syll *Syllabus) (Syllabus, error) {
-	ctx := context.Background()
-	existing := new(Syllabus)
-	err := db.NewSelect().Model(existing).Where("id = ?", id).Scan(ctx)
+func CreateSyllabus(user_uuid uuid.UUID, syll *Syllabus) (Syllabus, error) {
+	user, err := GetUser(user_uuid)
 	if err != nil {
 		return *syll, err
 	}
 
-	syll.UpdatedAt = time.Now()
-	_, err = db.NewUpdate().Model(syll).OmitZero().Where("id = ?", id).Returning("*").Exec(ctx)
-	return *syll, err
+	err = db.Model(&user).Association("Syllabi").Append(syll)
+	if err != nil {
+		return *syll, err
+	}
+
+	created, err := GetSyllabus(syll.UUID)
+	return created, err
 }
 
-func DeleteSyllabus(id uuid.UUID) (Syllabus, error) {
-	ctx := context.Background()
+func GetSyllabus(uuid uuid.UUID) (Syllabus, error) {
 	var syll Syllabus
-	err := db.NewSelect().Model(&syll).Where("id = ?", id).Scan(ctx)
-	if err != nil {
-		return syll, err
+	result := db.Preload("User").Preload("Attachments").Where("uuid = ? ", uuid).First(&syll)
+	return syll, result.Error
+}
+
+func GetAllSyllabi() ([]Syllabus, error) {
+	var syllabi []Syllabus
+	result := db.Find(&syllabi)
+	return syllabi, result.Error
+}
+
+func UpdateSyllabus(uuid uuid.UUID, syll *Syllabus) (Syllabus, error) {
+	var existing Syllabus
+	result := db.Where("uuid = ? ", uuid).First(&existing)
+	if result.Error != nil {
+		return *syll, result.Error
 	}
-	_, err = db.NewDelete().Model(&syll).Where("id = ?", id).Exec(ctx) //-- what to do with dangling resources?
+
+	result = db.Model(&existing).Where("uuid = ?", uuid).Updates(&syll)
+	return existing, result.Error
+}
+
+func AddAttachmentToSyllabus(syll_uuid uuid.UUID, res_uuid uuid.UUID) (Syllabus, error) {
+	var syll Syllabus
+	result := db.Where("uuid = ? ", syll_uuid).First(&syll)
+	if result.Error != nil {
+		return syll, result.Error
+	}
+
+	var att Attachment
+	result = db.Where("uuid = ? ", res_uuid).First(&att)
+	if result.Error != nil {
+		return syll, result.Error
+	}
+
+	err := db.Model(&syll).Association("Attachments").Append(&att)
 	return syll, err
+}
+
+func RemoveAttachmentFromSyllabus(syll_uuid uuid.UUID, res_uuid uuid.UUID) (Syllabus, error) {
+	var syll Syllabus
+	result := db.Where("uuid = ? ", syll_uuid).First(&syll)
+	if result.Error != nil {
+		return syll, result.Error
+	}
+
+	var att Attachment
+	result = db.Where("uuid = ? ", res_uuid).First(&att)
+	if result.Error != nil {
+		return syll, result.Error
+	}
+
+	// err := db.Model(&syll).Association("Attachments").Delete(res)
+	fmt.Println("IMPLEMENT ME!") //--  Right now attachments require a syllabus to exist, but it should be independent, only tied to a user, and with a many2many relation to syllabi
+	return syll, nil
+}
+
+func DeleteSyllabus(uuid uuid.UUID) (Syllabus, error) {
+	var syll Syllabus
+	result := db.Where("uuid = ? ", uuid).First(&syll)
+	if result.Error != nil {
+		return syll, result.Error
+	}
+	result = db.Select("Attachments").Where("uuid = ? ", uuid).Delete(&syll)
+	return syll, result.Error
 }
