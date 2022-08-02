@@ -8,6 +8,7 @@ import Button from "react-bootstrap/Button";
 
 import SyllabusBreadcrumbs from "components/SyllabusBreadcrumbs";
 import SyllabusSchoolCodeYear from "components/Syllabus/SyllabusSchoolCodeYear";
+import SyllabusFooter from "components/Syllabus/SyllabusFooter";
 
 const Syllabus: NextPage = () => {
   return (
@@ -51,6 +52,11 @@ const Syllabus: NextPage = () => {
               current interaction design precedents will be discussed.
             </p>
             <h2>Related Resources</h2>
+            <SyllabusFooter
+              instructors="Pat Shiu"
+              author="Pat Shiu"
+              uploadDate="May 24, 2022"
+            />
           </Col>
         </Row>
       </Container>
