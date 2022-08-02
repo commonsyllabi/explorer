@@ -1,3 +1,26 @@
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
+
 #header-section {
   background-color: white;
+}
+
+#footer {
+  p {
+    color: $gray-400;
+  }
+}
+
+.course-resource {
+  dl {
+    dt {
+      color: $gray-600;
+      font-weight: 500;
+      display: inline-block;
+    }
+    dd {
+      display: inline-block;
+    }
+  }
 }

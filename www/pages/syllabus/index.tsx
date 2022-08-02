@@ -9,6 +9,7 @@ import Button from "react-bootstrap/Button";
 import SyllabusBreadcrumbs from "components/SyllabusBreadcrumbs";
 import SyllabusSchoolCodeYear from "components/Syllabus/SyllabusSchoolCodeYear";
 import SyllabusFooter from "components/Syllabus/SyllabusFooter";
+import SyllabusResource from "components/Syllabus/SyllabusResource";
 
 const Syllabus: NextPage = () => {
   return (
@@ -52,6 +53,18 @@ const Syllabus: NextPage = () => {
               current interaction design precedents will be discussed.
             </p>
             <h2>Related Resources</h2>
+            <SyllabusResource
+              resourceTitle="Course Website"
+              resourceUrl="http://thesyllabus.website"
+              resourceDescription="The class website"
+              resourceType="website"
+            />
+            <SyllabusResource
+              resourceTitle="Assignments"
+              resourceUrl="http://thesyllabus.website/assignments"
+              resourceDescription="Assignments for this class"
+              resourceType="website"
+            />
             <SyllabusFooter
               instructors="Pat Shiu"
               author="Pat Shiu"
