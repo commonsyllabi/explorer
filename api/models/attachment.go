@@ -10,7 +10,7 @@ type Attachment struct {
 	UUID uuid.UUID `gorm:"uniqueIndex;type:uuid;primaryKey;default:uuid_generate_v4()" json:"uuid" yaml:"uuid"`
 	//-- belongs to a syllabus
 	SyllabusUUID uuid.UUID `gorm:"type:uuid;primaryKey;default:uuid_generate_v4()" json:"syllabus_uuid" yaml:"syllabus_uuid"`
-	Syllabus     Syllabus  `gorm:"foreignKey:SyllabusUUID;references:UUID"`
+	Syllabus     Syllabus  `gorm:"foreignKey:SyllabusUUID;references:UUID" json:"syllabus"`
 
 	Name        string `gorm:"not null" json:"name" form:"name"`
 	Type        string `gorm:"not null" json:"type" form:"type"`

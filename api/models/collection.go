@@ -8,11 +8,11 @@ import (
 type Collection struct {
 	gorm.Model
 	UUID   uuid.UUID `gorm:"uniqueIndex;type:uuid;primaryKey;default:uuid_generate_v4()" json:"uuid" yaml:"uuid"`
-	Status string    `gorm:"default:unlisted"`
+	Status string    `gorm:"default:unlisted" json:"status"`
 
 	UserUUID uuid.UUID   `gorm:"type:uuid;primaryKey;default:uuid_generate_v4()" json:"user_uuid" yaml:"user_uuid"`
-	User     User        `gorm:"foreignKey:UserUUID;references:UUID"`
-	Syllabi  []*Syllabus `gorm:"many2many:collections_syllabi;"`
+	User     User        `gorm:"foreignKey:UserUUID;references:UUID" json:"user"`
+	Syllabi  []*Syllabus `gorm:"many2many:collections_syllabi;" json:"syllabi"`
 
 	Name string `gorm:"not null" json:"name" form:"name" binding:"required"`
 }

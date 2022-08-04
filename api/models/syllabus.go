@@ -11,12 +11,12 @@ import (
 type Syllabus struct {
 	gorm.Model
 	UUID   uuid.UUID `gorm:"uniqueIndex;type:uuid;primaryKey;default:uuid_generate_v4()" json:"uuid" yaml:"uuid"`
-	Status string    `gorm:"default:unlisted"`
+	Status string    `gorm:"default:unlisted" json:"status"`
 
 	UserUUID    uuid.UUID     `gorm:"type:uuid;primaryKey;default:uuid_generate_v4()" json:"user_uuid" yaml:"user_uuid"`
-	User        User          `gorm:"foreignKey:UserUUID;references:UUID"`
-	Collections []*Collection `gorm:"many2many:collections_syllabi;"`
-	Attachments []Attachment  `gorm:"foreignKey:SyllabusUUID;references:UUID"`
+	User        User          `gorm:"foreignKey:UserUUID;references:UUID" json:"user"`
+	Collections []*Collection `gorm:"many2many:collections_syllabi;" json:"collections"`
+	Attachments []Attachment  `gorm:"foreignKey:SyllabusUUID;references:UUID" json:"attachments"`
 
 	// Institutions []struct {
 	// 	Country string //-- iso 3166
@@ -28,9 +28,9 @@ type Syllabus struct {
 	// 	URL  string
 	// }
 
-	AcademicFields   pq.StringArray `gorm:"type:text[]" json:"academic_field" form:"academic_fields[]"`
+	AcademicFields   pq.StringArray `gorm:"type:text[]" json:"academic_fields" form:"academic_fields[]"`
 	Assignments      pq.StringArray `gorm:"type:text[]" json:"assignments" form:"assignments[]"`
-	Description      string         `gorm:"not null" form:"description"`
+	Description      string         `gorm:"not null" form:"description" json:"description"`
 	Duration         int            `json:"duration" form:"duration"`
 	GradingRubric    string         `json:"grading_rubric" form:"grading_rubric"`
 	Language         string         `json:"language" form:"language"`
@@ -38,7 +38,7 @@ type Syllabus struct {
 	Other            string         `json:"other" form:"other"`
 	Readings         pq.StringArray `gorm:"type:text[]" json:"readings" form:"readings[]"`
 	Tags             pq.StringArray `gorm:"type:text[]" json:"tags" form:"tags[]"`
-	Title            string         `gorm:"not null" form:"title"`
+	Title            string         `gorm:"not null" form:"title" json:"title"`
 	TopicOutlines    pq.StringArray `gorm:"type:text[]" json:"topic_outlines" form:"topic_outlines[]"`
 }
 
