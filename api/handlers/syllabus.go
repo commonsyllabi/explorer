@@ -108,6 +108,29 @@ func AddSyllabusAttachment(c *gin.Context) {
 	c.JSON(http.StatusOK, syll)
 }
 
+func AddSyllabusInstitution(c *gin.Context) {
+	syll_id := c.Param("id")
+	syll_uid, err := uuid.Parse(syll_id)
+	if err != nil {
+		c.String(http.StatusBadRequest, "not a valid ID")
+		zero.Errorf("not a valid syllabus id %d", err)
+		return
+	}
+
+	var inst models.Institution
+	c.Bind(inst)
+	//-- bind this from the post body
+
+	syll, err := models.AddInstitutionToSyllabus(syll_uid, &inst)
+	if err != nil {
+		c.String(http.StatusNotFound, err.Error())
+		zero.Errorf("error getting syllabus %d: %v", syll_id, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, syll)
+}
+
 func GetSyllabusAttachments(c *gin.Context) {
 	id := c.Param("id")
 	uid, err := uuid.Parse(id)
@@ -256,6 +279,33 @@ func RemoveSyllabusAttachment(c *gin.Context) {
 	}
 
 	syll, err := models.RemoveAttachmentFromSyllabus(syll_uid, res_uid)
+	if err != nil {
+		c.String(http.StatusNotFound, err.Error())
+		zero.Errorf("error getting syllabus %d: %v", syll_id, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, syll)
+}
+
+func RemoveSyllabusInstitution(c *gin.Context) {
+	syll_id := c.Param("id")
+	syll_uid, err := uuid.Parse(syll_id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, syll_id)
+		zero.Errorf("not a valid id %d", err)
+		return
+	}
+
+	inst_id := c.Param("inst_id")
+	inst_uid, err := uuid.Parse(inst_id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, inst_id)
+		zero.Errorf("not a valid id %d", err)
+		return
+	}
+
+	syll, err := models.RemoveInstitutionFromSyllabus(syll_uid, inst_uid)
 	if err != nil {
 		c.String(http.StatusNotFound, err.Error())
 		zero.Errorf("error getting syllabus %d: %v", syll_id, err)

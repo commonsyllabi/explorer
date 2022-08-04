@@ -71,6 +71,34 @@ func UpdateUser(uuid uuid.UUID, user *User) (User, error) {
 	return existing, result.Error
 }
 
+func AddInstitutionToUser(user_uuid uuid.UUID, inst *Institution) (User, error) {
+	var user User
+	result := db.Where("uuid = ? ", user_uuid).First(&user)
+	if result.Error != nil {
+		return user, result.Error
+	}
+
+	err := db.Model(&user).Association("Institutions").Append(&inst)
+	return user, err
+}
+
+func RemoveInstitutionFromUser(user_uuid uuid.UUID, inst_uuid uuid.UUID) (User, error) {
+	var user User
+	result := db.Where("uuid = ? ", user_uuid).First(&user)
+	if result.Error != nil {
+		return user, result.Error
+	}
+
+	var inst Institution
+	result = db.Where("uuid = ? ", inst_uuid).First(&inst)
+	if result.Error != nil {
+		return user, result.Error
+	}
+
+	err := db.Model(&user).Association("Institutions").Delete(inst)
+	return user, err
+}
+
 func DeleteUser(uuid uuid.UUID) (User, error) {
 	var user User
 	result := db.Where("uuid = ?", uuid).First(&user)

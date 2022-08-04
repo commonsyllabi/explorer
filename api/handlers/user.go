@@ -109,6 +109,29 @@ func UpdateUser(c *gin.Context) {
 	c.JSON(http.StatusOK, updated)
 }
 
+func AddInstitutionUser(c *gin.Context) {
+	user_id := c.Param("id")
+	user_uid, err := uuid.Parse(user_id)
+	if err != nil {
+		c.String(http.StatusBadRequest, "not a valid ID")
+		zero.Errorf("not a valid syllabus id %d", err)
+		return
+	}
+
+	var inst models.Institution
+	c.Bind(inst)
+	//-- bind this from the post body
+
+	syll, err := models.AddInstitutionToUser(user_uid, &inst)
+	if err != nil {
+		c.String(http.StatusNotFound, err.Error())
+		zero.Errorf("error getting syllabus %d: %v", user_id, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, syll)
+}
+
 func GetUser(c *gin.Context) {
 	id := c.Param("id")
 	uid, err := uuid.Parse(id)
@@ -130,6 +153,33 @@ func GetUser(c *gin.Context) {
 
 	c.JSON(http.StatusOK, user)
 
+}
+
+func RemoveUserInstitution(c *gin.Context) {
+	user_id := c.Param("id")
+	user_uid, err := uuid.Parse(user_id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, user_id)
+		zero.Errorf("not a valid id %d", err)
+		return
+	}
+
+	inst_id := c.Param("inst_id")
+	inst_uid, err := uuid.Parse(inst_id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, inst_id)
+		zero.Errorf("not a valid id %d", err)
+		return
+	}
+
+	syll, err := models.RemoveInstitutionFromUser(user_uid, inst_uid)
+	if err != nil {
+		c.String(http.StatusNotFound, err.Error())
+		zero.Errorf("error getting syllabus %d: %v", user_id, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, syll)
 }
 
 func DeleteUser(c *gin.Context) {

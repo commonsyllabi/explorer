@@ -92,7 +92,7 @@ func AddAttachmentToSyllabus(syll_uuid uuid.UUID, res_uuid uuid.UUID) (Syllabus,
 	return syll, err
 }
 
-func RemoveAttachmentFromSyllabus(syll_uuid uuid.UUID, res_uuid uuid.UUID) (Syllabus, error) {
+func RemoveAttachmentFromSyllabus(syll_uuid uuid.UUID, att_uuid uuid.UUID) (Syllabus, error) {
 	var syll Syllabus
 	result := db.Where("uuid = ? ", syll_uuid).First(&syll)
 	if result.Error != nil {
@@ -100,7 +100,7 @@ func RemoveAttachmentFromSyllabus(syll_uuid uuid.UUID, res_uuid uuid.UUID) (Syll
 	}
 
 	var att Attachment
-	result = db.Where("uuid = ? ", res_uuid).First(&att)
+	result = db.Where("uuid = ? ", att_uuid).First(&att)
 	if result.Error != nil {
 		return syll, result.Error
 	}
@@ -108,6 +108,34 @@ func RemoveAttachmentFromSyllabus(syll_uuid uuid.UUID, res_uuid uuid.UUID) (Syll
 	// err := db.Model(&syll).Association("Attachments").Delete(res)
 	fmt.Println("IMPLEMENT ME!") //--  Right now attachments require a syllabus to exist, but it should be independent, only tied to a user, and with a many2many relation to syllabi
 	return syll, nil
+}
+
+func AddInstitutionToSyllabus(syll_uuid uuid.UUID, inst *Institution) (Syllabus, error) {
+	var syll Syllabus
+	result := db.Where("uuid = ? ", syll_uuid).First(&syll)
+	if result.Error != nil {
+		return syll, result.Error
+	}
+
+	err := db.Model(&syll).Association("Institutions").Append(&inst)
+	return syll, err
+}
+
+func RemoveInstitutionFromSyllabus(syll_uuid uuid.UUID, inst_uuid uuid.UUID) (Syllabus, error) {
+	var syll Syllabus
+	result := db.Where("uuid = ? ", syll_uuid).First(&syll)
+	if result.Error != nil {
+		return syll, result.Error
+	}
+
+	var inst Institution
+	result = db.Where("uuid = ? ", inst_uuid).First(&inst)
+	if result.Error != nil {
+		return syll, result.Error
+	}
+
+	err := db.Model(&syll).Association("Institutions").Delete(inst)
+	return syll, err
 }
 
 func DeleteSyllabus(uuid uuid.UUID) (Syllabus, error) {
