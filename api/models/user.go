@@ -1,6 +1,8 @@
 package models
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/lib/pq"
 	"gorm.io/gorm"
@@ -14,9 +16,12 @@ const (
 )
 
 type User struct {
-	gorm.Model
-	UUID   uuid.UUID `gorm:"uniqueIndex;type:uuid;primaryKey;default:uuid_generate_v4()" json:"uuid" yaml:"uuid"`
-	Status string    `gorm:"default:pending" json:"status"`
+	ID        uint           `gorm:"primaryKey"`
+	CreatedAt time.Time      `json:"created_at"`
+	UpdatedAt time.Time      `json:"updated_at"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`
+	UUID      uuid.UUID      `gorm:"uniqueIndex;type:uuid;primaryKey;default:uuid_generate_v4()" json:"uuid" yaml:"uuid"`
+	Status    string         `gorm:"default:pending" json:"status"`
 
 	Bio       string         `json:"bio" form:"bio"`
 	Education string         `json:"education" form:"education"`
