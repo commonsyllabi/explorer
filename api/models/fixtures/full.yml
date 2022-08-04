@@ -30,6 +30,14 @@
   collections:
     - uuid: 'b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a9'
       name: "Fixture Collection"
+  institutions: 
+    - uuid: 'c0e4c3ed-ac4f-4e44-bb43-5123b7b6d7a0'
+      name: 'university name'
+      country: 'fr'
+      date:
+        term: "fall"
+        year: 2020
+      position: "lecturer"
 
 - uuid: 'e7b74bcd-c864-41ee-b5a7-d3031f76c8a9'
   status: "confirmed"

@@ -30,10 +30,7 @@ type User struct {
 	Password  []byte         `gorm:"not null" json:"password"`
 	URLs      pq.StringArray `gorm:"type:text[]" json:"urls" form:"urls[]"`
 
-	// Position []struct {
-	// 	Name     string
-	// 	Institution Institution
-	// }
+	Institutions []Institution `gorm:"foreignKey:UserUUID;references:UUID" json:"institutions"`
 
 	Collections []Collection `gorm:"foreignKey:UserUUID;references:UUID" json:"collections"`
 	Syllabi     []Syllabus   `gorm:"foreignKey:UserUUID;references:UUID" json:"syllabi"`
@@ -46,7 +43,7 @@ func CreateUser(user *User) (User, error) {
 
 func GetUser(uuid uuid.UUID) (User, error) {
 	var user User
-	result := db.Preload("Syllabi").Preload("Collections").Where("uuid = ?", uuid).First(&user)
+	result := db.Preload("Syllabi").Preload("Collections").Preload("Institutions").Where("uuid = ?", uuid).First(&user)
 	return user, result.Error
 }
 

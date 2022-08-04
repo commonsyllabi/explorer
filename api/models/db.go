@@ -43,7 +43,7 @@ func InitDB(url string) (*gorm.DB, error) {
 	}
 
 	// migration
-	err = db.AutoMigrate(&User{}, &Collection{}, &Syllabus{}, &Attachment{}, &Token{})
+	err = db.AutoMigrate(&User{}, &Collection{}, &Syllabus{}, &Attachment{}, &Token{}, &Institution{})
 	if err != nil {
 		zero.Errorf("error running migrations: %v", err)
 		log.Fatal(err)
@@ -93,6 +93,8 @@ func runFixtures(shouldTruncateTables bool) error {
 	}
 
 	db.Model(&users[0].Collections[0]).Association("Syllabi").Append(&users[0].Syllabi[0])
+
+	db.Model(&users[0].Collections[0]).Association("Syllabi").Append(&users[0].Institutions[0])
 
 	token := Token{
 		UUID:   uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c801"),
