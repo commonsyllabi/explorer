@@ -35,9 +35,15 @@ const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = (props) => {
           discussed.
         </Card.Text>
         <div className="course-tags d-flex gap-2">
-          <Button className="btn-sm btn-tag">web design</Button>
-          <Button className="btn-sm btn-tag">foundation</Button>
-          <Button className="btn-sm btn-tag">undergraduate</Button>
+          <Button variant="outline-dark" className="btn-sm btn-tag">
+            web design
+          </Button>
+          <Button variant="outline-dark" className="btn-sm btn-tag">
+            foundation
+          </Button>
+          <Button variant="outline-dark" className="btn-sm btn-tag">
+            undergraduate
+          </Button>
         </div>
       </Card.Body>
     </Card>
