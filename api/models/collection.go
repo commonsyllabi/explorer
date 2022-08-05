@@ -46,6 +46,10 @@ func GetCollection(uuid uuid.UUID) (Collection, error) {
 
 	var syllabi []Syllabus
 	err := db.Model(&coll).Association("Syllabi").Find(&syllabi)
+	if err != nil {
+		return coll, err
+	}
+
 	for _, s := range syllabi {
 		coll.Syllabi = append(coll.Syllabi, &s)
 	}
@@ -84,7 +88,12 @@ func AddSyllabusToCollection(coll_uuid uuid.UUID, syll_uuid uuid.UUID) (Collecti
 	}
 
 	err := db.Model(&coll).Association("Syllabi").Append(&syll)
-	return coll, err
+	if err != nil {
+		return coll, err
+	}
+
+	updated, err := GetCollection(coll_uuid)
+	return updated, err
 }
 
 func RemoveSyllabusFromCollection(coll_uuid uuid.UUID, syll_uuid uuid.UUID) (Collection, error) {
@@ -100,7 +109,7 @@ func RemoveSyllabusFromCollection(coll_uuid uuid.UUID, syll_uuid uuid.UUID) (Col
 		return coll, result.Error
 	}
 
-	err := db.Model(&coll).Association("Attachments").Delete(syll)
+	err := db.Model(&coll).Association("Syllabi").Delete(syll)
 	return coll, err
 }
 

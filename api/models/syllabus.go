@@ -55,7 +55,21 @@ func CreateSyllabus(user_uuid uuid.UUID, syll *Syllabus) (Syllabus, error) {
 func GetSyllabus(uuid uuid.UUID) (Syllabus, error) {
 	var syll Syllabus
 	result := db.Preload("User").Preload("Attachments").Where("uuid = ? ", uuid).First(&syll)
-	return syll, result.Error
+	if result.Error != nil {
+		return syll, result.Error
+	}
+
+	var insts []Institution
+	err := db.Model(&syll).Association("Institutions").Find(&insts)
+	if err != nil {
+		return syll, err
+	}
+
+	for _, s := range insts {
+		syll.Institutions = append(syll.Institutions, &s)
+	}
+
+	return syll, nil
 }
 
 func GetAllSyllabi() ([]Syllabus, error) {
@@ -75,7 +89,7 @@ func UpdateSyllabus(uuid uuid.UUID, syll *Syllabus) (Syllabus, error) {
 	return existing, result.Error
 }
 
-func AddAttachmentToSyllabus(syll_uuid uuid.UUID, res_uuid uuid.UUID) (Syllabus, error) {
+func AddAttachmentToSyllabus(syll_uuid uuid.UUID, att_uuid uuid.UUID) (Syllabus, error) {
 	var syll Syllabus
 	result := db.Where("uuid = ? ", syll_uuid).First(&syll)
 	if result.Error != nil {
@@ -83,13 +97,18 @@ func AddAttachmentToSyllabus(syll_uuid uuid.UUID, res_uuid uuid.UUID) (Syllabus,
 	}
 
 	var att Attachment
-	result = db.Where("uuid = ? ", res_uuid).First(&att)
+	result = db.Where("uuid = ? ", att_uuid).First(&att)
 	if result.Error != nil {
 		return syll, result.Error
 	}
 
 	err := db.Model(&syll).Association("Attachments").Append(&att)
-	return syll, err
+	if err != nil {
+		return syll, err
+	}
+
+	updated, err := GetSyllabus(syll_uuid)
+	return updated, err
 }
 
 func RemoveAttachmentFromSyllabus(syll_uuid uuid.UUID, att_uuid uuid.UUID) (Syllabus, error) {
@@ -117,7 +136,16 @@ func AddInstitutionToSyllabus(syll_uuid uuid.UUID, inst *Institution) (Syllabus,
 		return syll, result.Error
 	}
 
-	err := db.Model(&syll).Association("Institutions").Append(&inst)
+	result = db.Create(&inst)
+	if result.Error != nil {
+		return syll, result.Error
+	}
+
+	err := db.Model(&syll).Association("Institutions").Append(inst)
+	if err != nil {
+		return syll, err
+	}
+
 	return syll, err
 }
 

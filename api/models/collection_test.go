@@ -43,6 +43,7 @@ func TestCollectionModel(t *testing.T) {
 		require.Nil(t, err)
 		assert.Equal(t, coll.UUID, collectionID)
 		assert.Equal(t, collectionName, coll.Name)
+		assert.Equal(t, 1, len(coll.Syllabi))
 	})
 
 	t.Run("Test get non-existing collection", func(t *testing.T) {
@@ -72,6 +73,18 @@ func TestCollectionModel(t *testing.T) {
 		updated, err := models.UpdateCollection(collectionNonExistingID, &coll)
 		assert.NotNil(t, err)
 		assert.True(t, updated.CreatedAt.IsZero())
+	})
+
+	t.Run("Test add syllabus to collection", func(t *testing.T) {
+		updated, err := models.AddSyllabusToCollection(collectionID, syllabusDeleteID)
+		assert.Nil(t, err)
+		assert.Equal(t, 2, len(updated.Syllabi))
+	})
+
+	t.Run("Test remove syllabus from collection", func(t *testing.T) {
+		updated, err := models.RemoveSyllabusFromCollection(collectionID, syllabusDeleteID)
+		assert.Nil(t, err)
+		assert.Equal(t, 0, len(updated.Syllabi))
 	})
 
 	t.Run("Test delete collection", func(t *testing.T) {
