@@ -136,11 +136,6 @@ func AddInstitutionToSyllabus(syll_uuid uuid.UUID, inst *Institution) (Syllabus,
 		return syll, result.Error
 	}
 
-	result = db.Create(&inst)
-	if result.Error != nil {
-		return syll, result.Error
-	}
-
 	err := db.Model(&syll).Association("Institutions").Append(inst)
 	if err != nil {
 		return syll, err
