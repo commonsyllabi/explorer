@@ -36,6 +36,8 @@ var (
 	userEmail         string
 	userName          string
 	userDeleteName    string
+
+	instID uuid.UUID
 )
 
 func TestInitDB(t *testing.T) {
@@ -73,13 +75,15 @@ func setup(t *testing.T) func(t *testing.T) {
 	userName = "full user 1"
 	userDeleteName = "user to be deleted"
 
+	instID = uuid.MustParse("c0e4c3ed-ac4f-4e44-bb43-5123b7b6d7a0")
+
 	mustSeedDB(t)
 	return func(t *testing.T) {
 
 	}
 }
 
-//-- todo here we should check whether the db is already initialized or not
+// -- todo here we should check whether the db is already initialized or not
 func mustSeedDB(t *testing.T) {
 	databaseTestURL = os.Getenv("DATABASE_TEST_URL")
 	if databaseTestURL == "" {

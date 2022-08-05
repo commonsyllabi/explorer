@@ -265,6 +265,66 @@ func TestUserHandler(t *testing.T) {
 		assert.Equal(t, http.StatusNotFound, res.Code)
 	})
 
+	t.Run("Test add institution to user", func(t *testing.T) {
+		var body bytes.Buffer
+		w := multipart.NewWriter(&body)
+		w.WriteField("name", "fachhoschule")
+		w.Close()
+
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "POST"
+		c.Params = []gin.Param{
+			{
+				Key:   "id",
+				Value: userID.String(),
+			},
+		}
+		c.Request.Header.Set("Content-Type", w.FormDataContentType())
+		c.Request.Body = io.NopCloser(&body)
+
+		handlers.AddInstitutionUser(c)
+
+		assert.Equal(t, http.StatusOK, res.Code)
+
+		var user models.User
+		err := json.Unmarshal(res.Body.Bytes(), &user)
+		require.Nil(t, err)
+		assert.Equal(t, 2, len(user.Institutions))
+	})
+
+	t.Run("Test remove institution from user", func(t *testing.T) {
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "DELETE"
+		c.Params = []gin.Param{
+			{
+				Key:   "id",
+				Value: userID.String(),
+			},
+			{
+				Key:   "inst_id",
+				Value: instID.String(),
+			},
+		}
+
+		handlers.RemoveInstitutionUser(c)
+		assert.Equal(t, http.StatusOK, res.Code)
+
+		var user models.User
+		err := json.Unmarshal(res.Body.Bytes(), &user)
+		require.Nil(t, err)
+		assert.Equal(t, 1, len(user.Institutions))
+	})
+
 	t.Run("Test delete user", func(t *testing.T) {
 		res := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(res)

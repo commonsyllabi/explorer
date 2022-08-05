@@ -1,6 +1,8 @@
 package models
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/lib/pq"
 	"gorm.io/gorm"
@@ -14,9 +16,12 @@ const (
 )
 
 type User struct {
-	gorm.Model
-	UUID   uuid.UUID `gorm:"uniqueIndex;type:uuid;primaryKey;default:uuid_generate_v4()" json:"uuid" yaml:"uuid"`
-	Status string    `gorm:"default:pending" json:"status"`
+	ID        uint           `gorm:"primaryKey"`
+	CreatedAt time.Time      `json:"created_at"`
+	UpdatedAt time.Time      `json:"updated_at"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`
+	UUID      uuid.UUID      `gorm:"uniqueIndex;type:uuid;primaryKey;default:uuid_generate_v4()" json:"uuid" yaml:"uuid"`
+	Status    string         `gorm:"default:pending" json:"status"`
 
 	Bio       string         `json:"bio" form:"bio"`
 	Education string         `json:"education" form:"education"`
@@ -25,10 +30,7 @@ type User struct {
 	Password  []byte         `gorm:"not null" json:"password"`
 	URLs      pq.StringArray `gorm:"type:text[]" json:"urls" form:"urls[]"`
 
-	// Position []struct {
-	// 	Name     string
-	// 	Institution Institution
-	// }
+	Institutions []Institution `gorm:"foreignKey:UserUUID;references:UUID" json:"institutions"`
 
 	Collections []Collection `gorm:"foreignKey:UserUUID;references:UUID" json:"collections"`
 	Syllabi     []Syllabus   `gorm:"foreignKey:UserUUID;references:UUID" json:"syllabi"`
@@ -41,7 +43,7 @@ func CreateUser(user *User) (User, error) {
 
 func GetUser(uuid uuid.UUID) (User, error) {
 	var user User
-	result := db.Preload("Syllabi").Preload("Collections").Where("uuid = ?", uuid).First(&user)
+	result := db.Preload("Syllabi").Preload("Collections").Preload("Institutions").Where("uuid = ?", uuid).First(&user)
 	return user, result.Error
 }
 
@@ -67,6 +69,44 @@ func UpdateUser(uuid uuid.UUID, user *User) (User, error) {
 	result = db.Model(&existing).Where("uuid = ?", uuid).Updates(user)
 
 	return existing, result.Error
+}
+
+func AddInstitutionToUser(user_uuid uuid.UUID, inst *Institution) (User, error) {
+	var user User
+	result := db.Where("uuid = ? ", user_uuid).Preload("Institutions").First(&user)
+	if result.Error != nil {
+		return user, result.Error
+	}
+
+	err := db.Model(&user).Association("Institutions").Append(inst)
+	if err != nil {
+		return user, err
+	}
+
+	updated, err := GetUser(user_uuid)
+	return updated, err
+}
+
+func RemoveInstitutionFromUser(user_uuid uuid.UUID, inst_uuid uuid.UUID) (User, error) {
+	var user User
+	result := db.Where("uuid = ? ", user_uuid).First(&user)
+	if result.Error != nil {
+		return user, result.Error
+	}
+
+	var inst Institution
+	result = db.Where("uuid = ? ", inst_uuid).First(&inst)
+	if result.Error != nil {
+		return user, result.Error
+	}
+
+	err := db.Model(&user).Association("Institutions").Delete(inst)
+	if err != nil {
+		return user, err
+	}
+
+	updated, err := GetUser(user_uuid)
+	return updated, err
 }
 
 func DeleteUser(uuid uuid.UUID) (User, error) {

@@ -38,6 +38,8 @@ var (
 	userID            uuid.UUID
 	userDeleteID      uuid.UUID
 	userNonExistentID uuid.UUID
+
+	instID uuid.UUID
 )
 
 func setup(t *testing.T) func(t *testing.T) {
@@ -57,6 +59,8 @@ func setup(t *testing.T) func(t *testing.T) {
 	userID = uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c8a8")
 	userDeleteID = uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c8a9")
 	userNonExistentID = uuid.New()
+
+	instID = uuid.MustParse("c0e4c3ed-ac4f-4e44-bb43-5123b7b6d7a0")
 
 	mustSeedDB(t)
 	gin.SetMode(gin.TestMode)
@@ -435,6 +439,14 @@ func TestSyllabusHandler(t *testing.T) {
 		err := json.Unmarshal(res.Body.Bytes(), &attachment)
 		require.Nil(t, err)
 		assert.Equal(t, syllabusID, attachment.UUID)
+	})
+
+	t.Run("Test add institution to syllabus", func(t *testing.T) {
+
+	})
+
+	t.Run("Test remove institution from syllabus", func(t *testing.T) {
+
 	})
 
 	t.Run("Test delete syllabus", func(t *testing.T) {

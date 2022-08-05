@@ -125,6 +125,11 @@ func AddCollectionSyllabus(c *gin.Context) {
 	}
 
 	coll, err := models.AddSyllabusToCollection(coll_uid, syll_uid)
+	if err != nil {
+		c.String(http.StatusInternalServerError, "couldn't add the syllabus")
+		zero.Errorf("couldn't add the syllabus %d", err)
+		return
+	}
 
 	c.JSON(http.StatusOK, coll)
 }

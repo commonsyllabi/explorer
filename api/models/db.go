@@ -1,7 +1,6 @@
 package models
 
 import (
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -43,7 +42,7 @@ func InitDB(url string) (*gorm.DB, error) {
 	}
 
 	// migration
-	err = db.AutoMigrate(&User{}, &Collection{}, &Syllabus{}, &Attachment{}, &Token{})
+	err = db.AutoMigrate(&User{}, &Collection{}, &Syllabus{}, &Attachment{}, &Token{}, &Institution{})
 	if err != nil {
 		zero.Errorf("error running migrations: %v", err)
 		log.Fatal(err)
@@ -74,7 +73,7 @@ func runFixtures(shouldTruncateTables bool) error {
 		}
 	}
 
-	bytes, err := ioutil.ReadFile(filepath.Join(Basepath, "fixtures", "full.yml"))
+	bytes, err := os.ReadFile(filepath.Join(Basepath, "fixtures", "full.yml"))
 	if err != nil {
 		return err
 	}
@@ -92,7 +91,10 @@ func runFixtures(shouldTruncateTables bool) error {
 		}
 	}
 
+	//-- populate collection with 1 syll
 	db.Model(&users[0].Collections[0]).Association("Syllabi").Append(&users[0].Syllabi[0])
+	//-- populate syllabus with 1 inst
+	db.Model(&users[0].Syllabi[0]).Association("Institutions").Append(&users[0].Institutions[0])
 
 	token := Token{
 		UUID:   uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c801"),
