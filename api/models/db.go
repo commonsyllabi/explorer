@@ -1,7 +1,6 @@
 package models
 
 import (
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -74,7 +73,7 @@ func runFixtures(shouldTruncateTables bool) error {
 		}
 	}
 
-	bytes, err := ioutil.ReadFile(filepath.Join(Basepath, "fixtures", "full.yml"))
+	bytes, err := os.ReadFile(filepath.Join(Basepath, "fixtures", "full.yml"))
 	if err != nil {
 		return err
 	}
