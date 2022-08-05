@@ -119,8 +119,7 @@ func AddInstitutionUser(c *gin.Context) {
 	}
 
 	var inst models.Institution
-	c.Bind(inst)
-	//-- bind this from the post body
+	c.Bind(&inst)
 
 	syll, err := models.AddInstitutionToUser(user_uid, &inst)
 	if err != nil {
@@ -155,7 +154,7 @@ func GetUser(c *gin.Context) {
 
 }
 
-func RemoveUserInstitution(c *gin.Context) {
+func RemoveInstitutionUser(c *gin.Context) {
 	user_id := c.Param("id")
 	user_uid, err := uuid.Parse(user_id)
 	if err != nil {

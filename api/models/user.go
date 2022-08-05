@@ -101,7 +101,12 @@ func RemoveInstitutionFromUser(user_uuid uuid.UUID, inst_uuid uuid.UUID) (User, 
 	}
 
 	err := db.Model(&user).Association("Institutions").Delete(inst)
-	return user, err
+	if err != nil {
+		return user, err
+	}
+
+	updated, err := GetUser(user_uuid)
+	return updated, err
 }
 
 func DeleteUser(uuid uuid.UUID) (User, error) {

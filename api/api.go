@@ -129,6 +129,9 @@ func SetupRouter() *gin.Engine {
 
 		users.PATCH("/:id", auth.Authenticate(), handlers.UpdateUser)
 		users.DELETE("/:id", auth.Authenticate(), handlers.DeleteUser)
+
+		users.POST("/:id/institutions", handlers.AddInstitutionUser)
+		users.DELETE("/:id/institutions/:inst_id", handlers.RemoveInstitutionUser)
 	}
 
 	attachments := router.Group("/attachments")

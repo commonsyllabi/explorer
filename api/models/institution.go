@@ -18,14 +18,14 @@ type Institution struct {
 	User     User        `gorm:"foreignKey:UserUUID;references:UUID" json:"user"`
 	Syllabi  []*Syllabus `gorm:"many2many:institutions_syllabi;" json:"syllabi"`
 
-	Name     string `json:"name"`
-	Country  string `json:"country"` //-- iso 3166
-	Date     Date   `gorm:"embedded;embeddedPrefix:date_" json:"date"`
-	URL      string `json:"url"`
-	Position string `json:"position"`
+	Name     string `json:"name" form:"name"`
+	Country  string `json:"country" form:"country"` //-- iso 3166
+	Date     Date   `gorm:"embedded;embeddedPrefix:date_" json:"date" form:"date"`
+	URL      string `json:"url" form:"url"`
+	Position string `json:"position" form:"position"`
 }
 
 type Date struct {
-	Term string `json:"term"`
-	Year int    `json:"year"`
+	Term string `json:"term" form:"date_term"`
+	Year int    `json:"year" form:"date_year"`
 }
