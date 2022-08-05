@@ -49,7 +49,7 @@ func GetUser(uuid uuid.UUID) (User, error) {
 
 func GetUserByEmail(email string) (User, error) {
 	var user User
-	result := db.Where("email = ?", email).First(&user)
+	result := db.Preload("Syllabi").Preload("Collections").Preload("Institutions").Where("email = ?", email).First(&user)
 	return user, result.Error
 }
 
