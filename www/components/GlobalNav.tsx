@@ -24,13 +24,10 @@ export function GlobalNav() {
               <Nav.Link href="/about" className="py-3 text-end">
                 About
               </Nav.Link>
-              <Nav.Link href="#login" className="py-3 text-end">
-                Login
-              </Nav.Link>
             </Nav>
           </Navbar.Collapse>
           <>
-            Signed in! <br />
+            Hi {session.user?.name}! <br />
             <button onClick={() => signOut()}>Sign out</button>
           </>
         </Container>
@@ -53,15 +50,12 @@ export function GlobalNav() {
             <Nav.Link href="/about" className="py-3 text-end">
               About
             </Nav.Link>
-            <Nav.Link href="#login" className="py-3 text-end">
+            <Nav.Link onClick={() => signIn()} href="#login" className="py-3 text-end">
               Login
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>
-        <>
-          Not signed in <br />
-          <button onClick={() => signIn()}>Sign in</button>
-        </>
+
       </Container>
     </Navbar>
     )

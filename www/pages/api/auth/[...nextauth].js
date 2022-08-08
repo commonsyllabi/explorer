@@ -34,7 +34,7 @@ export default NextAuth({
 
                 const response = await fetch("http://localhost:3046/login", requestOptions)
                 if (response.ok){
-                    const user = response.json()
+                    const user = await response.json()
                     console.log(`logged in user ${user.name}`);
                     return user
                 }else{
