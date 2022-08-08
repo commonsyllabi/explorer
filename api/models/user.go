@@ -30,7 +30,7 @@ type User struct {
 	Password  []byte         `gorm:"not null" json:"password"`
 	URLs      pq.StringArray `gorm:"type:text[]" json:"urls" form:"urls[]"`
 
-	Institutions []Institution `gorm:"foreignKey:UserUUID;references:UUID" json:"institutions"`
+	Institutions []Institution `gorm:"many2many:inst_users;" json:"institutions"`
 
 	Collections []Collection `gorm:"foreignKey:UserUUID;references:UUID" json:"collections"`
 	Syllabi     []Syllabus   `gorm:"foreignKey:UserUUID;references:UUID" json:"syllabi"`
@@ -43,14 +43,35 @@ func CreateUser(user *User) (User, error) {
 
 func GetUser(uuid uuid.UUID) (User, error) {
 	var user User
-	result := db.Preload("Syllabi").Preload("Collections").Preload("Institutions").Where("uuid = ?", uuid).First(&user)
-	return user, result.Error
+	err := db.Preload("Syllabi").Preload("Collections").Where("uuid = ?", uuid).First(&user).Error
+	if err != nil {
+		return user, err
+	}
+
+	var insts []Institution
+	err = db.Model(&user).Association("Institutions").Find(&insts)
+	if err != nil {
+		return user, err
+	}
+
+	user.Institutions = append(user.Institutions, insts...)
+
+	return user, err
 }
 
 func GetUserByEmail(email string) (User, error) {
 	var user User
-	result := db.Preload("Syllabi").Preload("Collections").Preload("Institutions").Where("email = ?", email).First(&user)
-	return user, result.Error
+	err := db.Preload("Syllabi").Preload("Collections").Where("email = ?", email).Find(&user).Error
+
+	var insts []Institution
+	err = db.Model(&user).Association("Institutions").Find(&insts)
+	if err != nil {
+		return user, err
+	}
+
+	user.Institutions = append(user.Institutions, insts...)
+
+	return user, err
 }
 
 func GetAllUsers() ([]User, error) {

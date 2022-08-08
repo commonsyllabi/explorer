@@ -14,9 +14,8 @@ type Institution struct {
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`
 	UUID      uuid.UUID      `gorm:"uniqueIndex;type:uuid;primaryKey;default:uuid_generate_v4()" json:"uuid" yaml:"uuid"`
 
-	UserUUID uuid.UUID   `gorm:"type:uuid;default:uuid_generate_v4()" json:"user_uuid" yaml:"user_uuid"`
-	User     User        `gorm:"foreignKey:UserUUID;references:UUID" json:"user"`
-	Syllabi  []*Syllabus `gorm:"many2many:institutions_syllabi;" json:"syllabi"`
+	// Users   []*User     `gorm:"many2many:institutions_users;" json:"users"`
+	// Syllabi []*Syllabus `gorm:"many2many:institutions_syllabi;" json:"syllabi"`
 
 	Name     string `json:"name" form:"name"`
 	Country  string `json:"country" form:"country"` //-- iso 3166

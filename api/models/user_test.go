@@ -75,6 +75,7 @@ func TestUserModel(t *testing.T) {
 		assert.Equal(t, uuid.Nil, updated.UUID)
 	})
 
+	var newInstID uuid.UUID
 	t.Run("Test add institution to user", func(t *testing.T) {
 		inst := models.Institution{
 			Name:     "Test Uni 2",
@@ -85,10 +86,11 @@ func TestUserModel(t *testing.T) {
 		require.Nil(t, err)
 		assert.Equal(t, userID, updated.UUID)
 		assert.Equal(t, 2, len(updated.Institutions))
+		newInstID = updated.Institutions[0].UUID
 	})
 
 	t.Run("Test remove institution from user", func(t *testing.T) {
-		updated, err := models.RemoveInstitutionFromUser(userID, instID)
+		updated, err := models.RemoveInstitutionFromUser(userID, newInstID)
 		require.Nil(t, err)
 		assert.Equal(t, userID, updated.UUID)
 	})

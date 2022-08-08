@@ -62,14 +62,19 @@ func runFixtures(shouldTruncateTables bool) error {
 	var err error
 
 	if shouldTruncateTables {
-		result := db.Exec("TRUNCATE TABLE users CASCADE")
-		if result.Error != nil {
-			return result.Error
+		err := db.Exec("TRUNCATE TABLE users CASCADE").Error
+		if err != nil {
+			return err
 		}
 
-		result = db.Exec("TRUNCATE TABLE tokens CASCADE")
-		if result.Error != nil {
-			return result.Error
+		err = db.Exec("TRUNCATE TABLE institutions CASCADE").Error
+		if err != nil {
+			return err
+		}
+
+		err = db.Exec("TRUNCATE TABLE tokens CASCADE").Error
+		if err != nil {
+			return err
 		}
 	}
 
@@ -83,18 +88,32 @@ func runFixtures(shouldTruncateTables bool) error {
 	if err != nil {
 		return err
 	}
+	inst := Institution{
+		Name:     "Sciences Po",
+		Country:  "fr",
+		Position: "lecturer",
+	}
+	users[0].Institutions = append(users[0].Institutions, inst)
 
 	for _, u := range users {
-		result := db.Create(&u)
-		if result.Error != nil {
-			return result.Error
+
+		err := db.Create(&u).Error
+		if err != nil {
+			return err
 		}
 	}
 
 	//-- populate collection with 1 syll
-	db.Model(&users[0].Collections[0]).Association("Syllabi").Append(&users[0].Syllabi[0])
+	err = db.Model(&users[0].Collections[0]).Association("Syllabi").Append(&users[0].Syllabi[0])
+	if err != nil {
+		return err
+	}
+
 	//-- populate syllabus with 1 inst
-	db.Model(&users[0].Syllabi[0]).Association("Institutions").Append(&users[0].Institutions[0])
+	err = db.Model(&users[0].Syllabi[0]).Association("Institutions").Append(&inst)
+	if err != nil {
+		return err
+	}
 
 	token := Token{
 		UUID:   uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c801"),
@@ -106,14 +125,14 @@ func runFixtures(shouldTruncateTables bool) error {
 		UserID: uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c800"),
 	}
 
-	result := db.Create(&token)
-	if result.Error != nil {
-		return result.Error
+	err = db.Create(&token).Error
+	if err != nil {
+		return err
 	}
 
-	result = db.Create(&token_recovery)
-	if result.Error != nil {
-		return result.Error
+	err = db.Create(&token_recovery).Error
+	if err != nil {
+		return err
 	}
 
 	return err

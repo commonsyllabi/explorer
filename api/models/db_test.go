@@ -73,7 +73,7 @@ func setup(t *testing.T) func(t *testing.T) {
 	userNonExistentID = uuid.New()
 	userEmail = "one@raz.com"
 	userName = "full user 1"
-	userDeleteName = "user to be deleted"
+	userDeleteName = "pierre"
 
 	instID = uuid.MustParse("c0e4c3ed-ac4f-4e44-bb43-5123b7b6d7a0")
 

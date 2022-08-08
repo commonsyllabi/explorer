@@ -13,6 +13,7 @@ import (
 	"github.com/commonsyllabi/explorer/api/handlers"
 	"github.com/commonsyllabi/explorer/api/models"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -265,6 +266,7 @@ func TestUserHandler(t *testing.T) {
 		assert.Equal(t, http.StatusNotFound, res.Code)
 	})
 
+	var newInstID uuid.UUID
 	t.Run("Test add institution to user", func(t *testing.T) {
 		var body bytes.Buffer
 		w := multipart.NewWriter(&body)
@@ -295,6 +297,7 @@ func TestUserHandler(t *testing.T) {
 		err := json.Unmarshal(res.Body.Bytes(), &user)
 		require.Nil(t, err)
 		assert.Equal(t, 2, len(user.Institutions))
+		newInstID = user.Institutions[0].UUID
 	})
 
 	t.Run("Test remove institution from user", func(t *testing.T) {
@@ -312,7 +315,7 @@ func TestUserHandler(t *testing.T) {
 			},
 			{
 				Key:   "inst_id",
-				Value: instID.String(),
+				Value: newInstID.String(),
 			},
 		}
 

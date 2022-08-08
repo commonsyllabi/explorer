@@ -17,11 +17,11 @@ type Syllabus struct {
 	UUID      uuid.UUID      `gorm:"uniqueIndex;type:uuid;primaryKey;default:uuid_generate_v4()" json:"uuid" yaml:"uuid"`
 	Status    string         `gorm:"default:unlisted" json:"status"`
 
-	UserUUID     uuid.UUID      `gorm:"type:uuid;primaryKey;default:uuid_generate_v4()" json:"user_uuid" yaml:"user_uuid"`
-	User         User           `gorm:"foreignKey:UserUUID;references:UUID" json:"user"`
-	Collections  []*Collection  `gorm:"many2many:collections_syllabi;" json:"collections"`
-	Attachments  []Attachment   `gorm:"foreignKey:SyllabusUUID;references:UUID" json:"attachments"`
-	Institutions []*Institution `gorm:"many2many:institutions_syllabi;" json:"institutions"`
+	UserUUID     uuid.UUID     `gorm:"type:uuid;primaryKey;default:uuid_generate_v4()" json:"user_uuid" yaml:"user_uuid"`
+	User         User          `gorm:"foreignKey:UserUUID;references:UUID" json:"user"`
+	Collections  []*Collection `gorm:"many2many:collections_syllabi;" json:"collections"`
+	Attachments  []Attachment  `gorm:"foreignKey:SyllabusUUID;references:UUID" json:"attachments"`
+	Institutions []Institution `gorm:"many2many:inst_syllabi;" json:"institutions"`
 
 	AcademicFields   pq.StringArray `gorm:"type:text[]" json:"academic_fields" form:"academic_fields[]"`
 	Assignments      pq.StringArray `gorm:"type:text[]" json:"assignments" form:"assignments[]"`
@@ -65,9 +65,7 @@ func GetSyllabus(uuid uuid.UUID) (Syllabus, error) {
 		return syll, err
 	}
 
-	for _, s := range insts {
-		syll.Institutions = append(syll.Institutions, &s)
-	}
+	syll.Institutions = append(syll.Institutions, insts...)
 
 	return syll, nil
 }
