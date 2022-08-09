@@ -54,7 +54,15 @@
     - uuid: '46de6a2b-aacb-4c24-b1e1-3495821f8466'
       title: "Fixture syllabus 3"
       description: "Lorem ipsum descriptio"
-      language: de
+      language: pl
+      academic_level: 2
+      tags:
+        - "one"
+        - "two"
+    - uuid: '46de6a2b-aacb-4c24-b1e1-3495821f8777'
+      title: "Fixture syllabus 4"
+      description: "Lorem ipsum dolores"
+      language: pl
       academic_level: 2
       tags:
         - "one"

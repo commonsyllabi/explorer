@@ -23,7 +23,7 @@ func GetSyllabi(c *gin.Context) {
 	searchParams := make(map[string]string, 0)
 	searchParams["fields"] = "%"
 	searchParams["keywords"] = "%"
-	searchParams["lang"] = "%"
+	searchParams["language"] = "%"
 	searchParams["level"] = "%"
 	searchParams["tags"] = "%"
 
@@ -61,7 +61,7 @@ func GetSyllabi(c *gin.Context) {
 		zero.Warnf("not enough tags: %v", kws)
 	}
 
-	lang := c.Query("lang")
+	lang := c.Query("language")
 	if lang != "" {
 		_, err := language.Parse(lang)
 		if err != nil {
@@ -69,7 +69,7 @@ func GetSyllabi(c *gin.Context) {
 			zero.Errorf("language is not bcp-47 compliant: %v", err)
 			return
 		}
-		searchParams["lang"] = lang
+		searchParams["language"] = lang
 	}
 
 	level := c.Query("level")

@@ -2,10 +2,12 @@ package handlers_test
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"os"
 	"path/filepath"
 	"testing"
@@ -82,7 +84,97 @@ func TestSyllabusHandler(t *testing.T) {
 		sylls := make([]models.Syllabus, 0)
 		err := json.Unmarshal(res.Body.Bytes(), &sylls)
 		require.Nil(t, err)
-		assert.Equal(t, 3, len(sylls))
+		assert.Equal(t, 4, len(sylls))
+	})
+
+	t.Run("Test get all syllabi in academic fields", func(t *testing.T) {
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{}
+		c.Request.URL, _ = url.Parse(fmt.Sprintf("?fields=%s", "100,200"))
+
+		handlers.GetSyllabi(c)
+		assert.Equal(t, http.StatusOK, res.Code)
+
+		sylls := make([]models.Syllabus, 0)
+		err := json.Unmarshal(res.Body.Bytes(), &sylls)
+		require.Nil(t, err)
+		assert.Equal(t, 1, len(sylls))
+	})
+
+	t.Run("Test get all syllabi with keywords", func(t *testing.T) {
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{}
+		c.Request.URL, _ = url.Parse(fmt.Sprintf("?keywords=%s", "descriptio,none"))
+
+		handlers.GetSyllabi(c)
+		assert.Equal(t, http.StatusOK, res.Code)
+
+		sylls := make([]models.Syllabus, 0)
+		err := json.Unmarshal(res.Body.Bytes(), &sylls)
+		require.Nil(t, err)
+		assert.Equal(t, 2, len(sylls))
+	})
+
+	t.Run("Test get all syllabi in a given language", func(t *testing.T) {
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{}
+		c.Request.URL, _ = url.Parse(fmt.Sprintf("?language=%s", "pl"))
+
+		handlers.GetSyllabi(c)
+		assert.Equal(t, http.StatusOK, res.Code)
+
+		sylls := make([]models.Syllabus, 0)
+		err := json.Unmarshal(res.Body.Bytes(), &sylls)
+		require.Nil(t, err)
+		assert.Equal(t, 2, len(sylls))
+	})
+
+	t.Run("Test get all syllabi in a given academic_level", func(t *testing.T) {
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{}
+		c.Request.URL, _ = url.Parse(fmt.Sprintf("?level=%s", "2"))
+
+		handlers.GetSyllabi(c)
+		assert.Equal(t, http.StatusOK, res.Code)
+
+		sylls := make([]models.Syllabus, 0)
+		err := json.Unmarshal(res.Body.Bytes(), &sylls)
+		require.Nil(t, err)
+		assert.Equal(t, 2, len(sylls))
+	})
+
+	t.Run("Test get all syllabi with tags", func(t *testing.T) {
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{}
+		c.Request.URL, _ = url.Parse(fmt.Sprintf("?tags=%s", "raz"))
+
+		handlers.GetSyllabi(c)
+		assert.Equal(t, http.StatusOK, res.Code)
+
+		sylls := make([]models.Syllabus, 0)
+		err := json.Unmarshal(res.Body.Bytes(), &sylls)
+		require.Nil(t, err)
+		assert.Equal(t, 1, len(sylls))
+	})
+
+	t.Run("Test get all syllabi with combined filters", func(t *testing.T) {
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{}
+		c.Request.URL, _ = url.Parse(fmt.Sprintf("?level=%s&keywords=%s", "2", "dolores"))
+
+		handlers.GetSyllabi(c)
+		assert.Equal(t, http.StatusOK, res.Code)
+
+		sylls := make([]models.Syllabus, 0)
+		err := json.Unmarshal(res.Body.Bytes(), &sylls)
+		require.Nil(t, err)
+		assert.Equal(t, 1, len(sylls))
 	})
 
 	t.Run("Test create syllabus", func(t *testing.T) {
