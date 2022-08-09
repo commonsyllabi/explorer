@@ -23,7 +23,7 @@ func TestSyllabusModel(t *testing.T) {
 	t.Run("Test get all syllabi", func(t *testing.T) {
 		syll, err := models.GetSyllabi(searchParams)
 		require.Nil(t, err)
-		assert.Equal(t, 3, len(syll))
+		assert.Equal(t, 4, len(syll))
 	})
 
 	t.Run("Test get all syllabi written in french", func(t *testing.T) {

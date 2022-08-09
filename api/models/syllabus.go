@@ -23,7 +23,7 @@ type Syllabus struct {
 	Attachments  []Attachment  `gorm:"foreignKey:SyllabusUUID;references:UUID" json:"attachments"`
 	Institutions []Institution `gorm:"many2many:inst_syllabi;" json:"institutions"`
 
-	AcademicFields   pq.Int32Array  `gorm:"type:integer[];default:'ARRAY[000]'" json:"academic_fields" yaml:"academic_fields" form:"academic_fields[]"`
+	AcademicFields   pq.Int32Array  `gorm:"type:integer[];" json:"academic_fields" yaml:"academic_fields" form:"academic_fields[]"`
 	AcademicLevel    int            `json:"academic_level" yaml:"academic_level" form:"academic_level"`
 	Assignments      pq.StringArray `gorm:"type:text[]" json:"assignments" form:"assignments[]"`
 	Description      string         `gorm:"not null" form:"description" json:"description"`
