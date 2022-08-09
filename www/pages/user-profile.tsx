@@ -39,7 +39,7 @@ const About: NextPage = () => {
                   creating and accessing web archives.
                 </p>
                 <p>
-                  Outside of work, I've taught web design at Parsons School of
+                  Outside of work, I&aposve taught web design at Parsons School of
                   Design at The New School, and exhibited my art works in
                   digital and physical spaces. I also run a small print studio
                   OfficialFan . Club.
