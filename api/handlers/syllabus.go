@@ -3,7 +3,6 @@ package handlers
 import (
 	"fmt"
 	"net/http"
-	"reflect"
 	"strconv"
 	"strings"
 
@@ -16,7 +15,7 @@ import (
 )
 
 var (
-	minSyllabusTitleLength = 10
+	minSyllabusTitleLength = 3
 	maxSyllabusTitleLength = 100
 )
 
@@ -54,7 +53,7 @@ func GetSyllabi(c *gin.Context) {
 	tags = strings.Trim(tags, " ")
 	all_tags := strings.Split(tags, ",")
 	if len(all_tags) > 0 {
-		for i, _ := range all_tags {
+		for i := range all_tags {
 			all_tags[i] = strings.Trim(all_tags[i], " ")
 		}
 		searchParams["tags"] = fmt.Sprintf("%%(%s)%%", strings.Join(all_tags, "|"))
@@ -273,10 +272,9 @@ func UpdateSyllabus(c *gin.Context) {
 		return
 	}
 
-	var empty = new(models.Syllabus)
 	var input models.Syllabus
 	err = c.Bind(&input)
-	if err != nil || reflect.DeepEqual(&input, empty) { // deep equal checks for wrong input fields
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -383,8 +381,9 @@ func RemoveSyllabusInstitution(c *gin.Context) {
 }
 
 func sanitizeSyllabusCreate(c *gin.Context) error {
-	if len(c.PostForm("title")) < minSyllabusTitleLength ||
-		len(c.PostForm("title")) > maxSyllabusTitleLength {
+	title := c.PostForm("title")
+	if len(title) < minSyllabusTitleLength ||
+		len(title) > maxSyllabusTitleLength {
 		zero.Errorf("the title of the syllabus should be between 10 and 200 characters: %d", len(c.PostForm("title")))
 		return fmt.Errorf("the title of the syllabus should be between 10 and 200 characters: %d", len(c.PostForm("title")))
 	}
@@ -392,46 +391,46 @@ func sanitizeSyllabusCreate(c *gin.Context) error {
 	lang := c.PostForm("language")
 	_, err := language.Parse(lang)
 	if err != nil {
-		return fmt.Errorf("the language of the syllabus should be BCP47 compliant: %d", len(c.PostForm("language")))
+		return fmt.Errorf("the language of the syllabus should be BCP47 compliant: %v", lang)
 	}
 
 	l, err := strconv.Atoi(c.PostForm("level"))
 	if err != nil {
-		return fmt.Errorf("the level of the syllabus should be between 0 and 3: %d", len(c.PostForm("level")))
+		return fmt.Errorf("the level of the syllabus should be between 0 and 3: %s", err)
 	}
 	_, found := models.LEVELS[l]
 	if !found {
-		return fmt.Errorf("the level of the syllabus should be between 0 and 3: %d", len(c.PostForm("level")))
+		return fmt.Errorf("the level of the syllabus should be between 0 and 3")
 	}
 
 	return nil
 }
 
 func sanitizeSyllabusUpdate(c *gin.Context) error {
-	if c.PostForm("title") != "" {
-		if len(c.PostForm("title")) < minSyllabusTitleLength ||
-			len(c.PostForm("title")) > maxSyllabusTitleLength {
-			zero.Errorf("the title of the syllabus should be between 10 and 200 characters: %d", len(c.PostForm("title")))
-			return fmt.Errorf("the title of the syllabus should be between 10 and 200 characters: %d", len(c.PostForm("title")))
-		}
+	title := c.PostForm("title")
+	if len(title) < minSyllabusTitleLength ||
+		len(title) > maxSyllabusTitleLength {
+		zero.Errorf("the title of the syllabus should be between 10 and 200 characters: %d", len(title))
+		return fmt.Errorf("the title of the syllabus should be between 10 and 200 characters: %d", len(title))
 	}
 
-	if c.PostForm("language") != "" {
-		lang := c.PostForm("language")
+	lang := c.PostForm("language")
+	if lang != "" {
 		_, err := language.Parse(lang)
 		if err != nil {
-			return fmt.Errorf("the language of the syllabus should be BCP47 compliant: %d", len(c.PostForm("language")))
+			return fmt.Errorf("the language of the syllabus should be BCP47 compliant, given '%v'", lang)
 		}
 	}
 
-	if c.PostForm("level") != "" {
-		l, err := strconv.Atoi(c.PostForm("level"))
+	level := c.PostForm("level")
+	if level != "" {
+		l, err := strconv.Atoi(level)
 		if err != nil {
-			return fmt.Errorf("the level of the syllabus should be between 0 and 3: %d", len(c.PostForm("level")))
+			return fmt.Errorf("the level of the syllabus should be between 0 and 3: %d", l)
 		}
 		_, found := models.LEVELS[l]
 		if !found {
-			return fmt.Errorf("the level of the syllabus should be between 0 and 3: %d", len(c.PostForm("level")))
+			return fmt.Errorf("the level of the syllabus should be between 0 and 3: %d", l)
 		}
 	}
 

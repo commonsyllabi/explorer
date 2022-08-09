@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -133,7 +132,6 @@ func mustInitDB() *gorm.DB {
 	databaseTestURL := os.Getenv("DATABASE_TEST_URL")
 	if databaseTestURL == "" {
 		databaseTestURL = "postgres://postgres:postgres@localhost:5432/explorer-test"
-		fmt.Printf("didn't get db test url from env, defaulting to %v\n", databaseTestURL)
 	}
 
 	db, err := models.InitDB(databaseTestURL)
