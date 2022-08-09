@@ -18,6 +18,7 @@ func TestSyllabusModel(t *testing.T) {
 	searchParams["keywords"] = "%"
 	searchParams["academic_field"] = "%"
 	searchParams["level"] = "%"
+	searchParams["tags"] = "%"
 
 	t.Run("Test get all syllabi", func(t *testing.T) {
 		syll, err := models.GetSyllabi(searchParams)
@@ -34,10 +35,18 @@ func TestSyllabusModel(t *testing.T) {
 	})
 
 	t.Run("Test get all syllabi with title search", func(t *testing.T) {
-		searchParams["keywords"] = "%created%"
+		searchParams["keywords"] = "%(created|3)%"
 		syll, err := models.GetSyllabi(searchParams)
 		require.Nil(t, err)
-		assert.Equal(t, 2, len(syll))
+		assert.Equal(t, 3, len(syll))
+		searchParams["keywords"] = "%"
+	})
+
+	t.Run("Test get all syllabi with tag search", func(t *testing.T) {
+		searchParams["tags"] = "%(raz)%"
+		syll, err := models.GetSyllabi(searchParams)
+		require.Nil(t, err)
+		assert.Equal(t, 1, len(syll))
 		searchParams["keywords"] = "%"
 	})
 

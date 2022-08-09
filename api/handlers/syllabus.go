@@ -26,17 +26,30 @@ func GetSyllabi(c *gin.Context) {
 	searchParams["keywords"] = "%"
 	searchParams["lang"] = "%"
 	searchParams["level"] = "%"
+	searchParams["tags"] = "%"
 
-	kw := c.Query("keywords")
-	kw = strings.Trim(kw, "")
-	if len(kw) > 2 && len(kw) < 100 {
-		_, err := language.Parse(kw)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, err)
-			zero.Errorf("keywords are not valid: %v", err)
-			return
+	kws := c.Query("keywords")
+	kws = strings.Trim(kws, " ")
+	all_kws := strings.Split(kws, ",")
+	if len(all_kws) > 0 {
+		for i, _ := range all_kws {
+			all_kws[i] = strings.Trim(all_kws[i], " ")
 		}
-		searchParams["keywords"] = fmt.Sprintf("%%%s%%", kw)
+		searchParams["keywords"] = fmt.Sprintf("%%(%s)%%", strings.Join(all_kws, "|"))
+	} else {
+		zero.Warnf("not enough keywords: %v", all_kws)
+	}
+
+	tags := c.Query("tags")
+	tags = strings.Trim(tags, " ")
+	all_tags := strings.Split(tags, ",")
+	if len(all_tags) > 0 {
+		for i, _ := range all_tags {
+			all_tags[i] = strings.Trim(all_tags[i], " ")
+		}
+		searchParams["tags"] = fmt.Sprintf("%%(%s)%%", strings.Join(all_tags, "|"))
+	} else {
+		zero.Warnf("not enough tags: %v", kws)
 	}
 
 	lang := c.Query("lang")

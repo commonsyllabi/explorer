@@ -33,7 +33,7 @@ type Syllabus struct {
 	LearningOutcomes pq.StringArray `gorm:"type:text[]" json:"learning_outcomes" form:"learning_outcomes[]"`
 	Other            string         `json:"other" form:"other"`
 	Readings         pq.StringArray `gorm:"type:text[]" json:"readings" form:"readings[]"`
-	Tags             pq.StringArray `gorm:"type:text[]" json:"tags" form:"tags[]"`
+	Tags             pq.StringArray `gorm:"type:text[]" json:"tags" yaml:"tags" form:"tags[]"`
 	Title            string         `gorm:"not null" form:"title" json:"title"`
 	TopicOutlines    pq.StringArray `gorm:"type:text[]" json:"topic_outlines" form:"topic_outlines[]"`
 }
@@ -74,7 +74,7 @@ func GetSyllabus(uuid uuid.UUID) (Syllabus, error) {
 func GetSyllabi(params map[string]string) ([]Syllabus, error) {
 	var syllabi []Syllabus
 
-	result := db.Where("language SIMILAR TO ? AND (description SIMILAR TO ? OR title SIMILAR TO ?) AND academic_level::TEXT LIKE ?", params["lang"], params["keywords"], params["keywords"], params["level"]).Find(&syllabi)
+	result := db.Where("language SIMILAR TO ? AND (lower(description) SIMILAR TO ? OR lower(title) SIMILAR TO ?) AND ARRAY_TO_STRING(tags, ' ') SIMILAR TO ? AND academic_level::TEXT LIKE ?", params["lang"], params["keywords"], params["keywords"], params["tags"], params["level"]).Find(&syllabi)
 	return syllabi, result.Error
 
 }
