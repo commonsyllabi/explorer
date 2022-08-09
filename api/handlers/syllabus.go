@@ -22,17 +22,27 @@ var (
 
 func GetSyllabi(c *gin.Context) {
 	searchParams := make(map[string]string, 0)
-	searchParams["academic_field"] = "%"
+	searchParams["fields"] = "%"
 	searchParams["keywords"] = "%"
 	searchParams["lang"] = "%"
 	searchParams["level"] = "%"
 	searchParams["tags"] = "%"
 
+	fields := c.Query("fields")
+	fields = strings.Trim(fields, " ")
+	all_fields := strings.Split(fields, ",")
+	if len(all_fields) > 0 {
+		for i := range all_fields {
+			all_fields[i] = strings.Trim(all_fields[i], " ")
+		}
+		searchParams["fields"] = fmt.Sprintf("%%(%s)%%", strings.Join(all_fields, "|"))
+	}
+
 	kws := c.Query("keywords")
 	kws = strings.Trim(kws, " ")
 	all_kws := strings.Split(kws, ",")
 	if len(all_kws) > 0 {
-		for i, _ := range all_kws {
+		for i := range all_kws {
 			all_kws[i] = strings.Trim(all_kws[i], " ")
 		}
 		searchParams["keywords"] = fmt.Sprintf("%%(%s)%%", strings.Join(all_kws, "|"))

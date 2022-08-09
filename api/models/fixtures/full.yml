@@ -14,8 +14,8 @@
       language: en
       academic_level: 0
       academic_fields:
-        - "media"
-        - "communication"
+        - 100
+        - 200
       description: "Lorem ipsum descriptio"
       duration: 14
       attachments:

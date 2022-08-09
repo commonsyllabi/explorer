@@ -23,7 +23,7 @@ type Syllabus struct {
 	Attachments  []Attachment  `gorm:"foreignKey:SyllabusUUID;references:UUID" json:"attachments"`
 	Institutions []Institution `gorm:"many2many:inst_syllabi;" json:"institutions"`
 
-	AcademicFields   pq.StringArray `gorm:"type:text[]" json:"academic_fields" yaml:"academic_fields" form:"academic_fields[]"`
+	AcademicFields   pq.Int32Array  `gorm:"type:integer[];default:'ARRAY[000]'" json:"academic_fields" yaml:"academic_fields" form:"academic_fields[]"`
 	AcademicLevel    int            `json:"academic_level" yaml:"academic_level" form:"academic_level"`
 	Assignments      pq.StringArray `gorm:"type:text[]" json:"assignments" form:"assignments[]"`
 	Description      string         `gorm:"not null" form:"description" json:"description"`
@@ -36,6 +36,15 @@ type Syllabus struct {
 	Tags             pq.StringArray `gorm:"type:text[]" json:"tags" yaml:"tags" form:"tags[]"`
 	Title            string         `gorm:"not null" form:"title" json:"title"`
 	TopicOutlines    pq.StringArray `gorm:"type:text[]" json:"topic_outlines" form:"topic_outlines[]"`
+}
+
+// the BeforeCreate GORM hook is used to set defaults for complex datatypes
+func (s *Syllabus) BeforeCreate(tx *gorm.DB) (err error) {
+	if len(s.AcademicFields) == 0 {
+		s.AcademicFields = []int32{000}
+	}
+
+	return nil
 }
 
 func CreateSyllabus(user_uuid uuid.UUID, syll *Syllabus) (Syllabus, error) {
@@ -74,7 +83,7 @@ func GetSyllabus(uuid uuid.UUID) (Syllabus, error) {
 func GetSyllabi(params map[string]string) ([]Syllabus, error) {
 	var syllabi []Syllabus
 
-	result := db.Where("language SIMILAR TO ? AND (lower(description) SIMILAR TO ? OR lower(title) SIMILAR TO ?) AND ARRAY_TO_STRING(tags, ' ') SIMILAR TO ? AND academic_level::TEXT LIKE ?", params["lang"], params["keywords"], params["keywords"], params["tags"], params["level"]).Find(&syllabi)
+	result := db.Where("language SIMILAR TO ? AND (lower(description) SIMILAR TO ? OR lower(title) SIMILAR TO ?) AND ARRAY_TO_STRING(tags, ' ') SIMILAR TO ? AND academic_level::TEXT LIKE ? AND ARRAY_TO_STRING(academic_fields, ' ') SIMILAR TO ?", params["lang"], params["keywords"], params["keywords"], params["tags"], params["level"], params["fields"]).Find(&syllabi)
 	return syllabi, result.Error
 
 }

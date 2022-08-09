@@ -16,7 +16,7 @@ func TestSyllabusModel(t *testing.T) {
 	searchParams := make(map[string]string, 0)
 	searchParams["lang"] = "%"
 	searchParams["keywords"] = "%"
-	searchParams["academic_field"] = "%"
+	searchParams["fields"] = "%"
 	searchParams["level"] = "%"
 	searchParams["tags"] = "%"
 
@@ -47,7 +47,7 @@ func TestSyllabusModel(t *testing.T) {
 		syll, err := models.GetSyllabi(searchParams)
 		require.Nil(t, err)
 		assert.Equal(t, 1, len(syll))
-		searchParams["keywords"] = "%"
+		searchParams["tags"] = "%"
 	})
 
 	t.Run("Test get all syllabi with academic level", func(t *testing.T) {
@@ -56,6 +56,14 @@ func TestSyllabusModel(t *testing.T) {
 		require.Nil(t, err)
 		assert.Equal(t, 1, len(syll))
 		searchParams["level"] = "%"
+	})
+
+	t.Run("Test get all syllabi with academic fields", func(t *testing.T) {
+		searchParams["fields"] = "%(100)%"
+		syll, err := models.GetSyllabi(searchParams)
+		require.Nil(t, err)
+		assert.Equal(t, 1, len(syll))
+		searchParams["fields"] = "%"
 	})
 
 	t.Run("Test create bare syllabus", func(t *testing.T) {
