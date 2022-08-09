@@ -13,10 +13,40 @@ func TestSyllabusModel(t *testing.T) {
 	teardown := setup(t)
 	defer teardown(t)
 
+	searchParams := make(map[string]string, 0)
+	searchParams["lang"] = "%"
+	searchParams["keywords"] = "%"
+	searchParams["academic_field"] = "%"
+	searchParams["level"] = "%"
+
 	t.Run("Test get all syllabi", func(t *testing.T) {
-		syll, err := models.GetAllSyllabi()
+		syll, err := models.GetSyllabi(searchParams)
 		require.Nil(t, err)
-		assert.Equal(t, len(syll), 3)
+		assert.Equal(t, 3, len(syll))
+	})
+
+	t.Run("Test get all syllabi written in french", func(t *testing.T) {
+		searchParams["lang"] = "fr"
+		syll, err := models.GetSyllabi(searchParams)
+		require.Nil(t, err)
+		assert.Equal(t, 1, len(syll))
+		searchParams["lang"] = "%"
+	})
+
+	t.Run("Test get all syllabi with title search", func(t *testing.T) {
+		searchParams["keywords"] = "%created%"
+		syll, err := models.GetSyllabi(searchParams)
+		require.Nil(t, err)
+		assert.Equal(t, 2, len(syll))
+		searchParams["keywords"] = "%"
+	})
+
+	t.Run("Test get all syllabi with academic level", func(t *testing.T) {
+		searchParams["level"] = "1"
+		syll, err := models.GetSyllabi(searchParams)
+		require.Nil(t, err)
+		assert.Equal(t, 1, len(syll))
+		searchParams["level"] = "%"
 	})
 
 	t.Run("Test create bare syllabus", func(t *testing.T) {

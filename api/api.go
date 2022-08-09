@@ -113,7 +113,7 @@ func SetupRouter() *gin.Engine {
 
 	syllabi := router.Group("/syllabi")
 	{
-		syllabi.GET("/", handlers.GetAllSyllabi)
+		syllabi.GET("/", handlers.GetSyllabi)
 		syllabi.GET("/:id", handlers.GetSyllabus)
 
 		syllabi.POST("/", auth.Authenticate(), handlers.CreateSyllabus)

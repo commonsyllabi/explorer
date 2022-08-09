@@ -76,7 +76,7 @@ func TestSyllabusHandler(t *testing.T) {
 	t.Run("Test get all syllabi", func(t *testing.T) {
 		res := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(res)
-		handlers.GetAllSyllabi(c)
+		handlers.GetSyllabi(c)
 		assert.Equal(t, http.StatusOK, res.Code)
 
 		sylls := make([]models.Syllabus, 0)

@@ -23,7 +23,8 @@ type Syllabus struct {
 	Attachments  []Attachment  `gorm:"foreignKey:SyllabusUUID;references:UUID" json:"attachments"`
 	Institutions []Institution `gorm:"many2many:inst_syllabi;" json:"institutions"`
 
-	AcademicFields   pq.StringArray `gorm:"type:text[]" json:"academic_fields" form:"academic_fields[]"`
+	AcademicFields   pq.StringArray `gorm:"type:text[]" json:"academic_fields" yaml:"academic_fields" form:"academic_fields[]"`
+	AcademicLevel    int            `json:"academic_level" yaml:"academic_level" form:"academic_level"`
 	Assignments      pq.StringArray `gorm:"type:text[]" json:"assignments" form:"assignments[]"`
 	Description      string         `gorm:"not null" form:"description" json:"description"`
 	Duration         int            `json:"duration" form:"duration"`
@@ -70,10 +71,12 @@ func GetSyllabus(uuid uuid.UUID) (Syllabus, error) {
 	return syll, nil
 }
 
-func GetAllSyllabi() ([]Syllabus, error) {
+func GetSyllabi(params map[string]string) ([]Syllabus, error) {
 	var syllabi []Syllabus
-	result := db.Find(&syllabi)
+
+	result := db.Where("language SIMILAR TO ? AND (description SIMILAR TO ? OR title SIMILAR TO ?) AND academic_level::TEXT LIKE ?", params["lang"], params["keywords"], params["keywords"], params["level"]).Find(&syllabi)
 	return syllabi, result.Error
+
 }
 
 func UpdateSyllabus(uuid uuid.UUID, syll *Syllabus) (Syllabus, error) {

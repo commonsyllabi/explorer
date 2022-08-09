@@ -4,12 +4,15 @@ import (
 	"fmt"
 	"net/http"
 	"reflect"
+	"strconv"
+	"strings"
 
 	zero "github.com/commonsyllabi/explorer/api/logger"
 	"github.com/commonsyllabi/explorer/api/models"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"golang.org/x/text/language"
 )
 
 var (
@@ -17,8 +20,55 @@ var (
 	maxSyllabusTitleLength = 100
 )
 
-func GetAllSyllabi(c *gin.Context) {
-	syllabi, err := models.GetAllSyllabi()
+func GetSyllabi(c *gin.Context) {
+	searchParams := make(map[string]string, 0)
+	searchParams["academic_field"] = "%"
+	searchParams["keywords"] = "%"
+	searchParams["lang"] = "%"
+	searchParams["level"] = "%"
+
+	kw := c.Query("keywords")
+	kw = strings.Trim(kw, "")
+	if len(kw) > 2 && len(kw) < 100 {
+		_, err := language.Parse(kw)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, err)
+			zero.Errorf("keywords are not valid: %v", err)
+			return
+		}
+		searchParams["keywords"] = fmt.Sprintf("%%%s%%", kw)
+	}
+
+	lang := c.Query("lang")
+	if lang != "" {
+		_, err := language.Parse(lang)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, err)
+			zero.Errorf("language is not bcp-47 compliant: %v", err)
+			return
+		}
+		searchParams["lang"] = lang
+	}
+
+	level := c.Query("level")
+	if level != "" {
+		l, err := strconv.Atoi(level)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, err)
+			zero.Errorf("the level of the syllabus should be between 0 and 3: %v", err)
+			return
+		}
+		_, found := models.LEVELS[l]
+		if !found {
+			c.JSON(http.StatusBadRequest, err)
+			zero.Errorf("the level of the syllabus should be between 0 and 3: %v", err)
+			return
+		}
+
+		searchParams["level"] = fmt.Sprintf("%d", l)
+	}
+
+	syllabi, err := models.GetSyllabi(searchParams)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err)
 		zero.Errorf("error getting syllabi: %v", err)
@@ -29,7 +79,7 @@ func GetAllSyllabi(c *gin.Context) {
 }
 
 func CreateSyllabus(c *gin.Context) {
-	err := sanitizeSyllabus(c)
+	err := sanitizeSyllabusCreate(c)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err)
 		zero.Error(err.Error())
@@ -186,12 +236,6 @@ func GetSyllabusAttachment(c *gin.Context) {
 
 func UpdateSyllabus(c *gin.Context) {
 	id := c.Param("id")
-	if len(id) < 25 {
-		c.String(http.StatusBadRequest, "not a valid ID")
-		zero.Errorf("not a valid id %d", id)
-		return
-	}
-
 	uid, err := uuid.Parse(id)
 	if err != nil {
 		c.String(http.StatusBadRequest, "not a valid ID")
@@ -199,7 +243,7 @@ func UpdateSyllabus(c *gin.Context) {
 		return
 	}
 
-	err = sanitizeSyllabus(c)
+	err = sanitizeSyllabusUpdate(c)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		zero.Error(err.Error())
@@ -315,11 +359,57 @@ func RemoveSyllabusInstitution(c *gin.Context) {
 	c.JSON(http.StatusOK, syll)
 }
 
-func sanitizeSyllabus(c *gin.Context) error {
+func sanitizeSyllabusCreate(c *gin.Context) error {
 	if len(c.PostForm("title")) < minSyllabusTitleLength ||
 		len(c.PostForm("title")) > maxSyllabusTitleLength {
 		zero.Errorf("the title of the syllabus should be between 10 and 200 characters: %d", len(c.PostForm("title")))
 		return fmt.Errorf("the title of the syllabus should be between 10 and 200 characters: %d", len(c.PostForm("title")))
+	}
+
+	lang := c.PostForm("language")
+	_, err := language.Parse(lang)
+	if err != nil {
+		return fmt.Errorf("the language of the syllabus should be BCP47 compliant: %d", len(c.PostForm("language")))
+	}
+
+	l, err := strconv.Atoi(c.PostForm("level"))
+	if err != nil {
+		return fmt.Errorf("the level of the syllabus should be between 0 and 3: %d", len(c.PostForm("level")))
+	}
+	_, found := models.LEVELS[l]
+	if !found {
+		return fmt.Errorf("the level of the syllabus should be between 0 and 3: %d", len(c.PostForm("level")))
+	}
+
+	return nil
+}
+
+func sanitizeSyllabusUpdate(c *gin.Context) error {
+	if c.PostForm("title") != "" {
+		if len(c.PostForm("title")) < minSyllabusTitleLength ||
+			len(c.PostForm("title")) > maxSyllabusTitleLength {
+			zero.Errorf("the title of the syllabus should be between 10 and 200 characters: %d", len(c.PostForm("title")))
+			return fmt.Errorf("the title of the syllabus should be between 10 and 200 characters: %d", len(c.PostForm("title")))
+		}
+	}
+
+	if c.PostForm("language") != "" {
+		lang := c.PostForm("language")
+		_, err := language.Parse(lang)
+		if err != nil {
+			return fmt.Errorf("the language of the syllabus should be BCP47 compliant: %d", len(c.PostForm("language")))
+		}
+	}
+
+	if c.PostForm("level") != "" {
+		l, err := strconv.Atoi(c.PostForm("level"))
+		if err != nil {
+			return fmt.Errorf("the level of the syllabus should be between 0 and 3: %d", len(c.PostForm("level")))
+		}
+		_, found := models.LEVELS[l]
+		if !found {
+			return fmt.Errorf("the level of the syllabus should be between 0 and 3: %d", len(c.PostForm("level")))
+		}
 	}
 
 	return nil
