@@ -50,7 +50,7 @@ func TestSyllabusModel(t *testing.T) {
 		searchParams["tags"] = "%"
 	})
 
-	t.Run("Test get all syllabi with academic level", func(t *testing.T) {
+	t.Run("Test get all syllabi with level", func(t *testing.T) {
 		searchParams["level"] = "1"
 		syll, err := models.GetSyllabi(searchParams)
 		require.Nil(t, err)
@@ -58,7 +58,7 @@ func TestSyllabusModel(t *testing.T) {
 		searchParams["level"] = "%"
 	})
 
-	t.Run("Test get all syllabi with academic fields", func(t *testing.T) {
+	t.Run("Test get all syllabi with fields", func(t *testing.T) {
 		searchParams["fields"] = "%(100)%"
 		syll, err := models.GetSyllabi(searchParams)
 		require.Nil(t, err)

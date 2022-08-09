@@ -62,6 +62,9 @@ func GetUser(uuid uuid.UUID) (User, error) {
 func GetUserByEmail(email string) (User, error) {
 	var user User
 	err := db.Preload("Syllabi").Preload("Collections").Where("email = ?", email).Find(&user).Error
+	if err != nil {
+		return user, err
+	}
 
 	var insts []Institution
 	err = db.Model(&user).Association("Institutions").Find(&insts)
