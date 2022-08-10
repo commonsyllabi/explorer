@@ -26,7 +26,7 @@ type Syllabus struct {
 	AcademicFields   pq.Int32Array  `gorm:"type:integer[];" json:"academic_fields" yaml:"academic_fields" form:"academic_fields[]"`
 	AcademicLevel    int            `json:"academic_level" yaml:"academic_level" form:"academic_level"`
 	Assignments      pq.StringArray `gorm:"type:text[]" json:"assignments" form:"assignments[]"`
-	Description      string         `gorm:"not null" form:"description" json:"description"`
+	Description      string         `gorm:"not null" json:"description" form:"description"`
 	Duration         int            `json:"duration" form:"duration"`
 	GradingRubric    string         `json:"grading_rubric" form:"grading_rubric"`
 	Language         string         `json:"language" form:"language"`

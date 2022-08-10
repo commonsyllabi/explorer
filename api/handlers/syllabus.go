@@ -394,7 +394,7 @@ func sanitizeSyllabusCreate(c *gin.Context) error {
 		return fmt.Errorf("the language of the syllabus should be BCP47 compliant: %v", lang)
 	}
 
-	l, err := strconv.Atoi(c.PostForm("level"))
+	l, err := strconv.Atoi(c.PostForm("academic_level"))
 	if err != nil {
 		return fmt.Errorf("the level of the syllabus should be between 0 and 3: %s", err)
 	}
@@ -422,7 +422,7 @@ func sanitizeSyllabusUpdate(c *gin.Context) error {
 		}
 	}
 
-	level := c.PostForm("level")
+	level := c.PostForm("academic_level")
 	if level != "" {
 		l, err := strconv.Atoi(level)
 		if err != nil {
