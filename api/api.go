@@ -119,6 +119,9 @@ func SetupRouter() *gin.Engine {
 		syllabi.POST("/", auth.Authenticate(), handlers.CreateSyllabus)
 		syllabi.PATCH("/:id", auth.Authenticate(), handlers.UpdateSyllabus)
 		syllabi.DELETE("/:id", auth.Authenticate(), handlers.DeleteSyllabus)
+
+		syllabi.POST("/:id/institutions", handlers.AddSyllabusInstitution)
+		syllabi.DELETE("/:id/institutions/:inst_id", handlers.RemoveSyllabusInstitution)
 	}
 
 	users := router.Group("/users")
@@ -130,8 +133,8 @@ func SetupRouter() *gin.Engine {
 		users.PATCH("/:id", auth.Authenticate(), handlers.UpdateUser)
 		users.DELETE("/:id", auth.Authenticate(), handlers.DeleteUser)
 
-		users.POST("/:id/institutions", handlers.AddInstitutionUser)
-		users.DELETE("/:id/institutions/:inst_id", handlers.RemoveInstitutionUser)
+		users.POST("/:id/institutions", handlers.AddUserInstitution)
+		users.DELETE("/:id/institutions/:inst_id", handlers.RemoveUserInstitution)
 	}
 
 	attachments := router.Group("/attachments")

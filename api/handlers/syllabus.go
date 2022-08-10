@@ -190,7 +190,7 @@ func AddSyllabusInstitution(c *gin.Context) {
 	}
 
 	var inst models.Institution
-	c.Bind(inst)
+	c.Bind(&inst)
 	//-- bind this from the post body
 
 	syll, err := models.AddInstitutionToSyllabus(syll_uid, &inst)

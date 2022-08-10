@@ -109,7 +109,7 @@ func UpdateUser(c *gin.Context) {
 	c.JSON(http.StatusOK, updated)
 }
 
-func AddInstitutionUser(c *gin.Context) {
+func AddUserInstitution(c *gin.Context) {
 	user_id := c.Param("id")
 	user_uid, err := uuid.Parse(user_id)
 	if err != nil {
@@ -154,7 +154,7 @@ func GetUser(c *gin.Context) {
 
 }
 
-func RemoveInstitutionUser(c *gin.Context) {
+func RemoveUserInstitution(c *gin.Context) {
 	user_id := c.Param("id")
 	user_uid, err := uuid.Parse(user_id)
 	if err != nil {

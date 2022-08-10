@@ -289,7 +289,7 @@ func TestUserHandler(t *testing.T) {
 		c.Request.Header.Set("Content-Type", w.FormDataContentType())
 		c.Request.Body = io.NopCloser(&body)
 
-		handlers.AddInstitutionUser(c)
+		handlers.AddUserInstitution(c)
 
 		assert.Equal(t, http.StatusOK, res.Code)
 
@@ -319,7 +319,7 @@ func TestUserHandler(t *testing.T) {
 			},
 		}
 
-		handlers.RemoveInstitutionUser(c)
+		handlers.RemoveUserInstitution(c)
 		assert.Equal(t, http.StatusOK, res.Code)
 
 		var user models.User

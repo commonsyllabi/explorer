@@ -182,7 +182,7 @@ func TestSyllabusHandler(t *testing.T) {
 		w := multipart.NewWriter(&body)
 		w.WriteField("title", "Test Syllabus Handling")
 		w.WriteField("language", "en")
-		w.WriteField("level", "0")
+		w.WriteField("academic_level", "0")
 		w.WriteField("academic_fields[]", "300")
 		w.WriteField("academic_fields[]", "200")
 		w.Close()
