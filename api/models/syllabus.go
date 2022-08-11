@@ -47,6 +47,10 @@ func (s *Syllabus) BeforeCreate(tx *gorm.DB) (err error) {
 	return nil
 }
 
+func (s *Syllabus) IsEmpty() bool {
+	return (len(s.AcademicFields) == 0) && s.AcademicLevel == 0 && len(s.Assignments) == 0 && s.Description == "" && s.Duration == 0 && s.GradingRubric == "" && s.Language == "" && len(s.LearningOutcomes) == 0 && s.Other == "" && len(s.Readings) == 0 && len(s.Tags) == 0 && s.Title == "" && len(s.TopicOutlines) == 0
+}
+
 func CreateSyllabus(user_uuid uuid.UUID, syll *Syllabus) (Syllabus, error) {
 	user, err := GetUser(user_uuid)
 	if err != nil {

@@ -81,14 +81,12 @@ func UpdateCollection(c *gin.Context) {
 		return
 	}
 
-	//-- get existing entity
 	coll, err := models.GetCollection(uid)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
 
-	//-- then bind with the incoming request
 	err = c.Bind(&coll)
 	if err != nil {
 		zero.Errorf("error binding user: %v", err)
@@ -96,7 +94,6 @@ func UpdateCollection(c *gin.Context) {
 		return
 	}
 
-	//-- then do the actual full update
 	updated, err := models.UpdateCollection(uid, &coll)
 	if err != nil {
 		c.String(http.StatusNotFound, err.Error())
@@ -257,8 +254,6 @@ func RemoveCollectionSyllabus(c *gin.Context) {
 	}
 
 	zero.Warn("the way to remove a syllabus from a collection needs to be updated")
-	//-- also there is a problem with "omitzero", we cannot unset fields (like setting the UUID to null below, so we do a new())
-	//-- anyway this will be obsolete when i properly implement many to many
 
 	updated, err := models.UpdateSyllabus(syll.UUID, &syll)
 	if err != nil {

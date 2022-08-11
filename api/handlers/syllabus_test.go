@@ -102,6 +102,26 @@ func TestSyllabusHandler(t *testing.T) {
 		assert.Equal(t, 1, len(sylls))
 	})
 
+	t.Run("Test get all syllabi in wrong academic fields", func(t *testing.T) {
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{}
+		c.Request.URL, _ = url.Parse(fmt.Sprintf("?fields=%s", "666"))
+
+		handlers.GetSyllabi(c)
+		assert.Equal(t, http.StatusBadRequest, res.Code)
+	})
+
+	t.Run("Test get all syllabi in malformed academic fields", func(t *testing.T) {
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{}
+		c.Request.URL, _ = url.Parse(fmt.Sprintf("?fields=%s", "bleh"))
+
+		handlers.GetSyllabi(c)
+		assert.Equal(t, http.StatusBadRequest, res.Code)
+	})
+
 	t.Run("Test get all syllabi with keywords", func(t *testing.T) {
 		res := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(res)
@@ -132,6 +152,16 @@ func TestSyllabusHandler(t *testing.T) {
 		assert.Equal(t, 2, len(sylls))
 	})
 
+	t.Run("Test get all syllabi in a given wrong language", func(t *testing.T) {
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{}
+		c.Request.URL, _ = url.Parse(fmt.Sprintf("?language=%s", "bleh"))
+
+		handlers.GetSyllabi(c)
+		assert.Equal(t, http.StatusBadRequest, res.Code)
+	})
+
 	t.Run("Test get all syllabi in a given academic_level", func(t *testing.T) {
 		res := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(res)
@@ -145,6 +175,26 @@ func TestSyllabusHandler(t *testing.T) {
 		err := json.Unmarshal(res.Body.Bytes(), &sylls)
 		require.Nil(t, err)
 		assert.Equal(t, 2, len(sylls))
+	})
+
+	t.Run("Test get all syllabi in a wrong academic_level", func(t *testing.T) {
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{}
+		c.Request.URL, _ = url.Parse(fmt.Sprintf("?level=%s", "666"))
+
+		handlers.GetSyllabi(c)
+		assert.Equal(t, http.StatusBadRequest, res.Code)
+	})
+
+	t.Run("Test get all syllabi in a malformed academic_level", func(t *testing.T) {
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{}
+		c.Request.URL, _ = url.Parse(fmt.Sprintf("?level=%s", "lol"))
+
+		handlers.GetSyllabi(c)
+		assert.Equal(t, http.StatusBadRequest, res.Code)
 	})
 
 	t.Run("Test get all syllabi with tags", func(t *testing.T) {
@@ -211,7 +261,29 @@ func TestSyllabusHandler(t *testing.T) {
 	t.Run("Test create syllabus malformed field", func(t *testing.T) {
 		var body bytes.Buffer
 		w := multipart.NewWriter(&body)
-		w.WriteField("title", "Test")
+		w.WriteField("title", "T")
+		w.Close()
+
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "POST"
+		c.Request.Header.Set("Content-Type", w.FormDataContentType())
+		c.Request.Body = io.NopCloser(&body)
+
+		handlers.CreateSyllabus(c)
+		assert.Equal(t, http.StatusBadRequest, res.Code)
+	})
+
+	t.Run("Test create syllabus wrong academic level", func(t *testing.T) {
+		var body bytes.Buffer
+		w := multipart.NewWriter(&body)
+		w.WriteField("title", "Testing")
+		w.WriteField("language", "pl")
+		w.WriteField("academic_level", "666")
 		w.Close()
 
 		res := httptest.NewRecorder()
@@ -346,6 +418,84 @@ func TestSyllabusHandler(t *testing.T) {
 		assert.Equal(t, http.StatusBadRequest, res.Code)
 	})
 
+	t.Run("Test update syllabus malformed language", func(t *testing.T) {
+		var body bytes.Buffer
+		w := multipart.NewWriter(&body)
+		w.WriteField("language", "donut")
+		w.Close()
+
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "PATCH"
+		c.Request.Header.Set("Content-Type", w.FormDataContentType())
+		c.Request.Body = io.NopCloser(&body)
+		c.Params = []gin.Param{
+			{
+				Key:   "id",
+				Value: syllabusID.String(),
+			},
+		}
+
+		handlers.UpdateSyllabus(c)
+		assert.Equal(t, http.StatusBadRequest, res.Code)
+	})
+
+	t.Run("Test update syllabus malformed academic level", func(t *testing.T) {
+		var body bytes.Buffer
+		w := multipart.NewWriter(&body)
+		w.WriteField("academic_level", "lol")
+		w.Close()
+
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "PATCH"
+		c.Request.Header.Set("Content-Type", w.FormDataContentType())
+		c.Request.Body = io.NopCloser(&body)
+		c.Params = []gin.Param{
+			{
+				Key:   "id",
+				Value: syllabusID.String(),
+			},
+		}
+
+		handlers.UpdateSyllabus(c)
+		assert.Equal(t, http.StatusBadRequest, res.Code)
+	})
+
+	t.Run("Test update syllabus wrong academic level", func(t *testing.T) {
+		var body bytes.Buffer
+		w := multipart.NewWriter(&body)
+		w.WriteField("academic_level", "666")
+		w.Close()
+
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "PATCH"
+		c.Request.Header.Set("Content-Type", w.FormDataContentType())
+		c.Request.Body = io.NopCloser(&body)
+		c.Params = []gin.Param{
+			{
+				Key:   "id",
+				Value: syllabusID.String(),
+			},
+		}
+
+		handlers.UpdateSyllabus(c)
+		assert.Equal(t, http.StatusBadRequest, res.Code)
+	})
+
 	t.Run("Test update syllabus malformed field", func(t *testing.T) {
 		var body bytes.Buffer
 		w := multipart.NewWriter(&body)
@@ -369,7 +519,7 @@ func TestSyllabusHandler(t *testing.T) {
 		}
 
 		handlers.UpdateSyllabus(c)
-		assert.Equal(t, http.StatusBadRequest, res.Code)
+		assert.Equal(t, http.StatusNoContent, res.Code)
 	})
 
 	t.Run("Test update syllabus non-existant ID", func(t *testing.T) {
@@ -427,7 +577,7 @@ func TestSyllabusHandler(t *testing.T) {
 	t.Run("Test add attachment to syllabus", func(t *testing.T) {
 		var body bytes.Buffer
 		w := multipart.NewWriter(&body)
-		w.WriteField("attachment_id", attachmentID.String())
+		w.WriteField("att_id", attachmentID.String())
 		w.Close()
 
 		res := httptest.NewRecorder()
@@ -453,6 +603,110 @@ func TestSyllabusHandler(t *testing.T) {
 		err := json.Unmarshal(res.Body.Bytes(), &syll)
 		require.Nil(t, err)
 		assert.Equal(t, "Lorem ipsum descriptio", syll.Description)
+	})
+
+	t.Run("Test add attachment to non-existing syllabus", func(t *testing.T) {
+		var body bytes.Buffer
+		w := multipart.NewWriter(&body)
+		w.WriteField("att_id", attachmentID.String())
+		w.Close()
+
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "PATCH"
+		c.Request.Header.Set("Content-Type", w.FormDataContentType())
+		c.Request.Body = io.NopCloser(&body)
+		c.Params = []gin.Param{
+			{
+				Key:   "id",
+				Value: syllabusNonExistingID.String(),
+			},
+		}
+
+		handlers.AddSyllabusAttachment(c)
+		assert.Equal(t, http.StatusNotFound, res.Code)
+	})
+
+	t.Run("Test add non-existing attachment to syllabus", func(t *testing.T) {
+		var body bytes.Buffer
+		w := multipart.NewWriter(&body)
+		w.WriteField("att_id", attachmentNonExistingID.String())
+		w.Close()
+
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "PATCH"
+		c.Request.Header.Set("Content-Type", w.FormDataContentType())
+		c.Request.Body = io.NopCloser(&body)
+		c.Params = []gin.Param{
+			{
+				Key:   "id",
+				Value: syllabusID.String(),
+			},
+		}
+
+		handlers.AddSyllabusAttachment(c)
+		assert.Equal(t, http.StatusNotFound, res.Code)
+	})
+
+	t.Run("Test add attachment to syllabus malformed syll id", func(t *testing.T) {
+		var body bytes.Buffer
+		w := multipart.NewWriter(&body)
+		w.WriteField("attachment_id", attachmentID.String())
+		w.Close()
+
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "PATCH"
+		c.Request.Header.Set("Content-Type", w.FormDataContentType())
+		c.Request.Body = io.NopCloser(&body)
+		c.Params = []gin.Param{
+			{
+				Key:   "id",
+				Value: "lol-lol-lol",
+			},
+		}
+
+		handlers.AddSyllabusAttachment(c)
+		assert.Equal(t, http.StatusBadRequest, res.Code)
+	})
+
+	t.Run("Test add attachment to syllabus malformed att id", func(t *testing.T) {
+		var body bytes.Buffer
+		w := multipart.NewWriter(&body)
+		w.WriteField("attachment_id", "lol-lol-lol")
+		w.Close()
+
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "PATCH"
+		c.Request.Header.Set("Content-Type", w.FormDataContentType())
+		c.Request.Body = io.NopCloser(&body)
+		c.Params = []gin.Param{
+			{
+				Key:   "id",
+				Value: syllabusID.String(),
+			},
+		}
+
+		handlers.AddSyllabusAttachment(c)
+		assert.Equal(t, http.StatusBadRequest, res.Code)
 	})
 
 	t.Run("Test get all attachments from syllabus", func(t *testing.T) {
@@ -493,7 +747,7 @@ func TestSyllabusHandler(t *testing.T) {
 				Value: syllabusID.String(),
 			},
 			{
-				Key:   "res_id",
+				Key:   "att_id",
 				Value: attachmentID.String(),
 			},
 		}
@@ -505,6 +759,29 @@ func TestSyllabusHandler(t *testing.T) {
 		err := json.Unmarshal(res.Body.Bytes(), &att)
 		require.Nil(t, err)
 		assert.Equal(t, "Syllabus-owned Attachment 1", att.Name)
+	})
+
+	t.Run("Test get wrong attachment from syllabus", func(t *testing.T) {
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "GET"
+		c.Params = []gin.Param{
+			{
+				Key:   "id",
+				Value: syllabusID.String(),
+			},
+			{
+				Key:   "att_id",
+				Value: attachmentNonExistingID.String(),
+			},
+		}
+
+		handlers.GetSyllabusAttachment(c)
+		assert.Equal(t, http.StatusNotFound, res.Code)
 	})
 
 	t.Run("Test remove attachment from syllabus", func(t *testing.T) {
@@ -521,7 +798,7 @@ func TestSyllabusHandler(t *testing.T) {
 				Value: syllabusID.String(),
 			},
 			{
-				Key:   "res_id",
+				Key:   "att_id",
 				Value: attachmentID.String(),
 			},
 		}
@@ -535,12 +812,66 @@ func TestSyllabusHandler(t *testing.T) {
 		assert.Equal(t, syllabusID, attachment.UUID)
 	})
 
+	var newInstID uuid.UUID
 	t.Run("Test add institution to syllabus", func(t *testing.T) {
+		var body bytes.Buffer
+		w := multipart.NewWriter(&body)
+		w.WriteField("name", "fachhoschule")
+		w.Close()
 
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
+
+		c.Request.Method = "POST"
+		c.Params = []gin.Param{
+			{
+				Key:   "id",
+				Value: syllabusID.String(),
+			},
+		}
+		c.Request.Header.Set("Content-Type", w.FormDataContentType())
+		c.Request.Body = io.NopCloser(&body)
+
+		handlers.AddSyllabusInstitution(c)
+
+		assert.Equal(t, http.StatusOK, res.Code)
+
+		var syll models.Syllabus
+		err := json.Unmarshal(res.Body.Bytes(), &syll)
+		require.Nil(t, err)
+		assert.Equal(t, 1, len(syll.Institutions))
+		newInstID = syll.Institutions[0].UUID
 	})
 
 	t.Run("Test remove institution from syllabus", func(t *testing.T) {
+		res := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(res)
+		c.Request = &http.Request{
+			Header: make(http.Header),
+		}
 
+		c.Request.Method = "DELETE"
+		c.Params = []gin.Param{
+			{
+				Key:   "id",
+				Value: syllabusID.String(),
+			},
+			{
+				Key:   "inst_id",
+				Value: newInstID.String(),
+			},
+		}
+
+		handlers.RemoveSyllabusInstitution(c)
+		assert.Equal(t, http.StatusOK, res.Code)
+
+		var inst models.Institution
+		err := json.Unmarshal(res.Body.Bytes(), &inst)
+		require.Nil(t, err)
+		assert.Equal(t, syllabusID, inst.UUID)
 	})
 
 	t.Run("Test delete syllabus", func(t *testing.T) {

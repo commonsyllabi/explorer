@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/commonsyllabi/explorer/api/models"
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -130,6 +131,7 @@ func TestSyllabusModel(t *testing.T) {
 		assert.Equal(t, 2, len(updated.Attachments))
 	})
 
+	var newInstID uuid.UUID
 	t.Run("Test add institution to syllabus", func(t *testing.T) {
 		inst := models.Institution{
 			Name: "Test Uni 2",
@@ -139,20 +141,28 @@ func TestSyllabusModel(t *testing.T) {
 			},
 		}
 
-		t.Skip("The number of institutions returned is wrong")
 		updated, err := models.AddInstitutionToSyllabus(syllabusID, &inst)
 		assert.Nil(t, err)
 		assert.Equal(t, syllabusID, updated.UUID)
-		assert.Equal(t, 2, len(updated.Institutions))
-
+		assert.Equal(t, 1, len(updated.Institutions))
+		newInstID = updated.Institutions[0].UUID
 	})
 
-	t.Run("Test remove institution from user", func(t *testing.T) {
-		t.Skip("The test fails in returning the correct number of inst since the test before should have added one additional")
-		updated, err := models.RemoveInstitutionFromSyllabus(syllabusID, instID)
+	t.Run("Test remove institution from syllabus", func(t *testing.T) {
+		updated, err := models.RemoveInstitutionFromSyllabus(syllabusID, newInstID)
 		assert.Nil(t, err)
 		assert.Equal(t, syllabusID, updated.UUID)
-		assert.Equal(t, 1, len(updated.Institutions))
+		assert.Equal(t, 0, len(updated.Institutions))
+	})
+
+	t.Run("Test remove institution from syllabus wrong syll ID", func(t *testing.T) {
+		_, err := models.RemoveInstitutionFromSyllabus(syllabusNonExistingID, newInstID)
+		assert.NotNil(t, err)
+	})
+
+	t.Run("Test remove institution from syllabus wrong inst ID", func(t *testing.T) {
+		_, err := models.RemoveInstitutionFromSyllabus(syllabusID, instID)
+		assert.NotNil(t, err)
 	})
 
 	t.Run("Test delete syllabus", func(t *testing.T) {

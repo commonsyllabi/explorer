@@ -30,9 +30,20 @@ func GetSyllabi(c *gin.Context) {
 	fields := c.Query("fields")
 	fields = strings.Trim(fields, " ")
 	all_fields := strings.Split(fields, ",")
-	if len(all_fields) > 0 {
+	if len(all_fields) > 0 && all_fields[0] != "" {
 		for i := range all_fields {
 			all_fields[i] = strings.Trim(all_fields[i], " ")
+			f, err := strconv.Atoi(all_fields[i])
+			if err != nil {
+				c.JSON(http.StatusBadRequest, err)
+				zero.Errorf("field is not compliant integer: %v", err)
+				return
+			}
+			if _, found := models.ACADEMIC_FIELDS[f]; !found {
+				c.JSON(http.StatusBadRequest, err)
+				zero.Errorf("field is not ISCED-F 2013 compliant: %v", err)
+				return
+			}
 		}
 		searchParams["fields"] = fmt.Sprintf("%%(%s)%%", strings.Join(all_fields, "|"))
 	}
@@ -45,8 +56,6 @@ func GetSyllabi(c *gin.Context) {
 			all_kws[i] = strings.Trim(all_kws[i], " ")
 		}
 		searchParams["keywords"] = fmt.Sprintf("%%(%s)%%", strings.Join(all_kws, "|"))
-	} else {
-		zero.Warnf("not enough keywords: %v", all_kws)
 	}
 
 	tags := c.Query("tags")
@@ -57,8 +66,6 @@ func GetSyllabi(c *gin.Context) {
 			all_tags[i] = strings.Trim(all_tags[i], " ")
 		}
 		searchParams["tags"] = fmt.Sprintf("%%(%s)%%", strings.Join(all_tags, "|"))
-	} else {
-		zero.Warnf("not enough tags: %v", kws)
 	}
 
 	lang := c.Query("language")
@@ -135,16 +142,10 @@ func CreateSyllabus(c *gin.Context) {
 }
 
 func GetSyllabus(c *gin.Context) {
-	id := c.Param("id")
-	uid, err := uuid.Parse(id)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, err)
-		zero.Errorf("not a valid id %d", err)
-		return
-	}
+	uid := mustParseUUIDParam(c, "id")
 	syll, err := models.GetSyllabus(uid)
 	if err != nil {
-		zero.Errorf("error getting syllabus %v: %s", id, err)
+		zero.Errorf("error getting syllabus: %s", err)
 		c.JSON(http.StatusNotFound, err)
 
 		return
@@ -154,26 +155,13 @@ func GetSyllabus(c *gin.Context) {
 }
 
 func AddSyllabusAttachment(c *gin.Context) {
-	syll_id := c.Param("id")
-	syll_uid, err := uuid.Parse(syll_id)
-	if err != nil {
-		c.String(http.StatusBadRequest, "not a valid ID")
-		zero.Errorf("not a valid syllabus id %d", err)
-		return
-	}
+	uid := mustParseUUIDParam(c, "id")
+	att_uid := mustParseUUIDForm(c, "att_id")
 
-	res_id := c.PostForm("attachment_id")
-	res_uid, err := uuid.Parse(res_id)
-	if err != nil {
-		c.String(http.StatusBadRequest, "not a valid ID")
-		zero.Errorf("not a valid attachment id %d", err)
-		return
-	}
-
-	syll, err := models.AddAttachmentToSyllabus(syll_uid, res_uid)
+	syll, err := models.AddAttachmentToSyllabus(uid, att_uid)
 	if err != nil {
 		c.String(http.StatusNotFound, err.Error())
-		zero.Errorf("error getting syllabus %d: %v", syll_id, err)
+		zero.Errorf("error getting syllabus %d: %v", uid.String(), err)
 		return
 	}
 
@@ -181,22 +169,15 @@ func AddSyllabusAttachment(c *gin.Context) {
 }
 
 func AddSyllabusInstitution(c *gin.Context) {
-	syll_id := c.Param("id")
-	syll_uid, err := uuid.Parse(syll_id)
-	if err != nil {
-		c.String(http.StatusBadRequest, "not a valid ID")
-		zero.Errorf("not a valid syllabus id %d", err)
-		return
-	}
+	uid := mustParseUUIDParam(c, "id")
 
 	var inst models.Institution
 	c.Bind(&inst)
-	//-- bind this from the post body
 
-	syll, err := models.AddInstitutionToSyllabus(syll_uid, &inst)
+	syll, err := models.AddInstitutionToSyllabus(uid, &inst)
 	if err != nil {
 		c.String(http.StatusNotFound, err.Error())
-		zero.Errorf("error getting syllabus %d: %v", syll_id, err)
+		zero.Errorf("error getting syllabus: %v", err)
 		return
 	}
 
@@ -223,33 +204,20 @@ func GetSyllabusAttachments(c *gin.Context) {
 }
 
 func GetSyllabusAttachment(c *gin.Context) {
-	syll_id := c.Param("id")
-	syll_uid, err := uuid.Parse(syll_id)
+	uid := mustParseUUIDParam(c, "id")
+	att_uid := mustParseUUIDParam(c, "att_id")
+
+	_, err := models.GetSyllabus(uid)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, syll_id)
-		zero.Errorf("not a valid syllabus id %d", err)
+		zero.Errorf("error getting syllabus %v: %s", att_uid, err)
+		c.JSON(http.StatusNotFound, att_uid.String())
 		return
 	}
 
-	res_id := c.Param("res_id")
-	res_uid, err := uuid.Parse(res_id)
+	res, err := models.GetAttachment(att_uid)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, res_id)
-		zero.Errorf("not a valid attachment id %d", err)
-		return
-	}
-
-	_, err = models.GetSyllabus(syll_uid)
-	if err != nil {
-		zero.Errorf("error getting syllabus %v: %s", res_id, err)
-		c.JSON(http.StatusNotFound, res_id)
-		return
-	}
-
-	res, err := models.GetAttachment(res_uid)
-	if err != nil {
-		zero.Errorf("error getting attachment %v: %s", res_id, err)
-		c.JSON(http.StatusNotFound, res_id)
+		zero.Errorf("error getting attachment %v: %s", att_uid, err)
+		c.JSON(http.StatusNotFound, att_uid.String())
 		return
 	}
 
@@ -257,15 +225,9 @@ func GetSyllabusAttachment(c *gin.Context) {
 }
 
 func UpdateSyllabus(c *gin.Context) {
-	id := c.Param("id")
-	uid, err := uuid.Parse(id)
-	if err != nil {
-		c.String(http.StatusBadRequest, "not a valid ID")
-		zero.Errorf("not a valid id %d", err)
-		return
-	}
+	uid := mustParseUUIDParam(c, "id")
 
-	err = sanitizeSyllabusUpdate(c)
+	err := sanitizeSyllabusUpdate(c)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		zero.Error(err.Error())
@@ -276,6 +238,11 @@ func UpdateSyllabus(c *gin.Context) {
 	err = c.Bind(&input)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if input.IsEmpty() {
+		c.String(http.StatusNoContent, "you must specify at least one field to update")
 		return
 	}
 
@@ -295,7 +262,7 @@ func UpdateSyllabus(c *gin.Context) {
 	updated, err := models.UpdateSyllabus(uid, &syll)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
-		zero.Errorf("error updating syllabus %d: %v", id, err)
+		zero.Errorf("error updating syllabus %d: %v", uid.String(), err)
 		return
 	}
 
@@ -303,23 +270,11 @@ func UpdateSyllabus(c *gin.Context) {
 }
 
 func DeleteSyllabus(c *gin.Context) {
-	id := c.Param("id")
-	if len(id) < 25 {
-		c.String(http.StatusBadRequest, "not a valid ID")
-		zero.Errorf("not a valid id %d", id)
-		return
-	}
-
-	uid, err := uuid.Parse(id)
-	if err != nil {
-		c.String(http.StatusBadRequest, "not a valid ID")
-		zero.Errorf("not a valid id %d", err)
-		return
-	}
+	uid := mustParseUUIDParam(c, "id")
 	syll, err := models.DeleteSyllabus(uid)
 	if err != nil {
 		c.String(http.StatusNotFound, err.Error())
-		zero.Errorf("error deleting syllabus %d: %v", id, err)
+		zero.Errorf("error deleting syllabus %d: %v", uid.String(), err)
 		return
 	}
 
@@ -327,26 +282,13 @@ func DeleteSyllabus(c *gin.Context) {
 }
 
 func RemoveSyllabusAttachment(c *gin.Context) {
-	syll_id := c.Param("id")
-	syll_uid, err := uuid.Parse(syll_id)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, syll_id)
-		zero.Errorf("not a valid id %d", err)
-		return
-	}
+	uid := mustParseUUIDParam(c, "id")
+	att_uid := mustParseUUIDParam(c, "att_id")
 
-	res_id := c.Param("res_id")
-	res_uid, err := uuid.Parse(res_id)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, res_id)
-		zero.Errorf("not a valid id %d", err)
-		return
-	}
-
-	syll, err := models.RemoveAttachmentFromSyllabus(syll_uid, res_uid)
+	syll, err := models.RemoveAttachmentFromSyllabus(uid, att_uid)
 	if err != nil {
 		c.String(http.StatusNotFound, err.Error())
-		zero.Errorf("error getting syllabus %d: %v", syll_id, err)
+		zero.Errorf("error getting syllabus %d: %v", uid.String(), err)
 		return
 	}
 
@@ -354,26 +296,13 @@ func RemoveSyllabusAttachment(c *gin.Context) {
 }
 
 func RemoveSyllabusInstitution(c *gin.Context) {
-	syll_id := c.Param("id")
-	syll_uid, err := uuid.Parse(syll_id)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, syll_id)
-		zero.Errorf("not a valid id %d", err)
-		return
-	}
+	uid := mustParseUUIDParam(c, "id")
+	inst_uid := mustParseUUIDParam(c, "inst_id")
 
-	inst_id := c.Param("inst_id")
-	inst_uid, err := uuid.Parse(inst_id)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, inst_id)
-		zero.Errorf("not a valid id %d", err)
-		return
-	}
-
-	syll, err := models.RemoveInstitutionFromSyllabus(syll_uid, inst_uid)
+	syll, err := models.RemoveInstitutionFromSyllabus(uid, inst_uid)
 	if err != nil {
 		c.String(http.StatusNotFound, err.Error())
-		zero.Errorf("error getting syllabus %d: %v", syll_id, err)
+		zero.Errorf("error getting syllabus %d: %v", uid.String(), err)
 		return
 	}
 
@@ -408,7 +337,7 @@ func sanitizeSyllabusCreate(c *gin.Context) error {
 
 func sanitizeSyllabusUpdate(c *gin.Context) error {
 	title := c.PostForm("title")
-	if len(title) < minSyllabusTitleLength ||
+	if title != "" && len(title) < minSyllabusTitleLength ||
 		len(title) > maxSyllabusTitleLength {
 		zero.Errorf("the title of the syllabus should be between 10 and 200 characters: %d", len(title))
 		return fmt.Errorf("the title of the syllabus should be between 10 and 200 characters: %d", len(title))
@@ -416,7 +345,7 @@ func sanitizeSyllabusUpdate(c *gin.Context) error {
 
 	lang := c.PostForm("language")
 	if lang != "" {
-		_, err := language.Parse(lang)
+		_, err := language.ParseBase(lang)
 		if err != nil {
 			return fmt.Errorf("the language of the syllabus should be BCP47 compliant, given '%v'", lang)
 		}
@@ -435,4 +364,28 @@ func sanitizeSyllabusUpdate(c *gin.Context) error {
 	}
 
 	return nil
+}
+
+func mustParseUUIDParam(c *gin.Context, tag string) uuid.UUID {
+	id := c.Param(tag)
+	uid, err := uuid.Parse(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err)
+		zero.Errorf("not a valid id %d", err)
+		return uuid.Nil
+	}
+
+	return uid
+}
+
+func mustParseUUIDForm(c *gin.Context, tag string) uuid.UUID {
+	id := c.PostForm(tag)
+	uid, err := uuid.Parse(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err)
+		zero.Errorf("not a valid id %d", err)
+		return uuid.Nil
+	}
+
+	return uid
 }

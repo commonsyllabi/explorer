@@ -55,14 +55,14 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
+	token, err := models.CreateToken(user.UUID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err)
+		zero.Errorf(err.Error())
+		return
+	}
+	body := fmt.Sprintf("the user %s was successfully created with token %s!", user.UUID, token.UUID)
 	if gin.Mode() != gin.TestMode {
-		token, err := models.CreateToken(user.UUID)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, err)
-			zero.Errorf(err.Error())
-			return
-		}
-		body := fmt.Sprintf("the user %s was successfully created with token %s!", user.UUID, token.UUID)
 		mailer.SendMail(user.Email, "user created", body)
 	}
 
