@@ -2,19 +2,17 @@ package api
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"os"
 	"os/signal"
-	"path/filepath"
 	"syscall"
 	"time"
 
-	"github.com/gin-contrib/cors"
-	"github.com/gin-contrib/sessions"
-	"github.com/gin-contrib/sessions/cookie"
-	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
+	"github.com/gorilla/sessions"
+	"github.com/labstack/echo-contrib/session"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 
 	"github.com/commonsyllabi/explorer/api/auth"
 	"github.com/commonsyllabi/explorer/api/config"
@@ -50,7 +48,7 @@ func StartServer(port string, mode string, c config.Config) {
 		}
 	}()
 
-	if gin.Mode() != gin.TestMode {
+	if os.Getenv("API_MODE") != "test" {
 		ch := make(chan os.Signal, 2)
 		signal.Notify(ch, os.Interrupt, syscall.SIGTERM)
 		<-ch // block until signal received
@@ -61,127 +59,103 @@ func StartServer(port string, mode string, c config.Config) {
 }
 
 // SetupRouter registers all middleware, templates, logging route groups and settings
-func SetupRouter() *gin.Engine {
-	router := gin.New()
+func SetupRouter() *echo.Echo {
+	r := echo.New()
 
-	session_opts := sessions.Options{
-		HttpOnly: true,
-	}
-	store := cookie.NewStore([]byte("secret"))
-	store.Options(session_opts)
-	router.Use(sessions.Sessions("cosyl_auth", store))
+	store := sessions.NewCookieStore([]byte("cosyl_auth"))
+	store.Options.HttpOnly = true
+	r.Use(session.Middleware(store))
+	r.Use(middleware.CORS())
+	r.Use(middleware.Logger())
+	r.Use(middleware.Recover())
+	r.Use(middleware.BodyLimit("16M"))
 
-	router.Use(cors.Default())
-	if conf.TemplatesDir != "" {
-		router.LoadHTMLGlob(conf.TemplatesDir + "/*")
-	} else {
-		zero.Warn("got empty templates directory, skipping load...")
-	}
+	r.Static("/uploads", conf.UploadsDir)
 
-	router.Use(gin.LoggerWithFormatter(func(param gin.LogFormatterParams) string {
-		return fmt.Sprintf("%s - [%s] \"%s %s %s %d %s \"%s\" %s\"\n",
-			param.ClientIP,
-			param.TimeStamp.Format(time.RFC1123),
-			param.Method,
-			param.Path,
-			param.Request.Proto,
-			param.StatusCode,
-			param.Latency,
-			param.Request.UserAgent(),
-			param.ErrorMessage,
-		)
-	}))
-	router.MaxMultipartMemory = 16 << 20 // 16 MiB for uploads
-	router.Use(gin.Recovery())
-	cwd, _ := os.Getwd()
-	publicPath := filepath.Join(cwd, conf.PublicDir)
-	router.Use(static.Serve("/", static.LocalFile(publicPath, false)))
-	router.Use(static.Serve("/uploads", static.LocalFile(conf.UploadsDir, false)))
+	r.GET("/ping", handlePing)
 
-	router.GET("/ping", handlePing)
+	r.POST("/login", auth.Login)
+	r.GET("/logout", auth.Logout)
+	r.GET("/dashboard", auth.Dashboard)
 
-	router.POST("/login", auth.Login)
-	router.GET("/logout", auth.Logout)
-	router.GET("/dashboard", auth.Authenticate(), auth.Dashboard)
-
-	a := router.Group("/auth")
+	a := r.Group("/auth")
 	{
 		a.GET("/confirm", auth.Confirm)
 		a.POST("/request-recover", auth.RequestRecover)
 		a.POST("/check-recover", auth.Recover)
 	}
 
-	syllabi := router.Group("/syllabi")
+	syllabi := r.Group("/syllabi")
 	{
 		syllabi.GET("/", handlers.GetSyllabi)
 		syllabi.GET("/:id", handlers.GetSyllabus)
 
-		syllabi.POST("/", auth.Authenticate(), handlers.CreateSyllabus)
-		syllabi.PATCH("/:id", auth.Authenticate(), handlers.UpdateSyllabus)
-		syllabi.DELETE("/:id", auth.Authenticate(), handlers.DeleteSyllabus)
+		syllabi.POST("/", handlers.CreateSyllabus)
+		syllabi.PATCH("/:id", handlers.UpdateSyllabus)
+		syllabi.DELETE("/:id", handlers.DeleteSyllabus)
 
 		syllabi.POST("/:id/institutions", handlers.AddSyllabusInstitution)
 		syllabi.DELETE("/:id/institutions/:inst_id", handlers.RemoveSyllabusInstitution)
+
+		syllabi.POST("/:id/institutions", handlers.AddSyllabusAttachment)
+		syllabi.DELETE("/:id/institutions/:inst_id", handlers.RemoveSyllabusAttachment)
 	}
 
-	users := router.Group("/users")
+	users := r.Group("/users")
 	{
 		users.GET("/", handlers.GetAllUsers)
 		users.GET("/:id", handlers.GetUser)
 		users.POST("/", handlers.CreateUser)
 
-		users.PATCH("/:id", auth.Authenticate(), handlers.UpdateUser)
-		users.DELETE("/:id", auth.Authenticate(), handlers.DeleteUser)
+		users.PATCH("/:id", handlers.UpdateUser)
+		users.DELETE("/:id", handlers.DeleteUser)
 
 		users.POST("/:id/institutions", handlers.AddUserInstitution)
 		users.DELETE("/:id/institutions/:inst_id", handlers.RemoveUserInstitution)
 	}
 
-	attachments := router.Group("/attachments")
+	attachments := r.Group("/attachments")
 	{
 		attachments.GET("/", handlers.GetAllAttachments)
 		attachments.GET("/:id", handlers.GetAttachment)
 
-		attachments.POST("/", auth.Authenticate(), injectConfig(), handlers.CreateAttachment)
-		attachments.PATCH("/:id", auth.Authenticate(), handlers.UpdateAttachment)
-		attachments.DELETE("/:id", auth.Authenticate(), handlers.DeleteAttachment)
+		attachments.POST("/", handlers.CreateAttachment)
+		attachments.PATCH("/:id", handlers.UpdateAttachment)
+		attachments.DELETE("/:id", handlers.DeleteAttachment)
 	}
 
-	collections := router.Group("/collections")
+	collections := r.Group("/collections")
 	{
 		collections.GET("/", handlers.GetAllCollections)
 		collections.GET("/:id", handlers.GetCollection)
 
-		collections.POST("/", auth.Authenticate(), handlers.CreateCollection)
-		collections.PATCH("/:id", auth.Authenticate(), handlers.UpdateCollection)
-		collections.DELETE("/:id", auth.Authenticate(), handlers.DeleteCollection)
+		collections.POST("/", handlers.CreateCollection)
+		collections.PATCH("/:id", handlers.UpdateCollection)
+		collections.DELETE("/:id", handlers.DeleteCollection)
 
 		collections.GET("/:id/syllabi", handlers.GetCollectionSyllabi)
-		collections.POST("/:id/syllabi", handlers.AddCollectionSyllabus)
-
 		collections.GET("/:id/syllabi/:syll_id", handlers.GetCollectionSyllabus)
+		collections.POST("/:id/syllabi", handlers.AddCollectionSyllabus)
 		collections.DELETE("/:id/syllabi/:syll_id", handlers.RemoveCollectionSyllabus)
 	}
 
-	router.Use(handleNotFound)
+	r.GET("/", handleNotFound)
+	r.POST("/", handleNotFound)
 
-	return router
+	return r
 }
 
-func injectConfig() gin.HandlerFunc {
-	return func(c *gin.Context) {
+func injectConfig(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
 		c.Set("config", conf)
-		c.Next()
+		return nil
 	}
 }
 
-func handlePing(c *gin.Context) {
-	c.String(200, "pong")
+func handlePing(c echo.Context) error {
+	return c.String(200, "pong")
 }
 
-// todo make it a json response
-func handleNotFound(c *gin.Context) {
-	c.HTML(http.StatusNotFound, "Error", gin.H{
-		"msg": "We couldn't find the requested information, sorry :(.",
-	})
+func handleNotFound(c echo.Context) error {
+	return c.String(http.StatusNotFound, "We couldn't find the requested information, sorry :(.")
 }

@@ -1,17 +1,17 @@
 package mailer
 
 import (
+	"os"
 	"testing"
 
-	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestMailer(t *testing.T) {
-	gin.SetMode(gin.TestMode)
-
+	os.Setenv("API_MODE", "test")
 	t.Run("Testing basic send", func(t *testing.T) {
-		err := SendMail("pierre.depaz@gmail.com", "test subject", "")
+		err := SendMail("pierre.depaz@gmail.com", "test subject", "test body")
+
 		assert.Nil(t, err)
 	})
 }

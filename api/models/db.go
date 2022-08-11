@@ -27,9 +27,9 @@ func InitDB(url string) (*gorm.DB, error) {
 	var err error
 
 	conf := &gorm.Config{}
-	if os.Getenv("API_MODE") == "release" {
-		conf.Logger = logger.Default.LogMode(logger.Silent)
-	}
+	// if os.Getenv("API_MODE") == "release" {
+	conf.Logger = logger.Default.LogMode(logger.Silent)
+	// }
 
 	db, err = gorm.Open(postgres.Open(url), conf)
 	if err != nil {

@@ -13,23 +13,21 @@ import (
 	"github.com/commonsyllabi/explorer/api"
 	"github.com/commonsyllabi/explorer/api/config"
 	"github.com/commonsyllabi/explorer/api/models"
-	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"gorm.io/gorm"
 )
 
 var (
-	router          *gin.Engine
+	router          *echo.Echo
 	userConfirmID   uuid.UUID
 	tokenConfirmID  uuid.UUID
 	tokenRecoveryID uuid.UUID
 )
 
 func setup(t *testing.T) func(t *testing.T) {
-	gin.SetMode(gin.TestMode)
-
 	tokenConfirmID = uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c801")
 	tokenRecoveryID = uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c901")
 	userConfirmID = uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c800")
@@ -144,7 +142,7 @@ func TestAuth(t *testing.T) {
 
 }
 
-func mustSetupRouter() *gin.Engine {
+func mustSetupRouter() *echo.Echo {
 	var conf config.Config
 	conf.DefaultConf()
 	conf.TemplatesDir = "../api/templates"

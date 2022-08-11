@@ -8,14 +8,14 @@ import (
 
 	"github.com/commonsyllabi/explorer/api/config"
 	"github.com/commonsyllabi/explorer/api/models"
-	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
 
 	"github.com/stretchr/testify/assert"
 )
 
-var router *gin.Engine
+var router *echo.Echo
 
 var (
 	syllabusID   uuid.UUID
@@ -25,12 +25,12 @@ var (
 )
 
 func setup(t *testing.T) func(t *testing.T) {
+	os.Setenv("API_MODE", "test")
 	syllabusID = uuid.MustParse("46de6a2b-aacb-4c24-b1e1-3495821f846a")
 	collectionID = uuid.MustParse("b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a7")
 	attachmentID = uuid.MustParse("c55f0baf-12b8-4bdb-b5e6-2280bff8ab21")
 	userID = uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c8a8")
 
-	gin.SetMode(gin.TestMode)
 	router = mustSetupRouter()
 	mustInitDB()
 
@@ -47,7 +47,7 @@ func TestApi(t *testing.T) {
 		var conf config.Config
 		conf.DefaultConf()
 		conf.TemplatesDir = "./templates"
-		StartServer("2046", gin.TestMode, conf)
+		StartServer("2046", "test", conf)
 	})
 
 	t.Run("Testing ping", func(t *testing.T) {
@@ -77,6 +77,7 @@ func TestLoadConfig(t *testing.T) {
 }
 
 func TestRoutes(t *testing.T) {
+	os.Setenv("API_MODE", "release")
 	t.Run("Test delete collection unauthorized", func(t *testing.T) {
 		path := "/collections/" + collectionID.String()
 		req := httptest.NewRequest(http.MethodDelete, path, nil)
@@ -116,10 +117,10 @@ func TestRoutes(t *testing.T) {
 
 		assert.Equal(t, http.StatusUnauthorized, res.Code)
 	})
-
+	os.Setenv("API_MODE", "test")
 }
 
-func mustSetupRouter() *gin.Engine {
+func mustSetupRouter() *echo.Echo {
 	conf.DefaultConf()
 	conf.TemplatesDir = "../api/templates"
 	conf.FixturesDir = "../api/models/fixtures"

@@ -1,18 +1,17 @@
 package handlers_test
 
 import (
-	"bytes"
-	"io"
-	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
+	"strings"
 	"testing"
 
 	"encoding/json"
 
 	"github.com/commonsyllabi/explorer/api/handlers"
 	"github.com/commonsyllabi/explorer/api/models"
-	"github.com/gin-gonic/gin"
+	"github.com/labstack/echo/v4"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -24,7 +23,9 @@ func TestCollectionHandler(t *testing.T) {
 
 	t.Run("Test get all collections", func(t *testing.T) {
 		res := httptest.NewRecorder()
-		c, _ := gin.CreateTestContext(res)
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		c := echo.New().NewContext(req, res)
+		c.SetPath("/collections")
 		handlers.GetAllCollections(c)
 		assert.Equal(t, http.StatusOK, res.Code)
 
@@ -35,20 +36,14 @@ func TestCollectionHandler(t *testing.T) {
 	})
 
 	t.Run("Test create collection", func(t *testing.T) {
-		var body bytes.Buffer
-		w := multipart.NewWriter(&body)
-		w.WriteField("name", "Test Collection Handling")
-		w.Close()
+		f := make(url.Values)
+		f.Set("name", "Test Collection Handling")
 
 		res := httptest.NewRecorder()
-		c, _ := gin.CreateTestContext(res)
-		c.Request = &http.Request{
-			Header: make(http.Header),
-		}
-
-		c.Request.Method = "POST"
-		c.Request.Header.Set("Content-Type", w.FormDataContentType())
-		c.Request.Body = io.NopCloser(&body)
+		req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(f.Encode()))
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationForm)
+		c := echo.New().NewContext(req, res)
+		c.SetPath("/collections")
 
 		handlers.CreateCollection(c)
 
@@ -62,20 +57,14 @@ func TestCollectionHandler(t *testing.T) {
 	})
 
 	t.Run("Test create collection malformed input", func(t *testing.T) {
-		var body bytes.Buffer
-		w := multipart.NewWriter(&body)
-		w.WriteField("name", "Test")
-		w.Close()
+		f := make(url.Values)
+		f.Set("name", "Test")
 
 		res := httptest.NewRecorder()
-		c, _ := gin.CreateTestContext(res)
-		c.Request = &http.Request{
-			Header: make(http.Header),
-		}
-
-		c.Request.Method = "POST"
-		c.Request.Header.Set("Content-Type", w.FormDataContentType())
-		c.Request.Body = io.NopCloser(&body)
+		req := httptest.NewRequest(http.MethodPost, "/collections", strings.NewReader(f.Encode()))
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationForm)
+		c := echo.New().NewContext(req, res)
+		c.SetPath("/collections")
 
 		handlers.CreateCollection(c)
 
@@ -84,18 +73,12 @@ func TestCollectionHandler(t *testing.T) {
 
 	t.Run("Test get collection", func(t *testing.T) {
 		res := httptest.NewRecorder()
-		c, _ := gin.CreateTestContext(res)
-		c.Request = &http.Request{
-			Header: make(http.Header),
-		}
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
 
-		c.Request.Method = "GET"
-		c.Params = []gin.Param{
-			{
-				Key:   "id",
-				Value: collectionID.String(),
-			},
-		}
+		c := echo.New().NewContext(req, res)
+		c.SetPath("/collections")
+		c.SetParamNames("id")
+		c.SetParamValues(collectionID.String())
 
 		handlers.GetCollection(c)
 		assert.Equal(t, http.StatusOK, res.Code)
@@ -108,20 +91,14 @@ func TestCollectionHandler(t *testing.T) {
 		assert.Equal(t, 1, len(coll.Syllabi))
 	})
 
-	t.Run("Test get collection non-existent ID", func(t *testing.T) {
+	t.Run("Test get collection non-existing ID", func(t *testing.T) {
 		res := httptest.NewRecorder()
-		c, _ := gin.CreateTestContext(res)
-		c.Request = &http.Request{
-			Header: make(http.Header),
-		}
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
 
-		c.Request.Method = "GET"
-		c.Params = []gin.Param{
-			{
-				Key:   "id",
-				Value: collectionNonExistingID.String(),
-			},
-		}
+		c := echo.New().NewContext(req, res)
+		c.SetPath("/collections")
+		c.SetParamNames("id")
+		c.SetParamValues(collectionNonExistingID.String())
 
 		handlers.GetCollection(c)
 		assert.Equal(t, http.StatusNotFound, res.Code)
@@ -129,44 +106,28 @@ func TestCollectionHandler(t *testing.T) {
 
 	t.Run("Test get collection malformed ID", func(t *testing.T) {
 		res := httptest.NewRecorder()
-		c, _ := gin.CreateTestContext(res)
-		c.Request = &http.Request{
-			Header: make(http.Header),
-		}
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
 
-		c.Request.Method = "GET"
-		c.Params = []gin.Param{
-			{
-				Key:   "id",
-				Value: "wrong",
-			},
-		}
+		c := echo.New().NewContext(req, res)
+		c.SetPath("/collections/:id")
+		c.SetParamNames("id")
+		c.SetParamValues("wrong")
 
 		handlers.GetCollection(c)
 		assert.Equal(t, http.StatusBadRequest, res.Code)
 	})
 
 	t.Run("Test update collection", func(t *testing.T) {
-		var body bytes.Buffer
-		w := multipart.NewWriter(&body)
-		w.WriteField("name", "Updated")
-		w.Close()
+		f := make(url.Values)
+		f.Set("name", "Updated")
 
 		res := httptest.NewRecorder()
-		c, _ := gin.CreateTestContext(res)
-		c.Request = &http.Request{
-			Header: make(http.Header),
-		}
-
-		c.Request.Method = "PATCH"
-		c.Request.Header.Set("Content-Type", w.FormDataContentType())
-		c.Request.Body = io.NopCloser(&body)
-		c.Params = []gin.Param{
-			{
-				Key:   "id",
-				Value: collectionID.String(),
-			},
-		}
+		req := httptest.NewRequest(http.MethodPatch, "/collections", strings.NewReader(f.Encode()))
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationForm)
+		c := echo.New().NewContext(req, res)
+		c.SetPath("/collections/:id")
+		c.SetParamNames("id")
+		c.SetParamValues(collectionID.String())
 
 		handlers.UpdateCollection(c)
 		assert.Equal(t, http.StatusOK, res.Code)
@@ -179,106 +140,65 @@ func TestCollectionHandler(t *testing.T) {
 		assert.NotZero(t, coll.CreatedAt)
 	})
 
-	t.Run("Test update collection non-existant ID", func(t *testing.T) {
-		var body bytes.Buffer
-		w := multipart.NewWriter(&body)
-		w.WriteField("name", "Updated Name")
-		w.Close()
+	t.Run("Test update collection non-existing ID", func(t *testing.T) {
+		f := make(url.Values)
+		f.Set("name", "Updated Name")
 
 		res := httptest.NewRecorder()
-		c, _ := gin.CreateTestContext(res)
-		c.Request = &http.Request{
-			Header: make(http.Header),
-		}
-
-		c.Request.Method = "PATCH"
-		c.Request.Header.Set("Content-Type", w.FormDataContentType())
-		c.Request.Body = io.NopCloser(&body)
-		c.Params = []gin.Param{
-			{
-				Key:   "id",
-				Value: collectionNonExistingID.String(),
-			},
-		}
+		req := httptest.NewRequest(http.MethodPatch, "/", strings.NewReader(f.Encode()))
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationForm)
+		c := echo.New().NewContext(req, res)
+		c.SetPath("/collections/:id")
+		c.SetParamNames("id")
+		c.SetParamValues(collectionNonExistingID.String())
 
 		handlers.UpdateCollection(c)
 		assert.Equal(t, http.StatusNotFound, res.Code)
 	})
 
 	t.Run("Test update collection malformed ID", func(t *testing.T) {
-		var body bytes.Buffer
-		w := multipart.NewWriter(&body)
-		w.WriteField("name", "Updated Name")
-		w.Close()
+		f := make(url.Values)
+		f.Set("name", "Updated Name")
 
 		res := httptest.NewRecorder()
-		c, _ := gin.CreateTestContext(res)
-		c.Request = &http.Request{
-			Header: make(http.Header),
-		}
-
-		c.Request.Method = "PATCH"
-		c.Request.Header.Set("Content-Type", w.FormDataContentType())
-		c.Request.Body = io.NopCloser(&body)
-		c.Params = []gin.Param{
-			{
-				Key:   "id",
-				Value: "wrong",
-			},
-		}
+		req := httptest.NewRequest(http.MethodPatch, "/", strings.NewReader(f.Encode()))
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationForm)
+		c := echo.New().NewContext(req, res)
+		c.SetPath("/collections/:id")
+		c.SetParamNames("id")
+		c.SetParamValues("wrong")
 
 		handlers.UpdateCollection(c)
 		assert.Equal(t, http.StatusBadRequest, res.Code)
 	})
 
 	t.Run("Test update collection wrong field", func(t *testing.T) {
-		var body bytes.Buffer
-		w := multipart.NewWriter(&body)
-		w.WriteField("name", "Updated Name")
-		w.WriteField("wrong-field", "mailicious")
-		w.Close()
+		f := make(url.Values)
+		f.Set("wrong-field", "mailicious")
 
 		res := httptest.NewRecorder()
-		c, _ := gin.CreateTestContext(res)
-		c.Request = &http.Request{
-			Header: make(http.Header),
-		}
-
-		c.Request.Method = "PATCH"
-		c.Request.Header.Set("Content-Type", w.FormDataContentType())
-		c.Request.Body = io.NopCloser(&body)
-		c.Params = []gin.Param{
-			{
-				Key:   "id",
-				Value: "wrong",
-			},
-		}
+		req := httptest.NewRequest(http.MethodPatch, "/", strings.NewReader(f.Encode()))
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationForm)
+		c := echo.New().NewContext(req, res)
+		c.SetPath("/collections/:id")
+		c.SetParamNames("id")
+		c.SetParamValues(collectionID.String())
 
 		handlers.UpdateCollection(c)
 		assert.Equal(t, http.StatusBadRequest, res.Code)
 	})
 
 	t.Run("Test add syllabus to collection", func(t *testing.T) {
-		var body bytes.Buffer
-		w := multipart.NewWriter(&body)
-		w.WriteField("syllabus_id", syllabusID.String())
-		w.Close()
+		f := make(url.Values)
+		f.Set("syllabus_id", syllabusID.String())
 
 		res := httptest.NewRecorder()
-		c, _ := gin.CreateTestContext(res)
-		c.Request = &http.Request{
-			Header: make(http.Header),
-		}
-
-		c.Request.Method = "PATCH"
-		c.Request.Header.Set("Content-Type", w.FormDataContentType())
-		c.Request.Body = io.NopCloser(&body)
-		c.Params = []gin.Param{
-			{
-				Key:   "id",
-				Value: collectionID.String(),
-			},
-		}
+		req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(f.Encode()))
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationForm)
+		c := echo.New().NewContext(req, res)
+		c.SetPath("/collections/:id/syllabi")
+		c.SetParamNames("id")
+		c.SetParamValues(collectionID.String())
 
 		handlers.AddCollectionSyllabus(c)
 		assert.Equal(t, http.StatusOK, res.Code)
@@ -291,18 +211,12 @@ func TestCollectionHandler(t *testing.T) {
 
 	t.Run("Test get all syllabi from collection", func(t *testing.T) {
 		res := httptest.NewRecorder()
-		c, _ := gin.CreateTestContext(res)
-		c.Request = &http.Request{
-			Header: make(http.Header),
-		}
-
-		c.Request.Method = "GET"
-		c.Params = []gin.Param{
-			{
-				Key:   "id",
-				Value: collectionID.String(),
-			},
-		}
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationForm)
+		c := echo.New().NewContext(req, res)
+		c.SetPath("/collections/:id/syllabi")
+		c.SetParamNames("id")
+		c.SetParamValues(collectionID.String())
 
 		handlers.GetCollectionSyllabi(c)
 		assert.Equal(t, http.StatusOK, res.Code)
@@ -315,22 +229,12 @@ func TestCollectionHandler(t *testing.T) {
 
 	t.Run("Test get syllabus from collection", func(t *testing.T) {
 		res := httptest.NewRecorder()
-		c, _ := gin.CreateTestContext(res)
-		c.Request = &http.Request{
-			Header: make(http.Header),
-		}
-
-		c.Request.Method = "GET"
-		c.Params = []gin.Param{
-			{
-				Key:   "id",
-				Value: collectionID.String(),
-			},
-			{
-				Key:   "syll_id",
-				Value: syllabusID.String(),
-			},
-		}
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationForm)
+		c := echo.New().NewContext(req, res)
+		c.SetPath("/collections/:id/syllabi/:syll_id")
+		c.SetParamNames("id", "syll_id")
+		c.SetParamValues(collectionID.String(), syllabusID.String())
 
 		handlers.GetCollectionSyllabus(c)
 		assert.Equal(t, http.StatusOK, res.Code)
@@ -342,22 +246,12 @@ func TestCollectionHandler(t *testing.T) {
 
 	t.Run("Test remove syllabus from collection", func(t *testing.T) {
 		res := httptest.NewRecorder()
-		c, _ := gin.CreateTestContext(res)
-		c.Request = &http.Request{
-			Header: make(http.Header),
-		}
-
-		c.Request.Method = "DELETE"
-		c.Params = []gin.Param{
-			{
-				Key:   "id",
-				Value: collectionID.String(),
-			},
-			{
-				Key:   "syll_id",
-				Value: syllabusID.String(),
-			},
-		}
+		req := httptest.NewRequest(http.MethodDelete, "/", nil)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationForm)
+		c := echo.New().NewContext(req, res)
+		c.SetPath("/collections/:id/syllabi/:syll_id")
+		c.SetParamNames("id", "syll_id")
+		c.SetParamValues(collectionID.String(), syllabusID.String())
 
 		handlers.RemoveCollectionSyllabus(c)
 		assert.Equal(t, http.StatusOK, res.Code)
@@ -370,18 +264,12 @@ func TestCollectionHandler(t *testing.T) {
 
 	t.Run("Test delete collection", func(t *testing.T) {
 		res := httptest.NewRecorder()
-		c, _ := gin.CreateTestContext(res)
-		c.Request = &http.Request{
-			Header: make(http.Header),
-		}
-
-		c.Request.Method = "DELETE"
-		c.Params = []gin.Param{
-			{
-				Key:   "id",
-				Value: collectionDeleteID.String(),
-			},
-		}
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationForm)
+		c := echo.New().NewContext(req, res)
+		c.SetPath("/collections/:id")
+		c.SetParamNames("id")
+		c.SetParamValues(collectionID.String())
 
 		handlers.DeleteCollection(c)
 		assert.Equal(t, http.StatusOK, res.Code)
@@ -389,18 +277,12 @@ func TestCollectionHandler(t *testing.T) {
 
 	t.Run("Test delete collection non-existant ID", func(t *testing.T) {
 		res := httptest.NewRecorder()
-		c, _ := gin.CreateTestContext(res)
-		c.Request = &http.Request{
-			Header: make(http.Header),
-		}
-
-		c.Request.Method = "DELETE"
-		c.Params = []gin.Param{
-			{
-				Key:   "id",
-				Value: collectionNonExistingID.String(),
-			},
-		}
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationForm)
+		c := echo.New().NewContext(req, res)
+		c.SetPath("/collections/:id")
+		c.SetParamNames("id")
+		c.SetParamValues(collectionNonExistingID.String())
 
 		handlers.DeleteCollection(c)
 		assert.Equal(t, http.StatusNotFound, res.Code)
@@ -408,18 +290,12 @@ func TestCollectionHandler(t *testing.T) {
 
 	t.Run("Test delete collection wrong input", func(t *testing.T) {
 		res := httptest.NewRecorder()
-		c, _ := gin.CreateTestContext(res)
-		c.Request = &http.Request{
-			Header: make(http.Header),
-		}
-
-		c.Request.Method = "DELETE"
-		c.Params = []gin.Param{
-			{
-				Key:   "id",
-				Value: "wrong",
-			},
-		}
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationForm)
+		c := echo.New().NewContext(req, res)
+		c.SetPath("/collections/:id")
+		c.SetParamNames("id")
+		c.SetParamValues("wrong")
 
 		handlers.DeleteCollection(c)
 		assert.Equal(t, http.StatusBadRequest, res.Code)

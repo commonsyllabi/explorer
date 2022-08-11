@@ -4,91 +4,86 @@ import (
 	"fmt"
 	"net/http"
 	"net/mail"
+	"os"
 	"strings"
 
 	zero "github.com/commonsyllabi/explorer/api/logger"
 	"github.com/commonsyllabi/explorer/api/models"
 	"github.com/commonsyllabi/explorer/mailer"
-	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"github.com/labstack/echo-contrib/session"
+	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/bcrypt"
 )
 
-func Authenticate() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		session := sessions.Default(c)
-		sessionID := session.Get("user")
-		if sessionID == nil {
-			c.JSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})
-			c.Abort()
-			return
-		}
+func Authenticate(c echo.Context) error {
+	if os.Getenv("API_MODE") == "test" {
+		return nil
 	}
+
+	sess, _ := session.Get("cosyl_auth", c)
+	user := sess.Values["user"]
+	if user == nil {
+		return c.JSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})
+	}
+	return nil
 }
 
-func Login(c *gin.Context) {
-	session := sessions.Default(c)
-	password := c.PostForm("password")
-	email, err := mail.ParseAddress(c.PostForm("email"))
+func Login(c echo.Context) error {
+	sess, _ := session.Get("cosyl_auth", c)
+	password := c.FormValue("password")
+	email, err := mail.ParseAddress(c.FormValue("email"))
 	if err != nil || strings.Trim(password, " ") == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Parameters can't be empty"})
-		return
+		return c.JSON(http.StatusBadRequest, gin.H{"error": "Parameters can't be empty"})
 	}
 
 	user, err := models.GetUserByEmail(email.Address)
 	if err != nil || user.Status == models.UserPending {
 		zero.Error(err.Error())
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Authentication failed"})
-		return
+		return c.JSON(http.StatusUnauthorized, gin.H{"error": "Authentication failed"})
 	}
 
 	err = bcrypt.CompareHashAndPassword(user.Password, []byte(password))
 	if err != nil {
 		zero.Error(err.Error())
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Authentication failed"})
-		return
+		return c.JSON(http.StatusUnauthorized, gin.H{"error": "Authentication failed"})
 	}
 
-	session.Set("user", user.UUID.String())
-	if err := session.Save(); err != nil {
+	sess.Values["user"] = user.UUID.String()
+	if err := sess.Save(c.Request(), c.Response()); err != nil {
 		zero.Error(err.Error())
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save session"})
-		return
+		return c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save session"})
 	}
-	c.JSON(http.StatusOK, user)
+	return c.JSON(http.StatusOK, user)
 }
 
-func Logout(c *gin.Context) {
-	session := sessions.Default(c)
-	user := session.Get("user")
+func Logout(c echo.Context) error {
+	sess, _ := session.Get("cosyl_auth", c)
+	user := sess.Values["user"]
 	if user == nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Invalid session token"})
-		return
+		return c.JSON(http.StatusNotFound, gin.H{"error": "Invalid session token"})
 	}
 
-	session.Delete("user")
-	if err := session.Save(); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save session"})
-		return
+	sess.Values["user"] = nil
+	if err := sess.Save(c.Request(), c.Response()); err != nil {
+		return c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save session"})
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Successfully logged out"})
+	return c.JSON(http.StatusOK, gin.H{"message": "Successfully logged out"})
 }
 
-func Confirm(c *gin.Context) {
-	token, err := uuid.Parse(c.Query("token"))
+func Confirm(c echo.Context) error {
+	token, err := uuid.Parse(c.QueryParam("token"))
 	if err != nil {
 		c.String(http.StatusNotFound, err.Error())
 		zero.Errorf(err.Error())
-		return
 	}
 
 	user, err := models.GetTokenUser(token)
 	if err != nil {
 		c.String(http.StatusNotFound, err.Error())
 		zero.Errorf(err.Error())
-		return
 	}
 
 	user.Status = models.UserConfirmed
@@ -96,109 +91,95 @@ func Confirm(c *gin.Context) {
 	if err != nil {
 		c.String(http.StatusNotFound, err.Error())
 		zero.Errorf(err.Error())
-		return
 	}
 
 	err = models.DeleteToken(token)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		zero.Errorf(err.Error())
-		return
 	}
 
-	c.JSON(http.StatusOK, user)
+	return c.JSON(http.StatusOK, user)
 }
 
-func RequestRecover(c *gin.Context) {
-	email, err := mail.ParseAddress(c.PostForm("email"))
+func RequestRecover(c echo.Context) error {
+	email, err := mail.ParseAddress(c.FormValue("email"))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, err)
-		zero.Errorf("not a valid email %d", err)
-		return
+		return c.JSON(http.StatusBadRequest, err)
 	}
 
 	user, err := models.GetUserByEmail(email.Address)
 	if err != nil {
-		c.JSON(http.StatusNotFound, err)
-		zero.Errorf("user not found %s", err)
-		return
+		return c.JSON(http.StatusNotFound, err)
 	}
 
 	token, err := models.CreateToken(user.UUID)
 	if err != nil {
-		c.JSON(http.StatusNotFound, err)
-		zero.Errorf(err.Error())
-		return
+		return c.JSON(http.StatusNotFound, err)
 	}
 
 	// send email with link
-	if gin.Mode() != gin.TestMode {
+	if os.Getenv("API_MODE") != "test" {
 		body := fmt.Sprintf("here is your recover link :%v!", token.UUID.String())
 		mailer.SendMail(email.Address, "account recovery", body)
 	}
 
-	c.String(http.StatusOK, "recovery email sent!")
+	return c.String(http.StatusOK, "recovery email sent!")
 }
 
 // Recover takes a token and checks if it exists in the token table, and an optional password to update the associated user password
-func Recover(c *gin.Context) {
-	token, err := uuid.Parse(c.Query("token"))
+func Recover(c echo.Context) error {
+	token, err := uuid.Parse(c.QueryParam("token"))
 	if err != nil {
 		c.String(http.StatusNotFound, "token not found")
 		zero.Errorf("token not found %s", err)
-		return
 	}
 
 	user, err := models.GetTokenUser(token)
 	if err != nil {
 		c.String(http.StatusNotFound, "token not found")
 		zero.Errorf("token not found %s", err)
-		return
 	}
 
 	var password struct {
 		Value string `form:"password"`
 	}
 
-	err = c.ShouldBind(&password)
+	err = c.Bind(&password)
 	if err != nil {
 		c.String(http.StatusBadRequest, "couldn't parse password")
 		zero.Errorf("couldn't parse password %s", err)
-		return
 	}
 
 	if password.Value == "" {
 		c.String(http.StatusNotModified, "password not modified")
-		return
 	}
 
 	// hash and update the password
 	hashed, err := bcrypt.GenerateFromPassword([]byte(password.Value), bcrypt.DefaultCost)
 	if err != nil {
 		zero.Errorf("error hashing password: %v", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"error updating user": err.Error()})
-		return
+		return c.JSON(http.StatusInternalServerError, gin.H{"error updating user": err.Error()})
 	}
 	user.Password = hashed
 	updated, err := models.UpdateUser(user.UUID, &user)
 	if err != nil {
 		c.String(http.StatusBadRequest, "couldn't update password")
 		zero.Errorf("couldn't update password %s", err)
-		return
 	}
 
 	err = models.DeleteToken(token)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		zero.Errorf(err.Error())
-		return
 	}
 
-	c.JSON(http.StatusPartialContent, updated)
+	return c.JSON(http.StatusPartialContent, updated)
 }
 
-func Dashboard(c *gin.Context) {
-	session := sessions.Default(c)
-	user := session.Get("user")
-	c.JSON(http.StatusOK, gin.H{"user": user})
+func Dashboard(c echo.Context) error {
+	Authenticate(c)
+	sess, _ := session.Get("cosyl_auth", c)
+	user := sess.Values["user"]
+	return c.JSON(http.StatusOK, user)
 }
