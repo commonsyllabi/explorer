@@ -1,8 +1,10 @@
 package models
 
 import (
+	"fmt"
 	"time"
 
+	"github.com/biter777/countries"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
@@ -14,7 +16,7 @@ type Institution struct {
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`
 	UUID      uuid.UUID      `gorm:"uniqueIndex;type:uuid;primaryKey;default:uuid_generate_v4()" json:"uuid" yaml:"uuid"`
 	Name      string         `json:"name" form:"name"`
-	Country   string         `json:"country" form:"country"` //-- iso 3166
+	Country   int            `json:"country" form:"country"`
 	Date      Date           `gorm:"embedded;embeddedPrefix:date_" json:"date" form:"date"`
 	URL       string         `json:"url" form:"url"`
 	Position  string         `json:"position" form:"position"`
@@ -23,4 +25,18 @@ type Institution struct {
 type Date struct {
 	Term string `json:"term" form:"date_term"`
 	Year int    `json:"year" form:"date_year"`
+}
+
+func (i *Institution) BeforeCreate(tx *gorm.DB) (err error) {
+	if countries.ByNumeric(i.Country) == countries.Unknown {
+		return fmt.Errorf("country is unknown, skipping create")
+	}
+	return nil
+}
+
+func (i *Institution) BeforeUpdate(tx *gorm.DB) (err error) {
+	if countries.ByNumeric(i.Country) == countries.Unknown {
+		return fmt.Errorf("country is unknown, skipping update")
+	}
+	return nil
 }

@@ -90,7 +90,7 @@ func runFixtures(shouldTruncateTables bool) error {
 	}
 	inst := Institution{
 		Name:     "Sciences Po",
-		Country:  "fr",
+		Country:  250,
 		Position: "lecturer",
 	}
 	users[0].Institutions = append(users[0].Institutions, inst)

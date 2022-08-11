@@ -134,7 +134,8 @@ func TestSyllabusModel(t *testing.T) {
 	var newInstID uuid.UUID
 	t.Run("Test add institution to syllabus", func(t *testing.T) {
 		inst := models.Institution{
-			Name: "Test Uni 2",
+			Name:    "Test Uni 2",
+			Country: 250,
 			Date: models.Date{
 				Term: "fall",
 				Year: 2020,

@@ -79,6 +79,7 @@ func TestUserModel(t *testing.T) {
 	t.Run("Test add institution to user", func(t *testing.T) {
 		inst := models.Institution{
 			Name:     "Test Uni 2",
+			Country:  275,
 			Position: "lector",
 		}
 

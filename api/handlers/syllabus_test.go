@@ -817,6 +817,7 @@ func TestSyllabusHandler(t *testing.T) {
 		var body bytes.Buffer
 		w := multipart.NewWriter(&body)
 		w.WriteField("name", "fachhoschule")
+		w.WriteField("country", "275")
 		w.Close()
 
 		res := httptest.NewRecorder()
