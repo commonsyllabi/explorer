@@ -31,8 +31,7 @@ export default NextAuth({
                     body: urlencoded,
                     redirect: 'follow'
                 };
-
-                const response = await fetch("http://localhost:3046/login", requestOptions)
+                const response = await fetch(`${process.env.API_URL}/login`, requestOptions)
                 if (response.ok){
                     const user = await response.json()
                     console.log(`logged in user ${user.name}`);
