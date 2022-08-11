@@ -20,93 +20,14 @@ var (
 )
 
 func GetSyllabi(c *gin.Context) {
-	searchParams := make(map[string]string, 0)
-	searchParams["fields"] = "%"
-	searchParams["keywords"] = "%"
-	searchParams["languages"] = "%"
-	searchParams["levels"] = "%"
-	searchParams["tags"] = "%"
-
-	fields := c.Query("fields")
-	fields = strings.Trim(fields, " ")
-	all_fields := strings.Split(fields, ",")
-	if len(all_fields) > 0 && all_fields[0] != "" {
-		for i := range all_fields {
-			all_fields[i] = strings.Trim(all_fields[i], " ")
-			f, err := strconv.Atoi(all_fields[i])
-			if err != nil {
-				c.JSON(http.StatusBadRequest, err)
-				zero.Errorf("field is not compliant integer: %v", err)
-				return
-			}
-			if _, found := models.ACADEMIC_FIELDS[f]; !found {
-				c.JSON(http.StatusBadRequest, err)
-				zero.Errorf("field is not ISCED-F 2013 compliant: %v", err)
-				return
-			}
-		}
-		searchParams["fields"] = fmt.Sprintf("%%(%s)%%", strings.Join(all_fields, "|"))
+	params, err := parseSearchParams(c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err)
+		zero.Error(err.Error())
+		return
 	}
 
-	kws := c.Query("keywords")
-	kws = strings.Trim(kws, " ")
-	all_kws := strings.Split(kws, ",")
-	if len(all_kws) > 0 {
-		for i := range all_kws {
-			all_kws[i] = strings.Trim(all_kws[i], " ")
-		}
-		searchParams["keywords"] = fmt.Sprintf("%%(%s)%%", strings.Join(all_kws, "|"))
-	}
-
-	tags := c.Query("tags")
-	tags = strings.Trim(tags, " ")
-	all_tags := strings.Split(tags, ",")
-	if len(all_tags) > 0 {
-		for i := range all_tags {
-			all_tags[i] = strings.Trim(all_tags[i], " ")
-		}
-		searchParams["tags"] = fmt.Sprintf("%%(%s)%%", strings.Join(all_tags, "|"))
-	}
-
-	langs := c.Query("languages")
-	langs = strings.Trim(langs, " ")
-	all_langs := strings.Split(langs, ",")
-	if len(all_langs) > 0 {
-		for i := range all_langs {
-			all_langs[i] = strings.Trim(all_langs[i], " ")
-			_, err := language.Parse(all_langs[i])
-			if err != nil {
-				c.JSON(http.StatusBadRequest, err)
-				zero.Errorf("langsuage is not bcp-47 compliant: %v", err)
-				return
-			}
-		}
-		searchParams["languages"] = fmt.Sprintf("%%(%s)%%", strings.Join(all_langs, "|"))
-	}
-
-	levels := c.Query("levels")
-	levels = strings.Trim(levels, " ")
-	all_levels := strings.Split(levels, ",")
-	if len(all_levels) > 0 {
-		for i := range all_levels {
-			l, err := strconv.Atoi(all_levels[i])
-			if err != nil {
-				c.JSON(http.StatusBadRequest, err)
-				zero.Errorf("the level of the syllabus should be between 0 and 3: %v", err)
-				return
-			}
-			_, found := models.LEVELS[l]
-			if !found {
-				c.JSON(http.StatusBadRequest, err)
-				zero.Errorf("the level of the syllabus should be between 0 and 3: %v", err)
-				return
-			}
-		}
-
-		searchParams["levels"] = fmt.Sprintf("%%(%s)%%", strings.Join(all_levels, "|"))
-	}
-
-	syllabi, err := models.GetSyllabi(searchParams)
+	syllabi, err := models.GetSyllabi(params)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err)
 		zero.Errorf("error getting syllabi: %v", err)
@@ -316,6 +237,92 @@ func RemoveSyllabusInstitution(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, syll)
+}
+
+func parseSearchParams(c *gin.Context) (map[string]string, error) {
+	params := make(map[string]string, 0)
+	params["fields"] = "%"
+	params["keywords"] = "%"
+	params["languages"] = "%"
+	params["levels"] = "%"
+	params["tags"] = "%"
+
+	fields := c.Query("fields")
+	fields = strings.Trim(fields, " ")
+	all_fields := strings.Split(fields, ",")
+	if len(all_fields) > 0 && all_fields[0] != "" {
+		for i := range all_fields {
+			all_fields[i] = strings.Trim(all_fields[i], " ")
+			f, err := strconv.Atoi(all_fields[i])
+			if err != nil {
+				return params, fmt.Errorf("field is not compliant integer: %v", err)
+			}
+			if _, found := models.ACADEMIC_FIELDS[f]; !found {
+				return params, fmt.Errorf("field is not ISCED-F 2013 compliant: %v", err)
+			}
+		}
+		params["fields"] = fmt.Sprintf("%%(%s)%%", strings.Join(all_fields, "|"))
+	}
+
+	kws := c.Query("keywords")
+	kws = strings.Trim(kws, " ")
+	all_kws := strings.Split(kws, ",")
+	if len(all_kws) > 0 {
+		for i := range all_kws {
+			all_kws[i] = strings.Trim(all_kws[i], " ")
+			all_kws[i] = strings.ToLower(all_kws[i])
+		}
+		params["keywords"] = fmt.Sprintf("%%(%s)%%", strings.Join(all_kws, "|"))
+	}
+
+	tags := c.Query("tags")
+	tags = strings.Trim(tags, " ")
+	all_tags := strings.Split(tags, ",")
+	if len(all_tags) > 0 {
+		for i := range all_tags {
+			all_tags[i] = strings.Trim(all_tags[i], " ")
+			all_tags[i] = strings.ToLower(all_tags[i])
+		}
+		params["tags"] = fmt.Sprintf("%%(%s)%%", strings.Join(all_tags, "|"))
+	}
+
+	langs := c.Query("languages")
+	langs = strings.Trim(langs, " ")
+	all_langs := strings.Split(langs, ",")
+	if len(all_langs) > 0 {
+		for i := range all_langs {
+			all_langs[i] = strings.Trim(all_langs[i], " ")
+			if all_langs[i] != "" {
+				_, err := language.Parse(all_langs[i])
+				if err != nil {
+					return params, fmt.Errorf("language is not bcp-47 compliant: %v", err)
+				}
+			}
+		}
+		params["languages"] = fmt.Sprintf("%%(%s)%%", strings.Join(all_langs, "|"))
+	}
+
+	levels := c.Query("levels")
+	levels = strings.Trim(levels, " ")
+	all_levels := strings.Split(levels, ",")
+	if len(all_levels) > 0 {
+		for i := range all_levels {
+			if all_levels[i] != "" {
+				l, err := strconv.Atoi(all_levels[i])
+				if err != nil {
+					return params, fmt.Errorf("the level of the syllabus should be between 0 and 3: %v", err)
+				}
+				_, found := models.LEVELS[l]
+				if !found {
+					return params, fmt.Errorf("the level of the syllabus should be between 0 and 3: %v", err)
+				}
+			}
+		}
+
+		params["levels"] = fmt.Sprintf("%%(%s)%%", strings.Join(all_levels, "|"))
+	}
+
+	return params, nil
 }
 
 func sanitizeSyllabusCreate(c *gin.Context) error {

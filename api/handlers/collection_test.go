@@ -104,7 +104,7 @@ func TestCollectionHandler(t *testing.T) {
 		err := json.Unmarshal(res.Body.Bytes(), &coll)
 		require.Nil(t, err)
 		assert.Equal(t, collectionID, coll.UUID)
-		assert.Equal(t, "Fixture Collection", coll.Name)
+		assert.Equal(t, "Good Stuff", coll.Name)
 		assert.Equal(t, 1, len(coll.Syllabi))
 	})
 
@@ -337,7 +337,7 @@ func TestCollectionHandler(t *testing.T) {
 		var syll models.Syllabus
 		err := json.Unmarshal(res.Body.Bytes(), &syll)
 		require.Nil(t, err)
-		assert.Equal(t, "User-created 1", syll.Title)
+		assert.Equal(t, "Ungewohnt", syll.Title)
 	})
 
 	t.Run("Test remove syllabus from collection", func(t *testing.T) {

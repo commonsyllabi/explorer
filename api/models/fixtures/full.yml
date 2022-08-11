@@ -1,50 +1,59 @@
 - uuid: 'e7b74bcd-c864-41ee-b5a7-d3031f76c8a8'
   status: "confirmed"
-  name: "full user 1"
-  email: "one@raz.com"
-  bio: "this is a full user"
+  name: "Justyna Poplawska"
+  email: "jus@pop.com"
+  bio: "Justyna Poplawska is a guest lecturer at the Technisches Universität Berlin, in the chair of Jacob Van Rijs. She leads design and competition seminars."
   password: [36, 50, 97, 36, 49, 48, 36, 121, 72, 53, 79, 110, 76, 51, 98, 57, 112, 80, 81, 53, 49, 104, 54, 100, 74, 121, 54, 79, 101, 47, 117, 119, 78, 76, 57, 103, 107, 100, 88, 51, 90, 111, 73, 75, 80, 117, 113, 57, 104, 69, 102, 103, 85, 67, 51, 73, 56, 88, 113, 67]
-  education: "life education"
+  education: "MA in Architecture, TU Cottbus"
   urls:
-    - "http://test.net"
-    - "http://test.com"
+    - "http://jus.net"
+    - "http://pop.com"
   syllabi:
     - uuid: '46de6a2b-aacb-4c24-b1e1-3495821f846a'
-      title: "User-created 1"
-      language: en
-      academic_level: 0
+      title: "Ungewohnt"
+      language: de
+      academic_level: 1
       academic_fields:
         - 100
         - 200
-      description: "Lorem ipsum descriptio"
+      description: "Nach einem Semester im unbewohnten Berliner Umland kehren wir zurück in die Stadt. Eine Stadt, in der uns vieles bekannt und selbstverständlich vorkommt. Mit dem Beginn des Architekturstudiums verändert sich die Sichtweise auf unser gewohntes Umfeld grundlegend.\nDas Beobachten, Analysieren und Hinterfragen von städtischen Phänomenen, Strukturen, Ordnungen und Systemen führt uns zu einem neuen Verständnis von geplantem städtischem Raum und wir entwickeln eine Sensibilität für die Schönheit des vermeintlich Belanglosen.\nWir brechen mit Gewohntem, hinterfragen und suchen nach unbeschrittenen Wegen. Wir halten den Blick offen für Neues und schaffen Raum für neue Ideen. Im Spannungsfeld zwischen der Kraft des Gewohnten und der Dynamik des Experimentellen."
       duration: 14
       attachments:
         - uuid: 'c55f0baf-12b8-4bdb-b5e6-2280bff8ab21'
-          name: "Syllabus-owned Attachment 1"
-          url: "http://localhost/file1.jpg"
+          name: "Chair website"
+          url: "https://fg.vanr.tu-berlin.de/ungewohnt/"
         - uuid: 'c55f0baf-12b8-4bdb-b5e6-2280bff8ab30'
-          name: "Syllabus Attachment 2 (to delete)"
-          url: "http://localhost/delete.jpg"
+          name: "Final presentations"
+          url: "https://fg.vanr.tu-berlin.de/ungewohnt-endpraesentation/"
+        - uuid: 'c55f0baf-12b8-4bdb-b5e6-2280bff8ab49'
+          name: "Assignment 1 - City analysis"
+          url: "https://fg.vanr.tu-berlin.de/ungewohnt-uebung-1-1-fokussieren/"
       tags:
-        - "tag"
-        - "tog"
+        - "natur"
+        - "architektur"
+        - "vorkurs"
     - uuid: '46de6a2b-aacb-4c24-b1e1-3495821f8469'
-      title: "User-created 2 (without attachments)"
-      description: "Lorem ipsum descriptwo"
-      language: fr
-      academic_level: 1
-      duration: 7
+      title: "Drawing Machines: From figures to numbers, from numbers to figures."
+      description: "Das Seminar untersucht historische und zeitgenössische Zeichenmaschinen für Architektur. Der Schwerpunkt liegt auf Perspektographen. Sowohl die Maschinen als auch die Verfahren der Darstellenden Geometrie werden im Seminar aus technischer und aus historischer Sicht untersucht. Historische Quellen werden genutzt, um die Geschichte der Maschinen und ihre Funktionsweise zu verstehen. Anschließend werden in der Programmierumgebung Processing die Maschinen digital nachgebildet und dann mit Arduino hergestellt und gesteuert. Ziel des Seminars ist es, die wichtigsten Zeichenwerkzeuge, die den Architekten im Laufe der Zeit gedient haben, zu erforschen und den Stellenwert analoger und digitaler Zeichengesten im architektonischen Entwurf zu diskutieren."
+      language: de
+      academic_level: 2
+      duration: 14
+      attachments:
+        - uuid: 'c55f0baf-12b8-4bdb-b5e6-2280bee8ab21'
+          name: "Course website"
+          url: "https://www.dg.architektur.tu-darmstadt.de/studium/semesterprogramm_aktuell/semesterprogramm_ws20___21.de.jsp"
       tags:
-        - "raz"
-        - "dwa"
+        - "processing"
+        - "parametric"
+        - "design"
   collections:
     - uuid: 'b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a9'
-      name: "Fixture Collection"
+      name: "Good Stuff"
 
 
 - uuid: 'e7b74bcd-c864-41ee-b5a7-d3031f76c8a9'
   status: "confirmed"
-  name: "pierre"
+  name: "Pierre Depaz"
   email: "pierre.depaz@gmail.com"
   password: [36, 50, 97, 36, 49, 48, 36, 121, 72, 53, 79, 110, 76, 51, 98, 57, 112, 80, 81, 53, 49, 104, 54, 100, 74, 121, 54, 79, 101, 47, 117, 119, 78, 76, 57, 103, 107, 100, 88, 51, 90, 111, 73, 75, 80, 117, 113, 57, 104, 69, 102, 103, 85, 67, 51, 73, 56, 88, 113, 67]
   education: "the street"
@@ -52,33 +61,39 @@
     - 'http://pierre.net'
   syllabi:
     - uuid: '46de6a2b-aacb-4c24-b1e1-3495821f8466'
-      title: "Fixture syllabus 3"
-      description: "Lorem ipsum descriptio"
-      language: pl
-      academic_level: 2
+      title: "Digital Culture"
+      description: " This course is an introduction to the theory and practice of digital media, of how they affect the formation of human groups, and how are themselves affected by human groups.\nChanges in means of communication imply changes in the nature of communication itself, and therefore in the nature of the societies which communicate through these means. The near-ubiquitous presence of computer-mediated communications thus affects the way that humans organize, relate and imagine. As computers are changing us, this class provides the tools to approach and understand the nature of these changes. "
+      language: fr
+      academic_level: 1
+      attachments:
+        - uuid: 'c55f0baf-12b8-4adb-b5e6-2280bee8ab21'
+          name: "Course notes"
+          url: "https://periode.github.io/digital-culture/"
       tags:
-        - "one"
-        - "two"
+        - "sociology"
+        - "digital"
+        - "media studies"
     - uuid: '46de6a2b-aacb-4c24-b1e1-3495821f8777'
-      title: "Fixture syllabus 4"
-      description: "Lorem ipsum dolores"
-      language: pl
-      academic_level: 2
+      title: "Web Design Basics"
+      description: "Web Design Basics is designed to introduce students to programming as a creative medium—as a way of making and exploring. The coursework focuses on developing a vocabulary of interaction design principles which can then be applied across a range of platforms. Students are encouraged to experiment with various media, tools, and techniques, ultimately producing a portfolio of interactive and visual projects designed for the screen. An emphasis is placed on typography as it applies to a screen context, research-based problem solving and a “learning through making” approach to technical skill building. Historical and current interaction design precedents will be discussed."
+      language: en
+      academic_level: 1
       tags:
-        - "one"
-        - "two"
+        - "design"
+        - "web development"
+        - "intro"
   collections:
     - uuid: 'b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a7'
-      name: "Fixture Collection (to delete)"
+      name: "Design syllabi"
 
 - uuid: 'e7b74bcd-c864-41ee-b5a7-d3031f76c8a0'
   status: "confirmed"
-  name: "auth"
-  email: "auth@test.com"
+  name: "Pat Shiu"
+  email: "pat@shiu.com"
   password: [36, 50, 97, 36, 49, 48, 36, 121, 72, 53, 79, 110, 76, 51, 98, 57, 112, 80, 81, 53, 49, 104, 54, 100, 74, 121, 54, 79, 101, 47, 117, 119, 78, 76, 57, 103, 107, 100, 88, 51, 90, 111, 73, 75, 80, 117, 113, 57, 104, 69, 102, 103, 85, 67, 51, 73, 56, 88, 113, 67]
 
 - uuid: 'e7b74bcd-c864-41ee-b5a7-d3031f76c800'
   status: "pending"
-  name: "auth (pending)"
-  email: "auth-pending@test.com"
+  name: "John Doe (pending)"
+  email: "john-pending@doe.com"
   password: [36, 50, 97, 36, 49, 48, 36, 121, 72, 53, 79, 110, 76, 51, 98, 57, 112, 80, 81, 53, 49, 104, 54, 100, 74, 121, 54, 79, 101, 47, 117, 119, 78, 76, 57, 103, 107, 100, 88, 51, 90, 111, 73, 75, 80, 117, 113, 57, 104, 69, 102, 103, 85, 67, 51, 73, 56, 88, 113, 67]

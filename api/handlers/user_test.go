@@ -167,7 +167,7 @@ func TestUserHandler(t *testing.T) {
 		var user models.User
 		err := json.Unmarshal(res.Body.Bytes(), &user)
 		require.Nil(t, err)
-		assert.Equal(t, "full user 1", user.Name)
+		assert.Equal(t, "Justyna Poplawska", user.Name)
 	})
 
 	t.Run("Test get user malformed id", func(t *testing.T) {
@@ -349,7 +349,7 @@ func TestUserHandler(t *testing.T) {
 		var user models.User
 		err := json.Unmarshal(res.Body.Bytes(), &user)
 		require.Nil(t, err)
-		assert.Equal(t, "full user 1", user.Name)
+		assert.Equal(t, "Justyna Poplawska", user.Name)
 	})
 
 	t.Run("Test delete user malformed ID", func(t *testing.T) {

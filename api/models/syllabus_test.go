@@ -35,24 +35,24 @@ func TestSyllabusModel(t *testing.T) {
 		searchParams["languages"] = "%"
 	})
 
-	t.Run("Test get all syllabi with title search", func(t *testing.T) {
-		searchParams["keywords"] = "%(created|3)%"
+	t.Run("Test get all syllabi with keywords search", func(t *testing.T) {
+		searchParams["keywords"] = "%(culture|design)%"
 		syll, err := models.GetSyllabi(searchParams)
 		require.Nil(t, err)
-		assert.Equal(t, 3, len(syll))
+		assert.Equal(t, 2, len(syll))
 		searchParams["keywords"] = "%"
 	})
 
 	t.Run("Test get all syllabi with tag search", func(t *testing.T) {
-		searchParams["tags"] = "%(raz)%"
+		searchParams["tags"] = "%(design)%"
 		syll, err := models.GetSyllabi(searchParams)
 		require.Nil(t, err)
-		assert.Equal(t, 1, len(syll))
+		assert.Equal(t, 2, len(syll))
 		searchParams["tags"] = "%"
 	})
 
 	t.Run("Test get all syllabi with levels", func(t *testing.T) {
-		searchParams["levels"] = "%(1)%"
+		searchParams["levels"] = "%(2)%"
 		syll, err := models.GetSyllabi(searchParams)
 		require.Nil(t, err)
 		assert.Equal(t, 1, len(syll))
@@ -128,7 +128,7 @@ func TestSyllabusModel(t *testing.T) {
 	t.Run("Test add attachment to syllabus", func(t *testing.T) {
 		updated, err := models.AddAttachmentToSyllabus(syllabusID, attachmentID)
 		require.Nil(t, err)
-		assert.Equal(t, 2, len(updated.Attachments))
+		assert.Equal(t, 3, len(updated.Attachments))
 	})
 
 	var newInstID uuid.UUID

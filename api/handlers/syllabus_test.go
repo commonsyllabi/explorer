@@ -126,7 +126,7 @@ func TestSyllabusHandler(t *testing.T) {
 		res := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(res)
 		c.Request = &http.Request{}
-		c.Request.URL, _ = url.Parse(fmt.Sprintf("?keywords=%s", "descriptio,none"))
+		c.Request.URL, _ = url.Parse(fmt.Sprintf("?keywords=%s", "Raum"))
 
 		handlers.GetSyllabi(c)
 		assert.Equal(t, http.StatusOK, res.Code)
@@ -134,14 +134,14 @@ func TestSyllabusHandler(t *testing.T) {
 		sylls := make([]models.Syllabus, 0)
 		err := json.Unmarshal(res.Body.Bytes(), &sylls)
 		require.Nil(t, err)
-		assert.Equal(t, 2, len(sylls))
+		assert.Equal(t, 1, len(sylls))
 	})
 
 	t.Run("Test get all syllabi in a given language", func(t *testing.T) {
 		res := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(res)
 		c.Request = &http.Request{}
-		c.Request.URL, _ = url.Parse(fmt.Sprintf("?language=%s", "pl"))
+		c.Request.URL, _ = url.Parse(fmt.Sprintf("?languages=%s", "de"))
 
 		handlers.GetSyllabi(c)
 		assert.Equal(t, http.StatusOK, res.Code)
@@ -156,7 +156,7 @@ func TestSyllabusHandler(t *testing.T) {
 		res := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(res)
 		c.Request = &http.Request{}
-		c.Request.URL, _ = url.Parse(fmt.Sprintf("?language=%s", "bleh"))
+		c.Request.URL, _ = url.Parse(fmt.Sprintf("?languages=%s", "bleh"))
 
 		handlers.GetSyllabi(c)
 		assert.Equal(t, http.StatusBadRequest, res.Code)
@@ -166,7 +166,7 @@ func TestSyllabusHandler(t *testing.T) {
 		res := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(res)
 		c.Request = &http.Request{}
-		c.Request.URL, _ = url.Parse(fmt.Sprintf("?level=%s", "2"))
+		c.Request.URL, _ = url.Parse(fmt.Sprintf("?levels=%s", "2"))
 
 		handlers.GetSyllabi(c)
 		assert.Equal(t, http.StatusOK, res.Code)
@@ -174,14 +174,14 @@ func TestSyllabusHandler(t *testing.T) {
 		sylls := make([]models.Syllabus, 0)
 		err := json.Unmarshal(res.Body.Bytes(), &sylls)
 		require.Nil(t, err)
-		assert.Equal(t, 2, len(sylls))
+		assert.Equal(t, 1, len(sylls))
 	})
 
 	t.Run("Test get all syllabi in a wrong academic_level", func(t *testing.T) {
 		res := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(res)
 		c.Request = &http.Request{}
-		c.Request.URL, _ = url.Parse(fmt.Sprintf("?level=%s", "666"))
+		c.Request.URL, _ = url.Parse(fmt.Sprintf("?levels=%s", "666"))
 
 		handlers.GetSyllabi(c)
 		assert.Equal(t, http.StatusBadRequest, res.Code)
@@ -191,7 +191,7 @@ func TestSyllabusHandler(t *testing.T) {
 		res := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(res)
 		c.Request = &http.Request{}
-		c.Request.URL, _ = url.Parse(fmt.Sprintf("?level=%s", "lol"))
+		c.Request.URL, _ = url.Parse(fmt.Sprintf("?levels=%s", "lol"))
 
 		handlers.GetSyllabi(c)
 		assert.Equal(t, http.StatusBadRequest, res.Code)
@@ -201,7 +201,7 @@ func TestSyllabusHandler(t *testing.T) {
 		res := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(res)
 		c.Request = &http.Request{}
-		c.Request.URL, _ = url.Parse(fmt.Sprintf("?tags=%s", "raz"))
+		c.Request.URL, _ = url.Parse(fmt.Sprintf("?tags=%s", "vorkurs"))
 
 		handlers.GetSyllabi(c)
 		assert.Equal(t, http.StatusOK, res.Code)
@@ -216,7 +216,7 @@ func TestSyllabusHandler(t *testing.T) {
 		res := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(res)
 		c.Request = &http.Request{}
-		c.Request.URL, _ = url.Parse(fmt.Sprintf("?level=%s&keywords=%s", "2", "dolores"))
+		c.Request.URL, _ = url.Parse(fmt.Sprintf("?level=%s&keywords=%s", "1", "communication"))
 
 		handlers.GetSyllabi(c)
 		assert.Equal(t, http.StatusOK, res.Code)
@@ -320,7 +320,7 @@ func TestSyllabusHandler(t *testing.T) {
 		var syll models.Syllabus
 		err := json.Unmarshal(res.Body.Bytes(), &syll)
 		require.Nil(t, err)
-		assert.Equal(t, "User-created 1", syll.Title)
+		assert.Equal(t, "Ungewohnt", syll.Title)
 	})
 
 	t.Run("Test get syllabus non-existant ID", func(t *testing.T) {
@@ -602,7 +602,7 @@ func TestSyllabusHandler(t *testing.T) {
 		var syll models.Syllabus
 		err := json.Unmarshal(res.Body.Bytes(), &syll)
 		require.Nil(t, err)
-		assert.Equal(t, "Lorem ipsum descriptio", syll.Description)
+		assert.Equal(t, "Updated Title", syll.Title)
 	})
 
 	t.Run("Test add attachment to non-existing syllabus", func(t *testing.T) {
@@ -730,7 +730,7 @@ func TestSyllabusHandler(t *testing.T) {
 		atts := make([]models.Attachment, 0)
 		err := json.Unmarshal(res.Body.Bytes(), &atts)
 		require.Nil(t, err)
-		assert.Equal(t, 2, len(atts))
+		assert.Equal(t, 3, len(atts))
 	})
 
 	t.Run("Test get attachment from syllabus", func(t *testing.T) {
@@ -758,7 +758,7 @@ func TestSyllabusHandler(t *testing.T) {
 		var att models.Attachment
 		err := json.Unmarshal(res.Body.Bytes(), &att)
 		require.Nil(t, err)
-		assert.Equal(t, "Syllabus-owned Attachment 1", att.Name)
+		assert.Equal(t, "Chair website", att.Name)
 	})
 
 	t.Run("Test get wrong attachment from syllabus", func(t *testing.T) {

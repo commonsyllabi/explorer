@@ -52,28 +52,28 @@ func TestInitDB(t *testing.T) {
 
 func setup(t *testing.T) func(t *testing.T) {
 	syllabusID = uuid.MustParse("46de6a2b-aacb-4c24-b1e1-3495821f846a")
-	syllabusTitle = "User-created 1"
-	syllabusUserName = "full user 1"
+	syllabusTitle = "Ungewohnt"
+	syllabusUserName = "Justyna Poplawska"
 	syllabusDeleteID = uuid.MustParse("46de6a2b-aacb-4c24-b1e1-3495821f8469")
 	syllabusNonExistingID = uuid.New()
 
 	collectionID = uuid.MustParse("b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a9")
-	collectionName = "Fixture Collection"
+	collectionName = "Good Stuff"
 	collectionDeleteID = uuid.MustParse("b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a7")
 	collectionNonExistingID = uuid.New()
 
 	attachmentID = uuid.MustParse("c55f0baf-12b8-4bdb-b5e6-2280bff8ab21")
-	attachmentName = "Syllabus-owned Attachment 1"
-	attachmentURL = "http://localhost/file1.jpg"
+	attachmentName = "Chair website"
+	attachmentURL = "https://fg.vanr.tu-berlin.de/ungewohnt/"
 	attachmentDeleteID = uuid.MustParse("c55f0baf-12b8-4bdb-b5e6-2280bff8ab30")
 	attachmentNonExistingID = uuid.New()
 
 	userID = uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c8a8")
 	userDeleteID = uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c8a9")
 	userNonExistentID = uuid.New()
-	userEmail = "one@raz.com"
-	userName = "full user 1"
-	userDeleteName = "pierre"
+	userEmail = "jus@pop.com"
+	userName = "Justyna Poplawska"
+	userDeleteName = "Pierre Depaz"
 
 	instID = uuid.MustParse("c0e4c3ed-ac4f-4e44-bb43-5123b7b6d7a0")
 

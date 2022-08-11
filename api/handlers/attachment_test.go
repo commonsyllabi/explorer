@@ -38,7 +38,7 @@ func TestAttachmentHandler(t *testing.T) {
 		atts := make([]models.Attachment, 0)
 		err := json.Unmarshal(res.Body.Bytes(), &atts)
 		require.Nil(t, err)
-		assert.Equal(t, 2, len(atts))
+		assert.Equal(t, 5, len(atts))
 	})
 
 	t.Run("Test create attachment with file", func(t *testing.T) {
@@ -182,8 +182,8 @@ func TestAttachmentHandler(t *testing.T) {
 		err := json.Unmarshal(res.Body.Bytes(), &att)
 		require.Nil(t, err)
 		assert.Equal(t, attachmentID, att.UUID)
-		assert.Equal(t, "Syllabus-owned Attachment 1", att.Name)
-		assert.Equal(t, "http://localhost/file1.jpg", att.URL)
+		assert.Equal(t, "Chair website", att.Name)
+		assert.Equal(t, "https://fg.vanr.tu-berlin.de/ungewohnt/", att.URL)
 	})
 
 	t.Run("Test get attachment malformed ID", func(t *testing.T) {

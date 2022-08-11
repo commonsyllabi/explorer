@@ -50,7 +50,7 @@ func TestAuth(t *testing.T) {
 
 	t.Run("Testing login", func(t *testing.T) {
 		data := url.Values{}
-		data.Add("email", "auth@test.com")
+		data.Add("email", "pat@shiu.com")
 		data.Add("password", "12345678")
 		body := bytes.NewBuffer([]byte(data.Encode()))
 

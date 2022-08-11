@@ -16,7 +16,7 @@ func TestAttachmentModel(t *testing.T) {
 	t.Run("Test get all attachments", func(t *testing.T) {
 		res, err := models.GetAllAttachments()
 		require.Nil(t, err)
-		assert.Equal(t, len(res), 2)
+		assert.Equal(t, 5, len(res))
 	})
 
 	t.Run("Test create attachment", func(t *testing.T) {
