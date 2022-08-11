@@ -23,8 +23,8 @@ func GetSyllabi(c *gin.Context) {
 	searchParams := make(map[string]string, 0)
 	searchParams["fields"] = "%"
 	searchParams["keywords"] = "%"
-	searchParams["language"] = "%"
-	searchParams["level"] = "%"
+	searchParams["languages"] = "%"
+	searchParams["levels"] = "%"
 	searchParams["tags"] = "%"
 
 	fields := c.Query("fields")
@@ -68,33 +68,42 @@ func GetSyllabi(c *gin.Context) {
 		searchParams["tags"] = fmt.Sprintf("%%(%s)%%", strings.Join(all_tags, "|"))
 	}
 
-	lang := c.Query("language")
-	if lang != "" {
-		_, err := language.Parse(lang)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, err)
-			zero.Errorf("language is not bcp-47 compliant: %v", err)
-			return
+	langs := c.Query("languages")
+	langs = strings.Trim(langs, " ")
+	all_langs := strings.Split(langs, ",")
+	if len(all_langs) > 0 {
+		for i := range all_langs {
+			all_langs[i] = strings.Trim(all_langs[i], " ")
+			_, err := language.Parse(all_langs[i])
+			if err != nil {
+				c.JSON(http.StatusBadRequest, err)
+				zero.Errorf("langsuage is not bcp-47 compliant: %v", err)
+				return
+			}
 		}
-		searchParams["language"] = lang
+		searchParams["languages"] = fmt.Sprintf("%%(%s)%%", strings.Join(all_langs, "|"))
 	}
 
-	level := c.Query("level")
-	if level != "" {
-		l, err := strconv.Atoi(level)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, err)
-			zero.Errorf("the level of the syllabus should be between 0 and 3: %v", err)
-			return
-		}
-		_, found := models.LEVELS[l]
-		if !found {
-			c.JSON(http.StatusBadRequest, err)
-			zero.Errorf("the level of the syllabus should be between 0 and 3: %v", err)
-			return
+	levels := c.Query("levels")
+	levels = strings.Trim(levels, " ")
+	all_levels := strings.Split(levels, ",")
+	if len(all_levels) > 0 {
+		for i := range all_levels {
+			l, err := strconv.Atoi(all_levels[i])
+			if err != nil {
+				c.JSON(http.StatusBadRequest, err)
+				zero.Errorf("the level of the syllabus should be between 0 and 3: %v", err)
+				return
+			}
+			_, found := models.LEVELS[l]
+			if !found {
+				c.JSON(http.StatusBadRequest, err)
+				zero.Errorf("the level of the syllabus should be between 0 and 3: %v", err)
+				return
+			}
 		}
 
-		searchParams["level"] = fmt.Sprintf("%d", l)
+		searchParams["levels"] = fmt.Sprintf("%%(%s)%%", strings.Join(all_levels, "|"))
 	}
 
 	syllabi, err := models.GetSyllabi(searchParams)

@@ -15,10 +15,10 @@ func TestSyllabusModel(t *testing.T) {
 	defer teardown(t)
 
 	searchParams := make(map[string]string, 0)
-	searchParams["language"] = "%"
+	searchParams["languages"] = "%"
 	searchParams["keywords"] = "%"
 	searchParams["fields"] = "%"
-	searchParams["level"] = "%"
+	searchParams["levels"] = "%"
 	searchParams["tags"] = "%"
 
 	t.Run("Test get all syllabi", func(t *testing.T) {
@@ -28,11 +28,11 @@ func TestSyllabusModel(t *testing.T) {
 	})
 
 	t.Run("Test get all syllabi written in french", func(t *testing.T) {
-		searchParams["language"] = "fr"
+		searchParams["languages"] = "%(fr)%"
 		syll, err := models.GetSyllabi(searchParams)
 		require.Nil(t, err)
 		assert.Equal(t, 1, len(syll))
-		searchParams["language"] = "%"
+		searchParams["languages"] = "%"
 	})
 
 	t.Run("Test get all syllabi with title search", func(t *testing.T) {
@@ -51,12 +51,12 @@ func TestSyllabusModel(t *testing.T) {
 		searchParams["tags"] = "%"
 	})
 
-	t.Run("Test get all syllabi with level", func(t *testing.T) {
-		searchParams["level"] = "1"
+	t.Run("Test get all syllabi with levels", func(t *testing.T) {
+		searchParams["levels"] = "%(1)%"
 		syll, err := models.GetSyllabi(searchParams)
 		require.Nil(t, err)
 		assert.Equal(t, 1, len(syll))
-		searchParams["level"] = "%"
+		searchParams["levels"] = "%"
 	})
 
 	t.Run("Test get all syllabi with fields", func(t *testing.T) {

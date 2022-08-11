@@ -87,7 +87,7 @@ func GetSyllabus(uuid uuid.UUID) (Syllabus, error) {
 func GetSyllabi(params map[string]string) ([]Syllabus, error) {
 	var syllabi []Syllabus
 
-	result := db.Where("language SIMILAR TO ? AND (lower(description) SIMILAR TO ? OR lower(title) SIMILAR TO ?) AND ARRAY_TO_STRING(tags, ' ') SIMILAR TO ? AND academic_level::TEXT LIKE ? AND ARRAY_TO_STRING(academic_fields, ' ') SIMILAR TO ?", params["language"], params["keywords"], params["keywords"], params["tags"], params["level"], params["fields"]).Find(&syllabi)
+	result := db.Where("language SIMILAR TO ? AND (lower(description) SIMILAR TO ? OR lower(title) SIMILAR TO ?) AND ARRAY_TO_STRING(tags, ' ') SIMILAR TO ? AND academic_level::TEXT SIMILAR TO ? AND ARRAY_TO_STRING(academic_fields, ' ') SIMILAR TO ?", params["languages"], params["keywords"], params["keywords"], params["tags"], params["levels"], params["fields"]).Find(&syllabi)
 
 	return syllabi, result.Error
 
