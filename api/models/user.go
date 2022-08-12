@@ -83,9 +83,9 @@ func GetAllUsers() ([]User, error) {
 	return users, result.Error
 }
 
-func UpdateUser(uuid uuid.UUID, user *User) (User, error) {
+func UpdateUser(uuid uuid.UUID, user_uuid uuid.UUID, user *User) (User, error) {
 	var existing User
-	result := db.Where("uuid = ?", uuid).First(&existing)
+	result := db.Where("uuid = ? AND uuid = ?", uuid, user_uuid).First(&existing)
 	if result.Error != nil {
 		return *user, result.Error
 	}
@@ -95,9 +95,9 @@ func UpdateUser(uuid uuid.UUID, user *User) (User, error) {
 	return existing, result.Error
 }
 
-func AddInstitutionToUser(user_uuid uuid.UUID, inst *Institution) (User, error) {
+func AddInstitutionToUser(uuid uuid.UUID, user_uuid uuid.UUID, inst *Institution) (User, error) {
 	var user User
-	result := db.Where("uuid = ? ", user_uuid).Preload("Institutions").First(&user)
+	result := db.Where("uuid = ? AND uuid = ?", uuid, user_uuid).Preload("Institutions").First(&user)
 	if result.Error != nil {
 		return user, result.Error
 	}
@@ -111,9 +111,9 @@ func AddInstitutionToUser(user_uuid uuid.UUID, inst *Institution) (User, error) 
 	return updated, err
 }
 
-func RemoveInstitutionFromUser(user_uuid uuid.UUID, inst_uuid uuid.UUID) (User, error) {
+func RemoveInstitutionFromUser(uuid uuid.UUID, inst_uuid uuid.UUID, user_uuid uuid.UUID) (User, error) {
 	var user User
-	result := db.Where("uuid = ? ", user_uuid).First(&user)
+	result := db.Where("uuid = ? AND uuid = ?", uuid, user_uuid).First(&user)
 	if result.Error != nil {
 		return user, result.Error
 	}
@@ -133,9 +133,9 @@ func RemoveInstitutionFromUser(user_uuid uuid.UUID, inst_uuid uuid.UUID) (User, 
 	return updated, err
 }
 
-func DeleteUser(uuid uuid.UUID) (User, error) {
+func DeleteUser(uuid uuid.UUID, user_uuid uuid.UUID) (User, error) {
 	var user User
-	result := db.Where("uuid = ?", uuid).First(&user)
+	result := db.Where("uuid = ? AND uuid = ?", uuid, user_uuid).First(&user)
 	if result.Error != nil {
 		return user, result.Error
 	}

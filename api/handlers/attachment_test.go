@@ -177,7 +177,7 @@ func TestAttachmentHandler(t *testing.T) {
 
 		c := echo.New().NewContext(req, res)
 		c.SetParamNames("id")
-		c.SetParamValues(attachmentNonExistingID.String())
+		c.SetParamValues(attachmentUnknownID.String())
 
 		handlers.GetAttachment(c)
 		assert.Equal(t, http.StatusNotFound, res.Code)
@@ -246,7 +246,7 @@ func TestAttachmentHandler(t *testing.T) {
 
 		c := echo.New().NewContext(req, res)
 		c.SetParamNames("id")
-		c.SetParamValues(attachmentNonExistingID.String())
+		c.SetParamValues(attachmentUnknownID.String())
 
 		handlers.UpdateAttachment(c)
 		assert.Equal(t, http.StatusNotFound, res.Code)
@@ -306,7 +306,7 @@ func TestAttachmentHandler(t *testing.T) {
 
 		c := echo.New().NewContext(req, res)
 		c.SetParamNames("id")
-		c.SetParamValues(attachmentNonExistingID.String())
+		c.SetParamValues(attachmentUnknownID.String())
 
 		handlers.DeleteAttachment(c)
 		assert.Equal(t, http.StatusNotFound, res.Code)

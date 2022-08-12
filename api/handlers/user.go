@@ -61,7 +61,10 @@ func CreateUser(c echo.Context) error {
 }
 
 func UpdateUser(c echo.Context) error {
-	auth.Authenticate(c)
+	requester_uid, err := auth.Authenticate(c)
+	if err != nil {
+		return c.String(http.StatusUnauthorized, "unauthorized")
+	}
 	id := c.Param("id")
 	uid, err := uuid.Parse(id)
 	if err != nil {
@@ -84,7 +87,7 @@ func UpdateUser(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, err)
 	}
 
-	updated, err := models.UpdateUser(uid, &user)
+	updated, err := models.UpdateUser(uid, uuid.MustParse(requester_uid), &user)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err)
 	}
@@ -93,6 +96,11 @@ func UpdateUser(c echo.Context) error {
 }
 
 func AddUserInstitution(c echo.Context) error {
+	requester_uid, err := auth.Authenticate(c)
+	if err != nil {
+		return c.String(http.StatusUnauthorized, "unauthorized")
+	}
+
 	user_id := c.Param("id")
 	user_uid, err := uuid.Parse(user_id)
 	if err != nil {
@@ -102,7 +110,7 @@ func AddUserInstitution(c echo.Context) error {
 	var inst models.Institution
 	c.Bind(&inst)
 
-	syll, err := models.AddInstitutionToUser(user_uid, &inst)
+	syll, err := models.AddInstitutionToUser(user_uid, uuid.MustParse(requester_uid), &inst)
 	if err != nil {
 		return c.String(http.StatusNotFound, err.Error())
 	}
@@ -128,6 +136,11 @@ func GetUser(c echo.Context) error {
 }
 
 func RemoveUserInstitution(c echo.Context) error {
+	requester_uid, err := auth.Authenticate(c)
+	if err != nil {
+		return c.String(http.StatusUnauthorized, "unauthorized")
+	}
+
 	user_id := c.Param("id")
 	user_uid, err := uuid.Parse(user_id)
 	if err != nil {
@@ -141,7 +154,7 @@ func RemoveUserInstitution(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, inst_id)
 	}
 
-	syll, err := models.RemoveInstitutionFromUser(user_uid, inst_uid)
+	syll, err := models.RemoveInstitutionFromUser(user_uid, inst_uid, uuid.MustParse(requester_uid))
 	if err != nil {
 		return c.String(http.StatusNotFound, err.Error())
 	}
@@ -150,14 +163,17 @@ func RemoveUserInstitution(c echo.Context) error {
 }
 
 func DeleteUser(c echo.Context) error {
-	auth.Authenticate(c)
+	requester_uid, err := auth.Authenticate(c)
+	if err != nil {
+		return c.String(http.StatusUnauthorized, "unauthorized")
+	}
 	id := c.Param("id")
 	uid, err := uuid.Parse(id)
 	if err != nil {
 		return c.String(http.StatusBadRequest, "not a valid ID")
 	}
 
-	user, err := models.DeleteUser(uid)
+	user, err := models.DeleteUser(uid, uuid.MustParse(requester_uid))
 	if err != nil {
 		return c.String(http.StatusNotFound, err.Error())
 	}

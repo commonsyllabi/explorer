@@ -23,8 +23,11 @@ func GetAllCollections(c echo.Context) error {
 }
 
 func CreateCollection(c echo.Context) error {
-	auth.Authenticate(c)
-	err := sanitizeCollection(c)
+	_, err := auth.Authenticate(c)
+	if err != nil {
+		return c.String(http.StatusUnauthorized, "unauthorized")
+	}
+	err = sanitizeCollection(c)
 	if err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
@@ -48,7 +51,10 @@ func CreateCollection(c echo.Context) error {
 }
 
 func UpdateCollection(c echo.Context) error {
-	auth.Authenticate(c)
+	requester_uid, err := auth.Authenticate(c)
+	if err != nil {
+		return c.String(http.StatusUnauthorized, "unauthorized")
+	}
 	id := c.Param("id")
 	uid, err := uuid.Parse(id)
 	if err != nil {
@@ -72,7 +78,7 @@ func UpdateCollection(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, err)
 	}
 
-	updated, err := models.UpdateCollection(uid, &coll)
+	updated, err := models.UpdateCollection(uid, uuid.MustParse(requester_uid), &coll)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
@@ -81,7 +87,10 @@ func UpdateCollection(c echo.Context) error {
 }
 
 func AddCollectionSyllabus(c echo.Context) error {
-	auth.Authenticate(c)
+	requester_uid, err := auth.Authenticate(c)
+	if err != nil {
+		return c.String(http.StatusUnauthorized, "unauthorized")
+	}
 	coll_id := c.Param("id")
 	coll_uid, err := uuid.Parse(coll_id)
 	if err != nil {
@@ -94,7 +103,7 @@ func AddCollectionSyllabus(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "not a valid ID")
 	}
 
-	coll, err := models.AddSyllabusToCollection(coll_uid, syll_uid)
+	coll, err := models.AddSyllabusToCollection(coll_uid, syll_uid, uuid.MustParse(requester_uid))
 	if err != nil {
 		c.String(http.StatusInternalServerError, "couldn't add the return syllabus")
 	}
@@ -159,14 +168,17 @@ func GetCollectionSyllabus(c echo.Context) error {
 }
 
 func DeleteCollection(c echo.Context) error {
-	auth.Authenticate(c)
+	requester_uid, err := auth.Authenticate(c)
+	if err != nil {
+		return c.String(http.StatusUnauthorized, "unauthorized")
+	}
 	id := c.Param("id")
 	uid, err := uuid.Parse(id)
 	if err != nil {
 		return c.String(http.StatusBadRequest, "not a valid ID")
 	}
 
-	coll, err := models.DeleteCollection(uid)
+	coll, err := models.DeleteCollection(uid, uuid.MustParse(requester_uid))
 	if err != nil {
 		return c.String(http.StatusNotFound, err.Error())
 	}
@@ -175,7 +187,11 @@ func DeleteCollection(c echo.Context) error {
 }
 
 func RemoveCollectionSyllabus(c echo.Context) error {
-	auth.Authenticate(c)
+	requester_uid, err := auth.Authenticate(c)
+	if err != nil {
+		return c.String(http.StatusUnauthorized, "unauthorized")
+	}
+
 	coll_id := c.Param("id")
 	coll_uid, err := uuid.Parse(coll_id)
 	if err != nil {
@@ -200,7 +216,7 @@ func RemoveCollectionSyllabus(c echo.Context) error {
 
 	zero.Warn("the way to remove a syllabus from a collection needs to be updated")
 
-	updated, err := models.UpdateSyllabus(syll.UUID, &syll)
+	updated, err := models.UpdateSyllabus(syll.UUID, uuid.MustParse(requester_uid), &syll)
 	if err != nil {
 		return c.String(http.StatusNotFound, err.Error())
 	}

@@ -99,7 +99,7 @@ func TestSyllabusModel(t *testing.T) {
 	})
 
 	t.Run("Test get non-existing syllabus", func(t *testing.T) {
-		syll, err := models.GetSyllabus(syllabusNonExistingID)
+		syll, err := models.GetSyllabus(syllabusUnknownID)
 		assert.NotNil(t, err)
 		assert.True(t, syll.CreatedAt.IsZero())
 	})
@@ -108,7 +108,7 @@ func TestSyllabusModel(t *testing.T) {
 		var syll models.Syllabus
 		updatedTitle := fmt.Sprintf("%s (updated)", syllabusTitle)
 		syll.Title = updatedTitle
-		updated, err := models.UpdateSyllabus(syllabusID, &syll)
+		updated, err := models.UpdateSyllabus(syllabusID, userID, &syll)
 
 		require.Nil(t, err)
 		require.NotZero(t, updated.CreatedAt)
@@ -116,17 +116,26 @@ func TestSyllabusModel(t *testing.T) {
 		assert.Equal(t, updatedTitle, syll.Title)
 	})
 
+	t.Run("Test update syllabus wrong user", func(t *testing.T) {
+		var syll models.Syllabus
+		updatedTitle := fmt.Sprintf("%s (updated by someone else)", syllabusTitle)
+		syll.Title = updatedTitle
+		_, err := models.UpdateSyllabus(syllabusID, userUnknownID, &syll)
+
+		require.NotNil(t, err)
+	})
+
 	t.Run("Test update non-existing syllabus", func(t *testing.T) {
 		syll := models.Syllabus{
 			Title: "Test Title 1 (updated)",
 		}
-		updated, err := models.UpdateSyllabus(syllabusNonExistingID, &syll)
+		updated, err := models.UpdateSyllabus(syllabusUnknownID, userID, &syll)
 		assert.NotNil(t, err)
 		assert.Zero(t, updated.CreatedAt)
 	})
 
 	t.Run("Test add attachment to syllabus", func(t *testing.T) {
-		updated, err := models.AddAttachmentToSyllabus(syllabusID, attachmentID)
+		updated, err := models.AddAttachmentToSyllabus(syllabusID, attachmentID, userID)
 		require.Nil(t, err)
 		assert.Equal(t, 3, len(updated.Attachments))
 	})
@@ -142,7 +151,7 @@ func TestSyllabusModel(t *testing.T) {
 			},
 		}
 
-		updated, err := models.AddInstitutionToSyllabus(syllabusID, &inst)
+		updated, err := models.AddInstitutionToSyllabus(syllabusID, userID, &inst)
 		assert.Nil(t, err)
 		assert.Equal(t, syllabusID, updated.UUID)
 		assert.Equal(t, 1, len(updated.Institutions))
@@ -150,30 +159,30 @@ func TestSyllabusModel(t *testing.T) {
 	})
 
 	t.Run("Test remove institution from syllabus", func(t *testing.T) {
-		updated, err := models.RemoveInstitutionFromSyllabus(syllabusID, newInstID)
+		updated, err := models.RemoveInstitutionFromSyllabus(syllabusID, newInstID, userID)
 		assert.Nil(t, err)
 		assert.Equal(t, syllabusID, updated.UUID)
 		assert.Equal(t, 0, len(updated.Institutions))
 	})
 
 	t.Run("Test remove institution from syllabus wrong syll ID", func(t *testing.T) {
-		_, err := models.RemoveInstitutionFromSyllabus(syllabusNonExistingID, newInstID)
+		_, err := models.RemoveInstitutionFromSyllabus(syllabusUnknownID, newInstID, userID)
 		assert.NotNil(t, err)
 	})
 
 	t.Run("Test remove institution from syllabus wrong inst ID", func(t *testing.T) {
-		_, err := models.RemoveInstitutionFromSyllabus(syllabusID, instID)
+		_, err := models.RemoveInstitutionFromSyllabus(syllabusID, instID, userID)
 		assert.NotNil(t, err)
 	})
 
 	t.Run("Test delete syllabus", func(t *testing.T) {
-		syll, err := models.DeleteSyllabus(syllabusDeleteID)
+		syll, err := models.DeleteSyllabus(syllabusDeleteID, userID)
 		assert.NotNil(t, syll)
 		assert.Nil(t, err)
 	})
 
 	t.Run("Test delete wrong syllabus", func(t *testing.T) {
-		syll, err := models.DeleteSyllabus(syllabusNonExistingID)
+		syll, err := models.DeleteSyllabus(syllabusUnknownID, userID)
 		assert.NotNil(t, err)
 		assert.Zero(t, syll)
 	})

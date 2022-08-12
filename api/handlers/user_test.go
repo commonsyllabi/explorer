@@ -139,7 +139,7 @@ func TestUserHandler(t *testing.T) {
 		c := echo.New().NewContext(req, res)
 		c.SetPath("/users")
 		c.SetParamNames("id")
-		c.SetParamValues(userNonExistingID.String())
+		c.SetParamValues(userUnknownID.String())
 
 		handlers.GetUser(c)
 		assert.Equal(t, http.StatusNotFound, res.Code)
@@ -179,7 +179,7 @@ func TestUserHandler(t *testing.T) {
 		c := echo.New().NewContext(req, res)
 		c.SetPath("/users")
 		c.SetParamNames("id")
-		c.SetParamValues(userNonExistingID.String())
+		c.SetParamValues(userUnknownID.String())
 
 		handlers.UpdateUser(c)
 		assert.Equal(t, http.StatusNotFound, res.Code)
@@ -269,7 +269,7 @@ func TestUserHandler(t *testing.T) {
 		c := echo.New().NewContext(req, res)
 		c.SetPath("/users/:id/institutions")
 		c.SetParamNames("id")
-		c.SetParamValues(userNonExistingID.String())
+		c.SetParamValues(userUnknownID.String())
 
 		handlers.DeleteUser(c)
 		assert.Equal(t, http.StatusNotFound, res.Code)

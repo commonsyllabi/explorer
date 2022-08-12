@@ -20,22 +20,22 @@ import (
 )
 
 var (
-	syllabusID            uuid.UUID
-	syllabusDeleteID      uuid.UUID
-	syllabusNonExistingID uuid.UUID
+	syllabusID        uuid.UUID
+	syllabusDeleteID  uuid.UUID
+	syllabusUnknownID uuid.UUID
 
-	collectionID            uuid.UUID
-	collectionDeleteID      uuid.UUID
-	collectionNonExistingID uuid.UUID
+	collectionID        uuid.UUID
+	collectionDeleteID  uuid.UUID
+	collectionUnknownID uuid.UUID
 
-	attachmentID            uuid.UUID
-	attachmentDeleteID      uuid.UUID
-	attachmentNonExistingID uuid.UUID
-	attachmentFilePath      string
+	attachmentID        uuid.UUID
+	attachmentDeleteID  uuid.UUID
+	attachmentUnknownID uuid.UUID
+	attachmentFilePath  string
 
-	userID            uuid.UUID
-	userDeleteID      uuid.UUID
-	userNonExistingID uuid.UUID
+	userID        uuid.UUID
+	userDeleteID  uuid.UUID
+	userUnknownID uuid.UUID
 
 	instID uuid.UUID
 )
@@ -44,20 +44,20 @@ func setup(t *testing.T) func(t *testing.T) {
 	os.Setenv("API_MODE", "test")
 	syllabusID = uuid.MustParse("46de6a2b-aacb-4c24-b1e1-3495821f846a")
 	syllabusDeleteID = uuid.MustParse("46de6a2b-aacb-4c24-b1e1-3495821f8469")
-	syllabusNonExistingID = uuid.New()
+	syllabusUnknownID = uuid.New()
 
 	collectionID = uuid.MustParse("b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a9")
 	collectionDeleteID = uuid.MustParse("b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a9")
-	collectionNonExistingID = uuid.New()
+	collectionUnknownID = uuid.New()
 
 	attachmentID = uuid.MustParse("c55f0baf-12b8-4bdb-b5e6-2280bff8ab21")
 	attachmentDeleteID = uuid.MustParse("c55f0baf-12b8-4bdb-b5e6-2280bff8ab30")
-	attachmentNonExistingID = uuid.New()
+	attachmentUnknownID = uuid.New()
 	attachmentFilePath = filepath.Join(models.Basepath, "../../tests/files/image.png")
 
 	userID = uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c8a8")
 	userDeleteID = uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c8a9")
-	userNonExistingID = uuid.New()
+	userUnknownID = uuid.New()
 
 	instID = uuid.MustParse("c0e4c3ed-ac4f-4e44-bb43-5123b7b6d7a0")
 
@@ -323,7 +323,7 @@ func TestSyllabusHandler(t *testing.T) {
 		c := echo.New().NewContext(req, res)
 		c.SetPath("/syllabi")
 		c.SetParamNames("id")
-		c.SetParamValues(syllabusNonExistingID.String())
+		c.SetParamValues(syllabusUnknownID.String())
 
 		handlers.GetSyllabus(c)
 		assert.Equal(t, http.StatusNotFound, res.Code)
@@ -459,7 +459,7 @@ func TestSyllabusHandler(t *testing.T) {
 		c := echo.New().NewContext(req, res)
 		c.SetPath("/syllabi")
 		c.SetParamNames("id")
-		c.SetParamValues(syllabusNonExistingID.String())
+		c.SetParamValues(syllabusUnknownID.String())
 
 		handlers.UpdateSyllabus(c)
 		assert.Equal(t, http.StatusNotFound, res.Code)
@@ -515,7 +515,7 @@ func TestSyllabusHandler(t *testing.T) {
 		c := echo.New().NewContext(req, res)
 		c.SetPath("/syllabi")
 		c.SetParamNames("id")
-		c.SetParamValues(syllabusNonExistingID.String())
+		c.SetParamValues(syllabusUnknownID.String())
 
 		handlers.AddSyllabusAttachment(c)
 		assert.Equal(t, http.StatusNotFound, res.Code)
@@ -523,7 +523,7 @@ func TestSyllabusHandler(t *testing.T) {
 
 	t.Run("Test add non-existing attachment to syllabus", func(t *testing.T) {
 		f := make(url.Values)
-		f.Set("att_id", attachmentNonExistingID.String())
+		f.Set("att_id", attachmentUnknownID.String())
 
 		res := httptest.NewRecorder()
 		req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(f.Encode()))
@@ -612,7 +612,7 @@ func TestSyllabusHandler(t *testing.T) {
 		c := echo.New().NewContext(req, res)
 		c.SetPath("/syllabi/:id/attachments/:att_id")
 		c.SetParamNames("id", "att_id")
-		c.SetParamValues(syllabusID.String(), attachmentNonExistingID.String())
+		c.SetParamValues(syllabusID.String(), attachmentUnknownID.String())
 
 		handlers.GetSyllabusAttachment(c)
 		assert.Equal(t, http.StatusNotFound, res.Code)
@@ -708,7 +708,7 @@ func TestSyllabusHandler(t *testing.T) {
 		c := echo.New().NewContext(req, res)
 		c.SetPath("/syllabi/:id/institutions")
 		c.SetParamNames("id")
-		c.SetParamValues(syllabusNonExistingID.String())
+		c.SetParamValues(syllabusUnknownID.String())
 
 		handlers.DeleteSyllabus(c)
 		assert.Equal(t, http.StatusNotFound, res.Code)

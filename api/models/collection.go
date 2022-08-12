@@ -63,7 +63,7 @@ func GetAllCollections() ([]Collection, error) {
 	return coll, result.Error
 }
 
-func UpdateCollection(uuid uuid.UUID, coll *Collection) (Collection, error) {
+func UpdateCollection(uuid uuid.UUID, user_uuid uuid.UUID, coll *Collection) (Collection, error) {
 	var existing Collection
 	result := db.Where("uuid = ?", uuid).First(&existing)
 	if result.Error != nil {
@@ -74,7 +74,7 @@ func UpdateCollection(uuid uuid.UUID, coll *Collection) (Collection, error) {
 	return existing, result.Error
 }
 
-func AddSyllabusToCollection(coll_uuid uuid.UUID, syll_uuid uuid.UUID) (Collection, error) {
+func AddSyllabusToCollection(coll_uuid uuid.UUID, syll_uuid uuid.UUID, user_uuid uuid.UUID) (Collection, error) {
 	var coll Collection
 	result := db.Where("uuid = ? ", coll_uuid).First(&coll)
 	if result.Error != nil {
@@ -96,7 +96,7 @@ func AddSyllabusToCollection(coll_uuid uuid.UUID, syll_uuid uuid.UUID) (Collecti
 	return updated, err
 }
 
-func RemoveSyllabusFromCollection(coll_uuid uuid.UUID, syll_uuid uuid.UUID) (Collection, error) {
+func RemoveSyllabusFromCollection(coll_uuid uuid.UUID, syll_uuid uuid.UUID, user_uuid uuid.UUID) (Collection, error) {
 	var coll Collection
 	result := db.Where("uuid = ? ", coll_uuid).First(&coll)
 	if result.Error != nil {
@@ -113,7 +113,7 @@ func RemoveSyllabusFromCollection(coll_uuid uuid.UUID, syll_uuid uuid.UUID) (Col
 	return coll, err
 }
 
-func DeleteCollection(uuid uuid.UUID) (Collection, error) {
+func DeleteCollection(uuid uuid.UUID, user_uuid uuid.UUID) (Collection, error) {
 	var coll Collection
 	result := db.Where("uuid = ?", uuid).First(&coll)
 	if result.Error != nil {

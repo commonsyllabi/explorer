@@ -98,7 +98,7 @@ func TestCollectionHandler(t *testing.T) {
 		c := echo.New().NewContext(req, res)
 		c.SetPath("/collections")
 		c.SetParamNames("id")
-		c.SetParamValues(collectionNonExistingID.String())
+		c.SetParamValues(collectionUnknownID.String())
 
 		handlers.GetCollection(c)
 		assert.Equal(t, http.StatusNotFound, res.Code)
@@ -150,7 +150,7 @@ func TestCollectionHandler(t *testing.T) {
 		c := echo.New().NewContext(req, res)
 		c.SetPath("/collections/:id")
 		c.SetParamNames("id")
-		c.SetParamValues(collectionNonExistingID.String())
+		c.SetParamValues(collectionUnknownID.String())
 
 		handlers.UpdateCollection(c)
 		assert.Equal(t, http.StatusNotFound, res.Code)
@@ -282,7 +282,7 @@ func TestCollectionHandler(t *testing.T) {
 		c := echo.New().NewContext(req, res)
 		c.SetPath("/collections/:id")
 		c.SetParamNames("id")
-		c.SetParamValues(collectionNonExistingID.String())
+		c.SetParamValues(collectionUnknownID.String())
 
 		handlers.DeleteCollection(c)
 		assert.Equal(t, http.StatusNotFound, res.Code)

@@ -44,7 +44,7 @@ func TestAttachmentModel(t *testing.T) {
 	})
 
 	t.Run("Test get non-existing attachment", func(t *testing.T) {
-		res, err := models.GetAttachment(attachmentNonExistingID)
+		res, err := models.GetAttachment(attachmentUnknownID)
 		assert.NotNil(t, err)
 		assert.True(t, res.CreatedAt.IsZero())
 	})
@@ -53,7 +53,7 @@ func TestAttachmentModel(t *testing.T) {
 		var att models.Attachment
 		updatedName := fmt.Sprintf("%v (updated)", attachmentName)
 		att.Name = updatedName
-		updated, err := models.UpdateAttachment(attachmentID, &att)
+		updated, err := models.UpdateAttachment(attachmentID, userID, &att)
 		require.Nil(t, err)
 		require.False(t, updated.CreatedAt.IsZero())
 
@@ -66,19 +66,19 @@ func TestAttachmentModel(t *testing.T) {
 		res := models.Attachment{
 			Name: "Test Name 1 (updated)",
 		}
-		updated, err := models.UpdateAttachment(attachmentNonExistingID, &res)
+		updated, err := models.UpdateAttachment(attachmentUnknownID, userID, &res)
 		assert.NotNil(t, err)
 		assert.True(t, updated.CreatedAt.IsZero())
 	})
 
 	t.Run("Test delete attachment", func(t *testing.T) {
-		res, err := models.DeleteAttachment(attachmentDeleteID)
+		res, err := models.DeleteAttachment(attachmentDeleteID, userID)
 		assert.NotNil(t, res)
 		assert.Nil(t, err)
 	})
 
 	t.Run("Test delete wrong attachment", func(t *testing.T) {
-		res, err := models.DeleteAttachment(attachmentNonExistingID)
+		res, err := models.DeleteAttachment(attachmentUnknownID, userID)
 		assert.Zero(t, res)
 		assert.NotNil(t, err)
 	})

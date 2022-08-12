@@ -47,7 +47,7 @@ func TestCollectionModel(t *testing.T) {
 	})
 
 	t.Run("Test get non-existing collection", func(t *testing.T) {
-		res, err := models.GetCollection(collectionNonExistingID)
+		res, err := models.GetCollection(collectionUnknownID)
 		assert.NotNil(t, err)
 		assert.True(t, res.CreatedAt.IsZero())
 	})
@@ -56,7 +56,7 @@ func TestCollectionModel(t *testing.T) {
 		var coll models.Collection
 		updatedName := fmt.Sprintf("%s (updated)", collectionName)
 		coll.Name = updatedName
-		updated, err := models.UpdateCollection(collectionID, &coll)
+		updated, err := models.UpdateCollection(collectionID, userID, &coll)
 
 		require.Nil(t, err)
 		require.False(t, updated.CreatedAt.IsZero())
@@ -70,31 +70,31 @@ func TestCollectionModel(t *testing.T) {
 		coll := models.Collection{
 			Name: "Test Name 1 (updated)",
 		}
-		updated, err := models.UpdateCollection(collectionNonExistingID, &coll)
+		updated, err := models.UpdateCollection(collectionUnknownID, userID, &coll)
 		assert.NotNil(t, err)
 		assert.True(t, updated.CreatedAt.IsZero())
 	})
 
 	t.Run("Test add syllabus to collection", func(t *testing.T) {
-		updated, err := models.AddSyllabusToCollection(collectionID, syllabusDeleteID)
+		updated, err := models.AddSyllabusToCollection(collectionID, syllabusDeleteID, userID)
 		assert.Nil(t, err)
 		assert.Equal(t, 2, len(updated.Syllabi))
 	})
 
 	t.Run("Test remove syllabus from collection", func(t *testing.T) {
-		updated, err := models.RemoveSyllabusFromCollection(collectionID, syllabusDeleteID)
+		updated, err := models.RemoveSyllabusFromCollection(collectionID, syllabusDeleteID, userID)
 		assert.Nil(t, err)
 		assert.Equal(t, 0, len(updated.Syllabi))
 	})
 
 	t.Run("Test delete collection", func(t *testing.T) {
-		coll, err := models.DeleteCollection(collectionDeleteID)
+		coll, err := models.DeleteCollection(collectionDeleteID, userID)
 		assert.NotNil(t, coll)
 		assert.Nil(t, err)
 	})
 
 	t.Run("Test delete wrong collection", func(t *testing.T) {
-		coll, err := models.DeleteCollection(collectionNonExistingID)
+		coll, err := models.DeleteCollection(collectionUnknownID, userID)
 		assert.Zero(t, coll)
 		assert.NotNil(t, err)
 	})

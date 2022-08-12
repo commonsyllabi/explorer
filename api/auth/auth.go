@@ -17,17 +17,17 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func Authenticate(c echo.Context) error {
+func Authenticate(c echo.Context) (string, error) {
 	if os.Getenv("API_MODE") == "test" {
-		return nil
+		return "e7b74bcd-c864-41ee-b5a7-d3031f76c8a8", nil
 	}
 
-	sess, _ := session.Get("cosyl_auth", c)
+	sess, err := session.Get("cosyl_auth", c)
 	user := sess.Values["user"]
-	if user == nil {
-		return c.JSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})
+	if user == nil || err != nil {
+		return "", fmt.Errorf("unauthorized user - %v", err)
 	}
-	return nil
+	return fmt.Sprintf("%s", user), nil
 }
 
 func Login(c echo.Context) error {
@@ -87,7 +87,7 @@ func Confirm(c echo.Context) error {
 	}
 
 	user.Status = models.UserConfirmed
-	user, err = models.UpdateUser(user.UUID, &user)
+	user, err = models.UpdateUser(user.UUID, user.UUID, &user)
 	if err != nil {
 		c.String(http.StatusNotFound, err.Error())
 		zero.Errorf(err.Error())
@@ -162,7 +162,7 @@ func Recover(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, gin.H{"error updating user": err.Error()})
 	}
 	user.Password = hashed
-	updated, err := models.UpdateUser(user.UUID, &user)
+	updated, err := models.UpdateUser(user.UUID, user.UUID, &user)
 	if err != nil {
 		c.String(http.StatusBadRequest, "couldn't update password")
 		zero.Errorf("couldn't update password %s", err)
@@ -178,7 +178,10 @@ func Recover(c echo.Context) error {
 }
 
 func Dashboard(c echo.Context) error {
-	Authenticate(c)
+	_, err := Authenticate(c)
+	if err != nil {
+		return c.String(http.StatusUnauthorized, "unauthorized")
+	}
 	sess, _ := session.Get("cosyl_auth", c)
 	user := sess.Values["user"]
 	return c.JSON(http.StatusOK, user)

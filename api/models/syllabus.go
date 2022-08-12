@@ -93,9 +93,9 @@ func GetSyllabi(params map[string]string) ([]Syllabus, error) {
 
 }
 
-func UpdateSyllabus(uuid uuid.UUID, syll *Syllabus) (Syllabus, error) {
+func UpdateSyllabus(uuid uuid.UUID, user_uuid uuid.UUID, syll *Syllabus) (Syllabus, error) {
 	var existing Syllabus
-	result := db.Where("uuid = ? ", uuid).First(&existing)
+	result := db.Where("uuid = ? AND user_uuid = ?", uuid, user_uuid).First(&existing)
 	if result.Error != nil {
 		return *syll, result.Error
 	}
@@ -104,15 +104,15 @@ func UpdateSyllabus(uuid uuid.UUID, syll *Syllabus) (Syllabus, error) {
 	return existing, result.Error
 }
 
-func AddAttachmentToSyllabus(syll_uuid uuid.UUID, att_uuid uuid.UUID) (Syllabus, error) {
+func AddAttachmentToSyllabus(syll_uuid uuid.UUID, att_uuid uuid.UUID, user_uuid uuid.UUID) (Syllabus, error) {
 	var syll Syllabus
-	result := db.Where("uuid = ? ", syll_uuid).First(&syll)
+	result := db.Where("uuid = ? AND user_uuid = ?", syll_uuid, user_uuid).First(&syll)
 	if result.Error != nil {
 		return syll, result.Error
 	}
 
 	var att Attachment
-	result = db.Where("uuid = ? ", att_uuid).First(&att)
+	result = db.Where("uuid = ?", att_uuid, user_uuid).First(&att)
 	if result.Error != nil {
 		return syll, result.Error
 	}
@@ -126,9 +126,9 @@ func AddAttachmentToSyllabus(syll_uuid uuid.UUID, att_uuid uuid.UUID) (Syllabus,
 	return updated, err
 }
 
-func RemoveAttachmentFromSyllabus(syll_uuid uuid.UUID, att_uuid uuid.UUID) (Syllabus, error) {
+func RemoveAttachmentFromSyllabus(syll_uuid uuid.UUID, att_uuid uuid.UUID, user_uuid uuid.UUID) (Syllabus, error) {
 	var syll Syllabus
-	result := db.Where("uuid = ? ", syll_uuid).First(&syll)
+	result := db.Where("uuid = ? AND user_uuid = ?", syll_uuid, user_uuid).First(&syll)
 	if result.Error != nil {
 		return syll, result.Error
 	}
@@ -144,9 +144,9 @@ func RemoveAttachmentFromSyllabus(syll_uuid uuid.UUID, att_uuid uuid.UUID) (Syll
 	return syll, nil
 }
 
-func AddInstitutionToSyllabus(syll_uuid uuid.UUID, inst *Institution) (Syllabus, error) {
+func AddInstitutionToSyllabus(syll_uuid uuid.UUID, user_uuid uuid.UUID, inst *Institution) (Syllabus, error) {
 	var syll Syllabus
-	result := db.Where("uuid = ? ", syll_uuid).First(&syll)
+	result := db.Where("uuid = ? AND user_uuid = ?", syll_uuid, user_uuid).First(&syll)
 	if result.Error != nil {
 		return syll, result.Error
 	}
@@ -159,9 +159,9 @@ func AddInstitutionToSyllabus(syll_uuid uuid.UUID, inst *Institution) (Syllabus,
 	return syll, err
 }
 
-func RemoveInstitutionFromSyllabus(syll_uuid uuid.UUID, inst_uuid uuid.UUID) (Syllabus, error) {
+func RemoveInstitutionFromSyllabus(syll_uuid uuid.UUID, inst_uuid uuid.UUID, user_uuid uuid.UUID) (Syllabus, error) {
 	var syll Syllabus
-	result := db.Where("uuid = ? ", syll_uuid).First(&syll)
+	result := db.Where("uuid = ? AND user_uuid = ?", syll_uuid, user_uuid).First(&syll)
 	if result.Error != nil {
 		return syll, result.Error
 	}
@@ -176,9 +176,9 @@ func RemoveInstitutionFromSyllabus(syll_uuid uuid.UUID, inst_uuid uuid.UUID) (Sy
 	return syll, err
 }
 
-func DeleteSyllabus(uuid uuid.UUID) (Syllabus, error) {
+func DeleteSyllabus(uuid uuid.UUID, user_uuid uuid.UUID) (Syllabus, error) {
 	var syll Syllabus
-	result := db.Where("uuid = ? ", uuid).First(&syll)
+	result := db.Where("uuid = ? AND user_uuid = ?", uuid, user_uuid).First(&syll)
 	if result.Error != nil {
 		return syll, result.Error
 	}

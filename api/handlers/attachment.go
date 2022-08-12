@@ -29,13 +29,16 @@ func GetAllAttachments(c echo.Context) error {
 }
 
 func CreateAttachment(c echo.Context) error {
-	auth.Authenticate(c)
+	_, err := auth.Authenticate(c)
+	if err != nil {
+		return c.String(http.StatusUnauthorized, "unauthorized")
+	}
 	conf, ok := c.Get("config").(config.Config)
 	if !ok {
 		return c.String(http.StatusInternalServerError, "could not parse configuration from context")
 	}
 
-	err := sanitizeAttachment(c)
+	err = sanitizeAttachment(c)
 	if err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
@@ -116,12 +119,12 @@ func CreateAttachment(c echo.Context) error {
 }
 
 func UpdateAttachment(c echo.Context) error {
-	auth.Authenticate(c)
-	id := c.Param("id")
-	if len(id) < 25 {
-		return c.String(http.StatusBadRequest, "not a valid ID")
+	requester_uid, err := auth.Authenticate(c)
+	if err != nil {
+		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
 
+	id := c.Param("id")
 	uid, err := uuid.Parse(id)
 	if err != nil {
 		return c.String(http.StatusBadRequest, "not a valid ID")
@@ -149,7 +152,7 @@ func UpdateAttachment(c echo.Context) error {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	}
 
-	updated, err := models.UpdateAttachment(uid, &att)
+	updated, err := models.UpdateAttachment(uid, uuid.MustParse(requester_uid), &att)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
@@ -177,18 +180,17 @@ func GetAttachment(c echo.Context) error {
 }
 
 func DeleteAttachment(c echo.Context) error {
-	auth.Authenticate(c)
-	id := c.Param("id")
-	if len(id) < 25 {
-		return c.String(http.StatusBadRequest, "not a valid ID")
+	requester_uid, err := auth.Authenticate(c)
+	if err != nil {
+		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
-
+	id := c.Param("id")
 	uid, err := uuid.Parse(id)
 	if err != nil {
 		return c.String(http.StatusBadRequest, "not a valid ID")
 	}
 
-	att, err := models.DeleteAttachment(uid)
+	att, err := models.DeleteAttachment(uid, uuid.MustParse(requester_uid))
 	if err != nil {
 		return c.String(http.StatusNotFound, err.Error())
 	}

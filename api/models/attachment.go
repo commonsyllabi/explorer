@@ -51,7 +51,7 @@ func GetAllAttachments() ([]Attachment, error) {
 	return res, result.Error
 }
 
-func UpdateAttachment(uuid uuid.UUID, att *Attachment) (Attachment, error) {
+func UpdateAttachment(uuid uuid.UUID, user_uuid uuid.UUID, att *Attachment) (Attachment, error) {
 	var existing Attachment
 	result := db.Where("uuid = ?", uuid).First(&existing)
 	if result.Error != nil {
@@ -62,7 +62,7 @@ func UpdateAttachment(uuid uuid.UUID, att *Attachment) (Attachment, error) {
 	return existing, result.Error
 }
 
-func DeleteAttachment(uuid uuid.UUID) (Attachment, error) {
+func DeleteAttachment(uuid uuid.UUID, user_uuid uuid.UUID) (Attachment, error) {
 	var att Attachment
 	result := db.Where("uuid = ?", uuid).First(&att)
 	if result.Error != nil {

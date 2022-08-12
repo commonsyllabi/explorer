@@ -48,7 +48,7 @@ func TestUserModel(t *testing.T) {
 	})
 
 	t.Run("Test get non-existing user", func(t *testing.T) {
-		user, err := models.GetUser(userNonExistentID)
+		user, err := models.GetUser(userUnknownID)
 		require.NotNil(t, err)
 		assert.True(t, user.CreatedAt.IsZero())
 	})
@@ -58,7 +58,7 @@ func TestUserModel(t *testing.T) {
 		require.Nil(t, err)
 
 		user.Email = "test@updated.com"
-		updated, err := models.UpdateUser(userID, &user)
+		updated, err := models.UpdateUser(userID, userID, &user)
 
 		require.Nil(t, err)
 		require.False(t, updated.CreatedAt.IsZero())
@@ -66,11 +66,21 @@ func TestUserModel(t *testing.T) {
 		assert.Equal(t, user.Name, userName)
 	})
 
+	t.Run("Test update user non-owner", func(t *testing.T) {
+		user, err := models.GetUser(userID)
+		require.Nil(t, err)
+
+		user.Email = "test@updated.com"
+		_, err = models.UpdateUser(userID, userUnknownID, &user)
+
+		require.NotNil(t, err)
+	})
+
 	t.Run("Test update non-existing user", func(t *testing.T) {
 		user := models.User{
 			Email: "test@user-non-existing.updated",
 		}
-		updated, err := models.UpdateUser(userNonExistentID, &user)
+		updated, err := models.UpdateUser(userUnknownID, userID, &user)
 		assert.NotNil(t, err)
 		assert.Equal(t, uuid.Nil, updated.UUID)
 	})
@@ -83,7 +93,7 @@ func TestUserModel(t *testing.T) {
 			Position: "lector",
 		}
 
-		updated, err := models.AddInstitutionToUser(userID, &inst)
+		updated, err := models.AddInstitutionToUser(userID, userID, &inst)
 		require.Nil(t, err)
 		assert.Equal(t, userID, updated.UUID)
 		assert.Equal(t, 2, len(updated.Institutions))
@@ -91,19 +101,19 @@ func TestUserModel(t *testing.T) {
 	})
 
 	t.Run("Test remove institution from user", func(t *testing.T) {
-		updated, err := models.RemoveInstitutionFromUser(userID, newInstID)
+		updated, err := models.RemoveInstitutionFromUser(userID, newInstID, userID)
 		require.Nil(t, err)
 		assert.Equal(t, userID, updated.UUID)
 	})
 
 	t.Run("Test delete user", func(t *testing.T) {
-		user, err := models.DeleteUser(userDeleteID)
+		user, err := models.DeleteUser(userDeleteID, userDeleteID)
 		assert.Nil(t, err)
 		assert.Equal(t, user.Name, userDeleteName)
 	})
 
 	t.Run("Test delete wrong user", func(t *testing.T) {
-		user, err := models.DeleteUser(userNonExistentID)
+		user, err := models.DeleteUser(userUnknownID, userID)
 		assert.Zero(t, user)
 		assert.NotNil(t, err)
 	})
