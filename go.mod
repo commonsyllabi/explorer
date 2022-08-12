@@ -3,24 +3,25 @@ module github.com/commonsyllabi/explorer
 go 1.18
 
 require (
-	github.com/gin-contrib/cors v1.4.0
-	github.com/gin-contrib/sessions v0.0.5
-	github.com/gin-contrib/static v0.0.1
+	github.com/biter777/countries v1.5.6
 	github.com/gin-gonic/gin v1.8.1
 	github.com/golang-migrate/migrate/v4 v4.15.2
 	github.com/google/uuid v1.3.0
+	github.com/gorilla/sessions v1.2.1
+	github.com/labstack/echo-contrib v0.13.0
+	github.com/labstack/echo/v4 v4.8.0
 	github.com/lib/pq v1.10.6
 	github.com/mailgun/mailgun-go/v4 v4.8.1
 	github.com/rs/zerolog v1.27.0
 	github.com/stretchr/testify v1.8.0
 	golang.org/x/crypto v0.0.0-20220722155217-630584e8d5aa
+	golang.org/x/text v0.3.7
 	gopkg.in/yaml.v2 v2.4.0
 	gorm.io/driver/postgres v1.0.8
 	gorm.io/gorm v1.21.4
 )
 
 require (
-	github.com/biter777/countries v1.5.6 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/facebookgo/ensure v0.0.0-20200202191622-63f1cf65ac4c // indirect
 	github.com/facebookgo/subset v0.0.0-20200203212716-c811ad88dec4 // indirect
@@ -33,7 +34,6 @@ require (
 	github.com/gorilla/context v1.1.1 // indirect
 	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/gorilla/securecookie v1.1.1 // indirect
-	github.com/gorilla/sessions v1.2.1 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
@@ -47,8 +47,6 @@ require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.1 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
-	github.com/labstack/echo-contrib v0.13.0 // indirect
-	github.com/labstack/echo/v4 v4.8.0 // indirect
 	github.com/labstack/gommon v0.3.1 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect
@@ -64,7 +62,6 @@ require (
 	go.uber.org/atomic v1.9.0 // indirect
 	golang.org/x/net v0.0.0-20220728030405-41545e8bf201 // indirect
 	golang.org/x/sys v0.0.0-20220728004956-3c1f35247d10 // indirect
-	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/time v0.0.0-20220722155302-e5dcc9cfc0b9 // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
