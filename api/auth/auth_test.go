@@ -34,8 +34,10 @@ func setup(t *testing.T) func(t *testing.T) {
 
 	router = mustSetupRouter()
 	mustInitDB()
+	os.Setenv("API_MODE", "auth")
 
 	return func(t *testing.T) {
+		os.Setenv("API_MODE", "test")
 		t.Log("tearing down api")
 	}
 }
