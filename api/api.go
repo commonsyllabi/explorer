@@ -66,7 +66,9 @@ func SetupRouter() *echo.Echo {
 	store.Options.HttpOnly = true
 	r.Use(session.Middleware(store))
 	r.Use(middleware.CORS())
-	r.Use(middleware.Logger())
+	r.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
+		Format: "\033[32m${time_rfc3339}\033[0m | ${method} | ${uri} | ${status} | ${remote_ip} | ${error.message}\n",
+	}))
 	r.Use(middleware.Recover())
 	r.Use(middleware.BodyLimit("16M"))
 
