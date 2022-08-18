@@ -5,6 +5,7 @@ import Link from "next/link";
 import { GlobalNav } from "components/GlobalNav";
 import { FiltersBar } from "components/FiltersBar";
 import SyllabusSchoolCodeYear from "components/Syllabus/SyllabusSchoolCodeYear";
+import CollectionCard from "components/CollectionCard";
 
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -12,6 +13,9 @@ import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
+import Tab from "react-bootstrap/Tab";
+import Tabs from "react-bootstrap/Tabs";
+import SyllabusCard from "components/SyllabusCard";
 
 const About: NextPage = () => {
   return (
@@ -100,67 +104,32 @@ const About: NextPage = () => {
             </div>
           </Col>
           <Col>
-            <div className="d-flex justify-content-between align-items-baseline py-2">
-              <h2 className="inline h5">Syllabi shared by you</h2>
-              <Form className="inline col-3">
-                <Form.Control
-                  type="search"
-                  className="form-control"
-                  placeholder="Search..."
-                  aria-label="Search"
-                />
-              </Form>
-            </div>
-            <Card>
-              <Card.Body>
-                <div className="syllabus-owner-controls d-flex justify-content-between align-items-baseline pb-2 mb-4 border-bottom">
-                  <div className="d-flex align-items-baseline">
-                    <span className="text-success fw-bold text-uppercase">
-                      Public
-                    </span>
-                    <Button variant="link">Set to Private</Button>
+            <div className="py-4">
+              <Tabs
+                defaultActiveKey="syllabi"
+                id="uncontrolled-tab-example"
+                className="mb-3"
+              >
+                <Tab eventKey="syllabi" title="Syllabi">
+                  {/* SYLLABI CONTENT */}
+                  <div className="d-flex justify-content-between align-items-baseline py-2">
+                    <h2 className="inline h5">Syllabi shared by you</h2>
+                    <Form className="inline col-3">
+                      <Form.Control
+                        type="search"
+                        className="form-control"
+                        placeholder="Search..."
+                        aria-label="Search"
+                      />
+                    </Form>
                   </div>
-                  <div>In 10 collections</div>
-                  <Button variant="outline-dark">Edit</Button>
-                </div>
-                <SyllabusSchoolCodeYear
-                  institution="Parson The New School of Design"
-                  code="PSAM1028"
-                  year="Spring 2019"
-                />
-                <Card.Title>
-                  <Link href="/syllabus">
-                    <a>Web Design Basics</a>
-                  </Link>
-                </Card.Title>
-                <p className="course-instructors">Pat Shiu</p>
-                <Card.Text className="course-description">
-                  Web Design Basics is designed to introduce students to
-                  programming as a creative medium—as a way of making and
-                  exploring. The coursework focuses on developing a vocabulary
-                  of interaction design principles which can then be applied
-                  across a range of platforms. Students are encouraged to
-                  experiment with various media, tools, and techniques,
-                  ultimately producing a portfolio of interactive and visual
-                  projects designed for the screen. An emphasis is placed on
-                  typography as it applies to a screen context, research-based
-                  problem solving and a “learning through making” approach to
-                  technical skill building. Historical and current interaction
-                  design precedents will be discussed.
-                </Card.Text>
-                <div className="course-tags d-flex gap-2">
-                  <Button variant="outline-dark" className="btn-sm btn-tag">
-                    web design
-                  </Button>
-                  <Button variant="outline-dark" className="btn-sm btn-tag">
-                    foundation
-                  </Button>
-                  <Button variant="outline-dark" className="btn-sm btn-tag">
-                    undergraduate
-                  </Button>
-                </div>
-              </Card.Body>
-            </Card>
+                  <SyllabusCard />
+                </Tab>
+                <Tab eventKey="collections" title="Collections">
+                  <CollectionCard />
+                </Tab>
+              </Tabs>
+            </div>
           </Col>
         </Row>
       </Container>
