@@ -92,6 +92,10 @@ func runFixtures(shouldTruncateTables bool) error {
 		Name:     "Sciences Po",
 		Country:  250,
 		Position: "lecturer",
+		Date: Date{
+			Term: "fall",
+			Year: 2021,
+		},
 	}
 	users[0].Institutions = append(users[0].Institutions, inst)
 

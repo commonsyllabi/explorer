@@ -34,10 +34,16 @@ func GetSyllabi(c echo.Context) error {
 }
 
 func CreateSyllabus(c echo.Context) error {
-	_, err := auth.Authenticate(c)
+	sessionID, err := auth.Authenticate(c)
 	if err != nil {
 		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
+
+	userID, err := uuid.Parse(sessionID)
+	if err != nil {
+		return c.JSON(http.StatusUnauthorized, "unauthorized")
+	}
+
 	err = sanitizeSyllabusCreate(c)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
@@ -49,7 +55,6 @@ func CreateSyllabus(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, err)
 	}
 
-	var userID uuid.UUID
 	if os.Getenv("API_MODE") == "test" {
 		userID = uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c8a8")
 	}
