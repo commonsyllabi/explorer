@@ -1,14 +1,15 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
-import { GlobalNav } from "components/GlobalNav";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 
+import { GlobalNav } from "components/GlobalNav";
 import { FiltersBar } from "components/FiltersBar";
 import TagsFiltersBar from "components/TagFiltersBar";
 import SyllabusCard from "components/SyllabusCard";
+
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 const Home: NextPage = () => {
   return (
