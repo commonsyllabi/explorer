@@ -9,6 +9,7 @@ import Col from "react-bootstrap/Col";
 
 import TagsFiltersBar from "components/TagFiltersBar";
 import SyllabusCard from "components/SyllabusCard";
+import { BreadcrumbsBar } from "components/BreadcrumbsBar";
 
 const Collection: NextPage = () => {
   return (
@@ -20,12 +21,23 @@ const Collection: NextPage = () => {
       </Head>
       <div id="header-section" className="sticky-top">
         <GlobalNav />
-        <FiltersBar />
+        <BreadcrumbsBar />
       </div>
 
       <Container>
-        <Row className="d-flex flex-row-reverse">
-          <h1>This is a collection page.</h1>
+        <Row className="pt-3 pb-3">
+          <h1>Web Design History</h1>
+          <p class="collection-description">
+            Lorem ipsum a collection about web design, with discussions on
+            historical and current interaction design precedents.
+          </p>
+        </Row>
+        <Row className="gap-3 pb-5">
+          <SyllabusCard />
+          <SyllabusCard />
+          <SyllabusCard />
+          <SyllabusCard />
+          <SyllabusCard />
         </Row>
       </Container>
     </div>
