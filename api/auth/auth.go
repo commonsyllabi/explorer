@@ -22,13 +22,16 @@ func Authenticate(c echo.Context) (string, error) {
 		return "e7b74bcd-c864-41ee-b5a7-d3031f76c8a8", nil
 	}
 
-	token, err := uuid.Parse(c.QueryParam("token"))
-	if err != nil {
-		return "unauthorized", err
-	}
+	t := c.QueryParam("token")
+	if t != "" {
+		token, err := uuid.Parse(t)
+		if err != nil {
+			return "unauthorized", err
+		}
 
-	if token.String() != "" && token.String() == os.Getenv("ADMIN_KEY") {
-		return token.String(), nil
+		if token.String() != "" && token.String() == os.Getenv("ADMIN_KEY") {
+			return token.String(), nil
+		}
 	}
 
 	sess, err := session.Get("cosyl_auth", c)

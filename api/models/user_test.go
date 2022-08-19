@@ -16,7 +16,7 @@ func TestUserModel(t *testing.T) {
 	t.Run("Test get all users", func(t *testing.T) {
 		users, err := models.GetAllUsers()
 		require.Nil(t, err)
-		assert.Equal(t, 4, len(users))
+		assert.Equal(t, 5, len(users))
 	})
 
 	t.Run("Test create user", func(t *testing.T) {
