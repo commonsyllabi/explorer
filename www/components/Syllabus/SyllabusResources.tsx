@@ -1,17 +1,11 @@
 import * as React from "react";
 
+import { IResources, ISyllabus } from "types";
+
 import SyllabusResource from "components/Syllabus/SyllabusResource";
 
 interface ISyllabusResourcesProps {
-  resources: [
-    {
-      uuid: string;
-      name: string;
-      url: string;
-      description: string;
-      type: string;
-    }
-  ];
+  resources: IResources[];
 }
 
 const SyllabusResources: React.FunctionComponent<ISyllabusResourcesProps> = ({

@@ -29,3 +29,11 @@ export interface ISyllabus {
   description: string;
   tags: string[];
 }
+
+export interface IResources {
+  uuid: string;
+  name: string;
+  url: string;
+  description: string;
+  type: string;
+}
