@@ -2,7 +2,7 @@ import * as React from "react";
 import Link from "next/link";
 
 interface IUserLinksProps {
-  links: string[] | undefined;
+  links: string[];
 }
 
 const UserLinks: React.FunctionComponent<IUserLinksProps> = ({ links }) => {
