@@ -14,7 +14,18 @@ export interface IInstitution {
   position: string;
 }
 
-export interface ISyllabus {
+export interface ICollection {
   uuid: string;
   name: string;
+  status: string;
+  description?: string;
+  tags: string[];
+}
+
+export interface ISyllabus {
+  uuid: string;
+  title: string;
+  status: string;
+  description: string;
+  tags: string[];
 }
