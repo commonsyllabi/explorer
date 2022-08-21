@@ -2,7 +2,7 @@ import * as React from "react";
 import Link from "next/link";
 
 interface IUserLinksProps {
-  links: string[];
+  links: string[] | undefined;
 }
 
 const UserLinks: React.FunctionComponent<IUserLinksProps> = ({ links }) => {
@@ -18,7 +18,11 @@ const UserLinks: React.FunctionComponent<IUserLinksProps> = ({ links }) => {
       </Link>
     </li>
   ));
-  return <ul className="list-unstyled">{userLinksEls}</ul>;
+  return (
+    <div id="user-links">
+      <ul className="list-unstyled">{userLinksEls}</ul>
+    </div>
+  );
 };
 
 export default UserLinks;
