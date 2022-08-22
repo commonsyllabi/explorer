@@ -14,7 +14,8 @@ func TestSyllabusModel(t *testing.T) {
 	teardown := setup(t)
 	defer teardown(t)
 
-	searchParams := make(map[string]string, 0)
+	searchParams := make(map[string]any, 0)
+	searchParams["page"] = 0
 	searchParams["languages"] = "%"
 	searchParams["keywords"] = "%"
 	searchParams["fields"] = "%"

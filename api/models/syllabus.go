@@ -67,6 +67,8 @@ func CreateSyllabus(user_uuid uuid.UUID, syll *Syllabus) (Syllabus, error) {
 	return created, err
 }
 
+const PAGINATION_LIMIT = 15
+
 func GetSyllabus(uuid uuid.UUID) (Syllabus, error) {
 	var syll Syllabus
 	result := db.Preload("User").Preload("Attachments").Where("uuid = ? ", uuid).First(&syll)
@@ -85,10 +87,15 @@ func GetSyllabus(uuid uuid.UUID) (Syllabus, error) {
 	return syll, nil
 }
 
-func GetSyllabi(params map[string]string) ([]Syllabus, error) {
+func GetSyllabi(params map[string]any) ([]Syllabus, error) {
 	var syllabi []Syllabus
 
-	result := db.Where("language SIMILAR TO ? AND (lower(description) SIMILAR TO ? OR lower(title) SIMILAR TO ?) AND ARRAY_TO_STRING(tags, ' ') SIMILAR TO ? AND academic_level::TEXT SIMILAR TO ? AND ARRAY_TO_STRING(academic_fields, ' ') SIMILAR TO ?", params["languages"], params["keywords"], params["keywords"], params["tags"], params["levels"], params["fields"]).Preload("Institutions").Preload("Attachments").Find(&syllabi)
+	page := (params["page"].(int) - 1) * PAGINATION_LIMIT
+	if page < 0 {
+		page = 0
+	}
+
+	result := db.Limit(PAGINATION_LIMIT).Offset(page).Where("language SIMILAR TO ? AND (lower(description) SIMILAR TO ? OR lower(title) SIMILAR TO ?) AND ARRAY_TO_STRING(tags, ' ') SIMILAR TO ? AND academic_level::TEXT SIMILAR TO ? AND ARRAY_TO_STRING(academic_fields, ' ') SIMILAR TO ?", params["languages"], params["keywords"], params["keywords"], params["tags"], params["levels"], params["fields"]).Preload("User").Preload("Institutions").Preload("Attachments").Find(&syllabi)
 
 	return syllabi, result.Error
 

@@ -258,13 +258,22 @@ func RemoveSyllabusInstitution(c echo.Context) error {
 	return c.JSON(http.StatusOK, syll)
 }
 
-func parseSearchParams(c echo.Context) (map[string]string, error) {
-	params := make(map[string]string, 0)
+func parseSearchParams(c echo.Context) (map[string]any, error) {
+	params := make(map[string]any, 0)
+	params["page"] = 0
 	params["fields"] = "%"
 	params["keywords"] = "%"
 	params["languages"] = "%"
 	params["levels"] = "%"
 	params["tags"] = "%"
+
+	p := c.QueryParam("page")
+	p = strings.Trim(p, " ")
+	page, err := strconv.Atoi(p)
+	if err != nil {
+		page = 0
+	}
+	params["page"] = page
 
 	fields := c.QueryParam("fields")
 	fields = strings.Trim(fields, " ")
