@@ -77,8 +77,6 @@ func TestAuth(t *testing.T) {
 		res := httptest.NewRecorder()
 		router.ServeHTTP(res, req)
 
-		fmt.Println(res.Body.String())
-
 		assert.Equal(t, http.StatusOK, res.Code)
 	})
 

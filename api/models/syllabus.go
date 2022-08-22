@@ -31,6 +31,7 @@ type Syllabus struct {
 	GradingRubric    string         `json:"grading_rubric" form:"grading_rubric"`
 	Language         string         `json:"language" form:"language"`
 	LearningOutcomes pq.StringArray `gorm:"type:text[]" json:"learning_outcomes" form:"learning_outcomes[]"`
+	License          string         `json:"license" yaml:"license" form:"license"`
 	Other            string         `json:"other" form:"other"`
 	Readings         pq.StringArray `gorm:"type:text[]" json:"readings" form:"readings[]"`
 	Tags             pq.StringArray `gorm:"type:text[]" json:"tags" yaml:"tags" form:"tags[]"`
