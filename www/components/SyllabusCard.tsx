@@ -1,49 +1,72 @@
 import * as React from "react";
 import Link from "next/link";
-import Button from "react-bootstrap/Button";
+
 import Card from "react-bootstrap/Card";
 import SyllabusSchoolCodeYear from "components/Syllabus/SyllabusSchoolCodeYear";
+import Tags from "./Tags";
+import PubBadge from "./PubBadge";
 
-interface ISyllabusCardProps {}
+interface ISyllabusCardProps {
+  uuid: string;
+  status: string;
+  institution?: string;
+  courseNumber?: string;
+  term?: string;
+  year?: string;
+  title: string;
+  author: string;
+  authorUUID: string;
+  description: string;
+  tags?: string[];
+}
 
 const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = (props) => {
+  const getSyllabiUrl = (uuid: string) => {
+    return "/syllabus/" + uuid;
+  };
+
+  const getVisbility = (status: string) => {
+    if (status === "unlisted") {
+      return false;
+    } else if (status === "listed") {
+      return true;
+    } else {
+      return null;
+    }
+  };
+
   return (
     <Card>
       <Card.Body>
         <SyllabusSchoolCodeYear
-          institution="Parson The New School of Design"
-          code="PSAM1028"
-          year="Spring 2019"
+          institution={props.institution}
+          courseNumber={props.courseNumber}
+          term={props.term}
+          year={props.year}
         />
         <Card.Title>
-          <Link href="/syllabus">
-            <a>Web Design Basics</a>
+          {/* TODO: make public /private tags display only if logged in */}
+          <Link href={getSyllabiUrl(props.uuid)}>
+            <a>{props.title}</a>
           </Link>
+          <PubBadge isPublic={getVisbility(props.status)} />
         </Card.Title>
-        <p className="course-instructors">Pat Shiu</p>
+        <p className="course-author">
+          {props.author ? (
+            <Link href={props.authorUUID}>
+              <p>{props.author}</p>)
+            </Link>
+          ) : (
+            <p className="text-muted">
+              <em>Author goes here</em>
+            </p>
+          )}
+        </p>
         <Card.Text className="course-description">
-          Web Design Basics is designed to introduce students to programming as
-          a creative medium—as a way of making and exploring. The coursework
-          focuses on developing a vocabulary of interaction design principles
-          which can then be applied across a range of platforms. Students are
-          encouraged to experiment with various media, tools, and techniques,
-          ultimately producing a portfolio of interactive and visual projects
-          designed for the screen. An emphasis is placed on typography as it
-          applies to a screen context, research-based problem solving and a
-          “learning through making” approach to technical skill building.
-          Historical and current interaction design precedents will be
-          discussed.
+          {props.description}
         </Card.Text>
         <div className="course-tags d-flex gap-2">
-          <Button variant="outline-dark" className="btn-sm btn-tag">
-            web design
-          </Button>
-          <Button variant="outline-dark" className="btn-sm btn-tag">
-            foundation
-          </Button>
-          <Button variant="outline-dark" className="btn-sm btn-tag">
-            undergraduate
-          </Button>
+          {props.tags && <Tags tags={props.tags} />}
         </div>
       </Card.Body>
     </Card>
