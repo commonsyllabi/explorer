@@ -85,11 +85,11 @@ const About: NextPage<IUser> = (props) => {
                     </div>
                   </div>
                   <SyllabusCard
-                    uuid=""
-                    status=""
-                    institution=""
-                    courseNumber=""
-                    term=""
+                    uuid={props.syllabi[0].uuid}
+                    status={props.syllabi[0].status}
+                    institution={props.syllabi[0].institution}
+                    courseNumber={props.syllabi[0].institution}
+                    term={props.syllabi[0].term}
                     year={props.syllabi[0].year}
                     title={props.syllabi[0].title}
                     author={props.name}
