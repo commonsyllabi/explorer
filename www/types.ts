@@ -1,12 +1,12 @@
 export interface IUser {
   uuid: string;
   name: string;
-  bio: string;
+  bio?: string;
   urls?: string[];
-  education?: string | object[];
-  institutions?: object[];
-  collections?: object[];
-  syllabi?: object[];
+  education?: string | string[];
+  institutions?: IInstitution[];
+  syllabi?: ISyllabus[];
+  collections?: ICollection[];
 }
 
 export interface IInstitution {
@@ -24,10 +24,16 @@ export interface ICollection {
 
 export interface ISyllabus {
   uuid: string;
+  institution?: string;
+  course_number?: string;
+  term?: string;
+  year?: string;
   title: string;
   status: string;
+  user: IUser;
+  user_uuid: string;
   description: string;
-  tags: string[];
+  tags?: string[];
 }
 
 export interface IResources {
