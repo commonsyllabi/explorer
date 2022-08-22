@@ -3,6 +3,7 @@ import Link from "next/link";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import SyllabusSchoolCodeYear from "components/Syllabus/SyllabusSchoolCodeYear";
+import PubBadge from "./PubBadge";
 
 interface ICollectionCardProps {}
 
@@ -16,6 +17,7 @@ const CollectionCard: React.FunctionComponent<ICollectionCardProps> = (
           <Link href="user/a-collection">
             <a>Web Design Courses</a>
           </Link>
+          <PubBadge isPublic={true} />
         </Card.Title>
         <p className="collection-meta small">
           collection by Pat Shiu | contains 12 syllabi
