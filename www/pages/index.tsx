@@ -1,17 +1,36 @@
-import type { NextPage } from "next";
+import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
-import Image from "next/image";
 
 import { GlobalNav } from "components/GlobalNav";
 import { FiltersBar } from "components/FiltersBar";
 import TagsFiltersBar from "components/TagFiltersBar";
 import SyllabusCard from "components/SyllabusCard";
 
+import { getSyllabusCards } from "./utils/getSyllabusCards";
+
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
-const Home: NextPage = () => {
+export const getServerSideProps: GetServerSideProps = async () => {
+  const apiUrl = process.env.API_URL;
+  const url = apiUrl + "syllabi/";
+
+  console.log(`LANDING SYLLABI FETCH URL: ${url}`);
+
+  const res = await fetch(url);
+  const syllabiListings = await res.json();
+
+  console.log(syllabiListings);
+
+  return {
+    props: {
+      syllabiListings: syllabiListings,
+    },
+  };
+};
+
+const Home: NextPage = ({ syllabiListings }) => {
   return (
     <div className="container">
       <Head>
@@ -30,12 +49,7 @@ const Home: NextPage = () => {
             <TagsFiltersBar />
           </Col>
           <Col className="pt-3 pb-5 d-flex flex-column gap-3">
-            <SyllabusCard />
-            <SyllabusCard />
-            <SyllabusCard />
-            <SyllabusCard />
-            <SyllabusCard />
-            <SyllabusCard />
+            {getSyllabusCards(syllabiListings)}
           </Col>
         </Row>
       </Container>
