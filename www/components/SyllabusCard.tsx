@@ -51,17 +51,17 @@ const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = (props) => {
           </Link>
           <PubBadge isPublic={getVisbility(props.status)} />
         </Card.Title>
-        <p className="course-author">
+        <div className="course-author">
           {props.author ? (
-            <Link href={props.authorUUID}>
-              <p>{props.author}</p>)
-            </Link>
+            <p>
+              <Link href={props.authorUUID}>{props.author}</Link>
+            </p>
           ) : (
             <p className="text-muted">
               <em>Author goes here</em>
             </p>
           )}
-        </p>
+        </div>
         <Card.Text className="course-description">
           {props.description}
         </Card.Text>
