@@ -22,7 +22,6 @@ interface ISyllabusCardProps {
 
 const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = (props) => {
   const getSyllabiUrl = (uuid: string) => {
-    console.log("getSyllabiUrl() called, UUID:", uuid);
     return "/syllabus/" + uuid;
   };
 
