@@ -2,11 +2,11 @@ import * as React from "react";
 import Link from "next/link";
 
 interface IUserLinksProps {
-  links: string[];
+  links: string[] | undefined;
 }
 
 const UserLinks: React.FunctionComponent<IUserLinksProps> = ({ links }) => {
-  if (links.length < 1) {
+  if (!links || links.length === 0) {
     return null;
   }
   const userLinksEls = links.map((link) => (

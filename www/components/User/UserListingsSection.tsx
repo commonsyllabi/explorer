@@ -1,5 +1,6 @@
 import * as React from "react";
 import Link from "next/link";
+import PubBadge from "components/PubBadge";
 
 interface ILinkItem {
   uuid: string;
@@ -39,7 +40,7 @@ const UserListingsSection: React.FunctionComponent<
       <div id="user-syllabi-index-public">
         <h3 className="h6">
           Your {sectionTitle}
-          <span className="badge bg-success ms-2">Public</span>
+          <PubBadge isPublic={true} />
         </h3>
         {linkEls.length > 0 ? (
           <ul className="list-unstyled pb-3">{linkEls}</ul>
@@ -52,7 +53,7 @@ const UserListingsSection: React.FunctionComponent<
       <div id="user-syllabi-index-private">
         <h3 className="h6">
           Your {sectionTitle}
-          <span className="badge bg-secondary ms-2">Private</span>
+          <PubBadge isPublic={false} />
         </h3>
         {privateLinkEls.length > 0 ? (
           <ul className="list-unstyled pb-3">{privateLinkEls}</ul>
