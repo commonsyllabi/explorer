@@ -15,14 +15,12 @@ export const BreadcrumbsBar: React.FunctionComponent<IBreadcrumbsBarProps> = (
     <Container className="border-bottom">
       <div className="pt-3 d-grid gap-2 d-flex justify-content-between align-items-baseline">
         <div className="breadcrumbs d-flex">
-          <Link href="/user">
-            <p className="small">
-              <Link href={`/user/${props.userId}`}>
-                <a className="text-muted">@{props.user}</a>
-              </Link>
-              &nbsp;
-            </p>
-          </Link>
+          <p className="small">
+            <Link href={`/user/${props.userId}`}>
+              <a className="text-muted">@{props.user}</a>
+            </Link>
+            &nbsp;
+          </p>
           <p className="small">/&nbsp;{props.category}&nbsp;</p>
           <p className="small">/&nbsp;{props.pageTitle}</p>
         </div>
