@@ -84,19 +84,7 @@ const About: NextPage<IUser> = (props) => {
                       </Link>
                     </div>
                   </div>
-                  <SyllabusCard
-                    uuid={props.syllabi[0].uuid}
-                    status={props.syllabi[0].status}
-                    institution={props.syllabi[0].institution}
-                    courseNumber={props.syllabi[0].institution}
-                    term={props.syllabi[0].term}
-                    year={props.syllabi[0].year}
-                    title={props.syllabi[0].title}
-                    author={props.name}
-                    authorUUID={props.syllabi[0].user_uuid}
-                    description={props.syllabi[0].description}
-                    tags={props.syllabi[0].tags}
-                  />
+                  {getSyllabusCards(props.syllabi)}
                 </Tab>
                 <Tab eventKey="collections" title="Collections">
                   <div className="d-flex justify-content-between align-items-baseline py-2">
