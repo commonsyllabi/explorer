@@ -14,6 +14,7 @@ import SyllabusSchoolCodeYear from "components/Syllabus/SyllabusSchoolCodeYear";
 import SyllabusResources from "components/Syllabus/SyllabusResources";
 import SyllabusFooter from "components/Syllabus/SyllabusFooter";
 import Tags from "components/Tags";
+import Link from "next/link";
 
 interface ISyllabusProps {
   title: string;
@@ -102,7 +103,9 @@ const Syllabus: NextPage<ISyllabusProps> = (props) => {
             </h1>
             <p className="small text-muted mb-0">ID: {sid}</p>
             <p className="course-instructors p-0 m-0">
-              {props.user ? props.user.name : "Course Author / Instructor"}
+              <Link href={`/user/${props.user.uuid}`}>
+                {props.user ? props.user.name : "Course Author / Instructor"}
+              </Link>
             </p>
 
             <div className="course-tags d-flex gap-2">
