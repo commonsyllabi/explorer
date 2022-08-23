@@ -1,9 +1,10 @@
+import React, { useEffect, useState } from "react";
 import type { GetServerSideProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import Link from "next/link";
 
-import { ISyllabus, IInstitution, ICollection, IUser } from "types";
+import { IUser } from "types";
 
 import { GlobalNav } from "components/GlobalNav";
 import CollectionCard from "components/CollectionCard";
@@ -13,13 +14,9 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
-import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
-import UserLinks from "components/User/UserLinks";
-import UserInstitutions from "components/User/UserInstitutions";
-import UserListingsSection from "components/User/UserListingsSection";
 
 import { getSyllabusCards } from "pages/utils/getSyllabusCards";
 import UserProfileSidebar from "components/User/UserProfileSidebar";
@@ -42,8 +39,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 };
 
 const About: NextPage<IUser> = (props) => {
-  // const router = useRouter();
-  // const { uid } = router.query;
+  const router = useRouter();
+  const focusedTab = router.query["tab"];
+  const [activeTab, setActiveTab] = useState(
+    focusedTab ? focusedTab : "syllabi"
+  );
 
   return (
     <>
@@ -57,11 +57,12 @@ const About: NextPage<IUser> = (props) => {
           <GlobalNav />
         </div>
         <Row>
+          <p>{`Active tab: ${activeTab}`}</p>
           <UserProfileSidebar props={props} />
           <Col>
             <div className="py-4">
               <Tabs
-                defaultActiveKey="syllabi"
+                defaultActiveKey={activeTab as string}
                 id="user-syllabi-collections-tabs"
                 className="mb-3"
               >
@@ -103,7 +104,7 @@ const About: NextPage<IUser> = (props) => {
                       </Button>
                     </div>
                   </div>
-                  {/* <CollectionCard /> */}
+                  <CollectionCard />
                 </Tab>
               </Tabs>
             </div>
