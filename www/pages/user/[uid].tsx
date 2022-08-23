@@ -57,7 +57,6 @@ const About: NextPage<IUser> = (props) => {
           <GlobalNav />
         </div>
         <Row>
-          <p>{`Active tab: ${activeTab}`}</p>
           <UserProfileSidebar props={props} />
           <Col>
             <div className="py-4">
