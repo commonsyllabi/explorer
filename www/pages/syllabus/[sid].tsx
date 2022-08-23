@@ -94,7 +94,7 @@ const Syllabus: NextPage<ISyllabusProps> = (props) => {
           <Col className="pt-3 pb-5 d-flex flex-column gap-3" lg={10}>
             <SyllabusSchoolCodeYear
               institution="Parson The New School of Design"
-              code="PSAM1028"
+              courseNumber="PSAM1028"
               year="Spring 2019"
             />
             <h1 className="p-0 m-0">
