@@ -20,6 +20,7 @@ import Tabs from "react-bootstrap/Tabs";
 
 import { getSyllabusCards } from "pages/utils/getSyllabusCards";
 import UserProfileSidebar from "components/User/UserProfileSidebar";
+import { propTypes } from "react-bootstrap/esm/Image";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const userId = context.params!.uid;
@@ -41,9 +42,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 const About: NextPage<IUser> = (props) => {
   const router = useRouter();
   const focusedTab = router.query["tab"];
-  const [activeTab, setActiveTab] = useState(
-    focusedTab ? focusedTab : "syllabi"
-  );
+
+  const activeTab = focusedTab ? focusedTab : "syllabi";
 
   return (
     <>
@@ -103,7 +103,20 @@ const About: NextPage<IUser> = (props) => {
                       </Button>
                     </div>
                   </div>
-                  <CollectionCard />
+                  <CollectionCard
+                    uuid={props.collections[0].uuid}
+                    name={props.collections[0].name}
+                    status={props.collections[0].status}
+                    description={props.collections[0].description}
+                    tags={props.collections[0].tags}
+                    userName={props.name}
+                    userUuid={props.uuid}
+                    syllabiCount={
+                      props.collections[0].syllabi
+                        ? props.collections[0].syllabi.length
+                        : 0
+                    }
+                  />
                 </Tab>
               </Tabs>
             </div>
