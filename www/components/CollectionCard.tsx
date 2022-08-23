@@ -4,8 +4,19 @@ import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import SyllabusSchoolCodeYear from "components/Syllabus/SyllabusSchoolCodeYear";
 import PubBadge from "./PubBadge";
+import { getIsPublic } from "pages/utils/getIsPublic";
+import Tags from "./Tags";
 
-interface ICollectionCardProps {}
+interface ICollectionCardProps {
+  uuid: string;
+  name: string;
+  status: string;
+  description?: string;
+  tags?: string[];
+  userName: string;
+  userUuid: string;
+  syllabiCount?: number;
+}
 
 const CollectionCard: React.FunctionComponent<ICollectionCardProps> = (
   props
@@ -14,29 +25,20 @@ const CollectionCard: React.FunctionComponent<ICollectionCardProps> = (
     <Card>
       <Card.Body>
         <Card.Title>
-          <Link href="user/a-collection">
-            <a>Web Design Courses</a>
+          <Link href={`/collection/${props.uuid}`}>
+            <a>{props.name}</a>
           </Link>
-          <PubBadge isPublic={true} />
+          <PubBadge isPublic={getIsPublic(props.status)} />
         </Card.Title>
         <p className="collection-meta small">
-          collection by Pat Shiu | contains 12 syllabi
+          collection by{" "}
+          <Link href={`user/${props.userUuid}`}>{props.userName}</Link> |
+          contains {props.syllabiCount} syllabi
         </p>
         <Card.Text className="course-description">
-          Lorem ipsum a collection about web design, with discussions on
-          historical and current interaction design precedents.
+          {props.description}
         </Card.Text>
-        <div className="collection-tags d-flex gap-2">
-          <Button variant="outline-dark" className="btn-sm btn-tag">
-            web design
-          </Button>
-          <Button variant="outline-dark" className="btn-sm btn-tag">
-            foundation
-          </Button>
-          <Button variant="outline-dark" className="btn-sm btn-tag">
-            undergraduate
-          </Button>
-        </div>
+        <Tags tags={props.tags} />
       </Card.Body>
     </Card>
   );
