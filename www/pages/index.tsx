@@ -11,6 +11,7 @@ import { getSyllabusCards } from "./utils/getSyllabusCards";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import { ISyllabus } from "types";
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const apiUrl = process.env.API_URL;
@@ -30,7 +31,11 @@ export const getServerSideProps: GetServerSideProps = async () => {
   };
 };
 
-const Home: NextPage = ({ syllabiListings }) => {
+interface IHomeProps {
+  syllabiListings: ISyllabus[];
+}
+
+const Home: NextPage<IHomeProps> = ({ syllabiListings }) => {
   return (
     <div className="container">
       <Head>
