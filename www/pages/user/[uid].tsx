@@ -21,6 +21,7 @@ import Tabs from "react-bootstrap/Tabs";
 import { getSyllabusCards } from "pages/utils/getSyllabusCards";
 import UserProfileSidebar from "components/User/UserProfileSidebar";
 import { propTypes } from "react-bootstrap/esm/Image";
+import { getCollectionCards } from "pages/utils/getCollectionCards";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const userId = context.params!.uid;
@@ -103,20 +104,11 @@ const About: NextPage<IUser> = (props) => {
                       </Button>
                     </div>
                   </div>
-                  <CollectionCard
-                    uuid={props.collections[0].uuid}
-                    name={props.collections[0].name}
-                    status={props.collections[0].status}
-                    description={props.collections[0].description}
-                    tags={props.collections[0].tags}
-                    userName={props.name}
-                    userUuid={props.uuid}
-                    syllabiCount={
-                      props.collections[0].syllabi
-                        ? props.collections[0].syllabi.length
-                        : 0
-                    }
-                  />
+                  {getCollectionCards(
+                    props.collections,
+                    props.name,
+                    props.uuid
+                  )}
                 </Tab>
               </Tabs>
             </div>

@@ -20,6 +20,7 @@ export interface ICollection {
   status: string;
   description?: string;
   tags: string[];
+  syllabi: ISyllabus[];
 }
 
 export interface ISyllabus {
