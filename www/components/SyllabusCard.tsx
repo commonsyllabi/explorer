@@ -25,6 +25,11 @@ const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = (props) => {
     return "/syllabus/" + uuid;
   };
 
+  const getUserUrl = (uuid: string) => {
+    //-- TODO switch from user to userS
+    return "/user/" + uuid;
+  };
+
   const getVisbility = (status: string) => {
     if (status === "unlisted") {
       return false;
@@ -54,7 +59,7 @@ const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = (props) => {
         <div className="course-author">
           {props.author ? (
             <p>
-              <Link href={props.authorUUID}>{props.author}</Link>
+              <Link href={getUserUrl(props.authorUUID)}>{props.author}</Link>
             </p>
           ) : (
             <p className="text-muted">
