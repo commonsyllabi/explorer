@@ -26,7 +26,7 @@ import { getCollectionCards } from "pages/utils/getCollectionCards";
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const userId = context.params!.uid;
   const apiUrl = process.env.API_URL;
-  const url = apiUrl + "users/" + userId;
+  const url = new URL(`users/${userId}`, apiUrl)
 
   console.log(`USER ID: ${userId}`);
   console.log(`API URL: ${apiUrl}`);

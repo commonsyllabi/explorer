@@ -15,7 +15,7 @@ import { ISyllabus } from "types";
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const apiUrl = process.env.API_URL;
-  const url = apiUrl + "syllabi/";
+  const url = require('node:url').resolve(apiUrl, "syllabi/")
 
   console.log(`LANDING SYLLABI FETCH URL: ${url}`);
 
