@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, FormEvent } from "react";
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
@@ -20,7 +20,7 @@ const NewSyllabus: NextPage = () => {
 
   useEffect(() => setValidated(false), []);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event : FormEvent<HTMLFormElement>) => {
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
       event.preventDefault();
@@ -29,7 +29,7 @@ const NewSyllabus: NextPage = () => {
     setValidated(true);
   };
 
-  const addAttachment = (event) => {
+  const addAttachment = (event : FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     event.stopPropagation();
     console.log("Attachment added");
@@ -209,7 +209,7 @@ const NewSyllabus: NextPage = () => {
                 <div className="mb-5">
                   <h2 className="h4">Attachments</h2>
                   <div className="course-attachments p-3 mb-3 border rounded bg-light">
-                    <div class="attachment-item">
+                    <div className="attachment-item">
                       <h4 className="h5">AttachmentName.pdf</h4>
                       <div className="d-flex">
                         <p className="mb-0">Size: 3.5mb</p>
