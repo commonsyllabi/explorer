@@ -53,7 +53,7 @@ const Home: NextPage<IHomeProps> = ({ syllabiListings }) => {
           <Col lg={4} className="pb-3 border-bottom border-lg-bottom-0">
             <TagsFiltersBar />
           </Col>
-          <Col className="pt-3 pb-5 d-flex flex-column gap-3">
+          <Col lg={8} className="pt-3 pb-5 d-flex flex-column gap-3">
             {getSyllabusCards(syllabiListings)}
           </Col>
         </Row>
