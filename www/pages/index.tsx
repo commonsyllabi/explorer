@@ -6,7 +6,7 @@ import { FiltersBar } from "components/FiltersBar";
 import TagsFiltersBar from "components/TagFiltersBar";
 import SyllabusCard from "components/SyllabusCard";
 
-import { getSyllabusCards } from "./utils/getSyllabusCards";
+import { getSyllabusCards } from "../components/utils/getSyllabusCards";
 
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";

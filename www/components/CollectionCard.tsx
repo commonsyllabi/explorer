@@ -4,7 +4,7 @@ import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import SyllabusSchoolCodeYear from "components/Syllabus/SyllabusSchoolCodeYear";
 import PubBadge from "./PubBadge";
-import { getIsPublic } from "pages/utils/getIsPublic";
+import { getIsPublic } from "components/utils/getIsPublic";
 import Tags from "./Tags";
 
 interface ICollectionCardProps {
