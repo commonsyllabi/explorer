@@ -51,7 +51,6 @@ export function GlobalNav() {
                 About
               </Nav.Link>
               <Nav.Link
-                onClick={() => signIn()}
                 href="/auth/signin"
                 className="py-3 text-end"
               >
