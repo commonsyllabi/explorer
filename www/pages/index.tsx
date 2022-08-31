@@ -22,7 +22,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
   const res = await fetch(url);
   const syllabiListings = await res.json();
 
-  console.log(syllabiListings);
+  console.log(`FETCHED ${syllabiListings.length} SYLLABI`);
 
   return {
     props: {
