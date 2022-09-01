@@ -55,6 +55,8 @@ func InitDB(url string) (*gorm.DB, error) {
 			zero.Errorf("error running fixtures: %v", err)
 			return db, err
 		}
+	} else {
+		zero.Debug("RUN_FIXTURES env variable not set to true, skipping fixtures...")
 	}
 
 	return db, err
