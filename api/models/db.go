@@ -27,9 +27,9 @@ func InitDB(url string) (*gorm.DB, error) {
 	var err error
 
 	conf := &gorm.Config{}
-	// if os.Getenv("API_MODE") == "release" {
-	conf.Logger = logger.Default.LogMode(logger.Silent)
-	// }
+	if os.Getenv("API_MODE") == "release" {
+		conf.Logger = logger.Default.LogMode(logger.Silent)
+	}
 
 	db, err = gorm.Open(postgres.Open(url), conf)
 	if err != nil {
@@ -49,10 +49,14 @@ func InitDB(url string) (*gorm.DB, error) {
 	}
 
 	// fixtures
-	err = runFixtures(true)
-	if err != nil {
-		zero.Errorf("error running fixtures: %v", err)
-		return db, err
+	if os.Getenv("RUN_FIXTURES") == "true" {
+		err = runFixtures(true)
+		if err != nil {
+			zero.Errorf("error running fixtures: %v", err)
+			return db, err
+		}
+	} else {
+		zero.Debug("RUN_FIXTURES env variable not set to true, skipping fixtures...")
 	}
 
 	return db, err
