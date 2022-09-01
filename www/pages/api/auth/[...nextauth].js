@@ -18,16 +18,17 @@ export default NextAuth({
                 b.append("email", credentials.username);
                 b.append("password", credentials.password);
 
-                var requestOptions = {
+                var options = {
                     method: 'POST',
                     headers: h,
                     body: b,
                     redirect: 'follow'
                 };
-                const response = await fetch(`${process.env.API_URL}/login`, requestOptions)
+
+                const login_endpoint = new URL('/login', process.env.API_URL)
+                const response = await fetch(login_endpoint.href, options)
                 if (response.ok){
                     const user = await response.json()
-                    console.log(`logged in user ${user.name}`);
                     return user
                 }else{
                     return null

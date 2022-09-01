@@ -3,6 +3,7 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
+import Button from "react-bootstrap/Button";
 import { useSession, signIn, signOut } from "next-auth/react";
 
 export function GlobalNav() {
@@ -24,12 +25,11 @@ export function GlobalNav() {
               <Nav.Link href="/about" className="py-3 text-end">
                 About
               </Nav.Link>
+              <>
+                <Button variant="secondary" size="sm" onClick={() => signOut({callbackUrl: '/'})}>Sign out</Button>
+              </>
             </Nav>
           </Navbar.Collapse>
-          <>
-            Hi {session.user?.name}! <br />
-            <button onClick={() => signOut()}>Sign out</button>
-          </>
         </Container>
       </Navbar>
     );
