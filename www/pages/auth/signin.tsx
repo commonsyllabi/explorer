@@ -1,33 +1,27 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import { GlobalNav } from "components/GlobalNav";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
 
-import Container from "react-bootstrap/Container";
-import Tabs from "react-bootstrap/Tabs";
-import Tab from "react-bootstrap/Tab";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import {Tabs, Tab, Row, Button, Col, Container, Form}  from "react-bootstrap";
 import { FormEvent } from "react";
 
-import { signIn, useSession } from "next-auth/react"
+import { signIn } from "next-auth/react"
 
 const states = ['Login', 'Sign up']
 
 const SignIn: NextPage = () => {
-  // const { data: session } = useSession();
 
-  const handleLogin = (e : React.FormEvent<HTMLInputElement>) => {
+  const handleLogin = (e : React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     e.stopPropagation()
     
-    const u = e.target.children[0].children.username.value
-    const p = e.target.children[1].children.password.value
+    const t = e.target as HTMLInputElement
+    const u = t.children[0].children[1] as HTMLInputElement
+    const p = t.children[1].children[1] as HTMLInputElement
     console.warn("Sanitize the input!")
     signIn("credentials", {
-      username: u,
-      password: p,
+      username: u.value,
+      password: p.value,
       callbackUrl: '/'
     })
   }
@@ -49,7 +43,7 @@ const SignIn: NextPage = () => {
 
       <Row>
         <Col lg={{ span: 6, offset: 3 }} className="mt-5">
-          <Tabs defaultActiveKey={states[0]} fill="true">
+          <Tabs defaultActiveKey={states[0]}>
             {/* LOGIN */}
             <Tab eventKey="Login" title="Login">
               <Form className="mt-2" onSubmit={handleLogin}>
