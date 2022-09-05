@@ -130,10 +130,31 @@ func RequestRecover(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, err)
 	}
 
+	var host string
+	if os.Getenv("API_MODE") == "release" {
+		host = "https://explorer.common-syllabi.org"
+	} else {
+		host = "http://localhost:3000"
+	}
+
 	// send email with link
 	if os.Getenv("API_MODE") != "test" {
-		body := fmt.Sprintf("here is your recover link :%v!", token.UUID.String())
-		mailer.SendMail(email.Address, "account recovery", body)
+		body := fmt.Sprintf(`
+		<html>
+		<body>
+		<h1>Account recovery request>
+		<p>Hello,</p>
+		<p>Here is your recovery link; you can use it to reset your password:</p>
+		<p>
+		<a href="%s/auth/recover?token=%s">Confirm your account</a>
+		</p>
+		<p>Cheers,<br/>
+		The Common Syllabi team</p>
+		</body>
+		</html>
+		`, host, token.UUID.String())
+
+		mailer.SendMail(email.Address, "Account recovery", body)
 	}
 
 	return c.String(http.StatusOK, "recovery email sent!")

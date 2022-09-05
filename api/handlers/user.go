@@ -51,9 +51,30 @@ func CreateUser(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err)
 	}
-	body := fmt.Sprintf("the user %s was successfully created with token %s!", user.UUID, token.UUID)
+
+	var host string
+	if os.Getenv("API_MODE") == "release" {
+		host = "https://explorer.common-syllabi.org"
+	} else {
+		host = "http://localhost:3000"
+	}
+
+	htmlBody := fmt.Sprintf(`
+		<html>
+		<body>
+		<h1>Welcome, %s!</h1>
+		<p>Your account on Common Syllabi Explorer has been successfully created. You just need to confirm it by clicking on this link:</p>
+		<p>
+		<a href="%s/auth/confirm?token=%s">Confirm your account</a>
+		</p>
+		<p>Cheers,<br/>
+		The Common Syllabi team</p>
+		</body>
+		</html>
+		`, user.Name, host, token.UUID)
+
 	if os.Getenv("API_MODE") != "test" {
-		mailer.SendMail(user.Email, "Welcome to Common Syllabi!", body)
+		mailer.SendMail(user.Email, "Welcome to Common Syllabi!", htmlBody)
 	}
 
 	return c.JSON(http.StatusCreated, user)
@@ -178,8 +199,17 @@ func DeleteUser(c echo.Context) error {
 	}
 
 	if os.Getenv("API_MODE") != "test" {
-		body := fmt.Sprintf("the user %s was successfully deleted!", user.UUID)
-		mailer.SendMail(user.Email, "user deleted", body)
+		body := fmt.Sprintf(`
+		<html>
+		<body>
+		<h1>Sorry to see you go, %s!</h1>
+		<p>Your account was successfully deleted.</p>
+		<p>Cheers,<br/>
+		The Common Syllabi team</p>
+		</body>
+		</html>
+		`, user.UUID)
+		mailer.SendMail(user.Email, "Account deleted", body)
 	}
 
 	return c.JSON(http.StatusOK, user)
