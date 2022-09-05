@@ -88,26 +88,26 @@ func Logout(c echo.Context) error {
 func Confirm(c echo.Context) error {
 	token, err := uuid.Parse(c.QueryParam("token"))
 	if err != nil {
-		c.String(http.StatusNotFound, err.Error())
+		c.JSON(http.StatusNotFound, err)
 		zero.Errorf(err.Error())
 	}
 
 	user, err := models.GetTokenUser(token)
 	if err != nil {
-		c.String(http.StatusNotFound, err.Error())
+		c.JSON(http.StatusNotFound, err)
 		zero.Errorf(err.Error())
 	}
 
 	user.Status = models.UserConfirmed
 	user, err = models.UpdateUser(user.UUID, user.UUID, &user)
 	if err != nil {
-		c.String(http.StatusNotFound, err.Error())
+		c.JSON(http.StatusNotFound, err)
 		zero.Errorf(err.Error())
 	}
 
 	err = models.DeleteToken(token)
 	if err != nil {
-		c.String(http.StatusInternalServerError, err.Error())
+		c.JSON(http.StatusInternalServerError, err)
 		zero.Errorf(err.Error())
 	}
 

@@ -82,7 +82,6 @@ const SignIn: NextPage = () => {
       body: b
     })
       .then(res => {
-        console.log(res)
         if (res.status == 201) setCreated(true)
         else return res.json()
       })
