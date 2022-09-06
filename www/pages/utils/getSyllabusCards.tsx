@@ -7,6 +7,7 @@ export const getSyllabusCards = (syllabiArray: ISyllabus[] | undefined) => {
     return null;
   }
 
+  //TODO: add params for userName and userUuid?
   const syllabiCards = syllabiArray.map((item) => (
     <SyllabusCard
       key={item.uuid}

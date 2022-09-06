@@ -18,9 +18,7 @@ import Badge from "react-bootstrap/Badge";
 const NewSyllabus: NextPage = () => {
   const [validated, setValidated] = useState(false);
 
-  useEffect(() => setValidated(false), []);
-
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: React.FormEvent<HTMLInputElement>) => {
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
       event.preventDefault();
@@ -29,11 +27,13 @@ const NewSyllabus: NextPage = () => {
     setValidated(true);
   };
 
-  const addAttachment = (event) => {
+  const addAttachment = (event: React.FormEvent<HTMLInputElement>) => {
     event.preventDefault();
     event.stopPropagation();
     console.log("Attachment added");
   };
+
+  console.log(`validated: ${validated}`);
 
   return (
     <div className="container">
@@ -62,7 +62,7 @@ const NewSyllabus: NextPage = () => {
         </Row>
         <Row className="gap-3 pb-5">
           <Col className="col-8 offset-2">
-            <Form noValidate validated={validated} onSubmit={handleSubmit}>
+            <Form noValidate validated={false} onSubmit={handleSubmit}>
               <fieldset>
                 <Form.Group className="mb-3">
                   <Form.Label htmlFor="courseTitle">Course Title</Form.Label>
@@ -209,7 +209,7 @@ const NewSyllabus: NextPage = () => {
                 <div className="mb-5">
                   <h2 className="h4">Attachments</h2>
                   <div className="course-attachments p-3 mb-3 border rounded bg-light">
-                    <div class="attachment-item">
+                    <div className="attachment-item">
                       <h4 className="h5">AttachmentName.pdf</h4>
                       <div className="d-flex">
                         <p className="mb-0">Size: 3.5mb</p>
@@ -232,10 +232,10 @@ const NewSyllabus: NextPage = () => {
                       </div>
                     </div>
                   </div>
-                  <Form className="attachment-form" onSubmit={addAttachment}>
+                  {/* <Form className="attachment-form" onSubmit={addAttachment}>
                     <h3 className="h6">Add a new attachment</h3>
                     <Button variant="secondary">+ Add new attachment</Button>
-                  </Form>
+                  </Form> */}
                 </div>
 
                 <Button type="submit">Submit form</Button>
