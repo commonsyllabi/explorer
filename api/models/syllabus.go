@@ -31,6 +31,7 @@ type Syllabus struct {
 	GradingRubric    string         `json:"grading_rubric" form:"grading_rubric"`
 	Language         string         `json:"language" form:"language"`
 	LearningOutcomes pq.StringArray `gorm:"type:text[]" json:"learning_outcomes" form:"learning_outcomes[]"`
+	License          string         `json:"license" yaml:"license" form:"license"`
 	Other            string         `json:"other" form:"other"`
 	Readings         pq.StringArray `gorm:"type:text[]" json:"readings" form:"readings[]"`
 	Tags             pq.StringArray `gorm:"type:text[]" json:"tags" yaml:"tags" form:"tags[]"`
@@ -66,6 +67,8 @@ func CreateSyllabus(user_uuid uuid.UUID, syll *Syllabus) (Syllabus, error) {
 	return created, err
 }
 
+const PAGINATION_LIMIT = 15
+
 func GetSyllabus(uuid uuid.UUID) (Syllabus, error) {
 	var syll Syllabus
 	result := db.Preload("User").Preload("Attachments").Where("uuid = ? ", uuid).First(&syll)
@@ -84,10 +87,15 @@ func GetSyllabus(uuid uuid.UUID) (Syllabus, error) {
 	return syll, nil
 }
 
-func GetSyllabi(params map[string]string) ([]Syllabus, error) {
+func GetSyllabi(params map[string]any) ([]Syllabus, error) {
 	var syllabi []Syllabus
 
-	result := db.Preload("User").Where("language SIMILAR TO ? AND (lower(description) SIMILAR TO ? OR lower(title) SIMILAR TO ?) AND ARRAY_TO_STRING(tags, ' ') SIMILAR TO ? AND academic_level::TEXT SIMILAR TO ? AND ARRAY_TO_STRING(academic_fields, ' ') SIMILAR TO ?", params["languages"], params["keywords"], params["keywords"], params["tags"], params["levels"], params["fields"]).Find(&syllabi)
+	page := (params["page"].(int) - 1) * PAGINATION_LIMIT
+	if page < 0 {
+		page = 0
+	}
+
+	result := db.Limit(PAGINATION_LIMIT).Offset(page).Where("language SIMILAR TO ? AND (lower(description) SIMILAR TO ? OR lower(title) SIMILAR TO ?) AND ARRAY_TO_STRING(tags, ' ') SIMILAR TO ? AND academic_level::TEXT SIMILAR TO ? AND ARRAY_TO_STRING(academic_fields, ' ') SIMILAR TO ?", params["languages"], params["keywords"], params["keywords"], params["tags"], params["levels"], params["fields"]).Preload("User").Preload("Institutions").Preload("Attachments").Find(&syllabi)
 
 	return syllabi, result.Error
 

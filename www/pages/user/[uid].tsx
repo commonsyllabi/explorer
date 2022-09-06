@@ -18,10 +18,10 @@ import Button from "react-bootstrap/Button";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 
-import { getSyllabusCards } from "pages/utils/getSyllabusCards";
+import { getSyllabusCards } from "components/utils/getSyllabusCards";
 import UserProfileSidebar from "components/User/UserProfileSidebar";
 import { propTypes } from "react-bootstrap/esm/Image";
-import { getCollectionCards } from "pages/utils/getCollectionCards";
+import { getCollectionCards } from "components/utils/getCollectionCards";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const userId = context.params!.uid;

@@ -12,12 +12,12 @@ import UserBio from "./UserBio";
 import {
   getPrivateCollectionList,
   getPublicCollectionList,
-} from "pages/utils/getUserCollectionsList";
+} from "components/utils/getUserCollectionsList";
 
 import {
   getPrivateSyllabiList,
   getPublicSyllabiList,
-} from "pages/utils/getUserSyllabiList";
+} from "components/utils/getUserSyllabiList";
 
 const getinstitutionNames = (
   institutionsArray: IInstitution[] | undefined

@@ -34,10 +34,16 @@ func GetSyllabi(c echo.Context) error {
 }
 
 func CreateSyllabus(c echo.Context) error {
-	_, err := auth.Authenticate(c)
+	sessionID, err := auth.Authenticate(c)
 	if err != nil {
 		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
+
+	userID, err := uuid.Parse(sessionID)
+	if err != nil {
+		return c.JSON(http.StatusUnauthorized, "unauthorized")
+	}
+
 	err = sanitizeSyllabusCreate(c)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
@@ -49,7 +55,6 @@ func CreateSyllabus(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, err)
 	}
 
-	var userID uuid.UUID
 	if os.Getenv("API_MODE") == "test" {
 		userID = uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c8a8")
 	}
@@ -253,13 +258,22 @@ func RemoveSyllabusInstitution(c echo.Context) error {
 	return c.JSON(http.StatusOK, syll)
 }
 
-func parseSearchParams(c echo.Context) (map[string]string, error) {
-	params := make(map[string]string, 0)
+func parseSearchParams(c echo.Context) (map[string]any, error) {
+	params := make(map[string]any, 0)
+	params["page"] = 0
 	params["fields"] = "%"
 	params["keywords"] = "%"
 	params["languages"] = "%"
 	params["levels"] = "%"
 	params["tags"] = "%"
+
+	p := c.QueryParam("page")
+	p = strings.Trim(p, " ")
+	page, err := strconv.Atoi(p)
+	if err != nil {
+		page = 0
+	}
+	params["page"] = page
 
 	fields := c.QueryParam("fields")
 	fields = strings.Trim(fields, " ")

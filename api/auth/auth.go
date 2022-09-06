@@ -22,6 +22,18 @@ func Authenticate(c echo.Context) (string, error) {
 		return "e7b74bcd-c864-41ee-b5a7-d3031f76c8a8", nil
 	}
 
+	t := c.QueryParam("token")
+	if t != "" {
+		token, err := uuid.Parse(t)
+		if err != nil {
+			return "unauthorized", err
+		}
+
+		if token.String() != "" && token.String() == os.Getenv("ADMIN_KEY") {
+			return token.String(), nil
+		}
+	}
+
 	sess, err := session.Get("cosyl_auth", c)
 	user := sess.Values["user"]
 	if user == nil || err != nil {
@@ -76,26 +88,26 @@ func Logout(c echo.Context) error {
 func Confirm(c echo.Context) error {
 	token, err := uuid.Parse(c.QueryParam("token"))
 	if err != nil {
-		c.String(http.StatusNotFound, err.Error())
+		c.JSON(http.StatusNotFound, err)
 		zero.Errorf(err.Error())
 	}
 
 	user, err := models.GetTokenUser(token)
 	if err != nil {
-		c.String(http.StatusNotFound, err.Error())
+		c.JSON(http.StatusNotFound, err)
 		zero.Errorf(err.Error())
 	}
 
 	user.Status = models.UserConfirmed
 	user, err = models.UpdateUser(user.UUID, user.UUID, &user)
 	if err != nil {
-		c.String(http.StatusNotFound, err.Error())
+		c.JSON(http.StatusNotFound, err)
 		zero.Errorf(err.Error())
 	}
 
 	err = models.DeleteToken(token)
 	if err != nil {
-		c.String(http.StatusInternalServerError, err.Error())
+		c.JSON(http.StatusInternalServerError, err)
 		zero.Errorf(err.Error())
 	}
 
@@ -118,10 +130,31 @@ func RequestRecover(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, err)
 	}
 
+	var host string
+	if os.Getenv("API_MODE") == "release" {
+		host = "https://explorer.common-syllabi.org"
+	} else {
+		host = "http://localhost:3000"
+	}
+
 	// send email with link
 	if os.Getenv("API_MODE") != "test" {
-		body := fmt.Sprintf("here is your recover link :%v!", token.UUID.String())
-		mailer.SendMail(email.Address, "account recovery", body)
+		body := fmt.Sprintf(`
+		<html>
+		<body>
+		<h1>Account recovery request>
+		<p>Hello,</p>
+		<p>Here is your recovery link; you can use it to reset your password:</p>
+		<p>
+		<a href="%s/auth/recover?token=%s">Confirm your account</a>
+		</p>
+		<p>Cheers,<br/>
+		The Common Syllabi team</p>
+		</body>
+		</html>
+		`, host, token.UUID.String())
+
+		mailer.SendMail(email.Address, "Account recovery", body)
 	}
 
 	return c.String(http.StatusOK, "recovery email sent!")

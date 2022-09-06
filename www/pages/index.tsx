@@ -6,7 +6,7 @@ import { FiltersBar } from "components/FiltersBar";
 import TagsFiltersBar from "components/TagFiltersBar";
 import SyllabusCard from "components/SyllabusCard";
 
-import { getSyllabusCards } from "./utils/getSyllabusCards";
+import { getSyllabusCards } from "../components/utils/getSyllabusCards";
 
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -22,7 +22,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
   const res = await fetch(url);
   const syllabiListings = await res.json();
 
-  console.log(syllabiListings);
+  console.log(`FETCHED ${syllabiListings.length} SYLLABI`);
 
   return {
     props: {
@@ -53,7 +53,7 @@ const Home: NextPage<IHomeProps> = ({ syllabiListings }) => {
           <Col lg={4} className="pb-3 border-bottom border-lg-bottom-0">
             <TagsFiltersBar />
           </Col>
-          <Col className="pt-3 pb-5 d-flex flex-column gap-3">
+          <Col lg={8} className="pt-3 pb-5 d-flex flex-column gap-3">
             {getSyllabusCards(syllabiListings)}
           </Col>
         </Row>

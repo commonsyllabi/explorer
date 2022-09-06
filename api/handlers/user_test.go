@@ -31,7 +31,7 @@ func TestUserHandler(t *testing.T) {
 		users := make([]models.User, 0)
 		err := json.Unmarshal(res.Body.Bytes(), &users)
 		require.Nil(t, err)
-		assert.Equal(t, 4, len(users))
+		assert.Equal(t, 5, len(users))
 	})
 
 	t.Run("Test create user", func(t *testing.T) {

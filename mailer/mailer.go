@@ -10,7 +10,7 @@ import (
 
 const DOMAIN = "post.enframed.net"
 
-func SendMail(_dest string, _subject string, _body string) error {
+func SendMail(_dest string, _subject string, _htmlBody string) error {
 	var err error
 	if os.Getenv("API_MODE") == "test" {
 		os.Setenv("MAILGUN_PRIVATE_API_KEY", "pubkey-9e6707d57ed1aab274ac62786539c158")
@@ -20,9 +20,9 @@ func SendMail(_dest string, _subject string, _body string) error {
 
 	sender := "Common Syllabi <cosyl@post.enframed.net>"
 	subject := _subject
-	body := _body
 	recipient := _dest
-	message := mg.NewMessage(sender, subject, body, recipient)
+	message := mg.NewMessage(sender, subject, "", recipient)
+	message.SetHtml(_htmlBody)
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()

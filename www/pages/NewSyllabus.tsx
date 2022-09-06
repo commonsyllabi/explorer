@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, FormEvent } from "react";
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
@@ -17,6 +17,8 @@ import Badge from "react-bootstrap/Badge";
 
 const NewSyllabus: NextPage = () => {
   const [validated, setValidated] = useState(false);
+
+  useEffect(() => setValidated(false), []);
 
   const handleSubmit = (event: React.FormEvent<HTMLInputElement>) => {
     const form = event.currentTarget;

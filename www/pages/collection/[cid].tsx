@@ -14,7 +14,7 @@ import TagsFiltersBar from "components/TagFiltersBar";
 import SyllabusCard from "components/SyllabusCard";
 import { BreadcrumbsBar } from "components/BreadcrumbsBar";
 
-import { getSyllabusCards } from "pages/utils/getSyllabusCards";
+import { getSyllabusCards } from "components/utils/getSyllabusCards";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const collectionId = context.params!.cid;

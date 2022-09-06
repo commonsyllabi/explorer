@@ -41,7 +41,9 @@ const About: NextPage = () => {
             Contributors
           </a>
           &nbsp;&nbsp;|&nbsp;&nbsp;
-          <a href="mailto:contact@commonsyllabi.org">Contact</a>
+          <a href="mailto:team@common-syllabi.org">Contact</a>
+          &nbsp;&nbsp;|&nbsp;&nbsp;
+          <a href="https://tinyletter.com/common-syllabi" target="_blank" rel="noopener noreferrer">Subscribe to the newsletter</a>
         </p>
       </div>
     </div>
