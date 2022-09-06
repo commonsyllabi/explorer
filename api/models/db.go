@@ -49,7 +49,7 @@ func InitDB(url string) (*gorm.DB, error) {
 	}
 
 	// fixtures
-	if os.Getenv("RUN_FIXTURES") == "true" {
+	if os.Getenv("RUN_FIXTURES") == "true" || os.Getenv("API_MODE") == "test" {
 		err = runFixtures(true)
 		if err != nil {
 			zero.Errorf("error running fixtures: %v", err)

@@ -85,6 +85,7 @@ func setup(t *testing.T) func(t *testing.T) {
 
 // -- todo here we should check whether the db is already initialized or not
 func mustSeedDB(t *testing.T) {
+	os.Setenv("API_MODE", "test")
 	databaseTestURL = os.Getenv("DATABASE_TEST_URL")
 	if databaseTestURL == "" {
 		databaseTestURL = "postgres://postgres:postgres@localhost:5432/explorer-test"
