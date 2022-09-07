@@ -25,9 +25,13 @@ export function GlobalNav() {
               <Nav.Link href="/about" className="py-3 text-end">
                 About
               </Nav.Link>
-              <>
-                <Button variant="secondary" size="sm" onClick={() => signOut({callbackUrl: '/'})}>Sign out</Button>
-              </>
+              <Nav.Link
+                href="#"
+                className="py-3 text-end"
+                onClick={() => signOut({ callbackUrl: "/" })}
+              >
+                Sign Out
+              </Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Container>
@@ -50,10 +54,7 @@ export function GlobalNav() {
               <Nav.Link href="/about" className="py-3 text-end">
                 About
               </Nav.Link>
-              <Nav.Link
-                href="/auth/signin"
-                className="py-3 text-end"
-              >
+              <Nav.Link href="/auth/signin" className="py-3 text-end">
                 Login
               </Nav.Link>
             </Nav>
