@@ -27,29 +27,34 @@ func GetAllUsers(c echo.Context) error {
 func CreateUser(c echo.Context) error {
 	err := sanitizeUserCreate(c)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err)
+		zero.Warn(err.Error())
+		return c.String(http.StatusBadRequest, err.Error())
 	}
 
 	var user models.User
 	err = c.Bind(&user)
 	if err != nil {
-		zero.Errorf("error binding user: %v", err)
+		zero.Warn(err.Error())
+		return c.String(http.StatusBadRequest, "There was an error creating your account. Please try again later.")
 	}
 
 	hashed, err := bcrypt.GenerateFromPassword([]byte(c.FormValue("password")), bcrypt.DefaultCost)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err)
+		zero.Warn(err.Error())
+		return c.String(http.StatusInternalServerError, "Error generating the hash for the password. Please try again later.")
 	}
 	user.Password = hashed
 
 	user, err = models.CreateUser(&user)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err)
+		zero.Warn(err.Error())
+		return c.String(http.StatusInternalServerError, "There already is a user with this email address. Try to login instead?")
 	}
 
 	token, err := models.CreateToken(user.UUID)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err)
+		zero.Warn(err.Error())
+		return c.String(http.StatusInternalServerError, "There was an error completing your account creation. Please try again later.")
 	}
 
 	var host string

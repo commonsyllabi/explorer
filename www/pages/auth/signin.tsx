@@ -83,11 +83,10 @@ const SignIn: NextPage = () => {
     })
       .then(res => {
         if (res.status == 201) setCreated(true)
-        else return res.json()
+        else return res.text()
       })
       .then(body => {
-        console.log(body)
-        setError(body.Detail)
+        setError(body as string)
       })
       .catch(err => {
         console.error(err)

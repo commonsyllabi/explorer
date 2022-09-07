@@ -82,7 +82,7 @@ func SetupRouter() *echo.Echo {
 
 	a := r.Group("/auth")
 	{
-		a.GET("/confirm", auth.Confirm)
+		a.POST("/confirm", auth.Confirm)
 		a.POST("/request-recover", auth.RequestRecover)
 		a.POST("/check-recover", auth.Recover)
 	}
