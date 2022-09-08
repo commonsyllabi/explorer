@@ -25,8 +25,11 @@ export function GlobalNav() {
               <Nav.Link href="/about" className="py-3 text-end">
                 About
               </Nav.Link>
+              <Nav.Link href="/NewSyllabus" className="py-3 text-end">
+                + New Syllabus
+              </Nav.Link>
               <Nav.Link
-                href="/user/e7b74bcd-c864-41ee-b5a7-d3031f76c8a9"
+                href={`/user/${session.user._id}`}
                 className="py-3 text-end"
               >
                 {session.user.name}
