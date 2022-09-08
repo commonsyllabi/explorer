@@ -85,9 +85,15 @@ func Logout(c echo.Context) error {
 	return c.JSON(http.StatusOK, gin.H{"message": "Successfully logged out"})
 }
 
+type Token struct {
+	Token string `json:"token" form:"token"`
+}
+
 func Confirm(c echo.Context) error {
-	token, err := uuid.Parse(c.QueryParam("token"))
-	fmt.Println(token)
+	t := new(Token)
+	c.Bind(t)
+	token, err := uuid.Parse(t.Token)
+
 	if err != nil {
 		zero.Errorf(err.Error())
 		return c.String(http.StatusBadRequest, "The token format is incorrect")

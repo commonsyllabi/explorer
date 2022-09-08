@@ -102,12 +102,16 @@ func TestAuth(t *testing.T) {
 	})
 
 	t.Run("Testing confirm user account", func(t *testing.T) {
-		path := fmt.Sprintf("/auth/confirm?token=%s", tokenConfirmID)
-		req := httptest.NewRequest(http.MethodGet, path, nil)
+		obj := map[string]string{
+			"token": tokenConfirmID.String(),
+		}
+		body, _ := json.Marshal(obj)
+		req := httptest.NewRequest(http.MethodPost, "/auth/confirm", bytes.NewBuffer(body))
+		req.Header.Set("Content-Type", "application/json")
 		res := httptest.NewRecorder()
 		router.ServeHTTP(res, req)
 
-		assert.Equal(t, http.StatusOK, res.Code)
+		require.Equal(t, http.StatusOK, res.Code)
 		var user models.User
 		err := json.Unmarshal(res.Body.Bytes(), &user)
 		require.Nil(t, err)
