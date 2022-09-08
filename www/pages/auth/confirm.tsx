@@ -18,18 +18,17 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     if (token != undefined) {
         log = `That's at least a valid token; we're checking it...`
 
-        const h = new Headers()
-        h.append("Content-Type", "application/x-www-form-urlencoded")
-
-        const b = new URLSearchParams()
-        b.append("token", token)
-
-        const res  = await fetch(url)
-        if(res.status === 200){
+        const res = await fetch(url, {
+            method: 'POST', headers: {
+                'Content-Type': 'application/json',
+            }, body: JSON.stringify({ "token": token })
+        })
+        
+        if (res.status === 200) {
             log = `Your account is confirmed! You can now log in.`
-        }else{
-            const body =  await res.json()
-            log = `There was a problem verifying your account (${body.message})`
+        } else {
+            const body = await res.text()
+            log = `There was a problem verifying your account (${body})`
         }
     } else {
         log = `Oops! Looks like the token you're using to confirm this account is invalid.`

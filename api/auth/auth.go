@@ -85,30 +85,37 @@ func Logout(c echo.Context) error {
 	return c.JSON(http.StatusOK, gin.H{"message": "Successfully logged out"})
 }
 
+type Token struct {
+	Token string `json:"token" form:"token"`
+}
+
 func Confirm(c echo.Context) error {
-	token, err := uuid.Parse(c.QueryParam("token"))
+	t := new(Token)
+	c.Bind(t)
+	token, err := uuid.Parse(t.Token)
+
 	if err != nil {
-		c.JSON(http.StatusNotFound, err)
 		zero.Errorf(err.Error())
+		return c.String(http.StatusBadRequest, "The token format is incorrect")
 	}
 
 	user, err := models.GetTokenUser(token)
 	if err != nil {
-		c.JSON(http.StatusNotFound, err)
 		zero.Errorf(err.Error())
+		return c.String(http.StatusNotFound, "The confirmation token could not be found.")
 	}
 
 	user.Status = models.UserConfirmed
 	user, err = models.UpdateUser(user.UUID, user.UUID, &user)
 	if err != nil {
-		c.JSON(http.StatusNotFound, err)
 		zero.Errorf(err.Error())
+		return c.String(http.StatusNotFound, "The user account was not found.")
 	}
 
 	err = models.DeleteToken(token)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, err)
 		zero.Errorf(err.Error())
+		return c.String(http.StatusInternalServerError, "There was an internal problem. Please try again later.")
 	}
 
 	return c.JSON(http.StatusOK, user)
