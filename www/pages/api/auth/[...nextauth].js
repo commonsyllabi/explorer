@@ -12,7 +12,7 @@ export default NextAuth({
             },
             async authorize(credentials, req) {
                 var h = new Headers();
-                h.append("Content-Type", "application/x-www-form-urlencoded");
+                h.append("Content-Type", "application/form-data");
 
                 var b = new URLSearchParams();
                 b.append("email", credentials.username);
@@ -42,5 +42,11 @@ export default NextAuth({
         error: '/auth/error', // Error code passed in query string as ?error=
         verifyRequest: '/auth/verify-request', // (used for check email message)
         newUser: '/auth/new-user' // New users will be directed here on first sign in (leave the property out if not of interest)
+    },
+    callbacks: {
+        async session({session, user, token}){
+            console.log('user', JSON.stringify(user))
+            console.log('token', JSON.stringify(token))
+        }
     }
 })
