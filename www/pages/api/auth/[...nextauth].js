@@ -1,5 +1,6 @@
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
+
 export default NextAuth({
     secret: "double poney",
     providers: [
@@ -11,6 +12,7 @@ export default NextAuth({
                 password: { label: "Password", type: "password" }
             },
             async authorize(credentials, req) {
+                // Add logic here to look up the user from the credentials supplied
                 var h = new Headers();
                 h.append("Content-Type", "application/x-www-form-urlencoded");
 
@@ -27,26 +29,44 @@ export default NextAuth({
 
                 const login_endpoint = new URL('/login', process.env.API_URL)
                 const response = await fetch(login_endpoint.href, options)
-                if (response.ok){
-                    const user = await response.json()
-                    console.log(`Login success, user is: ${JSON.stringify(user)}`)
+                if (response.ok) {
+                    // Any object returned will be saved in `user` property of the JWT
+                    const userData = await response.json()
+                    console.log(`LOGIN SUCCESS USER UUID: ${JSON.stringify(userData.uuid)}`)
+                    const user = {
+                        _id: userData.uuid,
+                        email: userData.email,
+                        name: userData.name,
+                    };
                     return user
-                }else{
+                } else {
+                    // If you return null then an error will be displayed advising the user to check their details.
                     return null
                 }
             }
         })
     ],
     callbacks: {
-            async session({ session, token, user }) {
-                // Send properties to the client, like an access_token from a provider.
-                console.log(`USER: ${user}`)
-                console.log(`SESSION: ${JSON.stringify(session)}`)
-                console.log(`TOKEN: ${JSON.stringify(token)}`)
-                // session.uuid = user.uuid
-                return session
+        async session({ session, token, user }) {
+            // Send properties to the client, like an access_token from a provider.
+            // console.log(`SESSION - USER: ${user}`)
+            // console.log(`SESSION - SESSION: ${JSON.stringify(session)}`)
+            // console.log(`SESSION - TOKEN: ${JSON.stringify(token)}`)
+            if (token.user) { 
+                session.user = token.user
             }
+            return session
         },
+        async jwt({ token, user }) { 
+            // console.log(`JWT - USER: ${user}`)
+            // console.log(`JWT - TOKEN: ${JSON.stringify(token)}`)
+            if (user) { 
+                // console.log("There's a user object!!")
+                token.user = user
+            }
+            return token;
+        }
+    },
     pages: {
         signIn: '/auth/signin',
         signOut: '/auth/signout',
