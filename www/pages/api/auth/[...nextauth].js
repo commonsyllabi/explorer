@@ -42,5 +42,13 @@ export default NextAuth({
         error: '/auth/error', // Error code passed in query string as ?error=
         verifyRequest: '/auth/verify-request', // (used for check email message)
         newUser: '/auth/new-user' // New users will be directed here on first sign in (leave the property out if not of interest)
+    },
+    callbacks: {
+        async session({ session, token, user }) {
+            // Send properties to the client, like an access_token from a provider.
+            console.log(user)
+            session.uuid = user.uuid
+            return session
+        }
     }
 })
