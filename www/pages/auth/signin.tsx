@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
+import Router from 'next/router';
 import { GlobalNav } from "components/GlobalNav";
 
 import { Alert, Tabs, Tab, Row, Button, Col, Container, Form } from "react-bootstrap";
@@ -28,7 +29,12 @@ const SignIn: NextPage = () => {
     signIn("credentials", {
       username: u.value,
       password: p.value,
-      callbackUrl: '/'
+      redirect: false
+    }).
+    then(res => {
+      if(!res || res.error) setError("There was an error during login. Please check your email and password.")
+      else
+        if(res.ok) Router.push("/")
     })
   }
 
