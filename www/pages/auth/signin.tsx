@@ -34,12 +34,12 @@ const SignIn: NextPage = () => {
     const u = t.children[0].children[1] as HTMLInputElement;
     const p = t.children[1].children[1] as HTMLInputElement;
     console.warn("Sanitize the input!");
+    // TODO: catch signin error
     signIn("credentials", {
       username: u.value,
       password: p.value,
       callbackUrl: "/",
-    });
-  };
+    })
 
   const handleSignup = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
