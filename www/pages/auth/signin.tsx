@@ -39,7 +39,8 @@ const SignIn: NextPage = () => {
       username: u.value,
       password: p.value,
       callbackUrl: "/",
-    })
+    });
+  };
 
   const handleSignup = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

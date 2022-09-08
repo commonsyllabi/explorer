@@ -29,6 +29,7 @@ export default NextAuth({
                 const response = await fetch(login_endpoint.href, options)
                 if (response.ok){
                     const user = await response.json()
+                    console.log(`Login success, user is: ${JSON.stringify(user)}`)
                     return user
                 }else{
                     return null
@@ -36,19 +37,21 @@ export default NextAuth({
             }
         })
     ],
+    callbacks: {
+            async session({ session, token, user }) {
+                // Send properties to the client, like an access_token from a provider.
+                console.log(`USER: ${user}`)
+                console.log(`SESSION: ${JSON.stringify(session)}`)
+                console.log(`TOKEN: ${JSON.stringify(token)}`)
+                // session.uuid = user.uuid
+                return session
+            }
+        },
     pages: {
         signIn: '/auth/signin',
         signOut: '/auth/signout',
         error: '/auth/error', // Error code passed in query string as ?error=
         verifyRequest: '/auth/verify-request', // (used for check email message)
         newUser: '/auth/new-user' // New users will be directed here on first sign in (leave the property out if not of interest)
-    },
-    callbacks: {
-        async session({ session, token, user }) {
-            // Send properties to the client, like an access_token from a provider.
-            console.log(user)
-            session.uuid = user.uuid
-            return session
-        }
     }
 })

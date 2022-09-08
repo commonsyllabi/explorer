@@ -15,11 +15,12 @@ import { ISyllabus } from "types";
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const apiUrl = process.env.API_URL;
-  const url = require('node:url').resolve(apiUrl, "syllabi/")
+  const url = require("node:url").resolve(apiUrl, "syllabi/");
 
   console.log(`LANDING SYLLABI FETCH URL: ${url}`);
 
   const res = await fetch(url);
+  //TODO: check for errors
   const syllabiListings = await res.json();
 
   console.log(`FETCHED ${syllabiListings.length} SYLLABI`);
