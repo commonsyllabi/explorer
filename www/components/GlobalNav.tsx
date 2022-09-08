@@ -7,8 +7,8 @@ import Button from "react-bootstrap/Button";
 import { useSession, signIn, signOut } from "next-auth/react";
 
 export function GlobalNav() {
-  const { data: session } = useSession();
-  if (session) {
+  const { data: session, status } = useSession();
+  if (status === "authenticated") {
     return (
       <Navbar
         bg="light"
@@ -24,6 +24,12 @@ export function GlobalNav() {
             <Nav className="float-end">
               <Nav.Link href="/about" className="py-3 text-end">
                 About
+              </Nav.Link>
+              <Nav.Link
+                href="/user/e7b74bcd-c864-41ee-b5a7-d3031f76c8a9"
+                className="py-3 text-end"
+              >
+                {session.user.name}
               </Nav.Link>
               <Nav.Link
                 href="#"
