@@ -79,7 +79,10 @@ func CreateUser(c echo.Context) error {
 		`, user.Name, host, token.UUID)
 
 	if os.Getenv("API_MODE") != "test" {
-		mailer.SendMail(user.Email, "Welcome to Common Syllabi!", htmlBody)
+		err = mailer.SendMail(user.Email, "Welcome to Common Syllabi!", htmlBody)
+		if err != nil {
+			zero.Warn(err.Error())
+		}
 	}
 
 	return c.JSON(http.StatusCreated, user)

@@ -8,7 +8,7 @@ import (
 	"github.com/mailgun/mailgun-go/v4"
 )
 
-const DOMAIN = "post.enframed.net"
+const DOMAIN = "mail.common-syllabi.org"
 
 func SendMail(_dest string, _subject string, _htmlBody string) error {
 	var err error
@@ -18,7 +18,7 @@ func SendMail(_dest string, _subject string, _htmlBody string) error {
 	mg := mailgun.NewMailgun(DOMAIN, os.Getenv("MAILGUN_PRIVATE_API_KEY"))
 	mg.SetAPIBase("https://api.eu.mailgun.net/v3") //-- rgpd mon amour
 
-	sender := "Common Syllabi <cosyl@post.enframed.net>"
+	sender := "Common Syllabi <cosyl@mail.common-syllabi.org>"
 	subject := _subject
 	recipient := _dest
 	message := mg.NewMessage(sender, subject, "", recipient)
