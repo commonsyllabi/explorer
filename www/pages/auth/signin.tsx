@@ -1,6 +1,7 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import { GlobalNav } from "components/GlobalNav";
+import Link from "next/link";
 
 import {
   Alert,
@@ -14,12 +15,13 @@ import {
 } from "react-bootstrap";
 import { useState } from "react";
 
-import { signIn } from "next-auth/react";
+import { useSession, signIn, signOut } from "next-auth/react";
 
 const states = ["Login", "Sign up"];
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 const SignIn: NextPage = () => {
+  const { data: session, status } = useSession();
   const url = new URL("users/", apiUrl);
 
   const [log, setLog] = useState("");
@@ -103,6 +105,37 @@ const SignIn: NextPage = () => {
       });
   };
 
+  //if already signed in, render usder info
+  if (status === "authenticated") {
+    return (
+      <Container>
+        <Head>
+          <title>Sign In: Syllabi Explorer</title>
+          <meta name="description" content="Sign in to Syllabi Explorer" />
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
+        <GlobalNav />
+
+        <Row>
+          <Col className="col-8 offset-2 py-5">
+            <h1 className="h3 mb-3">
+              You are logged in as{" "}
+              <Link href={`/user/${session.user._id}`}>
+                {session.user.name}
+              </Link>
+              .
+            </h1>
+            <Button href="#" onClick={() => signOut({ callbackUrl: "/" })}>
+              {" "}
+              Sign Out
+            </Button>
+          </Col>
+        </Row>
+      </Container>
+    );
+  }
+
+  //else render login form
   return (
     <Container>
       <Head>
