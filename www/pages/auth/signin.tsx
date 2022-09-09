@@ -15,6 +15,7 @@ import {
 import { useState } from "react";
 
 import { signIn } from "next-auth/react";
+import Router from "next/router";
 
 const states = ["Login", "Sign up"];
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -38,8 +39,12 @@ const SignIn: NextPage = () => {
     signIn("credentials", {
       username: u.value,
       password: p.value,
-      callbackUrl: "/",
-    });
+      redirect: false
+    })
+    .then(result => {
+      if(!result || result.error) setError("There was an error logging you in. Please check your credentials")
+      else Router.push("/")
+    })
   };
 
   const handleSignup = (e: React.FormEvent<HTMLFormElement>) => {
