@@ -1,4 +1,4 @@
-import type { NextPage } from "next";
+import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import { GlobalNav } from "components/GlobalNav";
 
@@ -17,11 +17,16 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import Router from "next/router";
 
-const states = ["Login", "Sign up"];
-const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+export const getStaticProps: GetStaticProps = async () => {
+  const states = ["Login", "Sign up"];
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  return {
+    props: { apiUrl: apiUrl, states: states },
+  };
+};
 
-const SignIn: NextPage = () => {
-  const url = new URL("users/", apiUrl);
+const SignIn: NextPage = (props) => {
+  const url = new URL("users/", props.apiUrl);
 
   const [log, setLog] = useState("");
   const [error, setError] = useState("");
@@ -121,7 +126,7 @@ const SignIn: NextPage = () => {
         <Col lg={{ span: 6, offset: 3 }} className="mt-5">
           {isCreated === false ? (
             <Container>
-              <Tabs defaultActiveKey={states[0]}>
+              <Tabs defaultActiveKey={props.states[0]} id="tab">
                 {/* LOGIN */}
                 <Tab eventKey="Login" title="Login">
                   <Form className="mt-2" onSubmit={handleLogin}>
