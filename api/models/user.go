@@ -24,7 +24,7 @@ type User struct {
 	Status    string         `gorm:"default:pending" json:"status"`
 
 	Bio       string         `json:"bio" form:"bio"`
-	Education string         `json:"education" form:"education"`
+	Education pq.StringArray `gorm:"type:text[]" json:"education" form:"education[]"`
 	Email     string         `gorm:"unique;not null" json:"email" form:"email"`
 	Name      string         `gorm:"default:Anonymous User;not null" json:"name" form:"name"`
 	Password  []byte         `gorm:"not null" json:"password"`

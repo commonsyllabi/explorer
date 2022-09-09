@@ -4,7 +4,8 @@
   email: "jus@pop.com"
   bio: "Justyna Poplawska is a guest lecturer at the Technisches Universität Berlin, in the chair of Jacob Van Rijs. She leads design and competition seminars."
   password: [36, 50, 97, 36, 49, 48, 36, 121, 72, 53, 79, 110, 76, 51, 98, 57, 112, 80, 81, 53, 49, 104, 54, 100, 74, 121, 54, 79, 101, 47, 117, 119, 78, 76, 57, 103, 107, 100, 88, 51, 90, 111, 73, 75, 80, 117, 113, 57, 104, 69, 102, 103, 85, 67, 51, 73, 56, 88, 113, 67]
-  education: "MA in Architecture, TU Cottbus"
+  education:
+    - "MA in Architecture, TU Cottbus"
   urls:
     - "http://jus.net"
     - "http://pop.com"
@@ -56,7 +57,8 @@
   name: "Pierre Depaz"
   email: "pierre.depaz@gmail.com"
   password: [36, 50, 97, 36, 49, 48, 36, 121, 72, 53, 79, 110, 76, 51, 98, 57, 112, 80, 81, 53, 49, 104, 54, 100, 74, 121, 54, 79, 101, 47, 117, 119, 78, 76, 57, 103, 107, 100, 88, 51, 90, 111, 73, 75, 80, 117, 113, 57, 104, 69, 102, 103, 85, 67, 51, 73, 56, 88, 113, 67]
-  education: "the street"
+  education:
+    - "the street"
   urls:
     - 'http://pierre.net'
   syllabi:
