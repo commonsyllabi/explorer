@@ -1,0 +1,14 @@
+<html>
+
+<body>
+    <h1>Welcome, {{ .Name }}!</h1>
+    <p>Your account on Common Syllabi Explorer has been successfully created. You just need to confirm it by clicking on
+        this link:</p>
+    <p>
+        <a href="{{ .Host}}/auth/confirm?token={{ .Token}}">Confirm your account</a>
+    </p>
+    <p>Cheers,<br />
+        The Common Syllabi team</p>
+</body>
+
+</html>

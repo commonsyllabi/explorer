@@ -64,22 +64,14 @@ func CreateUser(c echo.Context) error {
 		host = "http://localhost:3000"
 	}
 
-	htmlBody := fmt.Sprintf(`
-		<html>
-		<body>
-		<h1>Welcome, %s!</h1>
-		<p>Your account on Common Syllabi Explorer has been successfully created. You just need to confirm it by clicking on this link:</p>
-		<p>
-		<a href="%s/auth/confirm?token=%s">Confirm your account</a>
-		</p>
-		<p>Cheers,<br/>
-		The Common Syllabi team</p>
-		</body>
-		</html>
-		`, user.Name, host, token.UUID)
+	payload := mailer.ConfirmationPayload{
+		Name:  user.Name,
+		Host:  host,
+		Token: token.UUID.String(),
+	}
 
 	if os.Getenv("API_MODE") != "test" {
-		err = mailer.SendMail(user.Email, "Welcome to Common Syllabi!", htmlBody)
+		err = mailer.SendMail(user.Email, "Welcome to Common Syllabi!", "account_confirmation", payload)
 		if err != nil {
 			zero.Warn(err.Error())
 		}
@@ -207,17 +199,10 @@ func DeleteUser(c echo.Context) error {
 	}
 
 	if os.Getenv("API_MODE") != "test" {
-		body := fmt.Sprintf(`
-		<html>
-		<body>
-		<h1>Sorry to see you go, %s!</h1>
-		<p>Your account was successfully deleted.</p>
-		<p>Cheers,<br/>
-		The Common Syllabi team</p>
-		</body>
-		</html>
-		`, user.UUID)
-		mailer.SendMail(user.Email, "Account deleted", body)
+		data := mailer.DeletionPayload{
+			Name: user.Name,
+		}
+		mailer.SendMail(user.Email, "Account deleted", "account_deleted", data)
 	}
 
 	return c.JSON(http.StatusOK, user)
