@@ -20,7 +20,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 
     const u = "//analytics.enframed.net/";
     _paq.push(['setTrackerUrl', u + 'matomo.php']);
-    _paq.push(['setSiteId', '1']);
+    _paq.push(['setSiteId', '5']);
     var d = document,
       g = d.createElement('script'),
       s = d.getElementsByTagName('script')[0];
