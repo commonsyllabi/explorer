@@ -25,7 +25,12 @@ export const getStaticProps: GetStaticProps = async () => {
   };
 };
 
-const SignIn: NextPage = (props) => {
+interface IAuthProps {
+  apiUrl: string;
+  states: Array<string>;
+}
+
+const SignIn: NextPage<IAuthProps> = (props) => {
   const url = new URL("users/", props.apiUrl);
 
   const [log, setLog] = useState("");
@@ -130,7 +135,7 @@ const SignIn: NextPage = (props) => {
                 {/* LOGIN */}
                 <Tab eventKey="Login" title="Login">
                   <Form className="mt-2" onSubmit={handleLogin}>
-                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Group className="mb-3" controlId="loginBasicEmail">
                       <Form.Label>Email address</Form.Label>
                       <Form.Control
                         required
@@ -143,7 +148,7 @@ const SignIn: NextPage = (props) => {
                       </Form.Text>
                     </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="formBasicPassword">
+                    <Form.Group className="mb-3" controlId="loginBasicPassword">
                       <Form.Label>Password</Form.Label>
                       <Form.Control
                         required
@@ -162,17 +167,17 @@ const SignIn: NextPage = (props) => {
                 {/* SIGN UP */}
                 <Tab eventKey="Sign up" title="Sign up">
                   <Form className="mt-2" onSubmit={handleSignup}>
-                    <Form.Group className="mb-3" controlId="formBasicName">
+                    <Form.Group className="mb-3" controlId="signupBasicName">
                       <Form.Label>Name</Form.Label>
                       <Form.Control type="text" placeholder="Enter name" />
                     </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Group className="mb-3" controlId="signupBasicEmail">  
                       <Form.Label>Email address</Form.Label>
                       <Form.Control type="email" placeholder="Enter email" />
                       <Form.Label>Confirm email address</Form.Label>
                       <Form.Control
-                        type="email-conf"
+                        type="email"
                         placeholder="Confirm email"
                       />
                       <Form.Text className="text-muted">
@@ -180,7 +185,7 @@ const SignIn: NextPage = (props) => {
                       </Form.Text>
                     </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="formBasicPassword">
+                    <Form.Group className="mb-3" controlId="signupBasicPassword">
                       <Form.Label>Password</Form.Label>
                       <Form.Control type="password" placeholder="Password" />
                       <Form.Label>Confirm password</Form.Label>
