@@ -28,7 +28,11 @@ export const getStaticProps: GetStaticProps = async () => {
   };
 };
 
-const NewSyllabus: NextPage = (props) => {
+interface INewSyllabusProps {
+  apiUrl: string;
+}
+
+const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
   const { data: session, status } = useSession();
 
   const [validated, setValidated] = useState(false);
@@ -40,7 +44,7 @@ const NewSyllabus: NextPage = (props) => {
 
   console.log(`apiUrl: ${props.apiUrl}`);
 
-  const handleSubmit = (event: React.FormEvent<HTMLInputElement>) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
       event.preventDefault();

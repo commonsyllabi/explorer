@@ -4,15 +4,31 @@ import "pages/global_styles.scss";
 import type { AppProps } from "next/app";
 import { SessionProvider } from "next-auth/react";
 import React, { useEffect } from "react";
-import { init } from "@socialgouv/matomo-next";
 
 const MATOMO_URL = process.env.NEXT_PUBLIC_MATOMO_URL as string;
 const MATOMO_SITE_ID = process.env.NEXT_PUBLIC_MATOMO_SITE_ID as string;
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
+
   useEffect(() => {
-    init({ url: MATOMO_URL, siteId: MATOMO_SITE_ID });
-  }, []);
+    let _paq = window._paq = window._paq || [];
+    _paq.push(["setDoNotTrack", true]);
+    _paq.push(["disableCookies"]);
+    _paq.push(['trackPageView']);
+    _paq.push(['enableLinkTracking']);
+
+
+    const u = "//analytics.enframed.net/";
+    _paq.push(['setTrackerUrl', u + 'matomo.php']);
+    _paq.push(['setSiteId', '1']);
+    var d = document,
+      g = d.createElement('script'),
+      s = d.getElementsByTagName('script')[0];
+    g.type = 'text/javascript';
+    g.async = true;
+    g.src = u + 'matomo.js';
+    s.parentNode?.insertBefore(g, s);
+}, [])
 
   return (
     <SessionProvider session={session}>
