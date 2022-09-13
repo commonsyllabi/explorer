@@ -26,11 +26,11 @@ export const getStaticProps: GetStaticProps = async () => {
   };
 };
 
-interface INewSyllabus {
-  apiUrl: URL;
+interface INewSyllabusProps {
+  apiUrl: string;
 }
 
-const NewSyllabus: NextPage<INewSyllabus> = (props) => {
+const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
   const { data: session, status } = useSession();
 
   const [validated, setValidated] = useState(true);
@@ -67,22 +67,23 @@ const NewSyllabus: NextPage<INewSyllabus> = (props) => {
 
   const apiUrl = props.apiUrl;
 
-  const handleSubmit = async (
-    event: React.FormEvent<HTMLInputElement>
-  ): void => {
-    event.preventDefault();
-    event.stopPropagation();
-
-    console.log("handleSubmit() called");
-    console.log(`Session details:${JSON.stringify(session)}`);
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     const form = event.currentTarget;
+    if (form.checkValidity() === false) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    setValidated(true);
 
-    // TODO: validate form
-    // if (form.checkValidity() === false) {
-    //   event.preventDefault();
-    //   event.stopPropagation();
-    // }
-    // setValidated(true);
+    if (validated) {
+      const h = new Headers();
+      h.append("Content-Type", "application/x-www-form-urlencoded");
+
+      const b = new URLSearchParams();
+      b.append("title", "My 101 Class");
+      b.append("description", "My beautiful class description.");
+      b.append("tags[]", "Banana");
+      b.append("tags[]", "Rama");
 
     const postHeader = new Headers();
     postHeader.append("Content-Type", "application/json; charset=UTF-8");

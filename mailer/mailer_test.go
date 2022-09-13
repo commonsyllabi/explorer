@@ -9,16 +9,36 @@ import (
 
 func TestMailer(t *testing.T) {
 	os.Setenv("API_MODE", "test")
-	t.Run("Testing basic send", func(t *testing.T) {
-		htmlBody := `
-		<html>
-		<body>
-		<h1>test</h1>
-		</body>
-		</html>`
 
-		err := SendMail("pierre.depaz@gmail.com", "test subject", htmlBody)
+	t.Run("Testing basic send", func(t *testing.T) {
+		body := ConfirmationPayload{
+			Name:  "Pierre",
+			Host:  "localhost",
+			Token: "ttttt-oooo-kkkk-eeeee",
+		}
+
+		err := SendMail("pierre.depaz@gmail.com", "test subject", "account_confirmation", body)
 
 		assert.Nil(t, err)
+	})
+
+	t.Run("Testing wrong template", func(t *testing.T) {
+		body := ConfirmationPayload{
+			Name:  "Pierre",
+			Host:  "localhost",
+			Token: "ttttt-oooo-kkkk-eeeee",
+		}
+
+		err := SendMail("pierre.depaz@gmail.com", "test subject", "does not exist", body)
+
+		assert.NotNil(t, err)
+	})
+
+	t.Run("Testing empty send", func(t *testing.T) {
+		body := ConfirmationPayload{}
+
+		err := SendMail("pierre.depaz@gmail.com", "test subject", "account_confirmation", body)
+
+		assert.NotNil(t, err)
 	})
 }

@@ -1,4 +1,4 @@
-import type { NextPage } from "next";
+import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import { GlobalNav } from "components/GlobalNav";
 import Link from "next/link";
@@ -18,12 +18,22 @@ import { useState } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import Router from "next/router";
 
-const states = ["Login", "Sign up"];
-const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+export const getStaticProps: GetStaticProps = async () => {
+  const states = ["Login", "Sign up"];
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  return {
+    props: { apiUrl: apiUrl, states: states },
+  };
+};
 
-const SignIn: NextPage = () => {
+interface IAuthProps {
+  apiUrl: string;
+  states: Array<string>;
+}
+
+const SignIn: NextPage<IAuthProps> = (props) => {
   const { data: session, status } = useSession();
-  const url = new URL("users/", apiUrl);
+  const url = new URL("users/", props.apiUrl);
 
   const [log, setLog] = useState("");
   const [error, setError] = useState("");
@@ -43,10 +53,10 @@ const SignIn: NextPage = () => {
       password: p.value,
       redirect: false
     })
-    .then(result => {
-      if(!result || result.error) setError("There was an error logging you in. Please check your credentials")
-      else Router.push("/")
-    })
+      .then(result => {
+        if (!result || result.error) setError("There was an error logging you in. Please check your credentials")
+        else Router.push("/")
+      })
   };
 
   const handleSignup = (e: React.FormEvent<HTMLFormElement>) => {
@@ -154,11 +164,11 @@ const SignIn: NextPage = () => {
         <Col lg={{ span: 6, offset: 3 }} className="mt-5">
           {isCreated === false ? (
             <Container>
-              <Tabs defaultActiveKey={states[0]}>
+              <Tabs defaultActiveKey={props.states[0]} id="tab">
                 {/* LOGIN */}
                 <Tab eventKey="Login" title="Login">
                   <Form className="mt-2" onSubmit={handleLogin}>
-                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Group className="mb-3" controlId="loginBasicEmail">
                       <Form.Label>Email address</Form.Label>
                       <Form.Control
                         required
@@ -171,7 +181,7 @@ const SignIn: NextPage = () => {
                       </Form.Text>
                     </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="formBasicPassword">
+                    <Form.Group className="mb-3" controlId="loginBasicPassword">
                       <Form.Label>Password</Form.Label>
                       <Form.Control
                         required
@@ -190,33 +200,35 @@ const SignIn: NextPage = () => {
                 {/* SIGN UP */}
                 <Tab eventKey="Sign up" title="Sign up">
                   <Form className="mt-2" onSubmit={handleSignup}>
-                    <Form.Group className="mb-3" controlId="formBasicName">
+                    <Form.Group className="mb-3" controlId="signupBasicName">
                       <Form.Label>Name</Form.Label>
                       <Form.Control type="text" placeholder="Enter name" />
                     </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Group className="mb-3" controlId="signupBasicEmail">
                       <Form.Label>Email address</Form.Label>
                       <Form.Control type="email" placeholder="Enter email" />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" controlId="signupBasicEmailConfirm">
                       <Form.Label>Confirm email address</Form.Label>
-                      <Form.Control
-                        type="email-conf"
-                        placeholder="Confirm email"
+                      <Form.Control type="email" placeholder="Confirm email"
                       />
                       <Form.Text className="text-muted">
                         We&#39;ll never share your email with anyone else.
                       </Form.Text>
                     </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="formBasicPassword">
+                    <Form.Group className="mb-3" controlId="signupBasicPassword">
                       <Form.Label>Password</Form.Label>
                       <Form.Control type="password" placeholder="Password" />
-                      <Form.Label>Confirm password</Form.Label>
-                      <Form.Control
-                        type="password"
-                        placeholder="Confirm password"
-                      />
                     </Form.Group>
+
+                    <Form.Group className="mb-3" controlId="signupBasicPasswordConfirm">
+                      <Form.Label>Confirm password</Form.Label>
+                      <Form.Control type="password" placeholder="Confirm password" />
+                    </Form.Group>
+
                     <Button variant="primary" type="submit">
                       Sign up
                     </Button>

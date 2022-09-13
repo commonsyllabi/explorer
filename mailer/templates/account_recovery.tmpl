@@ -1,0 +1,14 @@
+<html>
+
+<body>
+    <h1>Account recovery request>
+        <p>Hello {{ .Name }},</p>
+        <p>Here is your recovery link; you can use it to reset your password:</p>
+        <p>
+            <a href="{{ .Host }}/auth/recover?token={{ .Token }}">Confirm your account</a>
+        </p>
+        <p>Cheers,<br />
+            The Common Syllabi team</p>
+</body>
+
+</html>

@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
-	"os"
 	"strings"
 	"testing"
 
@@ -312,12 +311,4 @@ func TestAttachmentHandler(t *testing.T) {
 		assert.Equal(t, http.StatusNotFound, res.Code)
 	})
 
-}
-
-func mustOpen(path string) *os.File {
-	r, err := os.Open(path)
-	if err != nil {
-		panic(err)
-	}
-	return r
 }

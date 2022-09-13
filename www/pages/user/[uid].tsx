@@ -85,7 +85,9 @@ const About: NextPage<IUser> = (props) => {
                       </Link>
                     </div>
                   </div>
-                  {getSyllabusCards(props.syllabi)}
+                  <div id="syllabi">
+                    {getSyllabusCards(props.syllabi)}
+                  </div>
                 </Tab>
                 <Tab eventKey="collections" title="Collections">
                   <div className="d-flex justify-content-between align-items-baseline py-2">
@@ -104,11 +106,13 @@ const About: NextPage<IUser> = (props) => {
                       </Button>
                     </div>
                   </div>
-                  {getCollectionCards(
-                    props.collections,
-                    props.name,
-                    props.uuid
-                  )}
+                  <div id="collections">
+                    {getCollectionCards(
+                      props.collections,
+                      props.name,
+                      props.uuid
+                    )}
+                  </div>
                 </Tab>
               </Tabs>
             </div>

@@ -71,6 +71,7 @@ func SetupRouter() *echo.Echo {
 	}))
 	r.Use(middleware.Recover())
 	r.Use(middleware.BodyLimit("16M"))
+	r.Use(injectConfig)
 
 	r.Static("/uploads", conf.UploadsDir)
 
@@ -150,6 +151,10 @@ func SetupRouter() *echo.Echo {
 func injectConfig(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		c.Set("config", conf)
+		if err := next(c); err != nil {
+			c.Error(err)
+		}
+
 		return nil
 	}
 }
