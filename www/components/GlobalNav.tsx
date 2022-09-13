@@ -17,30 +17,41 @@ export function GlobalNav() {
       >
         <Container>
           <Navbar.Brand href="/">Syllabi Explorer</Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Toggle aria-controls="global-nav" />
         </Container>
         <Container>
-          <Navbar.Collapse id="basic-navbar-nav" className="flex-row-reverse">
+          <Navbar.Collapse id="global-nav" className="flex-row-reverse">
             <Nav className="float-end">
-              <Nav.Link href="/about" className="py-3 text-end">
-                About
-              </Nav.Link>
               <Nav.Link href="/NewSyllabus" className="py-3 text-end">
                 + New Syllabus
               </Nav.Link>
-              <Nav.Link
-                href={`/user/${session.user._id}`}
-                className="py-3 text-end"
+
+              <NavDropdown
+                title={session.user.name}
+                id="userNavDropdown"
+                className=" text-end align-self-center"
               >
-                {session.user.name}
-              </Nav.Link>
-              <Nav.Link
-                href="#"
-                className="py-3 text-end"
-                onClick={() => signOut({ callbackUrl: "/" })}
-              >
-                Sign Out
-              </Nav.Link>
+                <NavDropdown.Item
+                  href={`/user/${session.user._id}`}
+                  className="py-2 text-end"
+                >
+                  My Account
+                </NavDropdown.Item>
+
+                <NavDropdown.Item href="/about" className="py-2 text-end">
+                  About
+                </NavDropdown.Item>
+
+                <NavDropdown.Divider />
+
+                <NavDropdown.Item
+                  href="#"
+                  className="py-2 text-end"
+                  onClick={() => signOut({ callbackUrl: "/" })}
+                >
+                  Sign Out
+                </NavDropdown.Item>
+              </NavDropdown>
             </Nav>
           </Navbar.Collapse>
         </Container>
