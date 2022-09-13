@@ -47,25 +47,25 @@ func Login(c echo.Context) error {
 	password := c.FormValue("password")
 	email, err := mail.ParseAddress(c.FormValue("email"))
 	if err != nil || strings.Trim(password, " ") == "" {
-		return c.JSON(http.StatusBadRequest, gin.H{"error": "Parameters can't be empty"})
+		return c.String(http.StatusBadRequest, "Parameters can't be empty")
 	}
 
 	user, err := models.GetUserByEmail(email.Address)
 	if err != nil || user.Status == models.UserPending {
 		zero.Error(err.Error())
-		return c.JSON(http.StatusUnauthorized, gin.H{"error": "Authentication failed"})
+		return c.String(http.StatusUnauthorized, "Authentication failed")
 	}
 
 	err = bcrypt.CompareHashAndPassword(user.Password, []byte(password))
 	if err != nil {
 		zero.Error(err.Error())
-		return c.JSON(http.StatusUnauthorized, gin.H{"error": "Authentication failed"})
+		return c.String(http.StatusUnauthorized, "Authentication failed")
 	}
 
 	sess.Values["user"] = user.UUID.String()
 	if err := sess.Save(c.Request(), c.Response()); err != nil {
 		zero.Error(err.Error())
-		return c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save session"})
+		return c.String(http.StatusInternalServerError, "Failed to save session")
 	}
 	return c.JSON(http.StatusOK, user)
 }
@@ -74,15 +74,15 @@ func Logout(c echo.Context) error {
 	sess, _ := session.Get("cosyl_auth", c)
 	user := sess.Values["user"]
 	if user == nil {
-		return c.JSON(http.StatusNotFound, gin.H{"error": "Invalid session token"})
+		return c.String(http.StatusNotFound, "Invalid session token")
 	}
 
 	sess.Values["user"] = nil
 	if err := sess.Save(c.Request(), c.Response()); err != nil {
-		return c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save session"})
+		return c.String(http.StatusInternalServerError, "Failed to save session")
 	}
 
-	return c.JSON(http.StatusOK, gin.H{"message": "Successfully logged out"})
+	return c.String(http.StatusOK, "Successfully logged out")
 }
 
 type Token struct {
