@@ -12,3 +12,5 @@ describe('Navigation', () => {
         cy.get('.course-resource').should('have.length', 3)
     })
 })
+
+export {}

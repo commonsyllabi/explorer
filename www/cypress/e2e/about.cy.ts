@@ -8,3 +8,5 @@ describe('Navigation', () => {
         cy.get('#aboutLinks').children().should('have.length', 3)
     })
 })
+
+export { }

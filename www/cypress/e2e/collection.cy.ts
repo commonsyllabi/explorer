@@ -8,3 +8,5 @@ describe('Navigation', () => {
         cy.get('.card').should('have.length', 1)
     })
 })
+
+export {}
