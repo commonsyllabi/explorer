@@ -32,7 +32,7 @@ const About: NextPage = () => {
           collaborative progress, and our goal with Syllabi Explorer is to
           create a platform that enables wide access to curricula.
         </p>
-        <p>
+        <p id="aboutLinks">
           <a
             href="https://commonsyllabi.org/#contributors"
             target="_blank"
