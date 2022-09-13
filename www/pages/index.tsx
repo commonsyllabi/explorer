@@ -12,6 +12,7 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { ISyllabus } from "types";
+import { useEffect } from "react";
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const apiUrl = process.env.API_URL;
@@ -37,6 +38,7 @@ interface IHomeProps {
 }
 
 const Home: NextPage<IHomeProps> = ({ syllabiListings }) => {
+
   return (
     <div className="container">
       <Head>

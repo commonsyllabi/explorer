@@ -5,6 +5,7 @@ import (
 
 	"github.com/commonsyllabi/explorer/api/models"
 	"github.com/google/uuid"
+	"github.com/lib/pq"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -30,6 +31,21 @@ func TestUserModel(t *testing.T) {
 		assert.Equal(t, result.Email, user.Email, "Expected to have equal names, got %v - %v", result.Email, user.Email)
 		assert.Equal(t, result.Status, "pending")
 		assert.Equal(t, result.Name, "Anonymous User")
+	})
+
+	t.Run("Test create user with array fields", func(t *testing.T) {
+		user := models.User{
+			Email:     "test@user-create-array.com",
+			Password:  []byte("12345678"),
+			Education: pq.StringArray{"BSc", "MA"},
+		}
+		result, err := models.CreateUser(&user)
+		require.Nil(t, err)
+
+		assert.Equal(t, result.Email, user.Email, "Expected to have equal names, got %v - %v", result.Email, user.Email)
+		assert.Equal(t, result.Status, "pending")
+		assert.Equal(t, result.Name, "Anonymous User")
+		assert.Equal(t, 2, len(result.Education))
 	})
 
 	t.Run("Test get user with syllabi and collections", func(t *testing.T) {

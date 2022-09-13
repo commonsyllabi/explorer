@@ -19,7 +19,7 @@ export const FiltersBar: FunctionComponent = () => {
         </Dropdown>
 
         <Dropdown>
-          <Dropdown.Toggle variant="light" id="dropdown-level">
+          <Dropdown.Toggle variant="light" id="dropdown-field">
             Field
           </Dropdown.Toggle>
 
@@ -31,7 +31,7 @@ export const FiltersBar: FunctionComponent = () => {
         </Dropdown>
 
         <Dropdown>
-          <Dropdown.Toggle variant="light" id="dropdown-level">
+          <Dropdown.Toggle variant="light" id="dropdown-semester">
             Semester
           </Dropdown.Toggle>
 
@@ -43,7 +43,7 @@ export const FiltersBar: FunctionComponent = () => {
         </Dropdown>
 
         <Dropdown>
-          <Dropdown.Toggle variant="light" id="dropdown-level">
+          <Dropdown.Toggle variant="light" id="dropdown-language">
             Language / Region
           </Dropdown.Toggle>
 

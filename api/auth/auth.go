@@ -146,22 +146,13 @@ func RequestRecover(c echo.Context) error {
 
 	// send email with link
 	if os.Getenv("API_MODE") != "test" {
-		body := fmt.Sprintf(`
-		<html>
-		<body>
-		<h1>Account recovery request>
-		<p>Hello,</p>
-		<p>Here is your recovery link; you can use it to reset your password:</p>
-		<p>
-		<a href="%s/auth/recover?token=%s">Confirm your account</a>
-		</p>
-		<p>Cheers,<br/>
-		The Common Syllabi team</p>
-		</body>
-		</html>
-		`, host, token.UUID.String())
+		body := mailer.ConfirmationPayload{
+			Name:  user.Name,
+			Host:  host,
+			Token: token.UUID.String(),
+		}
 
-		mailer.SendMail(email.Address, "Account recovery", body)
+		mailer.SendMail(email.Address, "Account recovery", "account_recovery", body)
 	}
 
 	return c.String(http.StatusOK, "recovery email sent!")
