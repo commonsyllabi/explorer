@@ -174,7 +174,7 @@ func TestCollectionHandler(t *testing.T) {
 
 	t.Run("Test update collection wrong field", func(t *testing.T) {
 		f := make(url.Values)
-		f.Set("wrong-field", "mailicious")
+		f.Set("wrong-field", "malicious")
 
 		res := httptest.NewRecorder()
 		req := httptest.NewRequest(http.MethodPatch, "/", strings.NewReader(f.Encode()))
