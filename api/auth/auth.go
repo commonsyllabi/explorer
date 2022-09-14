@@ -14,7 +14,6 @@ import (
 	"github.com/commonsyllabi/explorer/mailer"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/bcrypt"
 
@@ -45,6 +44,10 @@ func Authenticate(c echo.Context) (string, error) {
 		}
 	}
 
+	authHeader := c.Request().Header["Authorization"]
+	if len(authHeader) == 0 {
+		return "", fmt.Errorf("No authorization header provided")
+	}
 	raw := c.Request().Header["Authorization"][0]
 	tokenString := strings.Split(raw, " ")[1]
 	token, err := jwt.ParseWithClaims(tokenString, &JWTCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
@@ -106,21 +109,6 @@ func Login(c echo.Context) error {
 		"user":  user,
 		"token": t,
 	})
-}
-
-func Logout(c echo.Context) error {
-	sess, _ := session.Get("cosyl_auth", c)
-	user := sess.Values["user"]
-	if user == nil {
-		return c.String(http.StatusNotFound, "Invalid session token")
-	}
-
-	sess.Values["user"] = nil
-	if err := sess.Save(c.Request(), c.Response()); err != nil {
-		return c.String(http.StatusInternalServerError, "Failed to save session")
-	}
-
-	return c.String(http.StatusOK, "Successfully logged out")
 }
 
 type Token struct {
@@ -247,11 +235,10 @@ func Recover(c echo.Context) error {
 }
 
 func Dashboard(c echo.Context) error {
-	_, err := Authenticate(c)
+	uuid, err := Authenticate(c)
 	if err != nil {
 		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
-	sess, _ := session.Get("cosyl_auth", c)
-	user := sess.Values["user"]
-	return c.JSON(http.StatusOK, user)
+
+	return c.JSON(http.StatusOK, uuid)
 }

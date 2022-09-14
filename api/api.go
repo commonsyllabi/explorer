@@ -71,7 +71,6 @@ func SetupRouter() *echo.Echo {
 	r.GET("/ping", handlePing)
 
 	r.POST("/login", auth.Login)
-	r.GET("/logout", auth.Logout)
 	r.GET("/dashboard", auth.Dashboard)
 
 	a := r.Group("/auth")
