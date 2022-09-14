@@ -122,6 +122,8 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
         if (typeof body == "string") { // if it's an error, it returns text
           setError(body);
         } else if (typeof body == "object") {
+
+          // institution
           const i = new FormData()
           i.append("name", "School")
           i.append("country", "275")
@@ -130,14 +132,44 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
           fetch("http://localhost:3046" + instit_endpoint, {
             method: "POST",
             headers: postHeader,
-            body:i
+            body: i
           })
-          .then(res => {
-            console.log(res)
-          })
-          .catch(err => {
-            console.log(err);
-          })
+            .then(res => {
+              console.log(res)
+              return
+            })
+            .catch(err => {
+              console.log(err);
+            })
+
+          // attachments
+
+          //--
+          // this whole dom querying is probably not the way to do it (see handleChange?)
+          // for now, it seems the form data is always empty...? because i'm not using https://reactjs.org/docs/forms.html#controlled-components to get the value of things (probs similar for institutions above tbh)
+          const atts = document.getElementsByClassName("attachment-inputs")
+          console.log(`found ${atts.length} attachments`)
+
+          for (let i = 0; i < atts.length; i++) {
+            const f = atts.item(i) as HTMLFormElement
+            console.log(f);
+
+            const a = new FormData(f);
+          
+            // strange that we have a different pattern here (i guess attahcment is at a higher class than institution)
+            const attach_endpoint = `/attachments/?syllabus_id=${body.uuid}`
+            fetch("http://localhost:3046" + attach_endpoint, {
+              method: "POST",
+              headers: postHeader,
+              body: a
+            })
+              .then(res => {
+                console.log(res)
+              })
+              .catch(err => {
+                console.log(err);
+              })
+          }
         }
 
       })
@@ -401,6 +433,23 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                             pdf.
                           </p>
                           <div className="d-flex gap-3">
+
+                            <form className="attachment-inputs" id="attachment-input">
+                              <Form.Group>
+                                <Form.Label>
+                                  Name
+                                </Form.Label>
+                                <Form.Control type="text" id="name" className=".attachment-names" />
+                              </Form.Group>
+
+                              <Form.Group>
+                                <Form.Label>
+                                  File (to do: support URL input)
+                                </Form.Label>
+                                <Form.Control type="file" id="file" className=".attachment-files" />
+                              </Form.Group>
+                            </form>
+
                             <Button variant="outline-secondary" size="sm">
                               Edit
                             </Button>

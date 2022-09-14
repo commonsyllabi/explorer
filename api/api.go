@@ -93,7 +93,7 @@ func SetupRouter() *echo.Echo {
 		syllabi.DELETE("/:id/institutions/:inst_id", handlers.RemoveSyllabusInstitution)
 
 		syllabi.POST("/:id/attachments", handlers.AddSyllabusAttachment)
-		syllabi.DELETE("/:id/attachments/:inst_id", handlers.RemoveSyllabusAttachment)
+		syllabi.DELETE("/:id/attachments/:att_id", handlers.RemoveSyllabusAttachment)
 	}
 
 	users := r.Group("/users")
