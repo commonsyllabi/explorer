@@ -41,9 +41,16 @@ const NewSyllabus: NextPage<INewSyllabus> = (props) => {
   useEffect(() => setValidated(true), []);
 
   const [testFormData, setTestFormData] = useState({
-    title: "My 101 Class",
-    description: "My beautiful class description.",
-    "tag[]": "Banana",
+    title: "Pomeranian Studies",
+    course_number: "POM101",
+    description: "This course is an introduction to pomeranian care. ",
+    "tags[]": "canine care",
+    "tags[]": "pomeranians",
+    language: "en",
+    duration: 500,
+    status: "unlisted",
+    "academic_fields[]": 100,
+    academic_level: 3,
   });
 
   const [formData, setFormData] = useState({
@@ -63,6 +70,7 @@ const NewSyllabus: NextPage<INewSyllabus> = (props) => {
     status: "unlisted",
     academic_fields: [],
     academic_level: 0,
+    duration: 0,
   });
 
   const [log, setLog] = useState("");
@@ -78,8 +86,10 @@ const NewSyllabus: NextPage<INewSyllabus> = (props) => {
     event.stopPropagation();
 
     console.log("handleSubmit() called");
-    console.log(`Session details:${JSON.stringify(session)}`);
-    const form = event.currentTarget;
+
+    console.log(formData);
+
+    // const form = event.currentTarget;
 
     // TODO: validate form
     // if (form.checkValidity() === false) {
@@ -88,45 +98,46 @@ const NewSyllabus: NextPage<INewSyllabus> = (props) => {
     // }
     // setValidated(true);
 
-    const postHeader = new Headers();
-    postHeader.append("Content-Type", "application/json; charset=UTF-8");
-    // h.append("Authorization");
+    // FOR NOW, JUST PRINT THE FORM DATA WITHOUT SENDING POST REQUEST
+    // const postHeader = new Headers();
+    // postHeader.append("Content-Type", "application/json; charset=UTF-8");
+    // // h.append("Authorization");
 
-    let formData = new FormData();
+    // let formData = new FormData();
 
-    for (let [key, value] of Object.entries(testFormData)) {
-      formData.append(key, value);
-    }
+    // for (let [key, value] of Object.entries(testFormData)) {
+    //   formData.append(key, value);
+    // }
 
-    fetch(new URL(`?token=${props.adminKey}`, props.apiUrl), {
-      method: "POST",
-      header: postHeader,
-      body: formData,
-    })
-      .then((res) => {
-        if (res.status == 201) {
-          console.log("SUCCESS, syllabus created.");
-          setCreated(true);
-        } else {
-          console.log(`Error: ${console.log(res)}`);
-        }
-      })
-      .then((body) => {
-        if (body) {
-          console.log(body);
-          console.log(body.Detail);
-          // setError(body.Detail);
-        } else {
-          console.log("NO BODY.");
-        }
-      })
-      .catch((err) => {
-        console.error(`Error: ${err}`);
-      });
+    // fetch(new URL(`?token=${props.adminKey}`, props.apiUrl), {
+    //   method: "POST",
+    //   header: postHeader,
+    //   body: formData,
+    // })
+    //   .then((res) => {
+    //     if (res.status == 201) {
+    //       console.log("SUCCESS, syllabus created.");
+    //       setCreated(true);
+    //     } else {
+    //       console.log(`Error: ${console.log(res)}`);
+    //     }
+    //   })
+    //   .then((body) => {
+    //     if (body) {
+    //       console.log(body);
+    //       console.log(body.Detail);
+    //       // setError(body.Detail);
+    //     } else {
+    //       console.log("NO BODY.");
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     console.error(`Error: ${err}`);
+    //   });
 
-    if (validated) {
-      //send post request
-    }
+    // if (validated) {
+    //   //send post request
+    // }
   };
 
   const addAttachment = (event: React.SyntheticEvent): void => {
@@ -183,10 +194,8 @@ const NewSyllabus: NextPage<INewSyllabus> = (props) => {
                 </p>
                 <Form noValidate validated={false} onSubmit={handleSubmit}>
                   <fieldset>
-                    <Form.Group className="mb-3">
-                      <Form.Label htmlFor="courseTitle">
-                        Course Title
-                      </Form.Label>
+                    <Form.Group className="mb-3" data-cy="courseTitle">
+                      <Form.Label htmlFor="title">Course Title</Form.Label>
                       <Form.Control
                         required
                         id="title"
@@ -208,6 +217,7 @@ const NewSyllabus: NextPage<INewSyllabus> = (props) => {
                         id="status"
                         onChange={handleChange}
                         value={formData.status}
+                        data-cy="courseStatusInput"
                       />
                       <Form.Check.Label>
                         {getPublicPrivateLabel(formData.status)}
