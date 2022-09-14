@@ -13,8 +13,9 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
-import { FormSelect } from "react-bootstrap";
+import { Alert, FormSelect } from "react-bootstrap";
 import Badge from "react-bootstrap/Badge";
+import Router from "next/router";
 
 export const getStaticProps: GetStaticProps = async () => {
   const apiUrl = new URL(`syllabi/`, process.env.API_URL);
@@ -75,19 +76,19 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     }
     setValidated(true);
 
-    if (validated) {
-      const h = new Headers();
-      h.append("Content-Type", "application/x-www-form-urlencoded");
 
-      const b = new URLSearchParams();
-      b.append("title", "My 101 Class");
-      b.append("description", "My beautiful class description.");
-      b.append("tags[]", "Banana");
-      b.append("tags[]", "Rama");
+    const h = new Headers();
+    h.append("Content-Type", "application/x-www-form-urlencoded");
+
+    const b = new URLSearchParams();
+    b.append("title", "My 101 Class");
+    b.append("description", "My beautiful class description.");
+    b.append("tags[]", "Banana");
+    b.append("tags[]", "Rama");
 
     const postHeader = new Headers();
     postHeader.append("Content-Type", "application/json; charset=UTF-8");
-    // h.append("Authorization");
+    postHeader.append("Authorization", `Bearer ${session.user.token}`);
 
     let formData = new FormData();
 
@@ -95,31 +96,26 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
       formData.append(key, value);
     }
 
-    // fetch(new URL(props.apiUrl), {
-    //   method: "POST",
-    //   header: postHeader,
-    //   body: formData,
-    // })
-    //   .then((res) => {
-    //     if (res.status == 201) {
-    //       console.log("SUCCESS, syllabus created.");
-    //       setCreated(true);
-    //     } else {
-    //       console.log(`Error: ${console.log(res)}`);
-    //     }
-    //   })
-    //   .then((body) => {
-    //     if (body) {
-    //       console.log(body);
-    //       console.log(body.Detail);
-    //       // setError(body.Detail);
-    //     } else {
-    //       console.log("NO BODY.");
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     console.error(`Error: ${err}`);
-    //   });
+    fetch(apiUrl, {
+      method: "POST",
+      headers: postHeader,
+      body: formData,
+    })
+      .then((res) => {
+        if (res.status == 201) {
+          console.log("SUCCESS, syllabus created.");
+          setCreated(true);
+        } else {
+          return res.text()
+        }
+      })
+      .then((body) => {
+        console.log(body);
+        setError(body)
+      })
+      .catch((err) => {
+        console.error(`Error: ${err}`);
+      });
 
     if (validated) {
       //send post request
@@ -398,6 +394,14 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                     </div>
 
                     <Button type="submit">Submit form</Button>
+
+                    {error !== "" ? (
+                      <Alert variant="danger" className="mt-3">
+                        {error}
+                      </Alert>
+                    ) : (
+                      <></>
+                    )}
                   </fieldset>
                 </Form>
               </Col>
@@ -442,5 +446,6 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     </>
   );
 };
+
 
 export default NewSyllabus;

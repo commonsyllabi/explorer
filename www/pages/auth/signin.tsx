@@ -71,8 +71,6 @@ const SignIn: NextPage<IAuthProps> = (props) => {
     const password = t.children[2].children[1] as HTMLInputElement;
     const password_conf = t.children[2].children[3] as HTMLInputElement;
 
-    // console.log(`signing up with:\nname: ${name.value}\nemail: ${email.value} - ${email_conf.value}\npassword: ${password.value} - ${password_conf.value}`);
-
     if (email.value !== email_conf.value) {
       setLog("Emails should match!");
       return;

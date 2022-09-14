@@ -386,22 +386,22 @@ func sanitizeSyllabusCreate(c echo.Context) error {
 	title := c.FormValue("title")
 	if len(title) < minSyllabusTitleLength ||
 		len(title) > maxSyllabusTitleLength {
-		return c.String(http.StatusBadRequest, fmt.Sprintf("the title must be between %d and %d characters: %d", minSyllabusTitleLength, maxSyllabusTitleLength, len(c.FormValue("title"))))
+		return fmt.Errorf("the title must be between %d and %d characters: %d", minSyllabusTitleLength, maxSyllabusTitleLength, len(c.FormValue("title")))
 	}
 
 	lang := c.FormValue("language")
 	_, err := language.ParseBase(lang)
 	if err != nil {
-		return c.String(http.StatusBadRequest, fmt.Sprintf("the language of the syllabus should be BCP47 compliant: %v", lang))
+		return fmt.Errorf("the language of the syllabus should be BCP47 compliant: %v", lang)
 	}
 
 	l, err := strconv.Atoi(c.FormValue("academic_level"))
 	if err != nil {
-		return c.String(http.StatusBadRequest, fmt.Sprintf("the level of the syllabus should be between 0 and 3: %s", err))
+		return fmt.Errorf("the level of the syllabus should be between 0 and 3: %s", err)
 	}
 	_, found := models.LEVELS[l]
 	if !found {
-		return c.String(http.StatusBadRequest, "the level of the syllabus should be between 0 and 3")
+		return fmt.Errorf("the level of the syllabus should be between 0 and 3")
 	}
 
 	return nil
