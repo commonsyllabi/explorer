@@ -33,7 +33,6 @@ interface INewSyllabusProps {
 
 const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
   const { data: session, status } = useSession();
-
   const [validated, setValidated] = useState(true);
   useEffect(() => setValidated(true), []);
 
