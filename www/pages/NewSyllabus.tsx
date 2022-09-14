@@ -1,6 +1,6 @@
 import { useState, useEffect, FormEvent } from "react";
 import type { GetStaticProps, NextPage } from "next";
-import { useSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
@@ -15,19 +15,23 @@ import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import { FormSelect } from "react-bootstrap";
 import Badge from "react-bootstrap/Badge";
+import { getToken } from "next-auth/jwt";
 
 export const getStaticProps: GetStaticProps = async () => {
   const apiUrl = new URL(`syllabi/`, process.env.API_URL);
 
   console.log(`GetStaticProps API URL: ${apiUrl.href}`);
 
+  const adminKey = process.env.ADMIN_KEY;
+
   return {
-    props: { apiUrl: apiUrl.href },
+    props: { apiUrl: apiUrl.href, adminKey: adminKey },
   };
 };
 
 interface INewSyllabus {
   apiUrl: URL;
+  adminKey: String;
 }
 
 const NewSyllabus: NextPage<INewSyllabus> = (props) => {
@@ -39,7 +43,7 @@ const NewSyllabus: NextPage<INewSyllabus> = (props) => {
   const [testFormData, setTestFormData] = useState({
     title: "My 101 Class",
     description: "My beautiful class description.",
-    "file[]": "Banana",
+    "tag[]": "Banana",
   });
 
   const [formData, setFormData] = useState({
@@ -94,31 +98,31 @@ const NewSyllabus: NextPage<INewSyllabus> = (props) => {
       formData.append(key, value);
     }
 
-    // fetch(new URL(props.apiUrl), {
-    //   method: "POST",
-    //   header: postHeader,
-    //   body: formData,
-    // })
-    //   .then((res) => {
-    //     if (res.status == 201) {
-    //       console.log("SUCCESS, syllabus created.");
-    //       setCreated(true);
-    //     } else {
-    //       console.log(`Error: ${console.log(res)}`);
-    //     }
-    //   })
-    //   .then((body) => {
-    //     if (body) {
-    //       console.log(body);
-    //       console.log(body.Detail);
-    //       // setError(body.Detail);
-    //     } else {
-    //       console.log("NO BODY.");
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     console.error(`Error: ${err}`);
-    //   });
+    fetch(new URL(`?token=${props.adminKey}`, props.apiUrl), {
+      method: "POST",
+      header: postHeader,
+      body: formData,
+    })
+      .then((res) => {
+        if (res.status == 201) {
+          console.log("SUCCESS, syllabus created.");
+          setCreated(true);
+        } else {
+          console.log(`Error: ${console.log(res)}`);
+        }
+      })
+      .then((body) => {
+        if (body) {
+          console.log(body);
+          console.log(body.Detail);
+          // setError(body.Detail);
+        } else {
+          console.log("NO BODY.");
+        }
+      })
+      .catch((err) => {
+        console.error(`Error: ${err}`);
+      });
 
     if (validated) {
       //send post request
