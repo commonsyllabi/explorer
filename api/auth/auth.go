@@ -1,11 +1,13 @@
 package auth
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"net/mail"
 	"os"
 	"strings"
+	"time"
 
 	zero "github.com/commonsyllabi/explorer/api/logger"
 	"github.com/commonsyllabi/explorer/api/models"
@@ -15,7 +17,16 @@ import (
 	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/bcrypt"
+
+	"github.com/golang-jwt/jwt"
 )
+
+type JWTCustomClaims struct {
+	Name  string `json:"name"`
+	UUID  string `json:"uuid"`
+	Email string `json:"email"`
+	jwt.StandardClaims
+}
 
 func Authenticate(c echo.Context) (string, error) {
 	if os.Getenv("API_MODE") == "test" {
@@ -26,7 +37,7 @@ func Authenticate(c echo.Context) (string, error) {
 	if t != "" {
 		token, err := uuid.Parse(t)
 		if err != nil {
-			return "unauthorized", err
+			return "unauthorized token", err
 		}
 
 		if token.String() != "" && token.String() == os.Getenv("ADMIN_KEY") {
@@ -34,16 +45,29 @@ func Authenticate(c echo.Context) (string, error) {
 		}
 	}
 
-	sess, err := session.Get("cosyl_auth", c)
-	user := sess.Values["user"]
-	if user == nil || err != nil {
-		return "", fmt.Errorf("unauthorized user - %v", err)
+	raw := c.Request().Header["Authorization"][0]
+	tokenString := strings.Split(raw, " ")[1]
+	token, err := jwt.ParseWithClaims(tokenString, &JWTCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, errors.New("unexpected JWT signing method")
+		}
+		return []byte("cosyl"), nil
+	})
+
+	if err != nil {
+		return "", err
 	}
-	return fmt.Sprintf("%s", user), nil
+
+	if !token.Valid {
+		return "", fmt.Errorf("unauthorized user - %v", token)
+	}
+
+	claims := token.Claims.(*JWTCustomClaims)
+
+	return claims.UUID, nil
 }
 
 func Login(c echo.Context) error {
-	sess, _ := session.Get("cosyl_auth", c)
 	password := c.FormValue("password")
 	email, err := mail.ParseAddress(c.FormValue("email"))
 	if err != nil || strings.Trim(password, " ") == "" {
@@ -62,12 +86,25 @@ func Login(c echo.Context) error {
 		return c.String(http.StatusUnauthorized, "Authentication failed")
 	}
 
-	sess.Values["user"] = user.UUID.String()
-	if err := sess.Save(c.Request(), c.Response()); err != nil {
-		zero.Error(err.Error())
-		return c.String(http.StatusInternalServerError, "Failed to save session")
+	claims := &JWTCustomClaims{
+		user.Name,
+		user.UUID.String(),
+		user.Email,
+		jwt.StandardClaims{
+			ExpiresAt: time.Now().Add(time.Hour * 72).Unix(),
+		},
 	}
-	return c.JSON(http.StatusOK, user)
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	t, err := token.SignedString([]byte("cosyl"))
+	if err != nil {
+		zero.Error(err.Error())
+		return c.String(http.StatusInternalServerError, "Authentication failed")
+	}
+
+	return c.JSON(http.StatusOK, echo.Map{
+		"token": t,
+	})
 }
 
 func Logout(c echo.Context) error {

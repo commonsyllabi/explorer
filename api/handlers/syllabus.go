@@ -39,12 +39,14 @@ func GetSyllabi(c echo.Context) error {
 func CreateSyllabus(c echo.Context) error {
 	sessionID, err := auth.Authenticate(c)
 	if err != nil {
+		zero.Error(err.Error())
 		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
 
 	userID, err := uuid.Parse(sessionID)
 	if err != nil {
-		return c.String(http.StatusUnauthorized, "unauthorized")
+		zero.Error(err.Error())
+		return c.String(http.StatusUnauthorized, "unauthorized UUID")
 	}
 
 	err = sanitizeSyllabusCreate(c)

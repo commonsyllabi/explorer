@@ -8,9 +8,6 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/gin-gonic/gin"
-	"github.com/gorilla/sessions"
-	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 
@@ -23,7 +20,7 @@ import (
 var conf config.Config
 
 // StartServer gets his port and debug in the environment, registers the router, and registers the database closing on exit.
-func StartServer(port string, mode string, c config.Config) {
+func StartServer(port string, c config.Config) {
 	conf = c
 
 	err := os.MkdirAll(c.UploadsDir, os.ModePerm)
@@ -31,7 +28,6 @@ func StartServer(port string, mode string, c config.Config) {
 		panic(err)
 	}
 
-	gin.SetMode(mode)
 	router := SetupRouter()
 	s := &http.Server{
 		Addr:         ":" + port,
@@ -62,9 +58,6 @@ func StartServer(port string, mode string, c config.Config) {
 func SetupRouter() *echo.Echo {
 	r := echo.New()
 
-	store := sessions.NewCookieStore([]byte("cosyl_auth"))
-	store.Options.HttpOnly = true
-	r.Use(session.Middleware(store))
 	r.Use(middleware.CORS())
 	r.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: "\033[32m${time_rfc3339}\033[0m | ${method} | ${uri} | ${status} | ${remote_ip} | ${error.message}\n",
