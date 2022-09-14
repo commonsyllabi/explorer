@@ -76,37 +76,33 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
   const apiUrl = props.apiUrl;
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-    setValidated(true);
-
     console.log("handleSubmit() called");
 
-    console.log(formData);
+    // TODO: Validate form
+    const form = event.currentTarget;
+    // if (form.checkValidity() === false) {
+    event.preventDefault();
+    event.stopPropagation();
+    // }
+    // setValidated(true);
+    // if (validated) {
+    //   //send post request
+    // }
 
-    // const form = event.currentTarget;
+    console.log(testFormData);
 
-    const h = new Headers();
-    h.append("Content-Type", "application/x-www-form-urlencoded");
-
-    const b = new URLSearchParams();
-    b.append("title", "My 101 Class");
-    b.append("description", "My beautiful class description.");
-    b.append("tags[]", "Banana");
-    b.append("tags[]", "Rama");
-
+    // Make POST request header
     const postHeader = new Headers();
     postHeader.append("Content-Type", "application/json; charset=UTF-8");
     postHeader.append("Authorization", `Bearer ${session.user.token}`);
 
-    // let formData = new FormData();
+    // Make POST request body
+    let formData = new FormData();
 
-    // for (let [key, value] of Object.entries(testFormData)) {
-    //   formData.append(key, value);
-    // }
+    for (let [key, value] of Object.entries(testFormData)) {
+      console.log(`Appending to req body — ${key}: ${value} `);
+      formData.append(key, value);
+    }
 
     fetch(apiUrl, {
       method: "POST",
@@ -128,10 +124,6 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
       .catch((err) => {
         console.error(`Error: ${err}`);
       });
-
-    // if (validated) {
-    //   //send post request
-    // }
   };
 
   const addAttachment = (event: React.SyntheticEvent): void => {
