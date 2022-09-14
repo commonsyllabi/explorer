@@ -31,12 +31,13 @@ export default NextAuth({
                 const response = await fetch(login_endpoint.href, options)
                 if (response.ok) {
                     // Any object returned will be saved in `user` property of the JWT
-                    const userData = await response.json()
-                    console.log(`LOGIN SUCCESS USER UUID: ${JSON.stringify(userData.uuid)}`)
+                    const data = await response.json()
+                    console.log(`LOGIN SUCCESS USER UUID: ${JSON.stringify(data)}`)
                     const user = {
-                        _id: userData.uuid,
-                        email: userData.email,
-                        name: userData.name
+                        _id: data.user.uuid,
+                        email: data.user.email,
+                        name: data.user.name,
+                        token: data.token
                     };
                     return user
                 } else {
@@ -47,6 +48,15 @@ export default NextAuth({
         })
     ],
     callbacks: {
+        async jwt({ token, user }) { 
+            // console.log(`JWT - USER: ${user}`)
+            // console.log(`JWT - TOKEN: ${JSON.stringify(token)}`)
+            if (user) { 
+                // console.log("There's a user object!!")
+                token.user = user
+            }
+            return token;
+        },
         async session({ session, token, user }) {
             // Send properties to the client, like an access_token from a provider.
             console.log(`SESSION - USER: ${user}`)

@@ -13,28 +13,24 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
-import { FormSelect } from "react-bootstrap";
+import { Alert, FormSelect } from "react-bootstrap";
 import Badge from "react-bootstrap/Badge";
-import { getToken } from "next-auth/jwt";
 
 export const getStaticProps: GetStaticProps = async () => {
   const apiUrl = new URL(`syllabi/`, process.env.API_URL);
 
   console.log(`GetStaticProps API URL: ${apiUrl.href}`);
 
-  const adminKey = process.env.ADMIN_KEY;
-
   return {
-    props: { apiUrl: apiUrl.href, adminKey: adminKey },
+    props: { apiUrl: apiUrl.href },
   };
 };
 
-interface INewSyllabus {
-  apiUrl: URL;
-  adminKey: String;
+interface INewSyllabusProps {
+  apiUrl: string;
 }
 
-const NewSyllabus: NextPage<INewSyllabus> = (props) => {
+const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
   const { data: session, status } = useSession();
 
   const [validated, setValidated] = useState(true);
@@ -79,11 +75,13 @@ const NewSyllabus: NextPage<INewSyllabus> = (props) => {
 
   const apiUrl = props.apiUrl;
 
-  const handleSubmit = async (
-    event: React.FormEvent<HTMLInputElement>
-  ): void => {
-    event.preventDefault();
-    event.stopPropagation();
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const form = event.currentTarget;
+    if (form.checkValidity() === false) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    setValidated(true);
 
     console.log("handleSubmit() called");
 
@@ -91,17 +89,18 @@ const NewSyllabus: NextPage<INewSyllabus> = (props) => {
 
     // const form = event.currentTarget;
 
-    // TODO: validate form
-    // if (form.checkValidity() === false) {
-    //   event.preventDefault();
-    //   event.stopPropagation();
-    // }
-    // setValidated(true);
+    const h = new Headers();
+    h.append("Content-Type", "application/x-www-form-urlencoded");
 
-    // FOR NOW, JUST PRINT THE FORM DATA WITHOUT SENDING POST REQUEST
-    // const postHeader = new Headers();
-    // postHeader.append("Content-Type", "application/json; charset=UTF-8");
-    // // h.append("Authorization");
+    const b = new URLSearchParams();
+    b.append("title", "My 101 Class");
+    b.append("description", "My beautiful class description.");
+    b.append("tags[]", "Banana");
+    b.append("tags[]", "Rama");
+
+    const postHeader = new Headers();
+    postHeader.append("Content-Type", "application/json; charset=UTF-8");
+    postHeader.append("Authorization", `Bearer ${session.user.token}`);
 
     // let formData = new FormData();
 
@@ -109,31 +108,26 @@ const NewSyllabus: NextPage<INewSyllabus> = (props) => {
     //   formData.append(key, value);
     // }
 
-    // fetch(new URL(`?token=${props.adminKey}`, props.apiUrl), {
-    //   method: "POST",
-    //   header: postHeader,
-    //   body: formData,
-    // })
-    //   .then((res) => {
-    //     if (res.status == 201) {
-    //       console.log("SUCCESS, syllabus created.");
-    //       setCreated(true);
-    //     } else {
-    //       console.log(`Error: ${console.log(res)}`);
-    //     }
-    //   })
-    //   .then((body) => {
-    //     if (body) {
-    //       console.log(body);
-    //       console.log(body.Detail);
-    //       // setError(body.Detail);
-    //     } else {
-    //       console.log("NO BODY.");
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     console.error(`Error: ${err}`);
-    //   });
+    fetch(apiUrl, {
+      method: "POST",
+      headers: postHeader,
+      body: formData,
+    })
+      .then((res) => {
+        if (res.status == 201) {
+          console.log("SUCCESS, syllabus created.");
+          setCreated(true);
+        } else {
+          return res.text();
+        }
+      })
+      .then((body) => {
+        console.log(body);
+        setError(body);
+      })
+      .catch((err) => {
+        console.error(`Error: ${err}`);
+      });
 
     // if (validated) {
     //   //send post request
@@ -411,6 +405,14 @@ const NewSyllabus: NextPage<INewSyllabus> = (props) => {
                     </div>
 
                     <Button type="submit">Submit form</Button>
+
+                    {error !== "" ? (
+                      <Alert variant="danger" className="mt-3">
+                        {error}
+                      </Alert>
+                    ) : (
+                      <></>
+                    )}
                   </fieldset>
                 </Form>
               </Col>

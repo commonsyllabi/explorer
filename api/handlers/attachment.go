@@ -34,6 +34,7 @@ func CreateAttachment(c echo.Context) error {
 		zero.Error(err.Error())
 		return c.String(http.StatusUnauthorized, "Unauthorized")
 	}
+
 	conf, ok := c.Get("config").(config.Config)
 	if !ok {
 		zero.Error("Could not parse configuration from context")

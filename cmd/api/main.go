@@ -8,22 +8,20 @@ import (
 	"github.com/commonsyllabi/explorer/api/config"
 	zero "github.com/commonsyllabi/explorer/api/logger"
 	"github.com/commonsyllabi/explorer/api/models"
-	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	var mode string
+
 	switch os.Getenv("API_MODE") {
 	case "debug":
-		mode = gin.DebugMode
+		zero.Warn("setting API_MODE to DEBUG")
 		zero.InitLog(0)
 	case "test":
-		mode = gin.TestMode
+		zero.Warn("setting API_MODE to INFO")
 		zero.InitLog(1)
 	default:
-		zero.Log.Warn().Msg("missing env DEBUG, defaulting to false")
-		mode = gin.ReleaseMode
-		zero.InitLog(1)
+		zero.Warn("setting API_MODE to WARN")
+		zero.InitLog(2)
 	}
 
 	var conf config.Config
@@ -50,5 +48,5 @@ func main() {
 		zero.Log.Fatal().Msgf("error initializing database: %v", err)
 	}
 
-	api.StartServer(port, mode, conf)
+	api.StartServer(port, conf)
 }
