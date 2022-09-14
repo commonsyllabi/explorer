@@ -92,7 +92,6 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
 
     // Make POST request header
     const postHeader = new Headers();
-    postHeader.append("Content-Type", "application/json; charset=UTF-8");
     postHeader.append("Authorization", `Bearer ${session.user.token}`);
 
     // Make POST request body
@@ -112,13 +111,35 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
         if (res.status == 201) {
           console.log("SUCCESS, syllabus created.");
           setCreated(true);
+
+          return res.json() // should we instead return just the uuid? 
         } else {
           return res.text();
         }
       })
       .then((body) => {
         console.log(body);
-        setError(body);
+        if (typeof body == "string") { // if it's an error, it returns text
+          setError(body);
+        } else if (typeof body == "object") {
+          const i = new FormData()
+          i.append("name", "School")
+          i.append("country", "275")
+
+          const instit_endpoint = `/syllabi/${body.uuid}/institutions`
+          fetch("http://localhost:3046" + instit_endpoint, {
+            method: "POST",
+            headers: postHeader,
+            body:i
+          })
+          .then(res => {
+            console.log(res)
+          })
+          .catch(err => {
+            console.log(err);
+          })
+        }
+
       })
       .catch((err) => {
         console.error(`Error: ${err}`);
