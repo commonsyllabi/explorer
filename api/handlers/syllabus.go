@@ -17,7 +17,7 @@ import (
 
 var (
 	minSyllabusTitleLength = 3
-	maxSyllabusTitleLength = 100
+	maxSyllabusTitleLength = 150
 )
 
 func GetSyllabi(c echo.Context) error {
