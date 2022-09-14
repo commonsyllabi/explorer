@@ -75,7 +75,7 @@ export function GlobalNav() {
               <Nav.Link href="/about" className="py-3 text-end">
                 About
               </Nav.Link>
-              <Nav.Link href="/auth/signin" className="py-3 text-end">
+              <Nav.Link href="/auth/signin" className="py-3 text-end" id="login-btn">
                 Login
               </Nav.Link>
             </Nav>

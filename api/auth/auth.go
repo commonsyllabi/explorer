@@ -46,7 +46,7 @@ func Authenticate(c echo.Context) (string, error) {
 
 	authHeader := c.Request().Header["Authorization"]
 	if len(authHeader) == 0 {
-		return "", fmt.Errorf("No authorization header provided")
+		return "", fmt.Errorf("no authorization header provided")
 	}
 	raw := c.Request().Header["Authorization"][0]
 	tokenString := strings.Split(raw, " ")[1]

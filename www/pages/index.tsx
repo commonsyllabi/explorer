@@ -20,17 +20,35 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
   console.log(`LANDING SYLLABI FETCH URL: ${url}`);
 
-  const res = await fetch(url);
+  const res = await fetch(url).catch(err => {
+    console.log(`error fetching backend: ${err}`);
+    
+    return {
+      props: {
+        syllabiListings: [],
+      },
+    };
+  })
   //TODO: check for errors
+  if(!res.ok){
+    return {
+      props: {
+        syllabiListings: [],
+      },
+    };
+  }else{
+
+  }
   const syllabiListings = await res.json();
 
   console.log(`FETCHED ${syllabiListings.length} SYLLABI`);
-
-  return {
+    return {
     props: {
       syllabiListings: syllabiListings,
     },
   };
+
+
 };
 
 interface IHomeProps {
