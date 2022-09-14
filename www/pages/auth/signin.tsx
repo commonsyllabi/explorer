@@ -51,12 +51,14 @@ const SignIn: NextPage<IAuthProps> = (props) => {
     signIn("credentials", {
       username: u.value,
       password: p.value,
-      redirect: false
-    })
-      .then(result => {
-        if (!result || result.error) setError("There was an error logging you in. Please check your credentials")
-        else Router.push("/")
-      })
+      redirect: false,
+    }).then((result) => {
+      if (!result || result.error)
+        setError(
+          "There was an error logging you in. Please check your credentials"
+        );
+      else Router.push("/");
+    });
   };
 
   const handleSignup = (e: React.FormEvent<HTMLFormElement>) => {
@@ -208,23 +210,34 @@ const SignIn: NextPage<IAuthProps> = (props) => {
                       <Form.Control type="email" placeholder="Enter email" />
                     </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="signupBasicEmailConfirm">
+                    <Form.Group
+                      className="mb-3"
+                      controlId="signupBasicEmailConfirm"
+                    >
                       <Form.Label>Confirm email address</Form.Label>
-                      <Form.Control type="email" placeholder="Confirm email"
-                      />
+                      <Form.Control type="email" placeholder="Confirm email" />
                       <Form.Text className="text-muted">
                         We&#39;ll never share your email with anyone else.
                       </Form.Text>
                     </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="signupBasicPassword">
+                    <Form.Group
+                      className="mb-3"
+                      controlId="signupBasicPassword"
+                    >
                       <Form.Label>Password</Form.Label>
                       <Form.Control type="password" placeholder="Password" />
                     </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="signupBasicPasswordConfirm">
+                    <Form.Group
+                      className="mb-3"
+                      controlId="signupBasicPasswordConfirm"
+                    >
                       <Form.Label>Confirm password</Form.Label>
-                      <Form.Control type="password" placeholder="Confirm password" />
+                      <Form.Control
+                        type="password"
+                        placeholder="Confirm password"
+                      />
                     </Form.Group>
 
                     <Button variant="primary" type="submit">

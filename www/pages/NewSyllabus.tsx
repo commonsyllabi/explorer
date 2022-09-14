@@ -1,6 +1,6 @@
 import { useState, useEffect, FormEvent } from "react";
 import type { GetStaticProps, NextPage } from "next";
-import { useSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
@@ -15,7 +15,6 @@ import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import { Alert, FormSelect } from "react-bootstrap";
 import Badge from "react-bootstrap/Badge";
-import Router from "next/router";
 
 export const getStaticProps: GetStaticProps = async () => {
   const apiUrl = new URL(`syllabi/`, process.env.API_URL);
@@ -37,9 +36,16 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
   useEffect(() => setValidated(true), []);
 
   const [testFormData, setTestFormData] = useState({
-    title: "My 101 Class",
-    description: "My beautiful class description.",
-    "file[]": "Banana",
+    title: "Pomeranian Studies",
+    course_number: "POM101",
+    description: "This course is an introduction to pomeranian care. ",
+    "tags[]": "canine care",
+    "tags[]": "pomeranians",
+    language: "en",
+    duration: 500,
+    status: "unlisted",
+    "academic_fields[]": 100,
+    academic_level: 3,
   });
 
   const [formData, setFormData] = useState({
@@ -59,6 +65,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     status: "unlisted",
     academic_fields: [],
     academic_level: 0,
+    duration: 0,
   });
 
   const [log, setLog] = useState("");
@@ -68,30 +75,31 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
   const apiUrl = props.apiUrl;
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    console.log("handleSubmit() called");
+
+    // TODO: Validate form
     const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-    setValidated(true);
+    // if (form.checkValidity() === false) {
+    event.preventDefault();
+    event.stopPropagation();
+    // }
+    // setValidated(true);
+    // if (validated) {
+    //   //send post request
+    // }
 
+    console.log(testFormData);
 
-    const h = new Headers();
-    h.append("Content-Type", "application/x-www-form-urlencoded");
-
-    const b = new URLSearchParams();
-    b.append("title", "My 101 Class");
-    b.append("description", "My beautiful class description.");
-    b.append("tags[]", "Banana");
-    b.append("tags[]", "Rama");
-
+    // Make POST request header
     const postHeader = new Headers();
     postHeader.append("Content-Type", "application/json; charset=UTF-8");
     postHeader.append("Authorization", `Bearer ${session.user.token}`);
 
+    // Make POST request body
     let formData = new FormData();
 
     for (let [key, value] of Object.entries(testFormData)) {
+      console.log(`Appending to req body — ${key}: ${value} `);
       formData.append(key, value);
     }
 
@@ -105,20 +113,16 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
           console.log("SUCCESS, syllabus created.");
           setCreated(true);
         } else {
-          return res.text()
+          return res.text();
         }
       })
       .then((body) => {
         console.log(body);
-        setError(body)
+        setError(body);
       })
       .catch((err) => {
         console.error(`Error: ${err}`);
       });
-
-    if (validated) {
-      //send post request
-    }
   };
 
   const addAttachment = (event: React.SyntheticEvent): void => {
@@ -175,10 +179,8 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                 </p>
                 <Form noValidate validated={false} onSubmit={handleSubmit}>
                   <fieldset>
-                    <Form.Group className="mb-3">
-                      <Form.Label htmlFor="courseTitle">
-                        Course Title
-                      </Form.Label>
+                    <Form.Group className="mb-3" data-cy="courseTitle">
+                      <Form.Label htmlFor="title">Course Title</Form.Label>
                       <Form.Control
                         required
                         id="title"
@@ -200,6 +202,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                         id="status"
                         onChange={handleChange}
                         value={formData.status}
+                        data-cy="courseStatusInput"
                       />
                       <Form.Check.Label>
                         {getPublicPrivateLabel(formData.status)}
@@ -445,6 +448,5 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     </>
   );
 };
-
 
 export default NewSyllabus;
