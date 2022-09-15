@@ -66,7 +66,7 @@ func SetupRouter() *echo.Echo {
 	r.Use(middleware.BodyLimit("16M"))
 	r.Use(injectConfig)
 
-	r.Static("/uploads", conf.UploadsDir)
+	r.Static("/static", conf.UploadsDir)
 
 	r.GET("/ping", handlePing)
 

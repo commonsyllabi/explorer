@@ -96,7 +96,7 @@ func CreateAttachment(c echo.Context) error {
 		att = models.Attachment{
 			Name:        name,
 			Description: desc,
-			URL:         dest,
+			URL:         fname,
 			Type:        "file",
 		}
 

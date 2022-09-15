@@ -21,7 +21,7 @@ const SyllabusResource: React.FunctionComponent<ISyllabusResourceProps> = ({
         <div>
           <dt className="m-0 pe-2">url:</dt>
           <dd className="m-0">
-            <Link href={resourceUrl}>
+            <Link href={"http://localhost:3046/static/"+resourceUrl}>
               <a target="_blank" rel="noreferrer">
                 {resourceUrl}
               </a>

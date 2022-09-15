@@ -168,6 +168,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
           // if it's an error, it returns text
           setError(body);
         } else if (typeof body == "object") {
+          setError("")
           // institution
           const i = new FormData();
           i.append("name", "School");

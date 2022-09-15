@@ -45,6 +45,10 @@ func (s *Syllabus) BeforeCreate(tx *gorm.DB) (err error) {
 		s.AcademicFields = []int32{000}
 	}
 
+	if len(s.Tags) == 0 {
+		s.Tags = []string{}
+	}
+
 	return nil
 }
 
