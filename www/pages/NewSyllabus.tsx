@@ -120,23 +120,23 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     //   //send post request
     // }
 
-    console.log(testFormData);
+    console.log(formData);
 
     // Make POST request header
     const postHeader = new Headers();
     postHeader.append("Authorization", `Bearer ${session.user.token}`);
 
     // Make POST request body
-    let formData = new FormData();
+    let body = new FormData();
 
-    for (let [key, value] of Object.entries(testFormData)) {
-      formData.append(key, value);
+    for (let [key, value] of Object.entries(formData)) {
+      body.append(key, value);
     }
 
     fetch(apiUrl, {
       method: "POST",
       headers: postHeader,
-      body: formData,
+      body: body,
     })
       .then((res) => {
         if (res.status == 201) {
@@ -336,9 +336,10 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                     </Form.Group>
 
                     <Form.Group className="mb-3">
-                      <Form.Label htmlFor="courseLanguage">Language</Form.Label>
+                      <Form.Label htmlFor="language">Language</Form.Label>
                       <Form.Select
-                        id="courseLanguage"
+                        id="language"
+                        onChange={handleChange}
                         data-cy="courseLanguageInput"
                       >
                         <option value="">—</option>
