@@ -137,7 +137,11 @@ func AddUserInstitution(c echo.Context) error {
 	}
 
 	var inst models.Institution
-	c.Bind(&inst)
+	err = c.Bind(&inst)
+	if err != nil {
+		zero.Error(err.Error())
+		return c.String(http.StatusBadRequest, "We had a problem binding your information, please check it again.")
+	}
 
 	syll, err := models.AddInstitutionToUser(user_uid, uuid.MustParse(requester_uid), &inst)
 	if err != nil {
