@@ -17,39 +17,42 @@ import Tags from "components/Tags";
 import Link from "next/link";
 
 interface ISyllabusProps {
-  title: string;
-  created_at: string;
-  institutions: [
-    {
+  info: {
+    title: string;
+    created_at: string;
+    institutions: [
+      {
+        uuid: string;
+        name: string;
+        country: number;
+        date: {
+          term: string;
+          year: string;
+        };
+        url: string;
+        position: string;
+      }
+    ];
+    academic_fields: number[];
+    user: {
       uuid: string;
       name: string;
-      country: number;
-      date: {
-        term: string;
-        year: string;
-      };
-      url: string;
-      position: string;
-    }
-  ];
-  academic_fields: number[];
-  user: {
-    uuid: string;
-    name: string;
-  };
-  tags: string[];
-  description: string;
-  resources: [
-    {
-      uuid: string;
-      name: string;
-      description: string;
-      url: string;
-      type: string;
-    }
-  ];
-  learning_outcomes: string;
-  attachments: IResources[];
+    };
+    tags: string[];
+    description: string;
+    resources: [
+      {
+        uuid: string;
+        name: string;
+        description: string;
+        url: string;
+        type: string;
+      }
+    ];
+    learning_outcomes: string;
+    attachments: IResources[];
+  },
+  apiUrl: string
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -68,7 +71,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   // console.log(userInfo);
 
   return {
-    props: syllabusInfo,
+    props: {
+      info: syllabusInfo,
+      apiUrl: apiUrl,
+    }
   };
 };
 
@@ -100,34 +106,34 @@ const Syllabus: NextPage<ISyllabusProps> = (props) => {
               year="Spring 2019"
             />
             <h1 className="p-0 m-0">
-              {props.title ? props.title : "Course Title"}
+              {props.info.title ? props.info.title : "Course Title"}
             </h1>
             <p className="small text-muted mb-0">ID: {sid}</p>
             <p className="course-instructors p-0 m-0">
-              <Link href={`/user/${props.user.uuid}`}>
-                {props.user ? props.user.name : "Course Author / Instructor"}
+              <Link href={`/user/${props.info.user.uuid}`}>
+                {props.info.user ? props.info.user.name : "Course Author / Instructor"}
               </Link>
             </p>
 
             <div className="course-tags d-flex gap-2">
-              {props.tags ? (
-                <Tags tags={props.tags} />
+              {props.info.tags ? (
+                <Tags tags={props.info.tags} />
               ) : (
                 <Tags tags={["tag 1", "tag 2", "tag 3"]} />
               )}
             </div>
             <h2 className="h3">Course Overview</h2>
             <p className="course-description">
-              {props.description
-                ? props.description
+              {props.info.description
+                ? props.info.description
                 : "Course description goes here..."}
             </p>
             <h2 className="h3">Course Resources</h2>
-            <SyllabusResources resources={props.attachments} />
+            <SyllabusResources resources={props.info.attachments} apiUrl={props.apiUrl}/>
             <SyllabusFooter
-              author={props.user.name}
-              authorUUID={props.user.uuid}
-              uploadDate={props.created_at}
+              author={props.info.user.name}
+              authorUUID={props.info.user.uuid}
+              uploadDate={props.info.created_at}
             />
           </Col>
         </Row>
