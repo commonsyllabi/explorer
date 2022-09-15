@@ -95,12 +95,13 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     name: string,
     description: string,
     file: File,
-    url: string
+    url: string,
   }
 
   const [log, setLog] = useState("");
   const [error, setError] = useState("");
   const [isCreated, setCreated] = useState(false);
+  const [attachmentStatuses, setAttachmentStatuses] = useState(Array<{name: string, created: boolean}>)
 
   //Handle form submission
   const apiUrl = props.apiUrl;
@@ -193,14 +194,14 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
               body: a
             })
               .then(res => {
-                console.log(res)
+                if(res.ok)
+                  setAttachmentStatuses([...attachmentStatuses, {name: att.name, created: true}])
               })
               .catch(err => {
-                console.log(err);
+                setAttachmentStatuses([...attachmentStatuses, {name: att.name, created: false}])
               })
           })
         }
-
       })
       .catch((err) => {
         console.error(`Error: ${err}`);
@@ -263,6 +264,15 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
   let attachmentElements = []
   for(let i = 0; i < attachments.length; i++){
     attachmentElements.push(<NewSyllabusAttachment key={attachments[i].id} attachment={attachments[i]} updateData={updateAttachment} removeAttachment={removeAttachment}/>)
+  }
+
+  let attachmentStatusElements = []
+  for(let i = 0; i < attachmentStatuses.length; i++){
+    if(attachmentStatuses[i].created){
+      attachmentStatusElements.push(<Alert variant="success">Attachment {attachmentStatuses[i].name} created!</Alert>)
+    }else{
+      attachmentStatusElements.push(<Alert variant="warning">Attachment {attachmentStatuses[i].name} failed :(</Alert>)
+    }
   }
 
   //if user is logged in, show form
@@ -491,6 +501,15 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                       <Alert variant="danger" className="mt-3">
                         {error}
                       </Alert>
+                    ) : (
+                      <></>
+                    )}
+
+                    {isCreated ? (
+                      <Container className="mt-5">
+                        <Alert variant="success">Syllabus created!</Alert>
+                        {attachmentStatusElements}
+                      </Container>
                     ) : (
                       <></>
                     )}
