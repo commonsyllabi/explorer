@@ -13,7 +13,7 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
-import { Alert, FormSelect } from "react-bootstrap";
+import { Alert, FormSelect, Tabs, Tab } from "react-bootstrap";
 import Badge from "react-bootstrap/Badge";
 
 export const getStaticProps: GetStaticProps = async () => {
@@ -188,28 +188,41 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
       });
   };
 
-  const handleAttachmentFile = (event: React.SyntheticEvent): void => {
+    const handleAttachmentName = (event: React.SyntheticEvent): void => {
     event.preventDefault();
-    
+
     const t = event.target as HTMLInputElement
     const id = t.dataset.index
-    
+
     attachmentData.map(att => {
-      if(att.id == id && t.files != null){
+      if (att.id == id) {
+        att.name = t.value
+      }
+    })
+  }
+
+  const handleAttachmentFile = (event: React.SyntheticEvent): void => {
+    event.preventDefault();
+
+    const t = event.target as HTMLInputElement
+    const id = t.dataset.index
+
+    attachmentData.map(att => {
+      if (att.id == id && t.files != null) {
         att.file = t.files[0] as File
       }
     })
   };
 
-  const handleAttachmentName = (event: React.SyntheticEvent): void => {
-    event.preventDefault();
-    
+  const handleAttachmentURL = (event: React.SyntheticEvent): void => {
+    event.preventDefault()
+
     const t = event.target as HTMLInputElement
     const id = t.dataset.index
-    
+
     attachmentData.map(att => {
-      if(att.id == id){
-        att.name = t.value
+      if (att.id == id) {
+        att.url = t.value
       }
     })
   }
@@ -228,7 +241,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
   };
 
   //Get public/private form label
-  const getPublicPrivateLabel = (status : string) => {
+  const getPublicPrivateLabel = (status: string) => {
     if (status === "unlisted") {
       return "Private (only viewable to you)";
     } else {
@@ -473,12 +486,25 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                                 <Form.Control onChange={handleAttachmentName} data-index="0" type="text" id="name" className=".attachment-names" />
                               </Form.Group>
 
-                              <Form.Group>
-                                <Form.Label>
-                                  File (to do: support URL input)
-                                </Form.Label>
-                                <Form.Control onChange={handleAttachmentFile} type="file" data-index="0" id="file" className=".attachment-files" />
-                              </Form.Group>
+                              <Tabs defaultActiveKey="File">
+                                <Tab eventKey="File" title="File">
+                                  <Form.Group>
+                                    <Form.Label>
+                                      Upload your file here
+                                    </Form.Label>
+                                    <Form.Control onChange={handleAttachmentFile} type="file" data-index="0" id="file" className=".attachment-files" />
+                                  </Form.Group>
+                                </Tab>
+                                <Tab eventKey="URL" title="URL">
+                                  <Form.Group>
+                                    <Form.Label>
+                                      Enter your URL here
+                                    </Form.Label>
+                                    <Form.Control onChange={handleAttachmentURL} type="text" data-index="0" id="url" className=".attachment-urls" />
+                                  </Form.Group>
+                                </Tab>
+                              </Tabs>
+
                             </Form>
 
                             <Button variant="outline-secondary" size="sm">
