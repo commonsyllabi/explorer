@@ -1,4 +1,4 @@
-import { useState, useEffect, FormEvent } from "react";
+import React, { useState, useEffect, FormEvent } from "react";
 import type { GetStaticProps, NextPage } from "next";
 import { getSession, useSession } from "next-auth/react";
 import Head from "next/head";
@@ -15,6 +15,8 @@ import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import { Alert, FormSelect, Tabs, Tab } from "react-bootstrap";
 import Badge from "react-bootstrap/Badge";
+import NewSyllbusAttachment from "components/Syllabus/NewSyllabusAttachment";
+import NewSyllabusAttachment from "components/Syllabus/NewSyllabusAttachment";
 
 const countries = require("i18n-iso-countries");
 const languages = require("@cospired/i18n-iso-languages");
@@ -67,19 +69,6 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
 
   //Form data and submission handling
   //---------------------------------------
-  //Mock data
-  const [testFormData, setTestFormData] = useState({
-    title: "Pomeranian Studies",
-    course_number: "POM101",
-    description: "This course is an introduction to pomeranian care. ",
-    "tags[]": "canine care",
-    "tags[]": "pomeranians",
-    language: "en",
-    duration: 500,
-    status: "unlisted",
-    "academic_fields[]": 100,
-    academic_level: 3,
-  });
   //Store form data
   const [formData, setFormData] = useState({
     institutions: [],
@@ -109,10 +98,6 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     url: string
   }
 
-  const att = {} as IAttachment
-  att.id = "0"
-  const [attachmentData, setAttachmentData] = useState([att])
-
   const [log, setLog] = useState("");
   const [error, setError] = useState("");
   const [isCreated, setCreated] = useState(false);
@@ -137,7 +122,10 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
 
     // Make POST request header
     const postHeader = new Headers();
-    postHeader.append("Authorization", `Bearer ${session.user.token}`);
+    if(session != null && session.user != null)
+      postHeader.append("Authorization", `Bearer ${session.user.token}`);
+    else
+      console.warn("no session found!")
 
     // Make POST request body
     let body = new FormData();
@@ -193,12 +181,12 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
           console.log(`adding ${attachmentData.length} attachments`);
           const attach_endpoint = new URL(`/attachments/?syllabus_id=${body.uuid}`, props.apiUrl)
           attachmentData.map(att => {
-            console.warn(`Uploading non-validated ${att}`)
+            console.warn(`Uploading non-validated ${JSON.stringify(att)}`)
 
             const a = new FormData()
             a.append("name", att.name)
             a.append("description", att.description ? att.description : "")
-            a.append("file", att.file)
+            a.append("file", att.file ? att.file : "")
             a.append("url", att.url ? att.url : "") //-- otherwise it defaults to "undefined"
 
             fetch(attach_endpoint, {
@@ -221,43 +209,23 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
       });
   };
 
-    const handleAttachmentName = (event: React.SyntheticEvent): void => {
-    event.preventDefault();
-
-    const t = event.target as HTMLInputElement
-    const id = t.dataset.index
-
-    attachmentData.map(att => {
-      if (att.id == id) {
-        att.name = t.value
-      }
-    })
+  const handleNewAttachment = (event: React.SyntheticEvent) => {
+    const a = {} as IAttachment
+    a.id = `${attachmentData.length}`
+    setAttachmentData([...attachmentData, a])
   }
 
-  const handleAttachmentFile = (event: React.SyntheticEvent): void => {
-    event.preventDefault();
+  const updateAttachment = (updated : IAttachment) => {
+    console.log(`updating attachment #${updated.id} ${updated.url}`);
 
-    const t = event.target as HTMLInputElement
-    const id = t.dataset.index
-
-    attachmentData.map(att => {
-      if (att.id == id && t.files != null) {
-        att.file = t.files[0] as File
-      }
+    let u = attachmentData.map(att => {
+      if(att.id == updated.id)
+        return updated
+      else
+        return att
     })
-  };
 
-  const handleAttachmentURL = (event: React.SyntheticEvent): void => {
-    event.preventDefault()
-
-    const t = event.target as HTMLInputElement
-    const id = t.dataset.index
-
-    attachmentData.map(att => {
-      if (att.id == id) {
-        att.url = t.value
-      }
-    })
+    setAttachmentData(u)
   }
 
   //Handle form change
@@ -281,6 +249,15 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
       return "Public (anyone can view)";
     }
   };
+
+  //-- data set up for attachments
+  const att = {} as IAttachment
+  att.id = "0"
+  const [attachmentData, setAttachmentData] = useState([att])
+  let attachments = []
+  for(let i = 0; i < attachmentData.length; i++){
+    attachments.push(<NewSyllabusAttachment attachment={attachmentData[i]} updateData={updateAttachment}/>)
+  }
 
   //if user is logged in, show form
   if (status === "authenticated") {
@@ -494,61 +471,10 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                     {/* TODO: Make attachments work */}
                     <div className="mb-5">
                       <h2 className="h4">Attachments</h2>
-                      <div className="course-attachments p-3 mb-3 border rounded bg-light">
-                        <div className="attachment-item">
-                          <h4 className="h5">AttachmentName.pdf</h4>
-                          <div className="d-flex">
-                            <p className="mb-0">Size: 3.5mb</p>
-                            <p className="mx-3">|</p>
-                            <p>
-                              Type: <Badge bg="secondary">PDF</Badge>
-                            </p>
-                          </div>
-                          <p>
-                            This is the description of my attachment, which is a
-                            pdf.
-                          </p>
-                          <div className="d-flex gap-3">
-
-                            <Form className="attachment-inputs" id="attachment-input">
-                              <Form.Group>
-                                <Form.Label>
-                                  Name
-                                </Form.Label>
-                                <Form.Control onChange={handleAttachmentName} data-index="0" type="text" id="name" className=".attachment-names" />
-                              </Form.Group>
-
-                              <Tabs defaultActiveKey="File">
-                                <Tab eventKey="File" title="File">
-                                  <Form.Group>
-                                    <Form.Label>
-                                      Upload your file here
-                                    </Form.Label>
-                                    <Form.Control onChange={handleAttachmentFile} type="file" data-index="0" id="file" className=".attachment-files" />
-                                  </Form.Group>
-                                </Tab>
-                                <Tab eventKey="URL" title="URL">
-                                  <Form.Group>
-                                    <Form.Label>
-                                      Enter your URL here
-                                    </Form.Label>
-                                    <Form.Control onChange={handleAttachmentURL} type="text" data-index="0" id="url" className=".attachment-urls" />
-                                  </Form.Group>
-                                </Tab>
-                              </Tabs>
-
-                            </Form>
-
-                            <Button variant="outline-secondary" size="sm">
-                              Edit
-                            </Button>
-                            <Button variant="danger" size="sm">
-                              Delete
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
+                      {attachments}
+                      <Button type="button" onClick={handleNewAttachment}>Add attachment</Button>
                     </div>
+
 
                     <Button type="submit" data-cy="courseSubmitButton">
                       Submit form
