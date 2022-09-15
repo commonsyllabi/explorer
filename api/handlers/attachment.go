@@ -81,14 +81,14 @@ func CreateAttachment(c echo.Context) error {
 		}
 		defer src.Close()
 
-		dst, err := os.Create(filepath.Join(dest, file.Filename))
+		target, err := os.Create(dest)
 		if err != nil {
 			zero.Error(err.Error())
 			return err
 		}
-		defer dst.Close()
+		defer target.Close()
 
-		if _, err = io.Copy(dst, src); err != nil {
+		if _, err = io.Copy(target, src); err != nil {
 			zero.Error(err.Error())
 			return c.String(http.StatusBadRequest, "Error saving File to disk.")
 		}

@@ -17,12 +17,12 @@ import { Alert, FormSelect } from "react-bootstrap";
 import Badge from "react-bootstrap/Badge";
 
 export const getStaticProps: GetStaticProps = async () => {
-  const apiUrl = new URL(`syllabi/`, process.env.API_URL);
+  const apiUrl = process.env.API_URL
 
-  console.log(`GetStaticProps API URL: ${apiUrl.href}`);
+  console.log(`GetStaticProps API URL: ${apiUrl}`);
 
   return {
-    props: { apiUrl: apiUrl.href },
+    props: { apiUrl: apiUrl },
   };
 };
 
@@ -68,6 +68,18 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     duration: 0,
   });
 
+  interface IAttachment {
+    id: string,
+    name: string,
+    description: string,
+    file: File,
+    url: string
+  }
+
+  const att = {} as IAttachment
+  att.id = "0"
+  const [attachmentData, setAttachmentData] = useState([att])
+
   const [log, setLog] = useState("");
   const [error, setError] = useState("");
   const [isCreated, setCreated] = useState(false);
@@ -99,10 +111,11 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
 
     for (let [key, value] of Object.entries(testFormData)) {
       console.log(`Appending to req body — ${key}: ${value} `);
-      formData.append(key, value);
+      formData.append(key, value as string);
     }
 
-    fetch(apiUrl, {
+    const syll_endpoint = new URL("/syllabi/", props.apiUrl)
+    fetch(syll_endpoint, {
       method: "POST",
       headers: postHeader,
       body: formData,
@@ -128,8 +141,8 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
           i.append("name", "School")
           i.append("country", "275")
 
-          const instit_endpoint = `/syllabi/${body.uuid}/institutions`
-          fetch("http://localhost:3046" + instit_endpoint, {
+          const instit_endpoint = new URL(`/syllabi/${body.uuid}/institutions`, props.apiUrl)
+          fetch(instit_endpoint, {
             method: "POST",
             headers: postHeader,
             body: i
@@ -143,22 +156,19 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
             })
 
           // attachments
+          // strange that we have a different pattern from institutions here (i guess attahcment is at a higher class than institution)
+          console.log(`adding ${attachmentData.length} attachments`);
+          const attach_endpoint = new URL(`/attachments/?syllabus_id=${body.uuid}`, props.apiUrl)
+          attachmentData.map(att => {
+            console.warn(`Uploading non-validated ${att}`)
 
-          //--
-          // this whole dom querying is probably not the way to do it (see handleChange?)
-          // for now, it seems the form data is always empty...? because i'm not using https://reactjs.org/docs/forms.html#controlled-components to get the value of things (probs similar for institutions above tbh)
-          const atts = document.getElementsByClassName("attachment-inputs")
-          console.log(`found ${atts.length} attachments`)
+            const a = new FormData()
+            a.append("name", att.name)
+            a.append("description", att.description ? att.description : "")
+            a.append("file", att.file)
+            a.append("url", att.url ? att.url : "") //-- otherwise it defaults to "undefined"
 
-          for (let i = 0; i < atts.length; i++) {
-            const f = atts.item(i) as HTMLFormElement
-            console.log(f);
-
-            const a = new FormData(f);
-          
-            // strange that we have a different pattern here (i guess attahcment is at a higher class than institution)
-            const attach_endpoint = `/attachments/?syllabus_id=${body.uuid}`
-            fetch("http://localhost:3046" + attach_endpoint, {
+            fetch(attach_endpoint, {
               method: "POST",
               headers: postHeader,
               body: a
@@ -169,7 +179,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
               .catch(err => {
                 console.log(err);
               })
-          }
+          })
         }
 
       })
@@ -178,26 +188,47 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
       });
   };
 
-  const addAttachment = (event: React.SyntheticEvent): void => {
+  const handleAttachmentFile = (event: React.SyntheticEvent): void => {
     event.preventDefault();
-    event.stopPropagation();
-    console.log("Attachment added");
+    
+    const t = event.target as HTMLInputElement
+    const id = t.dataset.index
+    
+    attachmentData.map(att => {
+      if(att.id == id && t.files != null){
+        att.file = t.files[0] as File
+      }
+    })
   };
+
+  const handleAttachmentName = (event: React.SyntheticEvent): void => {
+    event.preventDefault();
+    
+    const t = event.target as HTMLInputElement
+    const id = t.dataset.index
+    
+    attachmentData.map(att => {
+      if(att.id == id){
+        att.name = t.value
+      }
+    })
+  }
 
   //Handle form change
   const handleChange = (event: React.SyntheticEvent) => {
-    if (event.target.id === "status") {
+    const t = event.target as HTMLInputElement
+    if (t.id === "status") {
       //handle public/private toggle
       const newStatus = formData.status === "unlisted" ? "listed" : "unlisted";
-      setFormData({ ...formData, [event.target.id]: newStatus });
+      setFormData({ ...formData, [t.id]: newStatus });
     } else {
-      setFormData({ ...formData, [event.target.id]: event.target.value });
+      setFormData({ ...formData, [t.id]: t.value });
     }
-    console.log(`${[event.target.id]}: ${event.target.value}`);
+    // console.log(`${[t.id]}: ${t.value}`);
   };
 
   //Get public/private form label
-  const getPublicPrivateLabel = (status) => {
+  const getPublicPrivateLabel = (status : string) => {
     if (status === "unlisted") {
       return "Private (only viewable to you)";
     } else {
@@ -434,21 +465,21 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                           </p>
                           <div className="d-flex gap-3">
 
-                            <form className="attachment-inputs" id="attachment-input">
+                            <Form className="attachment-inputs" id="attachment-input">
                               <Form.Group>
                                 <Form.Label>
                                   Name
                                 </Form.Label>
-                                <Form.Control type="text" id="name" className=".attachment-names" />
+                                <Form.Control onChange={handleAttachmentName} data-index="0" type="text" id="name" className=".attachment-names" />
                               </Form.Group>
 
                               <Form.Group>
                                 <Form.Label>
                                   File (to do: support URL input)
                                 </Form.Label>
-                                <Form.Control type="file" id="file" className=".attachment-files" />
+                                <Form.Control onChange={handleAttachmentFile} type="file" data-index="0" id="file" className=".attachment-files" />
                               </Form.Group>
-                            </form>
+                            </Form>
 
                             <Button variant="outline-secondary" size="sm">
                               Edit
@@ -459,10 +490,6 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                           </div>
                         </div>
                       </div>
-                      {/* <Form className="attachment-form" onSubmit={addAttachment}>
-                    <h3 className="h6">Add a new attachment</h3>
-                    <Button variant="secondary">+ Add new attachment</Button>
-                  </Form> */}
                     </div>
 
                     <Button type="submit">Submit form</Button>
