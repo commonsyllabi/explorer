@@ -127,9 +127,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     else
       console.warn("no session found!")
 
-    // Make POST request body
     let body = new FormData();
-
     for (let [key, value] of Object.entries(formData)) {
       body.append(key, value as string);
     }
@@ -178,9 +176,9 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
 
           // attachments
           // strange that we have a different pattern from institutions here (i guess attahcment is at a higher class than institution)
-          console.log(`adding ${attachmentData.length} attachments`);
+          console.log(`adding ${attachments.length} attachments`);
           const attach_endpoint = new URL(`/attachments/?syllabus_id=${body.uuid}`, props.apiUrl)
-          attachmentData.map(att => {
+          attachments.map(att => {
             console.warn(`Uploading non-validated ${JSON.stringify(att)}`)
 
             const a = new FormData()
@@ -211,21 +209,29 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
 
   const handleNewAttachment = (event: React.SyntheticEvent) => {
     const a = {} as IAttachment
-    a.id = `${attachmentData.length}`
-    setAttachmentData([...attachmentData, a])
+    a.id = `${attachments.length}`
+    setAttachments([...attachments, a])
   }
 
   const updateAttachment = (updated : IAttachment) => {
     console.log(`updating attachment #${updated.id} ${updated.url}`);
 
-    let u = attachmentData.map(att => {
+    let u = attachments.map(att => {
       if(att.id == updated.id)
         return updated
       else
         return att
     })
 
-    setAttachmentData(u)
+    setAttachments(u)
+  }
+
+  const removeAttachment = (index : string) => {
+    let u = attachments.filter(att => {
+      return (att.id != index)
+    })
+
+    setAttachments(u)
   }
 
   //Handle form change
@@ -253,10 +259,10 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
   //-- data set up for attachments
   const att = {} as IAttachment
   att.id = "0"
-  const [attachmentData, setAttachmentData] = useState([att])
-  let attachments = []
-  for(let i = 0; i < attachmentData.length; i++){
-    attachments.push(<NewSyllabusAttachment attachment={attachmentData[i]} updateData={updateAttachment}/>)
+  const [attachments, setAttachments] = useState([att])
+  let attachmentElements = []
+  for(let i = 0; i < attachments.length; i++){
+    attachmentElements.push(<NewSyllabusAttachment key={attachments[i].id} attachment={attachments[i]} updateData={updateAttachment} removeAttachment={removeAttachment}/>)
   }
 
   //if user is logged in, show form
@@ -468,13 +474,14 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                     </Form.Group>
 
                     <hr className="my-3" />
-                    {/* TODO: Make attachments work */}
+                    
                     <div className="mb-5">
                       <h2 className="h4">Attachments</h2>
-                      {attachments}
+
+                      {attachmentElements}
+
                       <Button type="button" onClick={handleNewAttachment}>Add attachment</Button>
                     </div>
-
 
                     <Button type="submit" data-cy="courseSubmitButton">
                       Submit form
