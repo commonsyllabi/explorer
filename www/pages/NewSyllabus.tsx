@@ -37,11 +37,17 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
   const { data: session, status } = useSession();
   const [validated, setValidated] = useState(true);
 
+  useEffect(() => {
+    setValidated(true);
+  }, []);
+
+  //Set up list of countries (for use in "Add Institution" section)
   const setUpCountries = () => {
     countries.registerLocale(require("i18n-iso-countries/langs/en.json"));
     console.log(countries.getNames("en", { select: "official" }));
   };
 
+  //Set up list of languages and generate language dropdown elements
   const setUpLanguages = () => {
     languages.registerLocale(
       require("@cospired/i18n-iso-languages/langs/en.json")
@@ -49,7 +55,6 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     // console.log(languages.getNames("en"));
     return languages.getNames("en");
   };
-
   const generateLanguageOptions = () => {
     const languages = setUpLanguages();
     const elements = Object.keys(languages).map((langCode) => (
@@ -60,11 +65,9 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     return <>{elements}</>;
   };
 
-  useEffect(() => {
-    setValidated(true);
-    // generateLanguageOptions();
-  }, []);
-
+  //Form data and submission handling
+  //---------------------------------------
+  //Mock data
   const [testFormData, setTestFormData] = useState({
     title: "Pomeranian Studies",
     course_number: "POM101",
@@ -77,7 +80,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     "academic_fields[]": 100,
     academic_level: 3,
   });
-
+  //Store form data
   const [formData, setFormData] = useState({
     institutions: [],
     title: "",
@@ -101,8 +104,8 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
   const [error, setError] = useState("");
   const [isCreated, setCreated] = useState(false);
 
+  //Handle form submission
   const apiUrl = props.apiUrl;
-
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     console.log("handleSubmit() called");
 
@@ -140,66 +143,65 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
           console.log("SUCCESS, syllabus created.");
           setCreated(true);
 
-          return res.json() // should we instead return just the uuid? 
+          return res.json(); // should we instead return just the uuid?
         } else {
           return res.text();
         }
       })
       .then((body) => {
         console.log(body);
-        if (typeof body == "string") { // if it's an error, it returns text
+        if (typeof body == "string") {
+          // if it's an error, it returns text
           setError(body);
         } else if (typeof body == "object") {
-
           // institution
-          const i = new FormData()
-          i.append("name", "School")
-          i.append("country", "275")
+          const i = new FormData();
+          i.append("name", "School");
+          i.append("country", "275");
 
-          const instit_endpoint = `/syllabi/${body.uuid}/institutions`
+          const instit_endpoint = `/syllabi/${body.uuid}/institutions`;
           fetch("http://localhost:3046" + instit_endpoint, {
             method: "POST",
             headers: postHeader,
-            body: i
+            body: i,
           })
-            .then(res => {
-              console.log(res)
-              return
+            .then((res) => {
+              console.log(res);
+              return;
             })
-            .catch(err => {
+            .catch((err) => {
               console.log(err);
-            })
+            });
 
           // attachments
 
           //--
           // this whole dom querying is probably not the way to do it (see handleChange?)
           // for now, it seems the form data is always empty...? because i'm not using https://reactjs.org/docs/forms.html#controlled-components to get the value of things (probs similar for institutions above tbh)
-          const atts = document.getElementsByClassName("attachment-inputs")
-          console.log(`found ${atts.length} attachments`)
+          const atts = document.getElementsByClassName("attachment-inputs");
+          console.log(`found ${atts.length} attachments`);
 
           for (let i = 0; i < atts.length; i++) {
-            const f = atts.item(i) as HTMLFormElement
+            const f = atts.item(i) as HTMLFormElement;
             console.log(f);
 
             const a = new FormData(f);
-          
+
             // strange that we have a different pattern here (i guess attahcment is at a higher class than institution)
-            const attach_endpoint = `/attachments/?syllabus_id=${body.uuid}`
+            const attach_endpoint = `/attachments/?syllabus_id=${body.uuid}`;
             fetch("http://localhost:3046" + attach_endpoint, {
               method: "POST",
               headers: postHeader,
-              body: a
+              body: a,
             })
-              .then(res => {
-                console.log(res)
+              .then((res) => {
+                console.log(res);
               })
-              .catch(err => {
+              .catch((err) => {
                 console.log(err);
-              })
+              });
           }
         }
-
       })
       .catch((err) => {
         console.error(`Error: ${err}`);
@@ -459,22 +461,30 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                             pdf.
                           </p>
                           <div className="d-flex gap-3">
-
-                            <form className="attachment-inputs" id="attachment-input">
+                            {/* <form
+                              className="attachment-inputs"
+                              id="attachment-input"
+                            >
                               <Form.Group>
-                                <Form.Label>
-                                  Name
-                                </Form.Label>
-                                <Form.Control type="text" id="name" className=".attachment-names" />
+                                <Form.Label>Name</Form.Label>
+                                <Form.Control
+                                  type="text"
+                                  id="name"
+                                  className=".attachment-names"
+                                />
                               </Form.Group>
 
                               <Form.Group>
                                 <Form.Label>
                                   File (to do: support URL input)
                                 </Form.Label>
-                                <Form.Control type="file" id="file" className=".attachment-files" />
+                                <Form.Control
+                                  type="file"
+                                  id="file"
+                                  className=".attachment-files"
+                                />
                               </Form.Group>
-                            </form>
+                            </form> */}
 
                             <Button variant="outline-secondary" size="sm">
                               Edit
