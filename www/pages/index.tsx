@@ -28,8 +28,8 @@ export const getServerSideProps: GetServerSideProps = async () => {
         syllabiListings: [],
       },
     };
-  })
-  //TODO: check for errors
+  }) as Response
+  
   if(!res.ok){
     return {
       props: {
