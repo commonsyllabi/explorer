@@ -16,6 +16,9 @@ import InputGroup from "react-bootstrap/InputGroup";
 import { Alert, FormSelect, Tabs, Tab } from "react-bootstrap";
 import Badge from "react-bootstrap/Badge";
 
+const countries = require("i18n-iso-countries");
+const languages = require("@cospired/i18n-iso-languages");
+
 export const getStaticProps: GetStaticProps = async () => {
   const apiUrl = process.env.API_URL
 
@@ -33,8 +36,38 @@ interface INewSyllabusProps {
 const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
   const { data: session, status } = useSession();
   const [validated, setValidated] = useState(true);
-  useEffect(() => setValidated(true), []);
 
+  useEffect(() => {
+    setValidated(true);
+  }, []);
+
+  //Set up list of countries (for use in "Add Institution" section)
+  const setUpCountries = () => {
+    countries.registerLocale(require("i18n-iso-countries/langs/en.json"));
+    console.log(countries.getNames("en", { select: "official" }));
+  };
+
+  //Set up list of languages and generate language dropdown elements
+  const setUpLanguages = () => {
+    languages.registerLocale(
+      require("@cospired/i18n-iso-languages/langs/en.json")
+    );
+    // console.log(languages.getNames("en"));
+    return languages.getNames("en");
+  };
+  const generateLanguageOptions = () => {
+    const languages = setUpLanguages();
+    const elements = Object.keys(languages).map((langCode) => (
+      <option key={langCode} value={langCode.toUpperCase()}>
+        {langCode.toUpperCase()} – {languages[langCode]}
+      </option>
+    ));
+    return <>{elements}</>;
+  };
+
+  //Form data and submission handling
+  //---------------------------------------
+  //Mock data
   const [testFormData, setTestFormData] = useState({
     title: "Pomeranian Studies",
     course_number: "POM101",
@@ -47,7 +80,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     "academic_fields[]": 100,
     academic_level: 3,
   });
-
+  //Store form data
   const [formData, setFormData] = useState({
     institutions: [],
     title: "",
@@ -84,8 +117,8 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
   const [error, setError] = useState("");
   const [isCreated, setCreated] = useState(false);
 
+  //Handle form submission
   const apiUrl = props.apiUrl;
-
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     console.log("handleSubmit() called");
 
@@ -100,60 +133,59 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     //   //send post request
     // }
 
-    console.log(testFormData);
+    console.log(formData);
 
     // Make POST request header
     const postHeader = new Headers();
     postHeader.append("Authorization", `Bearer ${session.user.token}`);
 
     // Make POST request body
-    let formData = new FormData();
+    let body = new FormData();
 
-    for (let [key, value] of Object.entries(testFormData)) {
-      console.log(`Appending to req body — ${key}: ${value} `);
-      formData.append(key, value as string);
+    for (let [key, value] of Object.entries(formData)) {
+      body.append(key, value as string);
     }
 
     const syll_endpoint = new URL("/syllabi/", props.apiUrl)
     fetch(syll_endpoint, {
       method: "POST",
       headers: postHeader,
-      body: formData,
+      body: body,
     })
       .then((res) => {
         if (res.status == 201) {
           console.log("SUCCESS, syllabus created.");
           setCreated(true);
 
-          return res.json() // should we instead return just the uuid? 
+          return res.json(); // should we instead return just the uuid?
         } else {
           return res.text();
         }
       })
       .then((body) => {
         console.log(body);
-        if (typeof body == "string") { // if it's an error, it returns text
+        if (typeof body == "string") {
+          // if it's an error, it returns text
           setError(body);
         } else if (typeof body == "object") {
-
           // institution
-          const i = new FormData()
-          i.append("name", "School")
-          i.append("country", "275")
+          const i = new FormData();
+          i.append("name", "School");
+          i.append("country", "275");
 
           const instit_endpoint = new URL(`/syllabi/${body.uuid}/institutions`, props.apiUrl)
           fetch(instit_endpoint, {
             method: "POST",
             headers: postHeader,
-            body: i
+            body: i,
           })
-            .then(res => {
-              console.log(res)
-              return
+            .then((res) => {
+              console.log(res);
+              return;
             })
-            .catch(err => {
+            .catch((err) => {
               console.log(err);
-            })
+            });
 
           // attachments
           // strange that we have a different pattern from institutions here (i guess attahcment is at a higher class than institution)
@@ -276,7 +308,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                 </p>
                 <Form noValidate validated={false} onSubmit={handleSubmit}>
                   <fieldset>
-                    <Form.Group className="mb-3" data-cy="courseTitle">
+                    <Form.Group className="mb-3">
                       <Form.Label htmlFor="title">Course Title</Form.Label>
                       <Form.Control
                         required
@@ -284,6 +316,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                         placeholder="Web Design History"
                         onChange={handleChange}
                         value={formData.title}
+                        data-cy="courseTitleInput"
                       />
                       <Form.Control.Feedback type="invalid">
                         Please provide a valid course title.
@@ -327,6 +360,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                           placeholder="CS101"
                           onChange={handleChange}
                           value={formData.course_number}
+                          data-cy="courseCodeInput"
                         />
                       </div>
                     </Form.Group>
@@ -347,26 +381,15 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                       </Form.Select>
                     </Form.Group>
 
-                    <div className="d-flex gap-3">
-                      <Form.Group className="col-3 mb-3">
-                        <Form.Label htmlFor="courseYear">Year</Form.Label>
-                        <Form.Control id="courseYear" placeholder="2022" />
-                      </Form.Group>
-
-                      <Form.Group className="col-3 mb-3">
-                        <Form.Label htmlFor="courseTerm">Term</Form.Label>
-                        <Form.Control
-                          id="courseTerm"
-                          placeholder="Spring Semester"
-                        />
-                      </Form.Group>
-                    </div>
-
                     <Form.Group className="mb-3">
-                      <Form.Label htmlFor="courseLanguage">Language</Form.Label>
-
-                      <Form.Select id="courseLanguage">
-                        <option>—</option>
+                      <Form.Label htmlFor="language">Language</Form.Label>
+                      <Form.Select
+                        id="language"
+                        onChange={handleChange}
+                        data-cy="courseLanguageInput"
+                      >
+                        <option value="">—</option>
+                        {generateLanguageOptions()}
                       </Form.Select>
                       <Form.Text>
                         The language this class is primarily taught in.
@@ -378,7 +401,11 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                         <Form.Label htmlFor="duration">
                           Duration of course in weeks
                         </Form.Label>
-                        <Form.Control id="durcation" placeholder="3" />
+                        <Form.Control
+                          id="durcation"
+                          placeholder="3"
+                          data-cy="courseDurationInput"
+                        />
                       </Form.Group>
                     </div>
 
@@ -394,6 +421,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                         as="textarea"
                         rows={4}
                         placeholder="Course outline..."
+                        data-cy="courseDescriptionInput"
                       />
                       <Form.Control.Feedback type="invalid">
                         Please provide a brief description of the course.
@@ -409,6 +437,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                         as="textarea"
                         rows={4}
                         placeholder="Course learning outcomes..."
+                        data-cy="courseLearningOutcomes"
                       />
                     </Form.Group>
 
@@ -421,6 +450,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                         as="textarea"
                         rows={4}
                         placeholder="Course topics outline..."
+                        data-cy="courseTopicsOutline"
                       />
                     </Form.Group>
 
@@ -431,6 +461,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                         as="textarea"
                         rows={4}
                         placeholder="Course readings..."
+                        data-cy="courseReadings"
                       />
                     </Form.Group>
 
@@ -443,18 +474,18 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                         as="textarea"
                         rows={4}
                         placeholder="Course grading rubric..."
+                        data-cy="courseGradingRubric"
                       />
                     </Form.Group>
 
                     <Form.Group className="mb-3">
-                      <Form.Label htmlFor="assignments">
-                        Grading Rubric
-                      </Form.Label>
+                      <Form.Label htmlFor="assignments">Assignments</Form.Label>
                       <Form.Control
                         id="assignments"
                         as="textarea"
                         rows={4}
                         placeholder="Course assignments..."
+                        data-cy="courseAssignments"
                       />
                     </Form.Group>
 
@@ -518,7 +549,9 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                       </div>
                     </div>
 
-                    <Button type="submit">Submit form</Button>
+                    <Button type="submit" data-cy="courseSubmitButton">
+                      Submit form
+                    </Button>
 
                     {error !== "" ? (
                       <Alert variant="danger" className="mt-3">
