@@ -59,7 +59,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     const languages = setUpLanguages();
     const elements = Object.keys(languages).map((langCode) => (
       <option key={langCode} value={langCode.toUpperCase()}>
-        {languages[langCode]} ({langCode.toUpperCase()})
+        {langCode.toUpperCase()} – {languages[langCode]}
       </option>
     ));
     return <>{elements}</>;
@@ -180,26 +180,27 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
           // for now, it seems the form data is always empty...? because i'm not using https://reactjs.org/docs/forms.html#controlled-components to get the value of things (probs similar for institutions above tbh)
           const atts = document.getElementsByClassName("attachment-inputs");
           console.log(`found ${atts.length} attachments`);
+          if (atts.length > 0) {
+            for (let i = 0; i < atts.length; i++) {
+              const f = atts.item(i) as HTMLFormElement;
+              console.log(f);
 
-          for (let i = 0; i < atts.length; i++) {
-            const f = atts.item(i) as HTMLFormElement;
-            console.log(f);
+              const a = new FormData(f);
 
-            const a = new FormData(f);
-
-            // strange that we have a different pattern here (i guess attahcment is at a higher class than institution)
-            const attach_endpoint = `/attachments/?syllabus_id=${body.uuid}`;
-            fetch("http://localhost:3046" + attach_endpoint, {
-              method: "POST",
-              headers: postHeader,
-              body: a,
-            })
-              .then((res) => {
-                console.log(res);
+              // strange that we have a different pattern here (i guess attahcment is at a higher class than institution)
+              const attach_endpoint = `/attachments/?syllabus_id=${body.uuid}`;
+              fetch("http://localhost:3046" + attach_endpoint, {
+                method: "POST",
+                headers: postHeader,
+                body: a,
               })
-              .catch((err) => {
-                console.log(err);
-              });
+                .then((res) => {
+                  console.log(res);
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+            }
           }
         }
       })
