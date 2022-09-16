@@ -5,7 +5,7 @@ import Image from "next/image";
 import { IUser, ISyllabus } from "types";
 
 import GlobalNav from "components/GlobalNav";
-import { BreadcrumbsBar } from "components/BreadcrumbsBar";
+import BreadcrumbsBar from "components/BreadcrumbsBar";
 
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";

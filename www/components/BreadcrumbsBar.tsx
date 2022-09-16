@@ -8,7 +8,8 @@ interface IBreadcrumbsBarProps {
   category: string;
   pageTitle: string;
 }
-export const BreadcrumbsBar: React.FunctionComponent<IBreadcrumbsBarProps> = (
+
+const BreadcrumbsBar: React.FunctionComponent<IBreadcrumbsBarProps> = (
   props
 ) => {
   const getCategoryLink = (props: IBreadcrumbsBarProps) => {
@@ -23,9 +24,12 @@ export const BreadcrumbsBar: React.FunctionComponent<IBreadcrumbsBarProps> = (
       );
     }
     return (
-      <Link href={`/user/${props.userId}`}>
-        <a className="text-muted">{props.category}</a>
-      </Link>
+      <>
+        /{" "}
+        <Link href={`/user/${props.userId}`}>
+          <a className="text-muted">{props.category}</a>
+        </Link>
+      </>
     );
   };
   return (
@@ -41,7 +45,16 @@ export const BreadcrumbsBar: React.FunctionComponent<IBreadcrumbsBarProps> = (
           <p className="small">{getCategoryLink(props)}</p>
           <p className="small">&nbsp;/&nbsp;{props.pageTitle}</p>
         </div>
+
+        <div className="d-flex gap-4">
+          <p className="small text-muted">Flag</p>
+          {props.category === "syllabi" ? (
+            <p className="small text-muted">Add to Collection</p>
+          ) : null}
+        </div>
       </div>
     </Container>
   );
 };
+
+export default BreadcrumbsBar;
