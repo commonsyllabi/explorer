@@ -2,10 +2,9 @@ import React, { useState, useEffect, FormEvent } from "react";
 import type { GetStaticProps, NextPage } from "next";
 import { getSession, useSession } from "next-auth/react";
 import Head from "next/head";
-import Image from "next/image";
 import Link from "next/link";
 
-import { GlobalNav } from "components/GlobalNav";
+import GlobalNav from "components/GlobalNav";
 
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -22,7 +21,7 @@ const countries = require("i18n-iso-countries");
 const languages = require("@cospired/i18n-iso-languages");
 
 export const getStaticProps: GetStaticProps = async () => {
-  const apiUrl = process.env.API_URL
+  const apiUrl = process.env.API_URL;
 
   console.log(`GetStaticProps API URL: ${apiUrl}`);
 
@@ -91,17 +90,16 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
   });
 
   interface IAttachment {
-    id: string,
-    name: string,
-    description: string,
-    file: File,
-    url: string,
+    id: string;
+    name: string;
+    description: string;
+    file: File;
+    url: string;
   }
 
   const [log, setLog] = useState("");
   const [error, setError] = useState("");
   const [isCreated, setCreated] = useState(false);
-  const [attachmentStatuses, setAttachmentStatuses] = useState(Array<{name: string, created: boolean}>)
 
   //Handle form submission
   const apiUrl = props.apiUrl;
@@ -123,17 +121,18 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
 
     // Make POST request header
     const postHeader = new Headers();
-    if(session != null && session.user != null)
+    if (session != null && session.user != null)
       postHeader.append("Authorization", `Bearer ${session.user.token}`);
-    else
-      console.warn("no session found!")
+    else console.warn("no session found!");
 
+    // Make POST request body
     let body = new FormData();
+
     for (let [key, value] of Object.entries(formData)) {
       body.append(key, value as string);
     }
 
-    const syll_endpoint = new URL("/syllabi/", props.apiUrl)
+    const syll_endpoint = new URL("/syllabi/", props.apiUrl);
     fetch(syll_endpoint, {
       method: "POST",
       headers: postHeader,
@@ -155,13 +154,16 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
           // if it's an error, it returns text
           setError(body);
         } else if (typeof body == "object") {
-          setError("")
+          setError("");
           // institution
           const i = new FormData();
           i.append("name", "School");
           i.append("country", "275");
 
-          const instit_endpoint = new URL(`/syllabi/${body.uuid}/institutions`, props.apiUrl)
+          const instit_endpoint = new URL(
+            `/syllabi/${body.uuid}/institutions`,
+            props.apiUrl
+          );
           fetch(instit_endpoint, {
             method: "POST",
             headers: postHeader,
@@ -177,30 +179,32 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
 
           // attachments
           // strange that we have a different pattern from institutions here (i guess attahcment is at a higher class than institution)
-          console.log(`adding ${attachments.length} attachments`);
-          const attach_endpoint = new URL(`/attachments/?syllabus_id=${body.uuid}`, props.apiUrl)
-          attachments.map(att => {
-            console.warn(`Uploading non-validated ${JSON.stringify(att)}`)
+          console.log(`adding ${attachmentData.length} attachments`);
+          const attach_endpoint = new URL(
+            `/attachments/?syllabus_id=${body.uuid}`,
+            props.apiUrl
+          );
+          attachmentData.map((att) => {
+            console.warn(`Uploading non-validated ${JSON.stringify(att)}`);
 
-            const a = new FormData()
-            a.append("name", att.name)
-            a.append("description", att.description ? att.description : "")
-            a.append("file", att.file ? att.file : "")
-            a.append("url", att.url ? att.url : "") //-- otherwise it defaults to "undefined"
+            const a = new FormData();
+            a.append("name", att.name);
+            a.append("description", att.description ? att.description : "");
+            a.append("file", att.file ? att.file : "");
+            a.append("url", att.url ? att.url : ""); //-- otherwise it defaults to "undefined"
 
             fetch(attach_endpoint, {
               method: "POST",
               headers: postHeader,
-              body: a
+              body: a,
             })
-              .then(res => {
-                if(res.ok)
-                  setAttachmentStatuses([...attachmentStatuses, {name: att.name, created: true}])
+              .then((res) => {
+                console.log(res);
               })
-              .catch(err => {
-                setAttachmentStatuses([...attachmentStatuses, {name: att.name, created: false}])
-              })
-          })
+              .catch((err) => {
+                console.log(err);
+              });
+          });
         }
       })
       .catch((err) => {
@@ -209,35 +213,25 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
   };
 
   const handleNewAttachment = (event: React.SyntheticEvent) => {
-    const a = {} as IAttachment
-    a.id = `${attachments.length}`
-    setAttachments([...attachments, a])
-  }
+    const a = {} as IAttachment;
+    a.id = `${attachmentData.length}`;
+    setAttachmentData([...attachmentData, a]);
+  };
 
-  const updateAttachment = (updated : IAttachment) => {
+  const updateAttachment = (updated: IAttachment) => {
     console.log(`updating attachment #${updated.id} ${updated.url}`);
 
-    let u = attachments.map(att => {
-      if(att.id == updated.id)
-        return updated
-      else
-        return att
-    })
+    let u = attachmentData.map((att) => {
+      if (att.id == updated.id) return updated;
+      else return att;
+    });
 
-    setAttachments(u)
-  }
-
-  const removeAttachment = (index : string) => {
-    let u = attachments.filter(att => {
-      return (att.id != index)
-    })
-
-    setAttachments(u)
-  }
+    setAttachmentData(u);
+  };
 
   //Handle form change
   const handleChange = (event: React.SyntheticEvent) => {
-    const t = event.target as HTMLInputElement
+    const t = event.target as HTMLInputElement;
     if (t.id === "status") {
       //handle public/private toggle
       const newStatus = formData.status === "unlisted" ? "listed" : "unlisted";
@@ -258,21 +252,17 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
   };
 
   //-- data set up for attachments
-  const att = {} as IAttachment
-  att.id = "0"
-  const [attachments, setAttachments] = useState([att])
-  let attachmentElements = []
-  for(let i = 0; i < attachments.length; i++){
-    attachmentElements.push(<NewSyllabusAttachment key={attachments[i].id} attachment={attachments[i]} updateData={updateAttachment} removeAttachment={removeAttachment}/>)
-  }
-
-  let attachmentStatusElements = []
-  for(let i = 0; i < attachmentStatuses.length; i++){
-    if(attachmentStatuses[i].created){
-      attachmentStatusElements.push(<Alert variant="success">Attachment {attachmentStatuses[i].name} created!</Alert>)
-    }else{
-      attachmentStatusElements.push(<Alert variant="warning">Attachment {attachmentStatuses[i].name} failed :(</Alert>)
-    }
+  const att = {} as IAttachment;
+  att.id = "0";
+  const [attachmentData, setAttachmentData] = useState([att]);
+  let attachments = [];
+  for (let i = 0; i < attachmentData.length; i++) {
+    attachments.push(
+      <NewSyllabusAttachment
+        attachment={attachmentData[i]}
+        updateData={updateAttachment}
+      />
+    );
   }
 
   //if user is logged in, show form
@@ -484,13 +474,13 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                     </Form.Group>
 
                     <hr className="my-3" />
-                    
+                    {/* TODO: Make attachments work */}
                     <div className="mb-5">
                       <h2 className="h4">Attachments</h2>
-
-                      {attachmentElements}
-
-                      <Button type="button" onClick={handleNewAttachment}>Add attachment</Button>
+                      {attachments}
+                      <Button type="button" onClick={handleNewAttachment}>
+                        Add attachment
+                      </Button>
                     </div>
 
                     <Button type="submit" data-cy="courseSubmitButton">
@@ -501,15 +491,6 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                       <Alert variant="danger" className="mt-3">
                         {error}
                       </Alert>
-                    ) : (
-                      <></>
-                    )}
-
-                    {isCreated ? (
-                      <Container className="mt-5">
-                        <Alert variant="success">Syllabus created!</Alert>
-                        {attachmentStatusElements}
-                      </Container>
                     ) : (
                       <></>
                     )}

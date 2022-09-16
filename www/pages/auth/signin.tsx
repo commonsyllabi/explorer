@@ -1,6 +1,6 @@
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
-import { GlobalNav } from "components/GlobalNav";
+import GlobalNav from "components/GlobalNav";
 import Link from "next/link";
 
 import {

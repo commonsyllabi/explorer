@@ -1,10 +1,12 @@
 import * as React from "react";
 import Link from "next/link";
+import type { GetStaticProps } from "next";
 
 import Card from "react-bootstrap/Card";
 import SyllabusSchoolCodeYear from "components/Syllabus/SyllabusSchoolCodeYear";
 import Tags from "./Tags";
 import PubBadge from "./PubBadge";
+import { getServerSideProps } from "pages";
 
 interface ISyllabusCardProps {
   uuid: string;
@@ -14,7 +16,7 @@ interface ISyllabusCardProps {
   term?: string;
   year?: string;
   title: string;
-  author: string;
+  author?: string;
   authorUUID: string;
   description: string;
   tags?: string[];

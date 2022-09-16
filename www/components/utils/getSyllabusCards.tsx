@@ -2,7 +2,11 @@ import SyllabusCard from "components/SyllabusCard";
 
 import { ISyllabus } from "types";
 
-export const getSyllabusCards = (syllabiArray: ISyllabus[] | undefined) => {
+export const getSyllabusCards = (
+  syllabiArray: ISyllabus[] | undefined,
+  userName?: string,
+  userUuid?: string
+) => {
   if (!syllabiArray || syllabiArray.length === 0) {
     return null;
   }
@@ -16,8 +20,8 @@ export const getSyllabusCards = (syllabiArray: ISyllabus[] | undefined) => {
       title={item.title}
       year={item.year}
       courseNumber={item.course_number}
-      author={item.user.name}
-      authorUUID={item.user_uuid}
+      author={item.user.name ? item.user.name : userName}
+      authorUUID={userUuid ? userUuid : item.user_uuid}
       description={item.description}
       tags={item.tags}
     />

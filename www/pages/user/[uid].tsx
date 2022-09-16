@@ -6,7 +6,7 @@ import Link from "next/link";
 
 import { IUser } from "types";
 
-import { GlobalNav } from "components/GlobalNav";
+import GlobalNav from "components/GlobalNav";
 import CollectionCard from "components/CollectionCard";
 import SyllabusCard from "components/SyllabusCard";
 
@@ -26,7 +26,7 @@ import { getCollectionCards } from "components/utils/getCollectionCards";
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const userId = context.params!.uid;
   const apiUrl = process.env.API_URL;
-  const url = new URL(`users/${userId}`, apiUrl)
+  const url = new URL(`users/${userId}`, apiUrl);
 
   console.log(`USER ID: ${userId}`);
   console.log(`API URL: ${apiUrl}`);
@@ -86,7 +86,7 @@ const About: NextPage<IUser> = (props) => {
                     </div>
                   </div>
                   <div id="syllabi">
-                    {getSyllabusCards(props.syllabi)}
+                    {getSyllabusCards(props.syllabi, props.name, props.uuid)}
                   </div>
                 </Tab>
                 <Tab eventKey="collections" title="Collections">

@@ -4,22 +4,19 @@ import Image from "next/image";
 
 import { IUser, ISyllabus } from "types";
 
-import { GlobalNav } from "components/GlobalNav";
-import { FiltersBar } from "components/FiltersBar";
+import GlobalNav from "components/GlobalNav";
+import BreadcrumbsBar from "components/BreadcrumbsBar";
+
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-
-import TagsFiltersBar from "components/TagFiltersBar";
-import SyllabusCard from "components/SyllabusCard";
-import { BreadcrumbsBar } from "components/BreadcrumbsBar";
 
 import { getSyllabusCards } from "components/utils/getSyllabusCards";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const collectionId = context.params!.cid;
   const apiUrl = process.env.API_URL;
-  const url = new URL(`collections/${collectionId}`, apiUrl)
+  const url = new URL(`collections/${collectionId}`, apiUrl);
 
   console.log(`USER ID: ${collectionId}`);
   console.log(`API URL: ${apiUrl}`);
