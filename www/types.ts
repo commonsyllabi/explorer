@@ -21,6 +21,7 @@ export interface ICollection {
   description?: string;
   tags: string[];
   syllabi: ISyllabus[];
+  user_uuid: string;
 }
 
 export interface ISyllabus {
