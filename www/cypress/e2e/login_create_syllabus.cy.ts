@@ -1,7 +1,7 @@
 /* eslint-disable */
 // Disable ESLint to prevent failing linting inside the Next.js repo.
 
-describe('Navigation', () => {
+describe('Login and create a syllabus', () => {
     it('should navigate to the syllabus page', () => {
         cy.visit('http://localhost:3000/syllabus/46de6a2b-aacb-4c24-b1e1-3495821f846a')
 
