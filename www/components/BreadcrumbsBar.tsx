@@ -11,6 +11,23 @@ interface IBreadcrumbsBarProps {
 export const BreadcrumbsBar: React.FunctionComponent<IBreadcrumbsBarProps> = (
   props
 ) => {
+  const getCategoryLink = (props: IBreadcrumbsBarProps) => {
+    if (props.category === "collections") {
+      return (
+        <>
+          /{" "}
+          <Link href={`/user/${props.userId}/?tab=collections`}>
+            <a className="text-muted">{props.category}</a>
+          </Link>
+        </>
+      );
+    }
+    return (
+      <Link href={`/user/${props.userId}`}>
+        <a className="text-muted">{props.category}</a>
+      </Link>
+    );
+  };
   return (
     <Container className="border-bottom">
       <div className="pt-3 d-grid gap-2 d-flex justify-content-between align-items-baseline">
@@ -21,8 +38,8 @@ export const BreadcrumbsBar: React.FunctionComponent<IBreadcrumbsBarProps> = (
             </Link>
             &nbsp;
           </p>
-          <p className="small">/&nbsp;{props.category}&nbsp;</p>
-          <p className="small">/&nbsp;{props.pageTitle}</p>
+          <p className="small">{getCategoryLink(props)}</p>
+          <p className="small">&nbsp;/&nbsp;{props.pageTitle}</p>
         </div>
       </div>
     </Container>
