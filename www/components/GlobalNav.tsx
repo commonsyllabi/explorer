@@ -31,6 +31,7 @@ const GlobalNav: React.FunctionComponent = () => {
                 title={session.user.name}
                 id="userNavDropdown"
                 className=" text-end align-self-center"
+                align="end"
               >
                 <NavDropdown.Item
                   href={`/user/${session.user._id}`}

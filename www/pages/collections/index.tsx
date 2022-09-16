@@ -63,9 +63,9 @@ const Collections: React.FunctionComponent<ICollectionsProps> = ({
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div id="header-section" className="sticky-top">
+      <Container fluid id="header-section" className="sticky-top">
         <GlobalNav />
-      </div>
+      </Container>
       <Container>
         <h1 className="pt-3">Public Collections</h1>
         <Row className="d-flex ">

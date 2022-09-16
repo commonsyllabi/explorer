@@ -33,7 +33,7 @@ const BreadcrumbsBar: React.FunctionComponent<IBreadcrumbsBarProps> = (
     );
   };
   return (
-    <Container className="border-bottom">
+    <Container fluid className="border-bottom">
       <div className="pt-3 d-grid gap-2 d-flex justify-content-between align-items-baseline">
         <div className="breadcrumbs d-flex">
           <p className="small">

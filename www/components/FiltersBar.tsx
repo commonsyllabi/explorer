@@ -4,7 +4,7 @@ import { FunctionComponent } from "react";
 
 const FiltersBar: React.FunctionComponent = () => {
   return (
-    <Container className="border-bottom">
+    <Container fluid className="border-bottom">
       <div className="py-3 d-grid gap-2 d-flex justify-content-center">
         <Dropdown>
           <Dropdown.Toggle variant="light" id="dropdown-level">

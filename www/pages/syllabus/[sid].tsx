@@ -91,16 +91,18 @@ const Syllabus: NextPage<ISyllabusProps> = (props) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Container>
-        <div id="header-section" className="sticky-top">
-          <GlobalNav />
-          <BreadcrumbsBar
-            user={props.info.user.name}
-            userId={props.info.user_uuid}
-            category="syllabi"
-            pageTitle={props.info.title}
-          />
-        </div>
+      <Container
+        fluid
+        id="header-section"
+        className="container-fluid sticky-top"
+      >
+        <GlobalNav />
+        <BreadcrumbsBar
+          user={props.info.user.name}
+          userId={props.info.user_uuid}
+          category="syllabi"
+          pageTitle={props.info.title}
+        />
       </Container>
 
       <Container>

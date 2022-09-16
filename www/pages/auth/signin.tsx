@@ -123,155 +123,169 @@ const SignIn: NextPage<IAuthProps> = (props) => {
   //if already signed in, render usder info
   if (status === "authenticated") {
     return (
-      <Container>
+      <>
         <Head>
           <title>Sign In: Syllabi Explorer</title>
           <meta name="description" content="Sign in to Syllabi Explorer" />
           <link rel="icon" href="/favicon.ico" />
         </Head>
-        <GlobalNav />
 
-        <Row>
-          <Col className="col-8 offset-2 py-5">
-            <h1 className="h3 mb-3">
-              You are logged in as{" "}
-              <Link href={`/user/${session.user._id}`}>
-                {session.user.name}
-              </Link>
-              .
-            </h1>
-            <Button href="#" onClick={() => signOut({ callbackUrl: "/" })}>
-              {" "}
-              Sign Out
-            </Button>
-          </Col>
-        </Row>
-      </Container>
+        <Container fluid>
+          <GlobalNav />
+        </Container>
+        <Container>
+          <Row>
+            <Col className="col-8 offset-2 py-5">
+              <h1 className="h3 mb-3">
+                You are logged in as{" "}
+                <Link href={`/user/${session.user._id}`}>
+                  {session.user.name}
+                </Link>
+                .
+              </h1>
+              <Button href="#" onClick={() => signOut({ callbackUrl: "/" })}>
+                {" "}
+                Sign Out
+              </Button>
+            </Col>
+          </Row>
+        </Container>
+      </>
     );
   }
 
   //else render login form
   return (
-    <Container>
+    <>
       <Head>
         <title>Sign In: Syllabi Explorer</title>
         <meta name="description" content="Sign in to Syllabi Explorer" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <GlobalNav />
 
-      <Row>
-        <Col lg={{ span: 6, offset: 3 }} className="mt-5">
-          {isCreated === false ? (
-            <Container>
-              <Tabs defaultActiveKey={props.states[0]} id="tab">
-                {/* LOGIN */}
-                <Tab eventKey="Login" title="Login">
-                  <Form className="mt-2" onSubmit={handleLogin}>
-                    <Form.Group className="mb-3" controlId="loginBasicEmail">
-                      <Form.Label>Email address</Form.Label>
-                      <Form.Control
-                        required
-                        name="username"
-                        type="email"
-                        placeholder="Enter email"
-                      />
-                      <Form.Text className="text-muted">
-                        We&#39;ll never share your email with anyone else.
-                      </Form.Text>
-                    </Form.Group>
+      <Container fluid>
+        <GlobalNav />
+      </Container>
+      <Container>
+        <Row>
+          <Col lg={{ span: 6, offset: 3 }} className="mt-5">
+            {isCreated === false ? (
+              <Container>
+                <Tabs defaultActiveKey={props.states[0]} id="tab">
+                  {/* LOGIN */}
+                  <Tab eventKey="Login" title="Login">
+                    <Form className="mt-2" onSubmit={handleLogin}>
+                      <Form.Group className="mb-3" controlId="loginBasicEmail">
+                        <Form.Label>Email address</Form.Label>
+                        <Form.Control
+                          required
+                          name="username"
+                          type="email"
+                          placeholder="Enter email"
+                        />
+                        <Form.Text className="text-muted">
+                          We&#39;ll never share your email with anyone else.
+                        </Form.Text>
+                      </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="loginBasicPassword">
-                      <Form.Label>Password</Form.Label>
-                      <Form.Control
-                        required
-                        name="password"
-                        type="password"
-                        placeholder="Password"
-                      />
-                    </Form.Group>
+                      <Form.Group
+                        className="mb-3"
+                        controlId="loginBasicPassword"
+                      >
+                        <Form.Label>Password</Form.Label>
+                        <Form.Control
+                          required
+                          name="password"
+                          type="password"
+                          placeholder="Password"
+                        />
+                      </Form.Group>
 
-                    <Button variant="primary" type="submit">
-                      Submit
-                    </Button>
-                  </Form>
-                </Tab>
+                      <Button variant="primary" type="submit">
+                        Submit
+                      </Button>
+                    </Form>
+                  </Tab>
 
-                {/* SIGN UP */}
-                <Tab eventKey="Sign up" title="Sign up">
-                  <Form className="mt-2" onSubmit={handleSignup}>
-                    <Form.Group className="mb-3" controlId="signupBasicName">
-                      <Form.Label>Name</Form.Label>
-                      <Form.Control type="text" placeholder="Enter name" />
-                    </Form.Group>
+                  {/* SIGN UP */}
+                  <Tab eventKey="Sign up" title="Sign up">
+                    <Form className="mt-2" onSubmit={handleSignup}>
+                      <Form.Group className="mb-3" controlId="signupBasicName">
+                        <Form.Label>Name</Form.Label>
+                        <Form.Control type="text" placeholder="Enter name" />
+                      </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="signupBasicEmail">
-                      <Form.Label>Email address</Form.Label>
-                      <Form.Control type="email" placeholder="Enter email" />
-                    </Form.Group>
+                      <Form.Group className="mb-3" controlId="signupBasicEmail">
+                        <Form.Label>Email address</Form.Label>
+                        <Form.Control type="email" placeholder="Enter email" />
+                      </Form.Group>
 
-                    <Form.Group
-                      className="mb-3"
-                      controlId="signupBasicEmailConfirm"
-                    >
-                      <Form.Label>Confirm email address</Form.Label>
-                      <Form.Control type="email" placeholder="Confirm email" />
-                      <Form.Text className="text-muted">
-                        We&#39;ll never share your email with anyone else.
-                      </Form.Text>
-                    </Form.Group>
+                      <Form.Group
+                        className="mb-3"
+                        controlId="signupBasicEmailConfirm"
+                      >
+                        <Form.Label>Confirm email address</Form.Label>
+                        <Form.Control
+                          type="email"
+                          placeholder="Confirm email"
+                        />
+                        <Form.Text className="text-muted">
+                          We&#39;ll never share your email with anyone else.
+                        </Form.Text>
+                      </Form.Group>
 
-                    <Form.Group
-                      className="mb-3"
-                      controlId="signupBasicPassword"
-                    >
-                      <Form.Label>Password</Form.Label>
-                      <Form.Control type="password" placeholder="Password" />
-                    </Form.Group>
+                      <Form.Group
+                        className="mb-3"
+                        controlId="signupBasicPassword"
+                      >
+                        <Form.Label>Password</Form.Label>
+                        <Form.Control type="password" placeholder="Password" />
+                      </Form.Group>
 
-                    <Form.Group
-                      className="mb-3"
-                      controlId="signupBasicPasswordConfirm"
-                    >
-                      <Form.Label>Confirm password</Form.Label>
-                      <Form.Control
-                        type="password"
-                        placeholder="Confirm password"
-                      />
-                    </Form.Group>
+                      <Form.Group
+                        className="mb-3"
+                        controlId="signupBasicPasswordConfirm"
+                      >
+                        <Form.Label>Confirm password</Form.Label>
+                        <Form.Control
+                          type="password"
+                          placeholder="Confirm password"
+                        />
+                      </Form.Group>
 
-                    <Button variant="primary" type="submit">
-                      Sign up
-                    </Button>
-                  </Form>
-                </Tab>
-              </Tabs>
+                      <Button variant="primary" type="submit">
+                        Sign up
+                      </Button>
+                    </Form>
+                  </Tab>
+                </Tabs>
 
-              {log !== "" ? (
-                <Alert variant="warning" className="mt-3">
-                  {log}
-                </Alert>
-              ) : (
-                <></>
-              )}
+                {log !== "" ? (
+                  <Alert variant="warning" className="mt-3">
+                    {log}
+                  </Alert>
+                ) : (
+                  <></>
+                )}
 
-              {error !== "" ? (
-                <Alert variant="danger" className="mt-3">
-                  {error}
-                </Alert>
-              ) : (
-                <></>
-              )}
-            </Container>
-          ) : (
-            <>
-              <h1>Your account was created!</h1>
-              <p>Please check your email address to activate your account.</p>
-            </>
-          )}
-        </Col>
-      </Row>
-    </Container>
+                {error !== "" ? (
+                  <Alert variant="danger" className="mt-3">
+                    {error}
+                  </Alert>
+                ) : (
+                  <></>
+                )}
+              </Container>
+            ) : (
+              <>
+                <h1>Your account was created!</h1>
+                <p>Please check your email address to activate your account.</p>
+              </>
+            )}
+          </Col>
+        </Row>
+      </Container>
+    </>
   );
 };
 

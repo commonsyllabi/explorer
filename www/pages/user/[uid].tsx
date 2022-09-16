@@ -53,10 +53,11 @@ const About: NextPage<IUser> = (props) => {
         <meta name="description" content="Syllabi Explorer | user name" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
+      <Container fluid id="header-section" className="sticky-top">
+        <GlobalNav />
+      </Container>
       <Container>
-        <div id="header-section" className="sticky-top">
-          <GlobalNav />
-        </div>
         <Row>
           <UserProfileSidebar props={props} />
           <Col>
