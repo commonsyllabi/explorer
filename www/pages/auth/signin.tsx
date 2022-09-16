@@ -12,8 +12,9 @@ import {
   Col,
   Container,
   Form,
+  FormControlProps,
 } from "react-bootstrap";
-import { useState } from "react";
+import React, { useState } from "react";
 
 import { useSession, signIn, signOut } from "next-auth/react";
 import Router from "next/router";
@@ -39,6 +40,12 @@ const SignIn: NextPage<IAuthProps> = (props) => {
   const [error, setError] = useState("");
   const [isCreated, setCreated] = useState(false);
 
+  const [signupName, setSignupName] = useState("")
+  const [signupEmail, setSignupEmail] = useState("")
+  const [signupEmailConf, setSignupEmailConf] = useState("")
+  const [signupPassword, setSignupPassword] = useState("")
+  const [signupPasswordConf, setSignupPasswordConf] = useState("")
+
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     e.stopPropagation();
@@ -61,34 +68,26 @@ const SignIn: NextPage<IAuthProps> = (props) => {
     });
   };
 
-  const handleSignup = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handleSignup = (e : React.BaseSyntheticEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
 
-    const t = e.target as HTMLInputElement;
-    const name = t.children[0].children[1] as HTMLInputElement;
-    const email = t.children[1].children[1] as HTMLInputElement;
-    const email_conf = t.children[1].children[3] as HTMLInputElement;
-
-    const password = t.children[2].children[1] as HTMLInputElement;
-    const password_conf = t.children[2].children[3] as HTMLInputElement;
-
-    if (email.value !== email_conf.value) {
+    if (signupEmail !== signupEmailConf) {
       setLog("Emails should match!");
       return;
     }
 
-    if (password.value !== password_conf.value) {
+    if (signupPassword !== signupPasswordConf) {
       setLog("Passwords should match!");
       return;
     }
 
-    if (password.value.length < 8) {
+    if (signupPassword.length < 8) {
       setLog("Password should be at least 8 characters");
       return;
     }
 
-    if (name.value === "") {
+    if (signupName === "") {
       setLog("Name cannot be empty");
       return;
     }
@@ -99,9 +98,9 @@ const SignIn: NextPage<IAuthProps> = (props) => {
     h.append("Content-Type", "application/x-www-form-urlencoded");
 
     const b = new URLSearchParams();
-    b.append("name", name.value);
-    b.append("email", email.value);
-    b.append("password", password.value);
+    b.append("name", signupName);
+    b.append("email", signupEmail);
+    b.append("password", signupPassword);
 
     fetch(url.href, {
       method: "POST",
@@ -119,6 +118,31 @@ const SignIn: NextPage<IAuthProps> = (props) => {
         console.error(err);
       });
   };
+
+  const handleSignupName = (e :React.BaseSyntheticEvent) => {
+    const v = e.target.value as string
+    setSignupName(v)
+  }
+
+  const handleSignupEmail = (e :React.BaseSyntheticEvent) => {
+    const v = e.target.value as string
+    setSignupEmail(v)
+  }
+
+  const handleSignupEmailConf = (e :React.BaseSyntheticEvent) => {
+    const v = e.target.value as string
+    setSignupEmailConf(v)
+  }
+
+  const handleSignupPassword = (e :React.BaseSyntheticEvent) => {
+    const v = e.target.value as string
+    setSignupPassword(v)
+  }
+
+  const handleSignupPasswordConf = (e :React.BaseSyntheticEvent) => {
+    const v = e.target.value as string
+    setSignupPasswordConf(v)
+  }
 
   //if already signed in, render usder info
   if (status === "authenticated") {
@@ -166,7 +190,7 @@ const SignIn: NextPage<IAuthProps> = (props) => {
             <Container>
               <Tabs defaultActiveKey={props.states[0]} id="tab">
                 {/* LOGIN */}
-                <Tab eventKey="Login" title="Login">
+                <Tab eventKey="Login" title="Login" data-cy="Login">
                   <Form className="mt-2" onSubmit={handleLogin}>
                     <Form.Group className="mb-3" controlId="loginBasicEmail">
                       <Form.Label>Email address</Form.Label>
@@ -175,6 +199,7 @@ const SignIn: NextPage<IAuthProps> = (props) => {
                         name="username"
                         type="email"
                         placeholder="Enter email"
+                        data-cy="Login-email"
                       />
                       <Form.Text className="text-muted">
                         We&#39;ll never share your email with anyone else.
@@ -188,26 +213,27 @@ const SignIn: NextPage<IAuthProps> = (props) => {
                         name="password"
                         type="password"
                         placeholder="Password"
+                        data-cy="Login-password"
                       />
                     </Form.Group>
 
-                    <Button variant="primary" type="submit">
+                    <Button variant="primary" type="submit" data-cy="Login-submit">
                       Submit
                     </Button>
                   </Form>
                 </Tab>
 
                 {/* SIGN UP */}
-                <Tab eventKey="Sign up" title="Sign up">
+                <Tab eventKey="Sign up" title="Sign up" data-cy="Sign up">
                   <Form className="mt-2" onSubmit={handleSignup}>
                     <Form.Group className="mb-3" controlId="signupBasicName">
                       <Form.Label>Name</Form.Label>
-                      <Form.Control type="text" placeholder="Enter name" />
+                      <Form.Control type="text" placeholder="Enter name" data-cy="Signup-name" onChange={handleSignupName}/>
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="signupBasicEmail">
                       <Form.Label>Email address</Form.Label>
-                      <Form.Control type="email" placeholder="Enter email" />
+                      <Form.Control type="email" placeholder="Enter email" data-cy="Signup-email" onChange={handleSignupEmail}/>
                     </Form.Group>
 
                     <Form.Group
@@ -215,7 +241,7 @@ const SignIn: NextPage<IAuthProps> = (props) => {
                       controlId="signupBasicEmailConfirm"
                     >
                       <Form.Label>Confirm email address</Form.Label>
-                      <Form.Control type="email" placeholder="Confirm email" />
+                      <Form.Control type="email" placeholder="Confirm email" data-cy="Signup-email-conf" onChange={handleSignupEmailConf}/>
                       <Form.Text className="text-muted">
                         We&#39;ll never share your email with anyone else.
                       </Form.Text>
@@ -226,7 +252,7 @@ const SignIn: NextPage<IAuthProps> = (props) => {
                       controlId="signupBasicPassword"
                     >
                       <Form.Label>Password</Form.Label>
-                      <Form.Control type="password" placeholder="Password" />
+                      <Form.Control type="password" placeholder="Password" data-cy="Signup-password" onChange={handleSignupPassword}/>
                     </Form.Group>
 
                     <Form.Group
@@ -237,10 +263,12 @@ const SignIn: NextPage<IAuthProps> = (props) => {
                       <Form.Control
                         type="password"
                         placeholder="Confirm password"
+                        data-cy="Signup-password-conf"
+                        onChange={handleSignupPasswordConf}
                       />
                     </Form.Group>
 
-                    <Button variant="primary" type="submit">
+                    <Button variant="primary" type="submit" data-cy="Signup-submit">
                       Sign up
                     </Button>
                   </Form>
@@ -265,7 +293,7 @@ const SignIn: NextPage<IAuthProps> = (props) => {
             </Container>
           ) : (
             <>
-              <h1>Your account was created!</h1>
+              <h2 data-cy="Success">Your account was created!</h2>
               <p>Please check your email address to activate your account.</p>
             </>
           )}
