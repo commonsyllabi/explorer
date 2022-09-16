@@ -31,11 +31,8 @@ const GlobalNav: React.FunctionComponent = () => {
                 title={session.user.name}
                 id="userNavDropdown"
                 className=" text-end align-self-center"
-<<<<<<< HEAD
                 align="end"
-=======
                 data-cy="Logged user"
->>>>>>> e2ce267641715638e30667f8835aa3c06b9cba29
               >
                 <NavDropdown.Item
                   href={`/user/${session.user._id}`}
@@ -80,7 +77,12 @@ const GlobalNav: React.FunctionComponent = () => {
               <Nav.Link href="/about" className="py-3 text-end">
                 About
               </Nav.Link>
-              <Nav.Link href="/auth/signin" className="py-3 text-end" id="login-btn" data-cy="Login">
+              <Nav.Link
+                href="/auth/signin"
+                className="py-3 text-end"
+                id="login-btn"
+                data-cy="Login"
+              >
                 Login
               </Nav.Link>
             </Nav>
