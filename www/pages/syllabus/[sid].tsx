@@ -8,7 +8,7 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
-import { GlobalNav } from "components/GlobalNav";
+import GlobalNav from "components/GlobalNav";
 import SyllabusBreadcrumbs from "components/SyllabusBreadcrumbs";
 import SyllabusSchoolCodeYear from "components/Syllabus/SyllabusSchoolCodeYear";
 import SyllabusResources from "components/Syllabus/SyllabusResources";
@@ -51,8 +51,8 @@ interface ISyllabusProps {
     ];
     learning_outcomes: string;
     attachments: IResources[];
-  },
-  apiUrl: string
+  };
+  apiUrl: string;
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -74,7 +74,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     props: {
       info: syllabusInfo,
       apiUrl: apiUrl,
-    }
+    },
   };
 };
 
@@ -111,7 +111,9 @@ const Syllabus: NextPage<ISyllabusProps> = (props) => {
             <p className="small text-muted mb-0">ID: {sid}</p>
             <p className="course-instructors p-0 m-0">
               <Link href={`/user/${props.info.user.uuid}`}>
-                {props.info.user ? props.info.user.name : "Course Author / Instructor"}
+                {props.info.user
+                  ? props.info.user.name
+                  : "Course Author / Instructor"}
               </Link>
             </p>
 
@@ -129,7 +131,10 @@ const Syllabus: NextPage<ISyllabusProps> = (props) => {
                 : "Course description goes here..."}
             </p>
             <h2 className="h3">Course Resources</h2>
-            <SyllabusResources resources={props.info.attachments} apiUrl={props.apiUrl}/>
+            <SyllabusResources
+              resources={props.info.attachments}
+              apiUrl={props.apiUrl}
+            />
             <SyllabusFooter
               author={props.info.user.name}
               authorUUID={props.info.user.uuid}

@@ -7,7 +7,7 @@ import Button from "react-bootstrap/Button";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { setEnvironmentData } from "worker_threads";
 
-export function GlobalNav() {
+const GlobalNav: React.FunctionComponent = () => {
   const { data: session, status } = useSession();
   if (status === "authenticated") {
     return (
@@ -75,7 +75,11 @@ export function GlobalNav() {
               <Nav.Link href="/about" className="py-3 text-end">
                 About
               </Nav.Link>
-              <Nav.Link href="/auth/signin" className="py-3 text-end" id="login-btn">
+              <Nav.Link
+                href="/auth/signin"
+                className="py-3 text-end"
+                id="login-btn"
+              >
                 Login
               </Nav.Link>
             </Nav>
@@ -84,4 +88,6 @@ export function GlobalNav() {
       </Navbar>
     );
   }
-}
+};
+
+export default GlobalNav;
