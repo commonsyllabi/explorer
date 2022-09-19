@@ -6,9 +6,11 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import Button from "react-bootstrap/Button";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { setEnvironmentData } from "worker_threads";
+import Router from "next/router";
 
 const GlobalNav: React.FunctionComponent = () => {
   const { data: session, status } = useSession();
+
   if (status === "authenticated") {
     return (
       <Navbar
@@ -23,7 +25,7 @@ const GlobalNav: React.FunctionComponent = () => {
         <Container>
           <Navbar.Collapse id="global-nav" className="flex-row-reverse">
             <Nav className="float-end">
-              <Nav.Link href="/NewSyllabus" className="py-3 text-end">
+              <Nav.Link href="/NewSyllabus" className="py-3 text-end" data-cy="newSyllabusLink">
                 + New Syllabus
               </Nav.Link>
 
@@ -50,7 +52,9 @@ const GlobalNav: React.FunctionComponent = () => {
                 <NavDropdown.Item
                   href="#"
                   className="py-2 text-end"
-                  onClick={() => signOut({ callbackUrl: "/" })}
+                  onClick={() => signOut({ redirect: false }).then((result) => {
+                    Router.push('/')
+                  })}
                 >
                   Sign Out
                 </NavDropdown.Item>
