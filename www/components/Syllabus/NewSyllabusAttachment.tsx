@@ -1,5 +1,5 @@
 import { Container, Badge, Form, Tabs, Tab, Button } from "react-bootstrap";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface IAttachment {
     id: string,
@@ -28,12 +28,16 @@ const NewSyllbusAttachment: React.FunctionComponent<INewSyllabusAttachmentProps>
         type: "",
     })
 
+    useEffect(() => {
+        console.log(`updating attached data: ${attachmentData}`)
+        updateAttachment(attachmentData)
+    }, [attachmentData])
+
     const handleAttachmentName = (event: React.SyntheticEvent): void => {
         event.preventDefault();
 
         const t = event.target as HTMLInputElement
         setAttachmentData({ ...attachment, name: t.value })
-        updateAttachment(attachmentData)
     }
 
     const handleAttachmentDescription = (event: React.SyntheticEvent): void => {
@@ -58,7 +62,6 @@ const NewSyllbusAttachment: React.FunctionComponent<INewSyllabusAttachmentProps>
             size: (f.size * 0.000001).toFixed(2), //-- from byte to megabyte
             type: f.type
         })
-        updateAttachment(attachmentData)
     };
 
     const handleAttachmentURL = (event: React.SyntheticEvent): void => {
@@ -66,7 +69,6 @@ const NewSyllbusAttachment: React.FunctionComponent<INewSyllabusAttachmentProps>
 
         const t = event.target as HTMLInputElement
         setAttachmentData({ ...attachment, url: t.value })
-        updateAttachment(attachmentData)
     }
 
     const handleRemoveAttachment = (): void => {
@@ -96,7 +98,7 @@ const NewSyllbusAttachment: React.FunctionComponent<INewSyllabusAttachmentProps>
                             <Form.Label>
                                 Name*
                             </Form.Label>
-                            <Form.Control onChange={handleAttachmentName} type="text" id="name" placeholder="required" data-cy={"attachment-name-"+attachment.id}/>
+                            <Form.Control onChange={handleAttachmentName} type="text" id="name" placeholder="required" data-cy={"attachment-name-" + attachment.id} />
                         </Form.Group>
 
                         <Form.Group>
@@ -104,7 +106,7 @@ const NewSyllbusAttachment: React.FunctionComponent<INewSyllabusAttachmentProps>
                                 Description
                             </Form.Label>
                             <Form.Control onChange={handleAttachmentDescription} type="text" id="description" placeholder="optional"
-                            data-cy={"attachment-description-"+attachment.id}/>
+                                data-cy={"attachment-description-" + attachment.id} />
                         </Form.Group>
 
                         <Tabs defaultActiveKey="File" className="mt-3">
@@ -114,7 +116,7 @@ const NewSyllbusAttachment: React.FunctionComponent<INewSyllabusAttachmentProps>
                                         Upload your file here
                                     </Form.Label>
                                     <Form.Control onChange={handleAttachmentFile} type="file" id="file"
-                                    data-cy={"attachment-file-"+attachment.id}/>
+                                        data-cy={"attachment-file-" + attachment.id} />
                                 </Form.Group>
                             </Tab>
                             <Tab eventKey="URL" title="URL">
@@ -122,13 +124,13 @@ const NewSyllbusAttachment: React.FunctionComponent<INewSyllabusAttachmentProps>
                                     <Form.Label>
                                         Enter your URL here
                                     </Form.Label>
-                                    <Form.Control onChange={handleAttachmentURL} type="text" id="url" 
-                                    data-cy={"attachment-url-"+attachment.id}/>
+                                    <Form.Control onChange={handleAttachmentURL} type="text" id="url"
+                                        data-cy={"attachment-url-" + attachment.id} />
                                 </Form.Group>
                             </Tab>
                         </Tabs>
                     </div>
-                    <Button variant="danger" size="sm" className="m-3" onClick={handleRemoveAttachment} data-cy={"attachment-remove-"+attachment.id}>
+                    <Button variant="danger" size="sm" className="m-3" onClick={handleRemoveAttachment} data-cy={"attachment-remove-" + attachment.id}>
                         Remove
                     </Button>
                 </div>
