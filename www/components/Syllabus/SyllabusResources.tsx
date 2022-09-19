@@ -5,15 +5,13 @@ import { IResources, ISyllabus } from "types";
 import SyllabusResource from "components/Syllabus/SyllabusResource";
 
 interface ISyllabusResourcesProps {
-  resources: IResources[];
-  apiUrl: string;
+  resources?: IResources[];
 }
 
 const SyllabusResources: React.FunctionComponent<ISyllabusResourcesProps> = ({
   resources,
-  apiUrl
 }) => {
-  if (resources.length < 1) {
+  if (resources.length < 1 || resources === undefined) {
     return <p className="muted">No resources to show.</p>;
   }
   const resourceEls = resources.map((resource) => (
@@ -23,7 +21,6 @@ const SyllabusResources: React.FunctionComponent<ISyllabusResourcesProps> = ({
       resourceDescription={resource.description}
       resourceType={resource.type}
       key={resource.uuid}
-      apiUrl={apiUrl}
     />
   ));
   return <div className="syllabus-resources">{resourceEls}</div>;
