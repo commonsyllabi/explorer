@@ -4,7 +4,10 @@ import { getSession, useSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
 
-// Bootstrap
+//Interfaces
+import { IAttachment } from "types";
+
+//Bootstrap
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -16,7 +19,6 @@ import Badge from "react-bootstrap/Badge";
 
 //Components
 import GlobalNav from "components/GlobalNav";
-import NewSyllbusAttachment from "components/Syllabus/NewSyllabusAttachment";
 import NewSyllabusAttachment from "components/Syllabus/NewSyllabusAttachment";
 
 //Data
@@ -44,12 +46,31 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
 
   useEffect(() => {
     setValidated(true);
+    setUpCountries();
   }, []);
 
   //Set up list of countries (for use in "Add Institution" section)
   const setUpCountries = () => {
     countries.registerLocale(require("i18n-iso-countries/langs/en.json"));
-    console.log(countries.getNames("en", { select: "official" }));
+    // console.log(countries.getNames("en", { select: "official" }));
+    const countriesList = countries.getNames("en", { select: "official" });
+    let numericCountriesList: { [key: string]: string } = {};
+    Object.keys(countriesList).forEach((countryAlpha2Code) => {
+      const countryNumCode = countries.alpha2ToNumeric(countryAlpha2Code);
+      numericCountriesList[countriesList[countryAlpha2Code]] = countryNumCode;
+    });
+    // console.log(numericCountriesList);
+    return numericCountriesList;
+  };
+
+  const generateCountryOptions = () => {
+    const countries = setUpCountries();
+    const elements = Object.keys(countries).map((countryName) => (
+      <option key={countries[countryName]} value={countries[countryName]}>
+        {countryName}
+      </option>
+    ));
+    return <>{elements}</>;
   };
 
   //Set up list of languages and generate language dropdown elements
@@ -93,23 +114,15 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     duration: 0,
   });
 
-  const [institutionData, setInstitutionData] = useState({
-    name: "",
-    country: "",
-    url: "",
-    date: {
+  const [institutionData, setInstitutionData] = useState([
+    {
+      name: "",
+      country: "",
+      url: "",
       year: "",
       term: "",
     },
-  });
-
-  interface IAttachment {
-    id: string;
-    name: string;
-    description: string;
-    file: File;
-    url: string;
-  }
+  ]);
 
   const [log, setLog] = useState("");
   const [error, setError] = useState("");
@@ -135,7 +148,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     const postHeader = new Headers();
     if (session != null && session.user != null)
       postHeader.append("Authorization", `Bearer ${session.user.token}`);
-    else console.warn("no session found!");
+    else console.warn("No session found!");
 
     // Make POST request body
     let body = new FormData();
@@ -168,8 +181,11 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
           setError("");
           // institution
           const i = new FormData();
-          i.append("name", "School");
+          i.append("name", institutionData[0].name);
+          i.append("url", institutionData[0].url);
           i.append("country", "275");
+          i.append("date_year", institutionData[0].year);
+          i.append("date_term", institutionData[0].term);
 
           const instit_endpoint = new URL(
             `/syllabi/${body.uuid}/institutions`,
@@ -256,19 +272,13 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     } else {
       setFormData({ ...formData, [t.id]: t.value });
     }
-    // console.log(`${[t.id]}: ${t.value}`);
+    console.log(`${[t.id]}: ${t.value}`);
   };
 
   const handleInstitutionChange = (event: React.SyntheticEvent) => {
     const t = event.target as HTMLInputElement;
-    if (t.id === "term" || t.id === "year") {
-      const key = `date.` + t.id;
-      setInstitutionData({ ...institutionData, ["date." + t.id]: t.value });
-      console.log(`${key}: ${t.value}`);
-    } else {
-      setInstitutionData({ ...institutionData, [t.id]: t.value });
-      console.log(`${[t.id]}: ${t.value}`);
-    }
+    setInstitutionData([{ ...institutionData[0], [t.id]: t.value }]);
+    console.log(`${[t.id]}: ${t.value}`);
   };
 
   //Get public/private form label
@@ -360,13 +370,13 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                       <Form.Label htmlFor="name" className="mb-0">
                         Institution*
                       </Form.Label>
-                      <div className="col-6">
+                      <div className="col-10">
                         <Form.Control
                           required
                           id="name"
-                          placeholder="Hogwarts University"
+                          placeholder="Black Mountain College"
                           onChange={handleInstitutionChange}
-                          value={institutionData.name}
+                          value={institutionData[0].name}
                           data-cy="instutionNameInput"
                         />
                       </div>
@@ -375,75 +385,75 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                         course was taught.
                       </Form.Control.Feedback>
                     </Form.Group>
+
                     <Form.Group className="mb-1">
-                      <Form.Label htmlFor="country" className="mb-0">
-                        Country*
-                      </Form.Label>
-                      <div className="col-6">
-                        <Form.Control
-                          required
-                          id="country"
-                          placeholder="UK"
-                          onChange={handleInstitutionChange}
-                          value={institutionData.country}
-                          data-cy="instutionCountryInput"
-                        />
-                      </div>
-                      <Form.Control.Feedback type="invalid">
+                      <Form.Label htmlFor="language">Country*</Form.Label>
+                      <Form.Select
+                        id="country"
+                        onChange={handleInstitutionChange}
+                        data-cy="institutionCountryInput"
+                      >
+                        <option> – </option>
+                        {generateCountryOptions()}
+                      </Form.Select>
+                      <Form.Text>
                         Please provide the country where this course was taught.
-                      </Form.Control.Feedback>
+                      </Form.Text>
                     </Form.Group>
+
                     <Form.Group className="mb-1">
                       <Form.Label htmlFor="url" className="mb-0">
                         Institution Website
                       </Form.Label>
-                      <div className="col-6">
+                      <div className="col-8">
                         <Form.Control
                           id="url"
                           placeholder="http://hogwarts.com"
                           onChange={handleInstitutionChange}
-                          value={institutionData.url}
+                          value={institutionData[0].url}
                           data-cy="instutionUrlInput"
                         />
                       </div>
                     </Form.Group>
-                    <Form.Group className="mb-1">
-                      <Form.Label htmlFor="year" className="mb-0">
-                        Year*
-                      </Form.Label>
-                      <div className="col-3">
-                        <Form.Control
-                          required
-                          id="year"
-                          placeholder="2022"
-                          onChange={handleInstitutionChange}
-                          value={institutionData.date.year}
-                          data-cy="instutionYearInput"
-                        />
+                    <div className="row">
+                      <div className="col-2">
+                        <Form.Group className="mb-1">
+                          <Form.Label htmlFor="year" className="mb-0">
+                            Year*
+                          </Form.Label>
+                          <Form.Control
+                            required
+                            id="year"
+                            placeholder="2022"
+                            onChange={handleInstitutionChange}
+                            value={institutionData[0].year}
+                            data-cy="instutionYearInput"
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            Please provide the year this course was taught.
+                          </Form.Control.Feedback>
+                        </Form.Group>
                       </div>
-                      <Form.Control.Feedback type="invalid">
-                        Please provide the year this course was taught.
-                      </Form.Control.Feedback>
-                    </Form.Group>
-                    <Form.Group className="mb-1">
-                      <Form.Label htmlFor="term" className="mb-0">
-                        Term*
-                      </Form.Label>
-                      <div className="col-3">
-                        <Form.Control
-                          required
-                          id="term"
-                          placeholder="Spring Semester"
-                          onChange={handleInstitutionChange}
-                          value={institutionData.date.term}
-                          data-cy="instutionTermInput"
-                        />
+                      <div className="col-4">
+                        <Form.Group className="mb-1">
+                          <Form.Label htmlFor="term" className="mb-0">
+                            Term*
+                          </Form.Label>
+                          <Form.Control
+                            required
+                            id="term"
+                            placeholder="Spring Semester"
+                            onChange={handleInstitutionChange}
+                            value={institutionData[0].term}
+                            data-cy="instutionTermInput"
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            Please provide the academic term during which this
+                            course was taught.
+                          </Form.Control.Feedback>
+                        </Form.Group>
                       </div>
-                      <Form.Control.Feedback type="invalid">
-                        Please provide the academic term during which this
-                        course was taught.
-                      </Form.Control.Feedback>
-                    </Form.Group>
+                    </div>
                   </div>
 
                   <Form.Group className="mb-3">
@@ -497,7 +507,8 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                         Duration of course in weeks
                       </Form.Label>
                       <Form.Control
-                        id="durcation"
+                        id="duration"
+                        onChange={handleChange}
                         placeholder="3"
                         data-cy="courseDurationInput"
                       />
@@ -507,12 +518,11 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                   <hr className="my-3" />
 
                   <Form.Group className="mb-3">
-                    <Form.Label htmlFor="courseDescription">
-                      Description*
-                    </Form.Label>
+                    <Form.Label htmlFor="description">Description*</Form.Label>
                     <Form.Control
                       required
-                      id="courseDescription"
+                      id="description"
+                      onChange={handleChange}
                       as="textarea"
                       rows={4}
                       placeholder="Course outline..."
@@ -529,6 +539,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                     </Form.Label>
                     <Form.Control
                       id="learning_outcomes"
+                      onChange={handleChange}
                       as="textarea"
                       rows={4}
                       placeholder="Course learning outcomes..."
@@ -542,6 +553,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                     </Form.Label>
                     <Form.Control
                       id="topic_outlines"
+                      onChange={handleChange}
                       as="textarea"
                       rows={4}
                       placeholder="Course topics outline..."
@@ -553,6 +565,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                     <Form.Label htmlFor="readings">Readings</Form.Label>
                     <Form.Control
                       id="readings"
+                      onChange={handleChange}
                       as="textarea"
                       rows={4}
                       placeholder="Course readings..."
@@ -566,6 +579,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                     </Form.Label>
                     <Form.Control
                       id="grading_rubric"
+                      onChange={handleChange}
                       as="textarea"
                       rows={4}
                       placeholder="Course grading rubric..."
