@@ -59,7 +59,6 @@ interface ISyllabusProps {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const syllabusId = context.params!.sid;
   const apiUrl = process.env.API_URL;
-  // const url = require('node:url').resolve(apiUrl, "syllabi/"+syllabusId)
   const url = new URL(`syllabi/${syllabusId}`, apiUrl);
 
   console.log(`SYLLABUS ID: ${syllabusId}`);
