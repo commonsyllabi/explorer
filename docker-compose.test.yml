@@ -18,11 +18,9 @@ services:
       timeout: 3s
       retries: 10
 
-  backend_test_explorer:
-    container_name: backend_test_explorer
-    build:
-      context: .
-      dockerfile: tests/Dockertest.back
+  backend_explorer:
+    container_name: backend_explorer
+    build: .
     depends_on:
       db_test_explorer:
         condition: service_healthy
@@ -39,6 +37,31 @@ services:
       RUN_FIXTURES: "true"
     tmpfs:
       - /tmp
+
+  frontend_test_explorer:
+    container_name: frontend_test_explorer
+    build:
+      context: .
+      dockerfile: tests/Dockertest.next.front
+    environment:
+      API_URL: http://backend_explorer:3046
+      NEXT_PUBLIC_API_URL: http://backend_explorer:3046
+      NEXTAUTH_URL: http://backend_explorer3046/auth
+    depends_on:
+      - backend_explorer
+
+  e2e_tests:
+    container_name: e2e_tests
+    image: cypress
+    build:
+      context: .
+      dockerfile: tests/Dockertest.cypress.front
+    depends_on:
+      - frontend_test_explorer
+    environment:
+      - CYPRESS_baseUrl=http://frontend_test_explorer:3000
+    volumes:
+      - ./www/cypress:/cypress
 
 volumes:
   pgdata_explorer_test:
