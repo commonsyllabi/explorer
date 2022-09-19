@@ -43,15 +43,6 @@ export interface ISyllabus {
   user: IUser;
   tags?: string[];
   description: string;
-  resources?: [
-    {
-      uuid: string;
-      name: string;
-      description: string;
-      url: string;
-      type: string;
-    }
-  ];
   learning_outcomes?: string;
   attachments?: IResources[];
 }
