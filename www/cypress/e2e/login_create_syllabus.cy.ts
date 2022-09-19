@@ -2,16 +2,26 @@
 // Disable ESLint to prevent failing linting inside the Next.js repo.
 
 
-let newSyllabusUUID
+let newSyllabusUUID : String
 describe('Create a new syllabus', () => {
 
-    it('Navigates to the home page', () => {
-        cy.visit('http://localhost:3000/')
+    it('navigates to the home page', () => {
+        cy.visit('/')
+
+        cy.get('[data-cy="syllabusCard"]').should('have.length', 4)
 
         cy.get('[data-cy="Login"]').click()
     })
 
-    it('Logs in and creates a syllabus', () => {
+    it('logs in and creates a syllabus', () => {
+        cy.intercept('GET', '/auth/signin',(req) => {
+            console.log('intercepted auth')
+            req.continue((res) => {
+              console.log('intercepted auth res')
+              if(res.statusCode != 200) throw new Error(`Error logging the user in ${res.statusMessage}`)
+            })
+          }).as('login')
+
         cy.intercept('POST', '/syllabi/', (req) => {
             req.continue((res) => {
                 console.log('[cypress] created syllabus', res);
@@ -42,8 +52,8 @@ describe('Create a new syllabus', () => {
         cy.get('[data-cy="Login-password"]').type("12345678")
 
         cy.get('[data-cy="Login-submit"]').click()
-
-        cy.get('[data-cy="Logged user"]')
+        cy.wait('@login')
+        // cy.get('[data-cy="Logged user"]')
 
         cy.contains('+ New Syllabus').click()
 
@@ -77,11 +87,11 @@ describe('Create a new syllabus', () => {
     })
 })
 
-  describe('It visits the newly created syllabus', () => {
-    it('should navigate to the syllabus page', () => {
+  describe('Visit the newly created syllabus', () => {
+    it('navigate to the syllabus page', () => {
         if(!newSyllabusUUID) throw new Error(`incorrect newSyllabusUUI: ${newSyllabusUUID}`)
         
-        cy.visit(`http://localhost:3000/syllabus/${newSyllabusUUID}`)
+        cy.visit(`/syllabus/${newSyllabusUUID}`)
 
         cy.get('h1').contains('Test class 1')
         cy.get('.course-instructors').children().first().contains('Pierre Depaz')

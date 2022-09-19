@@ -21,7 +21,7 @@ import Router from "next/router";
 
 export const getStaticProps: GetStaticProps = async () => {
   const states = ["Login", "Sign up"];
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  const apiUrl = process.env.NODE_ENV == 'test' ? 'http://backend_explorer:3046/' : process.env.NEXT_PUBLIC_API_URL;
   return {
     props: { apiUrl: apiUrl, states: states },
   };

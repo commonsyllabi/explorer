@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
-import { GlobalNav } from "components/GlobalNav";
+import GlobalNav from "components/GlobalNav";
 
 const About: NextPage = () => {
   return (

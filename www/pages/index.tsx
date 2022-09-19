@@ -15,10 +15,8 @@ import { ISyllabus } from "types";
 import { useEffect } from "react";
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const apiUrl = process.env.API_URL;
-  const url = require("node:url").resolve(apiUrl, "syllabi/");
-
-  console.log(`LANDING SYLLABI FETCH URL: ${url}`);
+  const apiUrl = process.env.NODE_ENV == 'test' ? 'http://backend_explorer:3046/' : process.env.API_URL;
+  const url = new URL("syllabi/", apiUrl);
 
   const res = (await fetch(url).catch((err) => {
     console.log(`error fetching backend: ${err}`);
@@ -40,7 +38,6 @@ export const getServerSideProps: GetServerSideProps = async () => {
   }
   const syllabiListings = await res.json();
 
-  console.log(`FETCHED ${syllabiListings.length} SYLLABI`);
   return {
     props: {
       syllabiListings: syllabiListings,

@@ -22,9 +22,6 @@ const languages = require("@cospired/i18n-iso-languages");
 
 export const getStaticProps: GetStaticProps = async () => {
   const apiUrl = process.env.API_URL;
-
-  console.log(`GetStaticProps API URL: ${apiUrl}`);
-
   return {
     props: { apiUrl: apiUrl },
   };
