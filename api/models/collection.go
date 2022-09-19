@@ -59,7 +59,7 @@ func GetCollection(uuid uuid.UUID) (Collection, error) {
 
 func GetAllCollections() ([]Collection, error) {
 	coll := make([]Collection, 0)
-	result := db.Find(&coll)
+	result := db.Preload("User").Find(&coll)
 	return coll, result.Error
 }
 
