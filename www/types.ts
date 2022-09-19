@@ -54,3 +54,11 @@ export interface IResources {
   description: string;
   type: string;
 }
+
+export interface IAttachment {
+  id: string;
+  name: string;
+  description: string;
+  file: File;
+  url: string;
+}
