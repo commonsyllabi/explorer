@@ -27,7 +27,7 @@ export default NextAuth({
                     redirect: 'follow'
                 };
 
-                const apiUrl = process.env.NODE_ENV == 'test' ? 'http://backend_explorer:3046/' : process.env.API_URL;
+                const apiUrl = process.env.NODE_ENV == 'test' ? 'http://backend_explorer:3046/' : process.env.NEXT_PUBLIC_API_URL;
                 const login_endpoint = new URL('/login', apiUrl)
                 const response = await fetch(login_endpoint.href, options)
                 if (response.ok) {

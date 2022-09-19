@@ -21,7 +21,10 @@ const countries = require("i18n-iso-countries");
 const languages = require("@cospired/i18n-iso-languages");
 
 export const getStaticProps: GetStaticProps = async () => {
-  const apiUrl = process.env.API_URL;
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
+  console.log(`GetStaticProps API URL: ${apiUrl}`);
+
   return {
     props: { apiUrl: apiUrl },
   };
@@ -223,11 +226,11 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
 
   const removeAttachment = (id: String) => {
     let u = attachmentData.filter((a) => {
-      return a.id != id
-    })
+      return a.id != id;
+    });
 
-    setAttachmentData(u)
-  }
+    setAttachmentData(u);
+  };
 
   //Handle form change
   const handleChange = (event: React.SyntheticEvent) => {
@@ -481,7 +484,11 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                     <div className="mb-5">
                       <h2 className="h4">Attachments</h2>
                       {attachments}
-                      <Button type="button" onClick={handleNewAttachment} data-cy="attachment-add">
+                      <Button
+                        type="button"
+                        onClick={handleNewAttachment}
+                        data-cy="attachment-add"
+                      >
                         Add attachment
                       </Button>
                     </div>

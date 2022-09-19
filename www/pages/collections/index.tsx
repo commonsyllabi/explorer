@@ -20,7 +20,7 @@ interface ICollectionsProps {
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const apiUrl = process.env.API_URL;
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   const url = require("node:url").resolve(apiUrl, "collections/");
 
   console.log(`COLLECTIONS FETCH URL: ${url}`);

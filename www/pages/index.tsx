@@ -16,8 +16,10 @@ import { useEffect } from "react";
 import Favicons from "components/head/favicons";
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const apiUrl = process.env.NODE_ENV == 'test' ? 'http://backend_explorer:3046/' : process.env.API_URL;
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   const url = new URL("syllabi/", apiUrl);
+
+  console.log(`LANDING SYLLABI FETCH URL: ${url}`);
 
   const res = (await fetch(url).catch((err) => {
     console.log(`error fetching backend: ${err}`);
