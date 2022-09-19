@@ -21,7 +21,7 @@ const countries = require("i18n-iso-countries");
 const languages = require("@cospired/i18n-iso-languages");
 
 export const getStaticProps: GetStaticProps = async () => {
-  const apiUrl = process.env.API_URL;
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
   console.log(`GetStaticProps API URL: ${apiUrl}`);
 

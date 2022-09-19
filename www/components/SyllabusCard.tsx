@@ -52,10 +52,10 @@ const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = (props) => {
           year={props.year}
         />
         <Card.Title>
-          {/* TODO: make public /private tags display only if logged in */}
           <Link href={getSyllabiUrl(props.uuid)}>
             <a>{props.title}</a>
           </Link>
+          {/* TODO: make public /private tags display only if logged in */}
           <PubBadge isPublic={getVisbility(props.status)} />
         </Card.Title>
         <div className="course-author">

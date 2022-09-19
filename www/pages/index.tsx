@@ -16,7 +16,7 @@ import { useEffect } from "react";
 import Favicons from "components/head/favicons";
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const apiUrl = process.env.API_URL;
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   const url = require("node:url").resolve(apiUrl, "syllabi/");
 
   console.log(`LANDING SYLLABI FETCH URL: ${url}`);

@@ -16,7 +16,7 @@ import { getSyllabusCards } from "components/utils/getSyllabusCards";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const collectionId = context.params!.cid;
-  const apiUrl = process.env.API_URL;
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   const url = new URL(`collections/${collectionId}`, apiUrl);
 
   console.log(`USER ID: ${collectionId}`);

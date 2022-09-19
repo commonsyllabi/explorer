@@ -27,7 +27,7 @@ export default NextAuth({
                     redirect: 'follow'
                 };
 
-                const login_endpoint = new URL('/login', process.env.API_URL)
+                const login_endpoint = new URL('/login', process.env.NEXT_PUBLIC_API_URL)
                 const response = await fetch(login_endpoint.href, options)
                 if (response.ok) {
                     const data = await response.json()
