@@ -1,6 +1,7 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import Image from "next/image";
+
+import Favicons from "components/head/favicons";
 import GlobalNav from "components/GlobalNav";
 
 const About: NextPage = () => {
@@ -9,8 +10,11 @@ const About: NextPage = () => {
       <GlobalNav />
       <Head>
         <title>About Syllabi Explorer</title>
-        <meta name="description" content="About Syllabi Explorer" />
-        <link rel="icon" href="/favicon.ico" />
+        <meta
+          name="description"
+          content="About: Syllabi Explorer is an open platform for browsing and sharing syllabi."
+        />
+        <Favicons />
       </Head>
       <div>
         <h1 className="pt-3">About Syllabi Explorer</h1>
@@ -43,7 +47,13 @@ const About: NextPage = () => {
           &nbsp;&nbsp;|&nbsp;&nbsp;
           <a href="mailto:team@common-syllabi.org">Contact</a>
           &nbsp;&nbsp;|&nbsp;&nbsp;
-          <a href="https://tinyletter.com/common-syllabi" target="_blank" rel="noopener noreferrer">Subscribe to the newsletter</a>
+          <a
+            href="https://tinyletter.com/common-syllabi"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Subscribe to the newsletter
+          </a>
         </p>
       </div>
     </div>

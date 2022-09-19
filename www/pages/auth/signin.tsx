@@ -18,6 +18,7 @@ import React, { useState } from "react";
 
 import { useSession, signIn, signOut } from "next-auth/react";
 import Router from "next/router";
+import Favicons from "components/head/favicons";
 
 export const getStaticProps: GetStaticProps = async () => {
   const states = ["Login", "Sign up"];
@@ -150,7 +151,7 @@ const SignIn: NextPage<IAuthProps> = (props) => {
         <Head>
           <title>Sign In: Syllabi Explorer</title>
           <meta name="description" content="Sign in to Syllabi Explorer" />
-          <link rel="icon" href="/favicon.ico" />
+          <Favicons />
         </Head>
 
         <Container fluid>
