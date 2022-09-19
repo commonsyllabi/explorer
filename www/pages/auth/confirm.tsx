@@ -4,6 +4,7 @@ import Head from "next/head";
 import GlobalNav from "components/GlobalNav";
 
 import { Row, Col, Container } from "react-bootstrap";
+import Favicons from "components/head/favicons";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -51,7 +52,7 @@ const Confirm: NextPage<IConfirmProps> = (props) => {
       <Head>
         <title>Sign In: Syllabi Explorer</title>
         <meta name="description" content="Sign in to Syllabi Explorer" />
-        <link rel="icon" href="/favicon.ico" />
+        <Favicons />
       </Head>
       <Container fluid>
         <GlobalNav />

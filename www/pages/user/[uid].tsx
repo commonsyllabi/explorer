@@ -6,6 +6,7 @@ import Link from "next/link";
 
 import { IUser } from "types";
 
+import Favicons from "components/head/favicons";
 import GlobalNav from "components/GlobalNav";
 import CollectionCard from "components/CollectionCard";
 import SyllabusCard from "components/SyllabusCard";
@@ -50,8 +51,11 @@ const About: NextPage<IUser> = (props) => {
     <>
       <Head>
         <title>{props.name}</title>
-        <meta name="description" content="Syllabi Explorer | user name" />
-        <link rel="icon" href="/favicon.ico" />
+        <meta
+          name="description"
+          content={`${props.name} shares and collects syllabi on Syllabi Explorer.`}
+        />
+        <Favicons />
       </Head>
 
       <Container fluid id="header-section" className="sticky-top">
