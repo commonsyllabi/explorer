@@ -43,7 +43,7 @@ const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = (props) => {
   };
 
   return (
-    <Card>
+    <Card data-cy="syllabusCard">
       <Card.Body>
         <SyllabusSchoolCodeYear
           institution={props.institution}

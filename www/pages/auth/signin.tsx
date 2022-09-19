@@ -22,7 +22,7 @@ import Favicons from "components/head/favicons";
 
 export const getStaticProps: GetStaticProps = async () => {
   const states = ["Login", "Sign up"];
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  const apiUrl = process.env.NODE_ENV == 'test' ? 'http://backend_explorer:3046/' : process.env.NEXT_PUBLIC_API_URL;
   return {
     props: { apiUrl: apiUrl, states: states },
   };
@@ -55,7 +55,6 @@ const SignIn: NextPage<IAuthProps> = (props) => {
     const u = t.children[0].children[1] as HTMLInputElement;
     const p = t.children[1].children[1] as HTMLInputElement;
     console.warn("Sanitize the input!");
-    // TODO: catch signin error
     signIn("credentials", {
       username: u.value,
       password: p.value,

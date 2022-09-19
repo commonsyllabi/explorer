@@ -103,7 +103,7 @@ const Syllabus: NextPage<ISyllabusProps> = (props) => {
         <GlobalNav />
         <BreadcrumbsBar
           user={props.info.user.name}
-          userId={props.info.user_uuid}
+          userId={props.info.user.uuid}
           category="syllabi"
           pageTitle={props.info.title}
         />

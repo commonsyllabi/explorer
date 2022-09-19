@@ -1,0 +1,5 @@
+FROM cypress/included:10.8.0
+
+COPY ./www .
+ENV CI=1
+# RUN npx cypress verify

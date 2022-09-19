@@ -17,7 +17,7 @@ import Favicons from "components/head/favicons";
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-  const url = require("node:url").resolve(apiUrl, "syllabi/");
+  const url = new URL("syllabi/", apiUrl);
 
   console.log(`LANDING SYLLABI FETCH URL: ${url}`);
 
@@ -41,7 +41,6 @@ export const getServerSideProps: GetServerSideProps = async () => {
   }
   const syllabiListings = await res.json();
 
-  console.log(`FETCHED ${syllabiListings.length} SYLLABI`);
   return {
     props: {
       syllabiListings: syllabiListings,

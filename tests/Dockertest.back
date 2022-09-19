@@ -15,6 +15,6 @@ RUN chmod -R a+rwX /app
 ENV CGO_ENABLED=0
 RUN mkdir -p /go/tmp
 ENV TMPDIR=/go/tmp
-ENV GIN_MODE=test
+ENV API_MODE=test
 RUN chmod -R a+rwX /go/tmp
 CMD ["go", "test", "-p", "1", "./...", "-cover"]

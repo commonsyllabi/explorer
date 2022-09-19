@@ -104,8 +104,6 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
   //Handle form submission
   const apiUrl = props.apiUrl;
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    console.log("handleSubmit() called");
-
     // TODO: Validate form
     const form = event.currentTarget;
     // if (form.checkValidity() === false) {
@@ -149,7 +147,6 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
         }
       })
       .then((body) => {
-        console.log(body);
         if (typeof body == "string") {
           // if it's an error, it returns text
           setError(body);
@@ -219,11 +216,17 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
   };
 
   const updateAttachment = (updated: IAttachment) => {
-    console.log(`updating attachment #${updated.id} ${updated.url}`);
+    let u = attachmentData.map((a) => {
+      if (a.id == updated.id) return updated;
+      else return a;
+    });
 
-    let u = attachmentData.map((att) => {
-      if (att.id == updated.id) return updated;
-      else return att;
+    setAttachmentData(u);
+  };
+
+  const removeAttachment = (id: String) => {
+    let u = attachmentData.filter((a) => {
+      return a.id != id;
     });
 
     setAttachmentData(u);
@@ -260,7 +263,9 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     attachments.push(
       <NewSyllabusAttachment
         attachment={attachmentData[i]}
-        updateData={updateAttachment}
+        updateAttachment={updateAttachment}
+        removeAttachment={removeAttachment}
+        key={`attachment-${i}`}
       />
     );
   }
@@ -357,6 +362,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                         id="academic_level"
                         onChange={handleChange}
                         value={formData.academic_level}
+                        data-cy="academicLevelInput"
                       >
                         <option value="0">Other</option>
                         <option value="1">Bachelor</option>
@@ -366,7 +372,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                     </Form.Group>
 
                     <Form.Group className="mb-3">
-                      <Form.Label htmlFor="language">Language</Form.Label>
+                      <Form.Label htmlFor="language">Language*</Form.Label>
                       <Form.Select
                         id="language"
                         onChange={handleChange}
@@ -478,7 +484,11 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                     <div className="mb-5">
                       <h2 className="h4">Attachments</h2>
                       {attachments}
-                      <Button type="button" onClick={handleNewAttachment}>
+                      <Button
+                        type="button"
+                        onClick={handleNewAttachment}
+                        data-cy="attachment-add"
+                      >
                         Add attachment
                       </Button>
                     </div>
