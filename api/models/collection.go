@@ -22,7 +22,7 @@ type Collection struct {
 	Syllabi  []*Syllabus `gorm:"many2many:collections_syllabi;" json:"syllabi"`
 
 	Name string `gorm:"not null" json:"name" form:"name" binding:"required"`
-	Slug string `gorm:"" json:""`
+	Slug string `gorm:"" json:"slug"`
 }
 
 func (c *Collection) BeforeCreate(tx *gorm.DB) (err error) {

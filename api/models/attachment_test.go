@@ -43,6 +43,14 @@ func TestAttachmentModel(t *testing.T) {
 		assert.Equal(t, attachmentURL, att.URL)
 	})
 
+	t.Run("Test get attachment", func(t *testing.T) {
+		att, err := models.GetAttachmentBySlug(attachmentSlug)
+		require.Nil(t, err)
+		assert.Equal(t, att.UUID, attachmentID)
+		assert.Equal(t, attachmentName, att.Name)
+		assert.Equal(t, attachmentURL, att.URL)
+	})
+
 	t.Run("Test get non-existing attachment", func(t *testing.T) {
 		res, err := models.GetAttachment(attachmentUnknownID)
 		assert.NotNil(t, err)

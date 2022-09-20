@@ -29,7 +29,7 @@ type User struct {
 	Education pq.StringArray `gorm:"type:text[]" json:"education" form:"education[]"`
 	Email     string         `gorm:"unique;not null" json:"email" form:"email"`
 	Name      string         `gorm:"default:Anonymous User;not null" json:"name" form:"name"`
-	Slug      string         `gorm:"" json:""`
+	Slug      string         `gorm:"" json:"slug"`
 	Password  []byte         `gorm:"not null" json:"password"`
 	URLs      pq.StringArray `gorm:"type:text[]" json:"urls" form:"urls[]"`
 

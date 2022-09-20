@@ -14,23 +14,27 @@ import (
 var (
 	databaseTestURL   string = "postgres://postgres:postgres@localhost:5432/explorer-test"
 	syllabusID        uuid.UUID
+	syllabusSlug      string
 	syllabusTitle     string
 	syllabusUserName  string
 	syllabusDeleteID  uuid.UUID
 	syllabusUnknownID uuid.UUID
 
 	collectionID        uuid.UUID
+	collectionSlug      string
 	collectionName      string
 	collectionDeleteID  uuid.UUID
 	collectionUnknownID uuid.UUID
 
 	attachmentID        uuid.UUID
+	attachmentSlug      string
 	attachmentName      string
 	attachmentURL       string
 	attachmentDeleteID  uuid.UUID
 	attachmentUnknownID uuid.UUID
 
 	userID         uuid.UUID
+	userSlug       string
 	userDeleteID   uuid.UUID
 	userUnknownID  uuid.UUID
 	userEmail      string
@@ -52,23 +56,27 @@ func TestInitDB(t *testing.T) {
 
 func setup(t *testing.T) func(t *testing.T) {
 	syllabusID = uuid.MustParse("46de6a2b-aacb-4c24-b1e1-3495821f846a")
+	syllabusSlug = "46de6-ungewohnt"
 	syllabusTitle = "Ungewohnt"
 	syllabusUserName = "Justyna Poplawska"
 	syllabusDeleteID = uuid.MustParse("46de6a2b-aacb-4c24-b1e1-3495821f8469")
 	syllabusUnknownID = uuid.New()
 
 	collectionID = uuid.MustParse("b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a9")
+	collectionSlug = "b9e4c-good-stuff"
 	collectionName = "Good Stuff"
 	collectionDeleteID = uuid.MustParse("b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a7")
 	collectionUnknownID = uuid.New()
 
 	attachmentID = uuid.MustParse("c55f0baf-12b8-4bdb-b5e6-2280bff8ab21")
+	attachmentSlug = "c55f0-chair-website"
 	attachmentName = "Chair website"
 	attachmentURL = "https://fg.vanr.tu-berlin.de/ungewohnt/"
 	attachmentDeleteID = uuid.MustParse("c55f0baf-12b8-4bdb-b5e6-2280bff8ab30")
 	attachmentUnknownID = uuid.New()
 
 	userID = uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c8a8")
+	userSlug = "e7b74-justyna-poplawska"
 	userDeleteID = uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c8a9")
 	userUnknownID = uuid.New()
 	userEmail = "jus@pop.com"

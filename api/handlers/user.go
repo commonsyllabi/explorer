@@ -154,31 +154,27 @@ func AddUserInstitution(c echo.Context) error {
 }
 
 func GetUser(c echo.Context) error {
-	slug := c.Param("id")
-	if len(slug) < 5 || !strings.Contains(slug, "-") {
-		zero.Warnf("Not a valid slug: %v", slug)
-	}
-
-	user, err := models.GetUserBySlug(slug)
-	if err == nil {
-		return c.JSON(http.StatusOK, user)
-	}
-
 	id := c.Param("id")
 	uid, err := uuid.Parse(id)
 	if err != nil {
+		//-- uuid failed, attempting slug
+		if len(id) > 5 && strings.Contains(id, "-") {
+			user, err := models.GetUserBySlug(id)
+			if err == nil {
+				return c.JSON(http.StatusOK, user)
+			}
+		}
 		zero.Error(err.Error())
 		return c.String(http.StatusBadRequest, "Not a valid ID")
 	}
 
-	user, err = models.GetUser(uid)
+	user, err := models.GetUser(uid)
 	if err != nil {
-		zero.Errorf("error getting User %v: %s", id, err)
+		zero.Errorf("error getting User by UUID %v: %s", id, err)
 		c.String(http.StatusNotFound, "We couldn't find the User.")
 	}
 
 	return c.JSON(http.StatusOK, user)
-
 }
 
 func RemoveUserInstitution(c echo.Context) error {

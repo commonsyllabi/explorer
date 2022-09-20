@@ -91,6 +91,26 @@ func TestCollectionHandler(t *testing.T) {
 		assert.Equal(t, 1, len(coll.Syllabi))
 	})
 
+	t.Run("Test get collection", func(t *testing.T) {
+		res := httptest.NewRecorder()
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+
+		c := echo.New().NewContext(req, res)
+		c.SetPath("/collections")
+		c.SetParamNames("id")
+		c.SetParamValues(collectionSlug)
+
+		handlers.GetCollection(c)
+		assert.Equal(t, http.StatusOK, res.Code)
+
+		var coll models.Collection
+		err := json.Unmarshal(res.Body.Bytes(), &coll)
+		require.Nil(t, err)
+		assert.Equal(t, collectionID, coll.UUID)
+		assert.Equal(t, "Good Stuff", coll.Name)
+		assert.Equal(t, 1, len(coll.Syllabi))
+	})
+
 	t.Run("Test get collection non-existing ID", func(t *testing.T) {
 		res := httptest.NewRecorder()
 		req := httptest.NewRequest(http.MethodGet, "/", nil)

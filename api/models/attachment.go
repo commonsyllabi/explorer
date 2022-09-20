@@ -20,7 +20,7 @@ type Attachment struct {
 	Syllabus     Syllabus  `gorm:"foreignKey:SyllabusUUID;references:UUID" json:"syllabus"`
 
 	Name        string `gorm:"not null" json:"name" form:"name"`
-	Slug        string `gorm:"" json:""`
+	Slug        string `gorm:"" json:"slug"`
 	Type        string `gorm:"not null" json:"type" form:"type"`
 	Description string `json:"description" form:"description"`
 	URL         string `gorm:"not null" json:"url" form:"url"`
