@@ -75,11 +75,22 @@ func CreateSyllabus(c echo.Context) error {
 }
 
 func GetSyllabus(c echo.Context) error {
-	uid := mustParseUUIDParam(c, "id")
+	//-- query by slug before falling back to
+	slug := c.Param("id")
+	if len(slug) < 5 || !strings.Contains(slug, "-") {
+		zero.Warnf("Not a valid slug: %v", slug)
+	}
+
+	syll, err := models.GetSyllabusBySlug(slug)
+	if err == nil {
+		return c.JSON(http.StatusOK, syll)
+	}
+
+	uid := parseUUIDParam(c, "id")
 	if uid == uuid.Nil {
 		return c.String(http.StatusBadRequest, "Not a valid ID.")
 	}
-	syll, err := models.GetSyllabus(uid)
+	syll, err = models.GetSyllabus(uid)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusNotFound, "There was an error getting the requested Syllabus.")
@@ -93,8 +104,8 @@ func AddSyllabusAttachment(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
-	uid := mustParseUUIDParam(c, "id")
-	att_uid := mustParseUUIDForm(c, "att_id")
+	uid := parseUUIDParam(c, "id")
+	att_uid := parseUUIDForm(c, "att_id")
 	if uid == uuid.Nil || att_uid == uuid.Nil {
 		return c.String(http.StatusBadRequest, "Invalid UUID")
 	}
@@ -114,7 +125,7 @@ func AddSyllabusInstitution(c echo.Context) error {
 		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
 
-	uid := mustParseUUIDParam(c, "id")
+	uid := parseUUIDParam(c, "id")
 	if uid == uuid.Nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusBadRequest, "Not a valid ID.")
@@ -148,11 +159,11 @@ func GetSyllabusAttachments(c echo.Context) error {
 }
 
 func GetSyllabusAttachment(c echo.Context) error {
-	uid := mustParseUUIDParam(c, "id")
+	uid := parseUUIDParam(c, "id")
 	if uid == uuid.Nil {
 		return c.String(http.StatusBadRequest, "Not a valid Syllabus ID.")
 	}
-	att_uid := mustParseUUIDParam(c, "att_id")
+	att_uid := parseUUIDParam(c, "att_id")
 	if att_uid == uuid.Nil {
 		return c.String(http.StatusBadRequest, "Not a valid Attachment ID.")
 	}
@@ -177,7 +188,7 @@ func UpdateSyllabus(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
-	uid := mustParseUUIDParam(c, "id")
+	uid := parseUUIDParam(c, "id")
 	if uid == uuid.Nil {
 		return c.String(http.StatusBadRequest, "Not a valid ID.")
 	}
@@ -225,7 +236,7 @@ func DeleteSyllabus(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
-	uid := mustParseUUIDParam(c, "id")
+	uid := parseUUIDParam(c, "id")
 	if uid == uuid.Nil {
 		return c.String(http.StatusBadRequest, "Invalid UUID")
 	}
@@ -244,11 +255,11 @@ func RemoveSyllabusAttachment(c echo.Context) error {
 		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
 
-	uid := mustParseUUIDParam(c, "id")
+	uid := parseUUIDParam(c, "id")
 	if uid == uuid.Nil {
 		return c.String(http.StatusBadRequest, "Not a valid Syllabus ID")
 	}
-	att_uid := mustParseUUIDParam(c, "att_id")
+	att_uid := parseUUIDParam(c, "att_id")
 	if att_uid == uuid.Nil {
 		return c.String(http.StatusBadRequest, "Not a valid Attachment ID")
 	}
@@ -268,11 +279,11 @@ func RemoveSyllabusInstitution(c echo.Context) error {
 		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
 
-	uid := mustParseUUIDParam(c, "id")
+	uid := parseUUIDParam(c, "id")
 	if uid == uuid.Nil {
 		return c.String(http.StatusBadRequest, "Not a valid Syllabus ID.")
 	}
-	inst_uid := mustParseUUIDParam(c, "inst_id")
+	inst_uid := parseUUIDParam(c, "inst_id")
 	if inst_uid == uuid.Nil {
 		return c.String(http.StatusBadRequest, "Not a valid Institution ID.")
 	}
@@ -437,7 +448,7 @@ func sanitizeSyllabusUpdate(c echo.Context) error {
 	return nil
 }
 
-func mustParseUUIDParam(c echo.Context, tag string) uuid.UUID {
+func parseUUIDParam(c echo.Context, tag string) uuid.UUID {
 	id := c.Param(tag)
 	uid, err := uuid.Parse(id)
 	if err != nil {
@@ -447,7 +458,7 @@ func mustParseUUIDParam(c echo.Context, tag string) uuid.UUID {
 	return uid
 }
 
-func mustParseUUIDForm(c echo.Context, tag string) uuid.UUID {
+func parseUUIDForm(c echo.Context, tag string) uuid.UUID {
 	id := c.FormValue(tag)
 	uid, err := uuid.Parse(id)
 	if err != nil {

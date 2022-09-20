@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"strings"
 
 	"github.com/commonsyllabi/explorer/api/auth"
 	"github.com/commonsyllabi/explorer/api/config"
@@ -179,6 +180,16 @@ func UpdateAttachment(c echo.Context) error {
 }
 
 func GetAttachment(c echo.Context) error {
+	slug := c.Param("id")
+	if len(slug) < 5 || !strings.Contains(slug, "-") {
+		zero.Warnf("Not a valid slug: %v", slug)
+	}
+
+	att, err := models.GetAttachmentBySlug(slug)
+	if err == nil {
+		return c.JSON(http.StatusOK, att)
+	}
+
 	id := c.Param("id")
 	uid, err := uuid.Parse(id)
 	if err != nil {
@@ -186,7 +197,7 @@ func GetAttachment(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "Not a valid ID")
 	}
 
-	att, err := models.GetAttachment(uid)
+	att, err = models.GetAttachment(uid)
 	if err != nil {
 		zero.Errorf("Error getting Attachment %v: %s", id, err)
 		return c.String(http.StatusNotFound, "We couldn't find the Attachment.")
