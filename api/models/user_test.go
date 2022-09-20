@@ -63,6 +63,13 @@ func TestUserModel(t *testing.T) {
 		assert.Equal(t, user.Name, userName)
 	})
 
+	t.Run("Test get user by slug", func(t *testing.T) {
+		user, err := models.GetUserBySlug(userSlug)
+		require.Nil(t, err)
+		assert.Equal(t, user.Email, userEmail)
+		assert.Equal(t, user.Name, userName)
+	})
+
 	t.Run("Test get non-existing user", func(t *testing.T) {
 		user, err := models.GetUser(userUnknownID)
 		require.NotNil(t, err)

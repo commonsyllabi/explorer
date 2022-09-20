@@ -29,7 +29,6 @@ func main() {
 
 	url := os.Getenv("DATABASE_URL")
 	if url == "" {
-		zero.Log.Warn().Msg("missing DATABASE_URL, composing from env...")
 		if os.Getenv("DB_USER") == "" || os.Getenv("DB_PASSWORD") == "" || os.Getenv("DB_HOST") == "" || os.Getenv("DB_PORT") == "" {
 			zero.Log.Fatal().Msgf("missing env DB_ variables!")
 		}

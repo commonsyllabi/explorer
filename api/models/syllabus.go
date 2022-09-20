@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/gosimple/slug"
 	"github.com/lib/pq"
 	"gorm.io/gorm"
 )
@@ -35,11 +36,13 @@ type Syllabus struct {
 	Other            string         `json:"other" form:"other"`
 	Readings         pq.StringArray `gorm:"type:text[]" json:"readings" form:"readings[]"`
 	Tags             pq.StringArray `gorm:"type:text[]" json:"tags" yaml:"tags" form:"tags[]"`
+	Slug             string         `gorm:"" json:"slug"`
 	Title            string         `gorm:"not null" form:"title" json:"title"`
 	TopicOutlines    pq.StringArray `gorm:"type:text[]" json:"topic_outlines" form:"topic_outlines[]"`
 }
 
-// the BeforeCreate GORM hook is used to set defaults for complex datatypes
+// the BeforeCreate GORM hook is used to set defaults for academic fields and tags
+// and to generate the slug based on the title
 func (s *Syllabus) BeforeCreate(tx *gorm.DB) (err error) {
 	if len(s.AcademicFields) == 0 {
 		s.AcademicFields = []int32{000}
@@ -48,6 +51,8 @@ func (s *Syllabus) BeforeCreate(tx *gorm.DB) (err error) {
 	if len(s.Tags) == 0 {
 		s.Tags = []string{}
 	}
+
+	s.Slug = fmt.Sprintf("%s-%s", s.UUID.String()[:5], slug.Make(s.Title))
 
 	return nil
 }
@@ -76,6 +81,24 @@ const PAGINATION_LIMIT = 15
 func GetSyllabus(uuid uuid.UUID) (Syllabus, error) {
 	var syll Syllabus
 	result := db.Preload("User").Preload("Attachments").Where("uuid = ? ", uuid).First(&syll)
+	if result.Error != nil {
+		return syll, result.Error
+	}
+
+	var insts []Institution
+	err := db.Model(&syll).Association("Institutions").Find(&insts)
+	if err != nil {
+		return syll, err
+	}
+
+	syll.Institutions = append(syll.Institutions, insts...)
+
+	return syll, nil
+}
+
+func GetSyllabusBySlug(slug string) (Syllabus, error) {
+	var syll Syllabus
+	result := db.Preload("User").Preload("Attachments").Where("slug = ? ", slug).First(&syll)
 	if result.Error != nil {
 		return syll, result.Error
 	}

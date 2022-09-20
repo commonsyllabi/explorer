@@ -119,6 +119,24 @@ func TestUserHandler(t *testing.T) {
 		assert.Equal(t, "Justyna Poplawska", user.Name)
 	})
 
+	t.Run("Test get user by slug", func(t *testing.T) {
+		res := httptest.NewRecorder()
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+
+		c := echo.New().NewContext(req, res)
+		c.SetPath("/users")
+		c.SetParamNames("id")
+		c.SetParamValues(userSlug)
+
+		handlers.GetUser(c)
+		assert.Equal(t, http.StatusOK, res.Code)
+
+		var user models.User
+		err := json.Unmarshal(res.Body.Bytes(), &user)
+		require.Nil(t, err)
+		assert.Equal(t, "Justyna Poplawska", user.Name)
+	})
+
 	t.Run("Test get user malformed id", func(t *testing.T) {
 		res := httptest.NewRecorder()
 		req := httptest.NewRequest(http.MethodGet, "/", nil)

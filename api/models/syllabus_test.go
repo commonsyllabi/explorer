@@ -99,6 +99,15 @@ func TestSyllabusModel(t *testing.T) {
 		assert.Equal(t, 1, len(syll.Institutions))
 	})
 
+	t.Run("Test get syllabus", func(t *testing.T) {
+		syll, err := models.GetSyllabusBySlug(syllabusSlug)
+		require.Nil(t, err)
+		assert.Equal(t, syll.UUID, syllabusID)
+		assert.Equal(t, syllabusTitle, syll.Title)
+		assert.Equal(t, syllabusUserName, syll.User.Name)
+		assert.Equal(t, 1, len(syll.Institutions))
+	})
+
 	t.Run("Test get non-existing syllabus", func(t *testing.T) {
 		syll, err := models.GetSyllabus(syllabusUnknownID)
 		assert.NotNil(t, err)

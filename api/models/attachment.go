@@ -1,9 +1,11 @@
 package models
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/gosimple/slug"
 	"gorm.io/gorm"
 )
 
@@ -18,9 +20,16 @@ type Attachment struct {
 	Syllabus     Syllabus  `gorm:"foreignKey:SyllabusUUID;references:UUID" json:"syllabus"`
 
 	Name        string `gorm:"not null" json:"name" form:"name"`
+	Slug        string `gorm:"" json:"slug"`
 	Type        string `gorm:"not null" json:"type" form:"type"`
 	Description string `json:"description" form:"description"`
 	URL         string `gorm:"not null" json:"url" form:"url"`
+}
+
+func (a *Attachment) BeforeCreate(tx *gorm.DB) (err error) {
+	a.Slug = fmt.Sprintf("%s-%s", a.UUID.String()[:5], slug.Make(a.Name))
+
+	return nil
 }
 
 func CreateAttachment(syllabus_uuid uuid.UUID, att *Attachment) (Attachment, error) {
@@ -42,6 +51,12 @@ func CreateAttachment(syllabus_uuid uuid.UUID, att *Attachment) (Attachment, err
 func GetAttachment(uuid uuid.UUID) (Attachment, error) {
 	var att Attachment
 	result := db.Preload("Syllabus").Where("uuid = ?", uuid).First(&att)
+	return att, result.Error
+}
+
+func GetAttachmentBySlug(slug string) (Attachment, error) {
+	var att Attachment
+	result := db.Preload("Syllabus").Where("slug = ?", slug).First(&att)
 	return att, result.Error
 }
 

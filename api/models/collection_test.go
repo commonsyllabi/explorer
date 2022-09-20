@@ -46,6 +46,14 @@ func TestCollectionModel(t *testing.T) {
 		assert.Equal(t, 1, len(coll.Syllabi))
 	})
 
+	t.Run("Test get collection by slug", func(t *testing.T) {
+		coll, err := models.GetCollectionBySlug(collectionSlug)
+		require.Nil(t, err)
+		assert.Equal(t, coll.UUID, collectionID)
+		assert.Equal(t, collectionName, coll.Name)
+		assert.Equal(t, 1, len(coll.Syllabi))
+	})
+
 	t.Run("Test get non-existing collection", func(t *testing.T) {
 		res, err := models.GetCollection(collectionUnknownID)
 		assert.NotNil(t, err)

@@ -156,6 +156,26 @@ func TestAttachmentHandler(t *testing.T) {
 		assert.Equal(t, "https://fg.vanr.tu-berlin.de/ungewohnt/", att.URL)
 	})
 
+	t.Run("Test get attachment with slug", func(t *testing.T) {
+		res := httptest.NewRecorder()
+		req := httptest.NewRequest(http.MethodGet, "/attachments", nil)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationForm)
+
+		c := echo.New().NewContext(req, res)
+		c.SetParamNames("id")
+		c.SetParamValues(attachmentSlug)
+
+		handlers.GetAttachment(c)
+		assert.Equal(t, http.StatusOK, res.Code)
+
+		var att models.Attachment
+		err := json.Unmarshal(res.Body.Bytes(), &att)
+		require.Nil(t, err)
+		assert.Equal(t, attachmentID, att.UUID)
+		assert.Equal(t, "Chair website", att.Name)
+		assert.Equal(t, "https://fg.vanr.tu-berlin.de/ungewohnt/", att.URL)
+	})
+
 	t.Run("Test get attachment malformed ID", func(t *testing.T) {
 		res := httptest.NewRecorder()
 		req := httptest.NewRequest(http.MethodGet, "/attachments", nil)

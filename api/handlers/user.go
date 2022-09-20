@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"net/mail"
 	"os"
+	"strings"
 
 	"github.com/commonsyllabi/explorer/api/auth"
 	zero "github.com/commonsyllabi/explorer/api/logger"
@@ -156,18 +157,24 @@ func GetUser(c echo.Context) error {
 	id := c.Param("id")
 	uid, err := uuid.Parse(id)
 	if err != nil {
+		//-- uuid failed, attempting slug
+		if len(id) > 5 && strings.Contains(id, "-") {
+			user, err := models.GetUserBySlug(id)
+			if err == nil {
+				return c.JSON(http.StatusOK, user)
+			}
+		}
 		zero.Error(err.Error())
 		return c.String(http.StatusBadRequest, "Not a valid ID")
 	}
 
 	user, err := models.GetUser(uid)
 	if err != nil {
-		zero.Errorf("error getting User %v: %s", id, err)
+		zero.Errorf("error getting User by UUID %v: %s", id, err)
 		c.String(http.StatusNotFound, "We couldn't find the User.")
 	}
 
 	return c.JSON(http.StatusOK, user)
-
 }
 
 func RemoveUserInstitution(c echo.Context) error {

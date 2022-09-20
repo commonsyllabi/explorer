@@ -1,9 +1,11 @@
 package models
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/gosimple/slug"
 	"gorm.io/gorm"
 )
 
@@ -20,6 +22,13 @@ type Collection struct {
 	Syllabi  []*Syllabus `gorm:"many2many:collections_syllabi;" json:"syllabi"`
 
 	Name string `gorm:"not null" json:"name" form:"name" binding:"required"`
+	Slug string `gorm:"" json:"slug"`
+}
+
+func (c *Collection) BeforeCreate(tx *gorm.DB) (err error) {
+	c.Slug = fmt.Sprintf("%s-%s", c.UUID.String()[:5], slug.Make(c.Name))
+
+	return nil
 }
 
 func CreateCollection(user_uuid uuid.UUID, coll *Collection) (Collection, error) {
@@ -40,6 +49,26 @@ func CreateCollection(user_uuid uuid.UUID, coll *Collection) (Collection, error)
 func GetCollection(uuid uuid.UUID) (Collection, error) {
 	var coll Collection
 	result := db.Preload("User").Where("uuid = ?", uuid).First(&coll)
+	if result.Error != nil {
+		return coll, result.Error
+	}
+
+	var syllabi []Syllabus
+	err := db.Model(&coll).Association("Syllabi").Find(&syllabi)
+	if err != nil {
+		return coll, err
+	}
+
+	for _, s := range syllabi {
+		coll.Syllabi = append(coll.Syllabi, &s)
+	}
+
+	return coll, err
+}
+
+func GetCollectionBySlug(slug string) (Collection, error) {
+	var coll Collection
+	result := db.Preload("User").Where("slug = ?", slug).First(&coll)
 	if result.Error != nil {
 		return coll, result.Error
 	}

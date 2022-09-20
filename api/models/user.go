@@ -1,9 +1,11 @@
 package models
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/gosimple/slug"
 	"github.com/lib/pq"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -27,6 +29,7 @@ type User struct {
 	Education pq.StringArray `gorm:"type:text[]" json:"education" form:"education[]"`
 	Email     string         `gorm:"unique;not null" json:"email" form:"email"`
 	Name      string         `gorm:"default:Anonymous User;not null" json:"name" form:"name"`
+	Slug      string         `gorm:"" json:"slug"`
 	Password  []byte         `gorm:"not null" json:"password"`
 	URLs      pq.StringArray `gorm:"type:text[]" json:"urls" form:"urls[]"`
 
@@ -34,6 +37,12 @@ type User struct {
 
 	Collections []Collection `gorm:"foreignKey:UserUUID;references:UUID" json:"collections"`
 	Syllabi     []Syllabus   `gorm:"foreignKey:UserUUID;references:UUID" json:"syllabi"`
+}
+
+func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
+	u.Slug = fmt.Sprintf("%s-%s", u.UUID.String()[:5], slug.Make(u.Name))
+
+	return nil
 }
 
 func CreateUser(user *User) (User, error) {
@@ -62,6 +71,24 @@ func GetUser(uuid uuid.UUID) (User, error) {
 func GetUserByEmail(email string) (User, error) {
 	var user User
 	err := db.Preload("Syllabi").Preload("Collections").Where("email = ?", email).Find(&user).Error
+	if err != nil {
+		return user, err
+	}
+
+	var insts []Institution
+	err = db.Model(&user).Association("Institutions").Find(&insts)
+	if err != nil {
+		return user, err
+	}
+
+	user.Institutions = append(user.Institutions, insts...)
+
+	return user, err
+}
+
+func GetUserBySlug(slug string) (User, error) {
+	var user User
+	err := db.Preload("Syllabi").Preload("Collections").Where("slug = ?", slug).Find(&user).Error
 	if err != nil {
 		return user, err
 	}
