@@ -11,7 +11,7 @@ interface ISyllabusResourcesProps {
 const SyllabusResources: React.FunctionComponent<ISyllabusResourcesProps> = ({
   resources,
 }) => {
-  if (resources.length < 1 || resources === undefined) {
+  if (resources === undefined || resources.length < 1) {
     return <p className="muted">No resources to show.</p>;
   }
   const resourceEls = resources.map((resource) => (
