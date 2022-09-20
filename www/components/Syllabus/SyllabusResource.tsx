@@ -6,7 +6,6 @@ interface ISyllabusResourceProps {
   resourceUrl: string;
   resourceDescription: string;
   resourceType: string;
-  apiUrl: string;
 }
 
 const SyllabusResource: React.FunctionComponent<ISyllabusResourceProps> = ({
@@ -14,7 +13,6 @@ const SyllabusResource: React.FunctionComponent<ISyllabusResourceProps> = ({
   resourceUrl,
   resourceDescription,
   resourceType,
-  apiUrl,
 }) => {
   return (
     <div className="course-resource mb-4">
@@ -23,20 +21,23 @@ const SyllabusResource: React.FunctionComponent<ISyllabusResourceProps> = ({
         <div>
           <dt className="m-0 pe-2">url:</dt>
           <dd className="m-0">
-            {resourceType === 'file' ? (
-            <Link href={apiUrl+"/static/"+resourceUrl}>
-            <a target="_blank" rel="noreferrer">
-              {resourceUrl}
-            </a>
-          </Link>
+            {resourceType === "file" ? (
+              <Link
+                href={
+                  process.env.NEXT_PUBLIC_API_URL + "/static/" + resourceUrl
+                }
+              >
+                <a target="_blank" rel="noreferrer">
+                  {resourceUrl}
+                </a>
+              </Link>
             ) : (
               <Link href={resourceUrl}>
-              <a target="_blank" rel="noreferrer">
-                {resourceUrl}
-              </a>
-            </Link>
+                <a target="_blank" rel="noreferrer">
+                  {resourceUrl}
+                </a>
+              </Link>
             )}
-
           </dd>
         </div>
 

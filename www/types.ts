@@ -10,8 +10,15 @@ export interface IUser {
 }
 
 export interface IInstitution {
+  uuid: string;
   name: string;
-  position: string;
+  country: number;
+  date: {
+    term?: string;
+    year: string;
+  };
+  url?: string;
+  position?: string;
 }
 
 export interface ICollection {
@@ -26,16 +33,18 @@ export interface ICollection {
 
 export interface ISyllabus {
   uuid: string;
-  institution?: string;
-  course_number?: string;
-  term?: string;
-  year?: string;
-  title: string;
   status: string;
-  user: IUser;
+  title: string;
+  course_number?: string;
+  created_at: string;
+  institutions?: IInstitution[];
+  academic_fields?: number[];
   user_uuid: string;
-  description: string;
+  user: IUser;
   tags?: string[];
+  description: string;
+  learning_outcomes?: string;
+  attachments?: IResources[];
 }
 
 export interface IResources {
@@ -44,4 +53,12 @@ export interface IResources {
   url: string;
   description: string;
   type: string;
+}
+
+export interface IAttachment {
+  id: string;
+  name: string;
+  description: string;
+  file: File;
+  url: string;
 }

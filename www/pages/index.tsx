@@ -4,7 +4,6 @@ import Head from "next/head";
 import GlobalNav from "components/GlobalNav";
 import FiltersBar from "components/FiltersBar";
 import TagsFiltersBar from "components/TagFiltersBar";
-import SyllabusCard from "components/SyllabusCard";
 
 import { getSyllabusCards } from "../components/utils/getSyllabusCards";
 
@@ -12,7 +11,6 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { ISyllabus } from "types";
-import { useEffect } from "react";
 import Favicons from "components/head/favicons";
 
 export const getServerSideProps: GetServerSideProps = async () => {

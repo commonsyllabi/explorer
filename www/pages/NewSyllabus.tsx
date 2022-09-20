@@ -4,8 +4,10 @@ import { getSession, useSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
 
-import GlobalNav from "components/GlobalNav";
+//Interfaces
+import { IAttachment } from "types";
 
+//Bootstrap
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -14,11 +16,15 @@ import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import { Alert, FormSelect, Tabs, Tab } from "react-bootstrap";
 import Badge from "react-bootstrap/Badge";
-import NewSyllbusAttachment from "components/Syllabus/NewSyllabusAttachment";
+
+//Components
+import GlobalNav from "components/GlobalNav";
 import NewSyllabusAttachment from "components/Syllabus/NewSyllabusAttachment";
 
+//Data
 const countries = require("i18n-iso-countries");
 const languages = require("@cospired/i18n-iso-languages");
+import Favicons from "components/head/favicons";
 
 export const getStaticProps: GetStaticProps = async () => {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -40,12 +46,31 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
 
   useEffect(() => {
     setValidated(true);
+    setUpCountries();
   }, []);
 
   //Set up list of countries (for use in "Add Institution" section)
   const setUpCountries = () => {
     countries.registerLocale(require("i18n-iso-countries/langs/en.json"));
-    console.log(countries.getNames("en", { select: "official" }));
+    // console.log(countries.getNames("en", { select: "official" }));
+    const countriesList = countries.getNames("en", { select: "official" });
+    let numericCountriesList: { [key: string]: string } = {};
+    Object.keys(countriesList).forEach((countryAlpha2Code) => {
+      const countryNumCode = countries.alpha2ToNumeric(countryAlpha2Code);
+      numericCountriesList[countriesList[countryAlpha2Code]] = countryNumCode;
+    });
+    // console.log(numericCountriesList);
+    return numericCountriesList;
+  };
+
+  const generateCountryOptions = () => {
+    const countries = setUpCountries();
+    const elements = Object.keys(countries).map((countryName) => (
+      <option key={countries[countryName]} value={countries[countryName]}>
+        {countryName}
+      </option>
+    ));
+    return <>{elements}</>;
   };
 
   //Set up list of languages and generate language dropdown elements
@@ -89,13 +114,15 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     duration: 0,
   });
 
-  interface IAttachment {
-    id: string;
-    name: string;
-    description: string;
-    file: File;
-    url: string;
-  }
+  const [institutionData, setInstitutionData] = useState([
+    {
+      name: "",
+      country: "",
+      url: "",
+      year: "",
+      term: "",
+    },
+  ]);
 
   const [log, setLog] = useState("");
   const [error, setError] = useState("");
@@ -121,7 +148,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     const postHeader = new Headers();
     if (session != null && session.user != null)
       postHeader.append("Authorization", `Bearer ${session.user.token}`);
-    else console.warn("no session found!");
+    else console.warn("No session found!");
 
     // Make POST request body
     let body = new FormData();
@@ -154,8 +181,11 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
           setError("");
           // institution
           const i = new FormData();
-          i.append("name", "School");
+          i.append("name", institutionData[0].name);
+          i.append("url", institutionData[0].url);
           i.append("country", "275");
+          i.append("date_year", institutionData[0].year);
+          i.append("date_term", institutionData[0].term);
 
           const instit_endpoint = new URL(
             `/syllabi/${body.uuid}/institutions`,
@@ -232,7 +262,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     setAttachmentData(u);
   };
 
-  //Handle form change
+  //Handle form changes
   const handleChange = (event: React.SyntheticEvent) => {
     const t = event.target as HTMLInputElement;
     if (t.id === "status") {
@@ -242,7 +272,13 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     } else {
       setFormData({ ...formData, [t.id]: t.value });
     }
-    // console.log(`${[t.id]}: ${t.value}`);
+    console.log(`${[t.id]}: ${t.value}`);
+  };
+
+  const handleInstitutionChange = (event: React.SyntheticEvent) => {
+    const t = event.target as HTMLInputElement;
+    setInstitutionData([{ ...institutionData[0], [t.id]: t.value }]);
+    console.log(`${[t.id]}: ${t.value}`);
   };
 
   //Get public/private form label
@@ -277,238 +313,320 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
         <Head>
           <title>New Syllabus</title>
           <meta name="description" content="Create a new syllabus" />
-          <link rel="icon" href="/favicon.ico" />
+          <Favicons />
         </Head>
-        <Container>
-          <div id="header-section" className="sticky-top">
-            <GlobalNav />
-          </div>
 
-          <Container>
-            <Row className="pt-3 pb-3">
-              <Col className="col-8 offset-2">
-                <h1 className="h3">New Syllabus</h1>
-              </Col>
-            </Row>
-            <Row className="gap-3 pb-5">
-              <Col className="col-8 offset-2">
-                <p className="small text-muted mb-3">
-                  Signed in as {session.user.name} ({session.user.email}).
-                </p>
-                <Form noValidate validated={false} onSubmit={handleSubmit}>
-                  <fieldset>
-                    <Form.Group className="mb-3">
-                      <Form.Label htmlFor="title">Course Title</Form.Label>
-                      <Form.Control
-                        required
-                        id="title"
-                        placeholder="Web Design History"
-                        onChange={handleChange}
-                        value={formData.title}
-                        data-cy="courseTitleInput"
-                      />
+        <Container fluid id="header-section" className="sticky-top">
+          <GlobalNav />
+        </Container>
+
+        <Container>
+          <Row className="pt-3 pb-3">
+            <Col className="col-8 offset-2">
+              <h1 className="h3">New Syllabus</h1>
+            </Col>
+          </Row>
+          <Row className="gap-3 pb-5">
+            <Col className="col-8 offset-2">
+              <p className="small text-muted mb-3">
+                Signed in as {session.user.name} ({session.user.email}).
+              </p>
+              <Form noValidate validated={false} onSubmit={handleSubmit}>
+                <fieldset>
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="title">Course Title</Form.Label>
+                    <Form.Control
+                      required
+                      id="title"
+                      placeholder="Web Design History"
+                      onChange={handleChange}
+                      value={formData.title}
+                      data-cy="courseTitleInput"
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      Please provide a valid course title.
+                    </Form.Control.Feedback>
+                  </Form.Group>
+
+                  <Form.Check
+                    type="switch"
+                    className="mb-3"
+                    onChange={handleChange}
+                  >
+                    <Form.Check.Input
+                      id="status"
+                      onChange={handleChange}
+                      value={formData.status}
+                      data-cy="courseStatusInput"
+                    />
+                    <Form.Check.Label>
+                      {getPublicPrivateLabel(formData.status)}
+                    </Form.Check.Label>
+                  </Form.Check>
+
+                  {/* //TODO make add institution work */}
+                  <div className="institution-section my-5">
+                    <Form.Group className="mb-1">
+                      <Form.Label htmlFor="name" className="mb-0">
+                        Institution*
+                      </Form.Label>
+                      <div className="col-10">
+                        <Form.Control
+                          required
+                          id="name"
+                          placeholder="Black Mountain College"
+                          onChange={handleInstitutionChange}
+                          value={institutionData[0].name}
+                          data-cy="instutionNameInput"
+                        />
+                      </div>
                       <Form.Control.Feedback type="invalid">
-                        Please provide a valid course title.
+                        Please provide the name of the institution where this
+                        course was taught.
                       </Form.Control.Feedback>
                     </Form.Group>
 
-                    <Form.Check
-                      type="switch"
-                      className="mb-3"
-                      onChange={handleChange}
-                    >
-                      <Form.Check.Input
-                        id="status"
-                        onChange={handleChange}
-                        value={formData.status}
-                        data-cy="courseStatusInput"
-                      />
-                      <Form.Check.Label>
-                        {getPublicPrivateLabel(formData.status)}
-                      </Form.Check.Label>
-                    </Form.Check>
-
-                    {/* //TODO make add institution work */}
                     <Form.Group className="mb-1">
-                      <Form.Label htmlFor="institution">Institution</Form.Label>
-                      <Form.Select id="institution" disabled>
-                        <option>select institution</option>
-                      </Form.Select>
-                    </Form.Group>
-                    <Button variant="secondary" className="mb-3" disabled>
-                      + Add New Institution
-                    </Button>
-
-                    <Form.Group className="mb-3">
-                      <Form.Label htmlFor="courseCode">
-                        Course Number
-                      </Form.Label>
-                      <div className="col-4">
-                        <Form.Control
-                          id="course_number"
-                          placeholder="CS101"
-                          onChange={handleChange}
-                          value={formData.course_number}
-                          data-cy="courseCodeInput"
-                        />
-                      </div>
-                    </Form.Group>
-
-                    <Form.Group className="mb-5">
-                      <Form.Label htmlFor="academic_level" className="mb-0">
-                        Academic Level
-                      </Form.Label>
+                      <Form.Label htmlFor="language">Country*</Form.Label>
                       <Form.Select
-                        id="academic_level"
-                        onChange={handleChange}
-                        value={formData.academic_level}
-                        data-cy="academicLevelInput"
+                        id="country"
+                        onChange={handleInstitutionChange}
+                        data-cy="institutionCountryInput"
                       >
-                        <option value="0">Other</option>
-                        <option value="1">Bachelor</option>
-                        <option value="2">Master</option>
-                        <option value="3">Doctoral</option>
-                      </Form.Select>
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                      <Form.Label htmlFor="language">Language*</Form.Label>
-                      <Form.Select
-                        id="language"
-                        onChange={handleChange}
-                        data-cy="courseLanguageInput"
-                      >
-                        <option value="">—</option>
-                        {generateLanguageOptions()}
+                        <option> – </option>
+                        {generateCountryOptions()}
                       </Form.Select>
                       <Form.Text>
-                        The language this class is primarily taught in.
+                        Please provide the country where this course was taught.
                       </Form.Text>
                     </Form.Group>
 
-                    <div className="d-flex gap-3">
-                      <Form.Group className="mb-3">
-                        <Form.Label htmlFor="duration">
-                          Duration of course in weeks
-                        </Form.Label>
+                    <Form.Group className="mb-1">
+                      <Form.Label htmlFor="url" className="mb-0">
+                        Institution Website
+                      </Form.Label>
+                      <div className="col-8">
                         <Form.Control
-                          id="durcation"
-                          placeholder="3"
-                          data-cy="courseDurationInput"
+                          id="url"
+                          placeholder="http://hogwarts.com"
+                          onChange={handleInstitutionChange}
+                          value={institutionData[0].url}
+                          data-cy="instutionUrlInput"
                         />
-                      </Form.Group>
+                      </div>
+                    </Form.Group>
+                    <div className="row">
+                      <div className="col-2">
+                        <Form.Group className="mb-1">
+                          <Form.Label htmlFor="year" className="mb-0">
+                            Year*
+                          </Form.Label>
+                          <Form.Control
+                            required
+                            id="year"
+                            placeholder="2022"
+                            onChange={handleInstitutionChange}
+                            value={institutionData[0].year}
+                            data-cy="instutionYearInput"
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            Please provide the year this course was taught.
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                      </div>
+                      <div className="col-4">
+                        <Form.Group className="mb-1">
+                          <Form.Label htmlFor="term" className="mb-0">
+                            Term*
+                          </Form.Label>
+                          <Form.Control
+                            required
+                            id="term"
+                            placeholder="Spring Semester"
+                            onChange={handleInstitutionChange}
+                            value={institutionData[0].term}
+                            data-cy="instutionTermInput"
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            Please provide the academic term during which this
+                            course was taught.
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                      </div>
                     </div>
+                  </div>
 
-                    <hr className="my-3" />
-
-                    <Form.Group className="mb-3">
-                      <Form.Label htmlFor="courseDescription">
-                        Description*
-                      </Form.Label>
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="courseCode">Course Number</Form.Label>
+                    <div className="col-4">
                       <Form.Control
-                        required
-                        id="courseDescription"
-                        as="textarea"
-                        rows={4}
-                        placeholder="Course outline..."
-                        data-cy="courseDescriptionInput"
+                        id="course_number"
+                        placeholder="CS101"
+                        onChange={handleChange}
+                        value={formData.course_number}
+                        data-cy="courseCodeInput"
                       />
-                      <Form.Control.Feedback type="invalid">
-                        Please provide a brief description of the course.
-                      </Form.Control.Feedback>
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                      <Form.Label htmlFor="learning_outcomes">
-                        Learning Outcomes
-                      </Form.Label>
-                      <Form.Control
-                        id="learning_outcomes"
-                        as="textarea"
-                        rows={4}
-                        placeholder="Course learning outcomes..."
-                        data-cy="courseLearningOutcomes"
-                      />
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                      <Form.Label htmlFor="topic_outlines">
-                        Topics Outline
-                      </Form.Label>
-                      <Form.Control
-                        id="topic_outlines"
-                        as="textarea"
-                        rows={4}
-                        placeholder="Course topics outline..."
-                        data-cy="courseTopicsOutline"
-                      />
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                      <Form.Label htmlFor="readings">Readings</Form.Label>
-                      <Form.Control
-                        id="readings"
-                        as="textarea"
-                        rows={4}
-                        placeholder="Course readings..."
-                        data-cy="courseReadings"
-                      />
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                      <Form.Label htmlFor="grading_rubric">
-                        Grading Rubric
-                      </Form.Label>
-                      <Form.Control
-                        id="grading_rubric"
-                        as="textarea"
-                        rows={4}
-                        placeholder="Course grading rubric..."
-                        data-cy="courseGradingRubric"
-                      />
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                      <Form.Label htmlFor="assignments">Assignments</Form.Label>
-                      <Form.Control
-                        id="assignments"
-                        as="textarea"
-                        rows={4}
-                        placeholder="Course assignments..."
-                        data-cy="courseAssignments"
-                      />
-                    </Form.Group>
-
-                    <hr className="my-3" />
-                    {/* TODO: Make attachments work */}
-                    <div className="mb-5">
-                      <h2 className="h4">Attachments</h2>
-                      {attachments}
-                      <Button
-                        type="button"
-                        onClick={handleNewAttachment}
-                        data-cy="attachment-add"
-                      >
-                        Add attachment
-                      </Button>
                     </div>
+                  </Form.Group>
 
-                    <Button type="submit" data-cy="courseSubmitButton">
-                      Submit form
+                  <Form.Group className="mb-5">
+                    <Form.Label htmlFor="academic_level" className="mb-0">
+                      Academic Level
+                    </Form.Label>
+                    <Form.Select
+                      id="academic_level"
+                      onChange={handleChange}
+                      value={formData.academic_level}
+                      data-cy="academicLevelInput"
+                    >
+                      <option value="0">Other</option>
+                      <option value="1">Bachelor</option>
+                      <option value="2">Master</option>
+                      <option value="3">Doctoral</option>
+                    </Form.Select>
+                  </Form.Group>
+
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="language">Language*</Form.Label>
+                    <Form.Select
+                      id="language"
+                      onChange={handleChange}
+                      data-cy="courseLanguageInput"
+                    >
+                      <option value="">—</option>
+                      {generateLanguageOptions()}
+                    </Form.Select>
+                    <Form.Text>
+                      The language this class is primarily taught in.
+                    </Form.Text>
+                  </Form.Group>
+
+                  <div className="d-flex gap-3">
+                    <Form.Group className="mb-3">
+                      <Form.Label htmlFor="duration">
+                        Duration of course in weeks
+                      </Form.Label>
+                      <Form.Control
+                        id="duration"
+                        onChange={handleChange}
+                        placeholder="3"
+                        data-cy="courseDurationInput"
+                      />
+                    </Form.Group>
+                  </div>
+
+                  <hr className="my-3" />
+
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="description">Description*</Form.Label>
+                    <Form.Control
+                      required
+                      id="description"
+                      onChange={handleChange}
+                      as="textarea"
+                      rows={4}
+                      placeholder="Course outline..."
+                      data-cy="courseDescriptionInput"
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      Please provide a brief description of the course.
+                    </Form.Control.Feedback>
+                  </Form.Group>
+
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="learning_outcomes">
+                      Learning Outcomes
+                    </Form.Label>
+                    <Form.Control
+                      id="learning_outcomes"
+                      onChange={handleChange}
+                      as="textarea"
+                      rows={4}
+                      placeholder="Course learning outcomes..."
+                      data-cy="courseLearningOutcomes"
+                    />
+                  </Form.Group>
+
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="topic_outlines">
+                      Topics Outline
+                    </Form.Label>
+                    <Form.Control
+                      id="topic_outlines"
+                      onChange={handleChange}
+                      as="textarea"
+                      rows={4}
+                      placeholder="Course topics outline..."
+                      data-cy="courseTopicsOutline"
+                    />
+                  </Form.Group>
+
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="readings">Readings</Form.Label>
+                    <Form.Control
+                      id="readings"
+                      onChange={handleChange}
+                      as="textarea"
+                      rows={4}
+                      placeholder="Course readings..."
+                      data-cy="courseReadings"
+                    />
+                  </Form.Group>
+
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="grading_rubric">
+                      Grading Rubric
+                    </Form.Label>
+                    <Form.Control
+                      id="grading_rubric"
+                      onChange={handleChange}
+                      as="textarea"
+                      rows={4}
+                      placeholder="Course grading rubric..."
+                      data-cy="courseGradingRubric"
+                    />
+                  </Form.Group>
+
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="assignments">Assignments</Form.Label>
+                    <Form.Control
+                      id="assignments"
+                      as="textarea"
+                      rows={4}
+                      placeholder="Course assignments..."
+                      data-cy="courseAssignments"
+                    />
+                  </Form.Group>
+
+                  <hr className="my-3" />
+                  {/* TODO: Make attachments work */}
+                  <div className="mb-5">
+                    <h2 className="h4">Attachments</h2>
+                    {attachments}
+                    <Button
+                      type="button"
+                      onClick={handleNewAttachment}
+                      data-cy="attachment-add"
+                    >
+                      Add attachment
                     </Button>
+                  </div>
 
-                    {error !== "" ? (
-                      <Alert variant="danger" className="mt-3">
-                        {error}
-                      </Alert>
-                    ) : (
-                      <></>
-                    )}
-                  </fieldset>
-                </Form>
-              </Col>
-            </Row>
-          </Container>
+                  <Button type="submit" data-cy="courseSubmitButton">
+                    Submit form
+                  </Button>
+
+                  {error !== "" ? (
+                    <Alert variant="danger" className="mt-3">
+                      {error}
+                    </Alert>
+                  ) : (
+                    <></>
+                  )}
+                </fieldset>
+              </Form>
+            </Col>
+          </Row>
         </Container>
       </>
     );
