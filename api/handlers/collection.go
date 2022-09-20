@@ -123,24 +123,23 @@ func AddCollectionSyllabus(c echo.Context) error {
 }
 
 func GetCollection(c echo.Context) error {
-	slug := c.Param("id")
-	if len(slug) < 5 || !strings.Contains(slug, "-") {
-		zero.Warnf("Not a valid slug: %v", slug)
-	}
-
-	coll, err := models.GetCollectionBySlug(slug)
-	if err == nil {
-		return c.JSON(http.StatusOK, coll)
-	}
-
 	id := c.Param("id")
 	uid, err := uuid.Parse(id)
 	if err != nil {
-		zero.Error(err.Error())
-		return c.String(http.StatusBadRequest, "Not a valid ID.")
+		if len(id) < 5 || !strings.Contains(id, "-") {
+			zero.Error(err.Error())
+			return c.String(http.StatusBadRequest, "Not a valid ID")
+		}
+
+		coll, err := models.GetCollectionBySlug(id)
+		if err != nil {
+			return c.String(http.StatusNotFound, "There was an error getting the requested Collection.")
+		}
+		return c.JSON(http.StatusOK, coll)
+
 	}
 
-	coll, err = models.GetCollection(uid)
+	coll, err := models.GetCollection(uid)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusNotFound, "We couldn't find the Collection.")

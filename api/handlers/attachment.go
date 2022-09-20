@@ -180,24 +180,22 @@ func UpdateAttachment(c echo.Context) error {
 }
 
 func GetAttachment(c echo.Context) error {
-	slug := c.Param("id")
-	if len(slug) < 5 || !strings.Contains(slug, "-") {
-		zero.Warnf("Not a valid slug: %v", slug)
-	}
-
-	att, err := models.GetAttachmentBySlug(slug)
-	if err == nil {
-		return c.JSON(http.StatusOK, att)
-	}
-
 	id := c.Param("id")
 	uid, err := uuid.Parse(id)
 	if err != nil {
-		zero.Error(err.Error())
-		return c.String(http.StatusBadRequest, "Not a valid ID")
+		if len(id) < 5 || !strings.Contains(id, "-") {
+			zero.Error(err.Error())
+			return c.String(http.StatusBadRequest, "Not a valid ID")
+		}
+
+		att, err := models.GetAttachmentBySlug(id)
+		if err != nil {
+			return c.String(http.StatusNotFound, "There was an error getting the requested Attachment.")
+		}
+		return c.JSON(http.StatusOK, att)
 	}
 
-	att, err = models.GetAttachment(uid)
+	att, err := models.GetAttachment(uid)
 	if err != nil {
 		zero.Errorf("Error getting Attachment %v: %s", id, err)
 		return c.String(http.StatusNotFound, "We couldn't find the Attachment.")

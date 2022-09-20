@@ -157,15 +157,17 @@ func GetUser(c echo.Context) error {
 	id := c.Param("id")
 	uid, err := uuid.Parse(id)
 	if err != nil {
-		//-- uuid failed, attempting slug
-		if len(id) > 5 && strings.Contains(id, "-") {
-			user, err := models.GetUserBySlug(id)
-			if err == nil {
-				return c.JSON(http.StatusOK, user)
-			}
+		if len(id) < 5 || !strings.Contains(id, "-") {
+			zero.Error(err.Error())
+			return c.String(http.StatusBadRequest, "Not a valid ID")
 		}
-		zero.Error(err.Error())
-		return c.String(http.StatusBadRequest, "Not a valid ID")
+
+		user, err := models.GetUserBySlug(id)
+		if err != nil {
+			return c.String(http.StatusNotFound, "There was an error getting the requested User.")
+		}
+
+		return c.JSON(http.StatusOK, user)
 	}
 
 	user, err := models.GetUser(uid)

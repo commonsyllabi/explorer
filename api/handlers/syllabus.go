@@ -75,22 +75,22 @@ func CreateSyllabus(c echo.Context) error {
 }
 
 func GetSyllabus(c echo.Context) error {
-	//-- query by slug before falling back to
-	slug := c.Param("id")
-	if len(slug) < 5 || !strings.Contains(slug, "-") {
-		zero.Warnf("Not a valid slug: %v", slug)
-	}
+	id := c.Param("id")
+	uid, err := uuid.Parse(id)
+	if err != nil {
+		if len(id) < 5 || !strings.Contains(id, "-") {
+			zero.Error(err.Error())
+			return c.String(http.StatusBadRequest, "Not a valid ID")
+		}
 
-	syll, err := models.GetSyllabusBySlug(slug)
-	if err == nil {
+		syll, err := models.GetSyllabusBySlug(id)
+		if err != nil {
+			return c.String(http.StatusNotFound, "There was an error getting the requested Syllabus.")
+		}
 		return c.JSON(http.StatusOK, syll)
 	}
 
-	uid := parseUUIDParam(c, "id")
-	if uid == uuid.Nil {
-		return c.String(http.StatusBadRequest, "Not a valid ID.")
-	}
-	syll, err = models.GetSyllabus(uid)
+	syll, err := models.GetSyllabus(uid)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusNotFound, "There was an error getting the requested Syllabus.")
