@@ -2,6 +2,15 @@ import Form from "react-bootstrap/Form";
 
 import models from "models.json"; //import academic field codes
 
+//Get public/private form label
+export const getPublicPrivateLabel = (status: string) => {
+  if (status === "unlisted") {
+    return "Private (only viewable to you)";
+  } else {
+    return "Public (anyone can view)";
+  }
+};
+
 //Data Libraries for Countries adn Languages
 const countries = require("i18n-iso-countries");
 const languages = require("@cospired/i18n-iso-languages");
@@ -52,7 +61,9 @@ export const generateLanguageOptions = () => {
 };
 
 //Return <Form.Check/> (checkbox) elements for academic fields
-export const generateAcademicFieldsCheckboxes = (eventHandler) => {
+export const generateAcademicFieldsCheckboxes = (
+  eventHandler: (event: React.SyntheticEvent) => void
+) => {
   // console.log(models.ACADEMIC_FIELDS);
   const acadFields: { [key: string]: string } = models.ACADEMIC_FIELDS;
   // Process acadFields into categories
