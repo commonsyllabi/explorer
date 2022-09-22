@@ -5,7 +5,7 @@ import Head from "next/head";
 import Link from "next/link";
 
 //Interfaces
-import { IAttachment } from "types";
+import { IFormData, IAttachment, IInstitution } from "types";
 
 //Bootstrap
 import Container from "react-bootstrap/Container";
@@ -20,11 +20,21 @@ import Badge from "react-bootstrap/Badge";
 //Components
 import GlobalNav from "components/GlobalNav";
 import NewSyllabusAttachment from "components/Syllabus/NewSyllabusAttachment";
+import InstitutionCreationStatus from "components/Syllabus/InstitutionCreationStatus";
+import AttachmentsCreationStatus from "components/Syllabus/AttachmentsCreationStatus";
 
-//Data
-const countries = require("i18n-iso-countries");
-const languages = require("@cospired/i18n-iso-languages");
+//UI Utils
+import { getPublicPrivateLabel } from "components/utils/formUtils";
+
+//Utils for generating components from data libraries
+import {
+  generateCountryOptions,
+  generateLanguageOptions,
+  generateAcademicFieldsCheckboxes,
+} from "components/utils/formUtils";
+
 import Favicons from "components/head/favicons";
+import SyllabusCreationStatus from "components/Syllabus/SyllabusCreationStatus";
 
 export const getStaticProps: GetStaticProps = async () => {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -43,84 +53,76 @@ interface INewSyllabusProps {
 const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
   const { data: session, status } = useSession();
   const [validated, setValidated] = useState(true);
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [syllabusCreated, setSyllabusCreated] = useState("pending");
+  const [institutionCreated, setInstitutionCreated] = useState("pending");
+  const [attachmentsCreated, setAttachmentsCreated] = useState("pending");
+  const [syllabusUUID, setSyllabusUUID] = useState("");
 
   useEffect(() => {
     setValidated(true);
-    setUpCountries();
   }, []);
-
-  //Set up list of countries (for use in "Add Institution" section)
-  const setUpCountries = () => {
-    countries.registerLocale(require("i18n-iso-countries/langs/en.json"));
-    // console.log(countries.getNames("en", { select: "official" }));
-    const countriesList = countries.getNames("en", { select: "official" });
-    let numericCountriesList: { [key: string]: string } = {};
-    Object.keys(countriesList).forEach((countryAlpha2Code) => {
-      const countryNumCode = countries.alpha2ToNumeric(countryAlpha2Code);
-      numericCountriesList[countriesList[countryAlpha2Code]] = countryNumCode;
-    });
-    // console.log(numericCountriesList);
-    return numericCountriesList;
-  };
-
-  const generateCountryOptions = () => {
-    const countries = setUpCountries();
-    const elements = Object.keys(countries).map((countryName) => (
-      <option key={countries[countryName]} value={countries[countryName]}>
-        {countryName}
-      </option>
-    ));
-    return <>{elements}</>;
-  };
-
-  //Set up list of languages and generate language dropdown elements
-  const setUpLanguages = () => {
-    languages.registerLocale(
-      require("@cospired/i18n-iso-languages/langs/en.json")
-    );
-    // console.log(languages.getNames("en"));
-    return languages.getNames("en");
-  };
-  const generateLanguageOptions = () => {
-    const languages = setUpLanguages();
-    const elements = Object.keys(languages).map((langCode) => (
-      <option key={langCode} value={langCode.toUpperCase()}>
-        {langCode.toUpperCase()} – {languages[langCode]}
-      </option>
-    ));
-    return <>{elements}</>;
-  };
 
   //Form data and submission handling
   //---------------------------------------
   //Store form data
-  const [formData, setFormData] = useState({
+  // const [formData, setFormData] = useState<IFormData>({
+  //   institutions: [],
+  //   title: "",
+  //   course_number: "",
+  //   description: "",
+  //   attachments: [],
+  //   tags: [],
+  //   language: "",
+  //   learning_outcomes: [],
+  //   topic_outlines: [],
+  //   readings: [],
+  //   grading_rubric: "",
+  //   assignments: [],
+  //   other: "",
+  //   status: "unlisted",
+  //   academic_fields: [],
+  //   academic_level: 0,
+  //   duration: 0,
+  // });
+
+  const [formData, setFormData] = useState<IFormData>({
     institutions: [],
-    title: "",
-    course_number: "",
-    description: "",
+    title: "Test Dummy Course",
+    course_number: "DUM101",
+    description: "Some elegant description of this wonderful course.",
     attachments: [],
     tags: [],
-    language: "",
+    language: "EN",
     learning_outcomes: [],
     topic_outlines: [],
     readings: [],
     grading_rubric: "",
     assignments: [],
     other: "",
-    status: "unlisted",
+    status: "listed",
     academic_fields: [],
     academic_level: 0,
     duration: 0,
   });
 
+  // const [institutionData, setInstitutionData] = useState([
+  //   {
+  //     name: "",
+  //     country: "",
+  //     url: "",
+  //     year: "",
+  //     term: "",
+  //   },
+  // ]);
+
   const [institutionData, setInstitutionData] = useState([
     {
-      name: "",
-      country: "",
-      url: "",
-      year: "",
-      term: "",
+      name: "Hogwarts",
+      country: "012",
+      url: "http://hogwarts.com",
+      year: "2022",
+      term: "Spring Semester",
     },
   ]);
 
@@ -134,6 +136,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     // TODO: Validate form
     const form = event.currentTarget;
     // if (form.checkValidity() === false) {
+    setFormSubmitted(true);
     event.preventDefault();
     event.stopPropagation();
     // }
@@ -165,11 +168,14 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     })
       .then((res) => {
         if (res.status == 201) {
+          const responseBody = res.json();
           console.log("SUCCESS, syllabus created.");
+          console.log(`Syllabus POST response: ${responseBody}`);
           setCreated(true);
-
-          return res.json(); // should we instead return just the uuid?
+          setSyllabusCreated("created");
+          return responseBody; // should we instead return just the uuid?
         } else {
+          setSyllabusCreated("failed");
           return res.text();
         }
       })
@@ -178,12 +184,17 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
           // if it's an error, it returns text
           setError(body);
         } else if (typeof body == "object") {
-          setError("");
-          // institution
+          // Now that syllabus is created...
+          // Set the newly created syllabus UUID
+          setSyllabusUUID(body.uuid);
+
+          // and make institution & attachments POST requests
+          //--------------------------------------
+          // POST institution
           const i = new FormData();
           i.append("name", institutionData[0].name);
           i.append("url", institutionData[0].url);
-          i.append("country", "275");
+          i.append("country", institutionData[0].country);
           i.append("date_year", institutionData[0].year);
           i.append("date_term", institutionData[0].term);
 
@@ -191,6 +202,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
             `/syllabi/${body.uuid}/institutions`,
             props.apiUrl
           );
+
           fetch(instit_endpoint, {
             method: "POST",
             headers: postHeader,
@@ -198,14 +210,27 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
           })
             .then((res) => {
               console.log(res);
-              return;
+              if (res.status === 200) {
+                const responseBody = res.json();
+                console.log(`SUCCESS, Institutions created.`);
+                console.log(`Institution POST response: ${responseBody}`);
+                setInstitutionCreated("created");
+                return responseBody;
+              } else {
+                const responseErrorMsg = res.text();
+                console.log(`ERROR, institutions failed.`);
+                console.log(`Institution POST response: ${responseErrorMsg}`);
+                setInstitutionCreated("failed");
+                return responseErrorMsg;
+              }
             })
             .catch((err) => {
               console.log(err);
             });
 
-          // attachments
-          // strange that we have a different pattern from institutions here (i guess attahcment is at a higher class than institution)
+          // POST attachments
+          // strange that we have a different pattern from institutions
+          // here(i guess attahcment is at a higher class than institution)
           console.log(`adding ${attachmentData.length} attachments`);
           const attach_endpoint = new URL(
             `/attachments/?syllabus_id=${body.uuid}`,
@@ -239,6 +264,49 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
       });
   };
 
+  //Handle form changes
+  const handleChange = (event: React.SyntheticEvent) => {
+    const t = event.target as HTMLInputElement;
+    if (t.id === "status") {
+      //handle public/private toggle
+      const newStatus = formData.status === "unlisted" ? "listed" : "unlisted";
+      setFormData({ ...formData, [t.id]: newStatus });
+    } else {
+      setFormData({ ...formData, [t.id]: t.value });
+    }
+    console.log(`${[t.id]}: ${t.value}`);
+  };
+
+  const handleInstitutionChange = (event: React.SyntheticEvent) => {
+    const t = event.target as HTMLInputElement;
+    setInstitutionData([{ ...institutionData[0], [t.id]: t.value }]);
+    console.log(`${[t.id]}: ${t.value}`);
+  };
+
+  const handleAcademicFieldChange = (event: React.SyntheticEvent) => {
+    const allInputGroups: HTMLCollection =
+      document.getElementsByClassName("academicFieldInput");
+    let checkedFields = [];
+    for (let i = 0; i < allInputGroups.length; i++) {
+      const fieldCode =
+        allInputGroups[i].getElementsByTagName("input")[0].value;
+      const isChecked =
+        allInputGroups[i].getElementsByTagName("input")[0].checked;
+      // console.log(`${fieldCode}: ${isChecked}`);
+      if (isChecked === true) {
+        checkedFields.push(fieldCode);
+      }
+    }
+    console.log(`checkedFields: ${checkedFields}`);
+    setFormData({ ...formData, ["academic_fields"]: checkedFields });
+  };
+
+  //-- data set up for attachments
+  const att = {} as IAttachment;
+  att.id = "0";
+  const [attachmentData, setAttachmentData] = useState([att]);
+
+  //-- set up handlers for attachments
   const handleNewAttachment = (event: React.SyntheticEvent) => {
     const a = {} as IAttachment;
     a.id = `${attachmentData.length}`;
@@ -262,38 +330,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     setAttachmentData(u);
   };
 
-  //Handle form changes
-  const handleChange = (event: React.SyntheticEvent) => {
-    const t = event.target as HTMLInputElement;
-    if (t.id === "status") {
-      //handle public/private toggle
-      const newStatus = formData.status === "unlisted" ? "listed" : "unlisted";
-      setFormData({ ...formData, [t.id]: newStatus });
-    } else {
-      setFormData({ ...formData, [t.id]: t.value });
-    }
-    console.log(`${[t.id]}: ${t.value}`);
-  };
-
-  const handleInstitutionChange = (event: React.SyntheticEvent) => {
-    const t = event.target as HTMLInputElement;
-    setInstitutionData([{ ...institutionData[0], [t.id]: t.value }]);
-    console.log(`${[t.id]}: ${t.value}`);
-  };
-
-  //Get public/private form label
-  const getPublicPrivateLabel = (status: string) => {
-    if (status === "unlisted") {
-      return "Private (only viewable to you)";
-    } else {
-      return "Public (anyone can view)";
-    }
-  };
-
-  //-- data set up for attachments
-  const att = {} as IAttachment;
-  att.id = "0";
-  const [attachmentData, setAttachmentData] = useState([att]);
+  //setup elements for attachment
   let attachments = [];
   for (let i = 0; i < attachmentData.length; i++) {
     attachments.push(
@@ -306,8 +343,60 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     );
   }
 
-  //if user is logged in, show form
-  if (status === "authenticated") {
+  //if submitted, show progress and status confirmation
+  if (status === "authenticated" && formSubmitted === true) {
+    return (
+      <>
+        <Head>
+          <title>New Syllabus</title>
+          <meta name="description" content="Create a new syllabus" />
+          <Favicons />
+        </Head>
+
+        <Container fluid id="header-section" className="sticky-top">
+          <GlobalNav />
+        </Container>
+        <Container>
+          <Row className="pt-3 pb-3">
+            <Col className="col-8 offset-2">
+              <h1 className="h3">Creating new syllabus...</h1>
+
+              <ul>
+                <SyllabusCreationStatus status={syllabusCreated} />
+                <li>
+                  syllabusCreated:
+                  <pre>{syllabusCreated}</pre>
+                </li>
+
+                <InstitutionCreationStatus status={institutionCreated} />
+                <li>
+                  institutionCreated:
+                  <pre>{institutionCreated}</pre>
+                </li>
+
+                <AttachmentsCreationStatus status={attachmentsCreated} />
+                <li>
+                  attachmentsCreated:
+                  <pre>{attachmentsCreated}</pre>
+                </li>
+              </ul>
+
+              <h2>Success!</h2>
+              <p>
+                View{" "}
+                <Link href={`/syllabus/${syllabusUUID}`}>
+                  <a>{formData.title} here</a>
+                </Link>
+                .
+              </p>
+            </Col>
+          </Row>
+        </Container>
+      </>
+    );
+  }
+  if (status === "authenticated" && formSubmitted === false) {
+    //if user is logged in, show form
     return (
       <>
         <Head>
@@ -387,7 +476,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                     </Form.Group>
 
                     <Form.Group className="mb-1">
-                      <Form.Label htmlFor="language">Country*</Form.Label>
+                      <Form.Label htmlFor="country">Country*</Form.Label>
                       <Form.Select
                         id="country"
                         onChange={handleInstitutionChange}
@@ -470,20 +559,37 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                   </Form.Group>
 
                   <Form.Group className="mb-5">
+                    <Form.Label htmlFor="academic_fields" className="mb-0">
+                      Academic Field
+                    </Form.Label>
+                    <div
+                      className="col-6"
+                      id="academicFieldsInputSection"
+                      data-cy="academicFieldsInputSection"
+                    >
+                      {generateAcademicFieldsCheckboxes(
+                        handleAcademicFieldChange
+                      )}
+                    </div>
+                  </Form.Group>
+
+                  <Form.Group className="mb-5">
                     <Form.Label htmlFor="academic_level" className="mb-0">
                       Academic Level
                     </Form.Label>
-                    <Form.Select
-                      id="academic_level"
-                      onChange={handleChange}
-                      value={formData.academic_level}
-                      data-cy="academicLevelInput"
-                    >
-                      <option value="0">Other</option>
-                      <option value="1">Bachelor</option>
-                      <option value="2">Master</option>
-                      <option value="3">Doctoral</option>
-                    </Form.Select>
+                    <div className="col-6">
+                      <Form.Select
+                        id="academic_level"
+                        onChange={handleChange}
+                        value={formData.academic_level}
+                        data-cy="academicLevelInput"
+                      >
+                        <option value="0">Other</option>
+                        <option value="1">Bachelor</option>
+                        <option value="2">Master</option>
+                        <option value="3">Doctoral</option>
+                      </Form.Select>
+                    </div>
                   </Form.Group>
 
                   <Form.Group className="mb-3">
@@ -631,8 +737,6 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
       </>
     );
   }
-
-  //if successfully created, show confirmation
 
   //else, user is not logged in, show prompt
   return (
