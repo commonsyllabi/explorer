@@ -11,7 +11,7 @@ const SyllabusCreationStatus: React.FunctionComponent<
     case "pending":
       return (
         <li>
-          <em>Setting core course info..</em>.
+          <em>Setting core course info...</em>
         </li>
       );
     case "created":
