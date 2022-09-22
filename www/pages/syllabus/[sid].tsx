@@ -70,10 +70,10 @@ const Syllabus: NextPage<ISyllabus> = (props) => {
         <Row className="d-flex justify-content-center">
           <Col className="pt-3 pb-5 d-flex flex-column gap-3" lg={10}>
             <SyllabusSchoolCodeYear
-              institution={props.institutions[0].name}
+              institution={props.institutions && props.institutions[0].name}
               courseNumber={props.course_number}
-              year={props.institutions[0].date.year}
-              term={props.institutions[0].date.term}
+              year={props.institutions && props.institutions[0].date.year}
+              term={props.institutions && props.institutions[0].date.term}
             />
             <h1 className="p-0 m-0">
               {props.title ? props.title : "Course Title"}
