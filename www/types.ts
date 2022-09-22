@@ -47,6 +47,26 @@ export interface ISyllabus {
   attachments?: IResources[];
 }
 
+export interface IFormData {
+  institutions: IInstitution[];
+  title: string;
+  course_number: string;
+  description: string;
+  attachments: IAttachment[];
+  tags: string[];
+  language: string;
+  learning_outcomes: string[];
+  topic_outlines: string[];
+  readings: string[];
+  grading_rubric: string;
+  assignments: string[];
+  other: string;
+  status: string;
+  academic_fields: string[];
+  academic_level: number;
+  duration: number;
+}
+
 export interface IResources {
   uuid: string;
   name: string;

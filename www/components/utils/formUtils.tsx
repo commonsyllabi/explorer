@@ -1,3 +1,7 @@
+import Form from "react-bootstrap/Form";
+
+import models from "models.json"; //import academic field codes
+
 //Data Libraries for Countries adn Languages
 const countries = require("i18n-iso-countries");
 const languages = require("@cospired/i18n-iso-languages");
@@ -45,4 +49,25 @@ export const generateLanguageOptions = () => {
     </option>
   ));
   return <>{elements}</>;
+};
+
+//Return <Form.Check/> (checkbox) elements for academic fields
+export const generateAcademicFieldsCheckboxes = (eventHandler) => {
+  // console.log(models.ACADEMIC_FIELDS);
+  const acadFields: { [key: string]: string } = models.ACADEMIC_FIELDS;
+  // Process acadFields into categories
+
+  const acadFieldsCheckboxes = Object.keys(acadFields).map((fieldCode) => (
+    <Form.Check
+      type="checkbox"
+      label={`${acadFields[fieldCode]} [${fieldCode}]`}
+      key={fieldCode}
+      id={fieldCode}
+      onChange={eventHandler}
+      data-cy={`academicFieldsInput${acadFields[fieldCode]}`}
+      value={acadFields[fieldCode]}
+      className="academicFieldInput"
+    />
+  ));
+  return <>{acadFieldsCheckboxes}</>;
 };

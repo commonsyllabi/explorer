@@ -5,7 +5,7 @@ import Head from "next/head";
 import Link from "next/link";
 
 //Interfaces
-import { IAttachment } from "types";
+import { IFormData, IAttachment, IInstitution } from "types";
 
 //Bootstrap
 import Container from "react-bootstrap/Container";
@@ -25,6 +25,7 @@ import NewSyllabusAttachment from "components/Syllabus/NewSyllabusAttachment";
 import {
   generateCountryOptions,
   generateLanguageOptions,
+  generateAcademicFieldsCheckboxes,
 } from "components/utils/formUtils";
 
 import Favicons from "components/head/favicons";
@@ -54,7 +55,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
   //Form data and submission handling
   //---------------------------------------
   //Store form data
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<IFormData>({
     institutions: [],
     title: "",
     course_number: "",
@@ -239,6 +240,24 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     const t = event.target as HTMLInputElement;
     setInstitutionData([{ ...institutionData[0], [t.id]: t.value }]);
     console.log(`${[t.id]}: ${t.value}`);
+  };
+
+  const handleAcademicFieldChange = (event: React.SyntheticEvent) => {
+    const allInputGroups: HTMLCollection =
+      document.getElementsByClassName("academicFieldInput");
+    let checkedFields = [];
+    for (let i = 0; i < allInputGroups.length; i++) {
+      const fieldCode =
+        allInputGroups[i].getElementsByTagName("input")[0].value;
+      const isChecked =
+        allInputGroups[i].getElementsByTagName("input")[0].checked;
+      // console.log(`${fieldCode}: ${isChecked}`);
+      if (isChecked === true) {
+        checkedFields.push(fieldCode);
+      }
+    }
+    console.log(`checkedFields: ${checkedFields}`);
+    setFormData({ ...formData, ["academic_fields"]: checkedFields });
   };
 
   //Get public/private form label
@@ -430,20 +449,55 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                   </Form.Group>
 
                   <Form.Group className="mb-5">
+                    <Form.Label htmlFor="academic_fields" className="mb-0">
+                      Academic Field
+                    </Form.Label>
+                    <div
+                      className="col-6"
+                      id="academicFieldsInputSection"
+                      data-cy="academicFieldsInputSection"
+                    >
+                      {/* <Form.Check
+                        type="checkbox"
+                        label="Art"
+                        id="academic_fields"
+                        onChange={handleAcademicFieldChange}
+                        data-cy="academicFieldsInputArt"
+                        value="art"
+                        className="academicFieldInput"
+                      />
+                      <Form.Check
+                        type="checkbox"
+                        label="Science"
+                        id="academic_fields"
+                        onChange={handleAcademicFieldChange}
+                        data-cy="academicFieldsInputScience"
+                        value="science"
+                        className="academicFieldInput"
+                      /> */}
+                      {generateAcademicFieldsCheckboxes(
+                        handleAcademicFieldChange
+                      )}
+                    </div>
+                  </Form.Group>
+
+                  <Form.Group className="mb-5">
                     <Form.Label htmlFor="academic_level" className="mb-0">
                       Academic Level
                     </Form.Label>
-                    <Form.Select
-                      id="academic_level"
-                      onChange={handleChange}
-                      value={formData.academic_level}
-                      data-cy="academicLevelInput"
-                    >
-                      <option value="0">Other</option>
-                      <option value="1">Bachelor</option>
-                      <option value="2">Master</option>
-                      <option value="3">Doctoral</option>
-                    </Form.Select>
+                    <div className="col-6">
+                      <Form.Select
+                        id="academic_level"
+                        onChange={handleChange}
+                        value={formData.academic_level}
+                        data-cy="academicLevelInput"
+                      >
+                        <option value="0">Other</option>
+                        <option value="1">Bachelor</option>
+                        <option value="2">Master</option>
+                        <option value="3">Doctoral</option>
+                      </Form.Select>
+                    </div>
                   </Form.Group>
 
                   <Form.Group className="mb-3">
