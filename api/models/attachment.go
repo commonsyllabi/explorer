@@ -2,6 +2,8 @@ package models
 
 import (
 	"fmt"
+	"math"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -27,7 +29,10 @@ type Attachment struct {
 }
 
 func (a *Attachment) BeforeCreate(tx *gorm.DB) (err error) {
-	a.Slug = fmt.Sprintf("%s-%s", a.UUID.String()[:5], slug.Make(a.Name))
+	sp := strings.Split(slug.Make(a.Name), "-")
+	i := math.Min(float64(len(sp)), 5)
+
+	a.Slug = fmt.Sprintf("%s-%s", strings.Join(sp[:int(i)], "-"), a.UUID.String()[:8])
 
 	return nil
 }

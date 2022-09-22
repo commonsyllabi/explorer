@@ -2,6 +2,8 @@ package models
 
 import (
 	"fmt"
+	"math"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -40,7 +42,10 @@ type User struct {
 }
 
 func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
-	u.Slug = fmt.Sprintf("%s-%s", u.UUID.String()[:5], slug.Make(u.Name))
+	s := strings.Split(slug.Make(u.Name), "-")
+	i := math.Min(float64(len(s)), 5)
+
+	u.Slug = fmt.Sprintf("%s-%s", strings.Join(s[:int(i)], "-"), u.UUID.String()[:8])
 
 	return nil
 }

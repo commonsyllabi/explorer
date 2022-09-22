@@ -47,23 +47,23 @@ var (
 func setup(t *testing.T) func(t *testing.T) {
 	os.Setenv("API_MODE", "test")
 	syllabusID = uuid.MustParse("46de6a2b-aacb-4c24-b1e1-3495821f846a")
-	syllabusSlug = "46de6-ungewohnt"
+	syllabusSlug = "ungewohnt-46de6a2b"
 	syllabusDeleteID = uuid.MustParse("46de6a2b-aacb-4c24-b1e1-3495821f8469")
 	syllabusUnknownID = uuid.New()
 
 	collectionID = uuid.MustParse("b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a9")
-	collectionSlug = "b9e4c-good-stuff"
+	collectionSlug = "good-stuff-b9e4c3ed"
 	collectionDeleteID = uuid.MustParse("b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a9")
 	collectionUnknownID = uuid.New()
 
 	attachmentID = uuid.MustParse("c55f0baf-12b8-4bdb-b5e6-2280bff8ab21")
-	attachmentSlug = "c55f0-chair-website"
+	attachmentSlug = "chair-website-c55f0baf"
 	attachmentDeleteID = uuid.MustParse("c55f0baf-12b8-4bdb-b5e6-2280bff8ab30")
 	attachmentUnknownID = uuid.New()
 	attachmentFilePath = filepath.Join(models.Basepath, "../../tests/files/image.png")
 
 	userID = uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c8a8")
-	userSlug = "e7b74-justyna-poplawska"
+	userSlug = "justyna-poplawska-e7b74bcd"
 	userDeleteID = uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c8a9")
 	userUnknownID = uuid.New()
 

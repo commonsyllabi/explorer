@@ -2,6 +2,8 @@ package models
 
 import (
 	"fmt"
+	"math"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -52,7 +54,10 @@ func (s *Syllabus) BeforeCreate(tx *gorm.DB) (err error) {
 		s.Tags = []string{}
 	}
 
-	s.Slug = fmt.Sprintf("%s-%s", s.UUID.String()[:5], slug.Make(s.Title))
+	sp := strings.Split(slug.Make(s.Title), "-")
+	i := math.Min(float64(len(sp)), 5)
+
+	s.Slug = fmt.Sprintf("%s-%s", strings.Join(sp[:int(i)], "-"), s.UUID.String()[:8])
 
 	return nil
 }
