@@ -1,7 +1,7 @@
-import { Container, Badge, Form, Tabs, Tab, Button } from "react-bootstrap";
-import { useEffect, useState } from "react";
+import { Form, Button } from "react-bootstrap";
+import { useState } from "react";
 
-import { IAttachment, IUploadAttachment } from "types";
+import { IUploadAttachment } from "types";
 
 interface INewSyllabusAttachmentProps {
   attachmentData: IUploadAttachment[];
@@ -12,7 +12,7 @@ const NewSyllbusAttachment: React.FunctionComponent<
   INewSyllabusAttachmentProps
 > = ({ attachmentData, setAttachmentData }) => {
   // Set up file data
-  const attachmentInfo: IUploadAttachment = {
+  const blankAttachment: IUploadAttachment = {
     id: attachmentData.length,
     name: "",
     description: "",
@@ -21,7 +21,7 @@ const NewSyllbusAttachment: React.FunctionComponent<
     url: "",
     type: "",
   };
-  const [thisAttachment, setThisAttachment] = useState(attachmentInfo);
+  const [thisAttachment, setThisAttachment] = useState(blankAttachment);
   const [fileData, setFileData] = useState({
     name: "",
     size: "",
@@ -32,29 +32,32 @@ const NewSyllbusAttachment: React.FunctionComponent<
   const [showFileUI, setShowFileUI] = useState(true);
   const toggleUI = () => {
     if (showFileUI === true) {
+      //reset the file/url fields of any old data upon toggle
+      setThisAttachment({
+        ...thisAttachment,
+        type: "url",
+        url: "",
+        file: undefined,
+        size: "",
+      });
       setShowFileUI(false);
     } else {
+      //reset the file/url fields of any old data upon toggle
+      setThisAttachment({
+        ...thisAttachment,
+        type: "",
+        url: "",
+        file: undefined,
+        size: "",
+      });
       setShowFileUI(true);
     }
   };
 
-  // useEffect(() => {
-  //   console.log(`updating attached data: ${attachmentData}`);
-  //   updateAttachment(attachmentData);
-  // }, [attachmentData]);
-
-  const handleAttachmentName = (event: React.SyntheticEvent): void => {
-    event.preventDefault();
-
+  const handleChange = (event: React.SyntheticEvent) => {
     const t = event.target as HTMLInputElement;
-    setThisAttachment({ ...thisAttachment, name: t.value });
-  };
-
-  const handleAttachmentDescription = (event: React.SyntheticEvent): void => {
-    event.preventDefault();
-
-    const t = event.target as HTMLInputElement;
-    setThisAttachment({ ...thisAttachment, description: t.value });
+    setThisAttachment({ ...thisAttachment, [t.id]: t.value });
+    console.log(`${[t.id]}: ${t.value}`);
   };
 
   const handleAttachmentFile = (event: React.SyntheticEvent): void => {
@@ -78,19 +81,13 @@ const NewSyllbusAttachment: React.FunctionComponent<
     });
   };
 
-  const handleAttachmentURL = (event: React.SyntheticEvent): void => {
-    event.preventDefault();
-
-    const t = event.target as HTMLInputElement;
-    setThisAttachment({ ...thisAttachment, url: t.value });
+  const handleSubmitNewAttachment = (): void => {
+    setAttachmentData([...attachmentData, thisAttachment]);
+    resetForm();
   };
 
-  //TODO: clear url or file data when radio buttons are clicked, so
-  //user can't submit both url and file.
-
-  const handleSubmitNewAttachment = () => {
-    setAttachmentData([...attachmentData, thisAttachment]);
-    //TODO: reset form
+  const resetForm = (): void => {
+    setThisAttachment(blankAttachment);
   };
 
   return (
@@ -99,10 +96,11 @@ const NewSyllbusAttachment: React.FunctionComponent<
         <Form.Group className="mb-1">
           <Form.Label>Attachment Name*</Form.Label>
           <Form.Control
-            onChange={handleAttachmentName}
+            onChange={handleChange}
             type="text"
             id="name"
             placeholder="required"
+            value={thisAttachment.name}
             data-cy="new-attachment-name"
           />
         </Form.Group>
@@ -110,10 +108,11 @@ const NewSyllbusAttachment: React.FunctionComponent<
         <Form.Group>
           <Form.Label>Description</Form.Label>
           <Form.Control
-            onChange={handleAttachmentDescription}
+            onChange={handleChange}
             type="text"
             id="description"
             placeholder="optional"
+            value={thisAttachment.description}
             as="textarea"
             rows={2}
             data-cy="new-attachment-description"
@@ -156,9 +155,10 @@ const NewSyllbusAttachment: React.FunctionComponent<
             <Form.Group>
               <Form.Label>Enter your URL here</Form.Label>
               <Form.Control
-                onChange={handleAttachmentURL}
+                onChange={handleChange}
                 type="text"
                 id="url"
+                value={thisAttachment.url}
                 data-cy={"new-attachment-url"}
               />
             </Form.Group>

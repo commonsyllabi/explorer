@@ -339,14 +339,8 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
 
   //display elements for attachment
   const getUploadedAttachments = (attachmentData: IUploadAttachment[]) => {
-    const uploadedAttachments = attachmentData.map((attachment, index) => (
-      <AttachmentItemFile
-        key={index}
-        name={attachment.name}
-        size={attachment.size}
-        type={attachment.type}
-        url={attachment.url}
-      />
+    const uploadedAttachments = attachmentData.map((attachment) => (
+      <AttachmentItemFile attachment={attachment} />
     ));
     return uploadedAttachments;
   };
