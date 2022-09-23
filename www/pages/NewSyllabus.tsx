@@ -311,7 +311,18 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     type: "url",
   };
 
-  const [attachmentData, setAttachmentData] = useState([dummyLinkAttachment]);
+  const dummyFileAttachment: IUploadAttachment = {
+    id: 1,
+    name: "Tropical File",
+    description: "What a lovely file",
+    type: "pdf",
+    size: "32.0mb",
+  };
+
+  const [attachmentData, setAttachmentData] = useState([
+    dummyLinkAttachment,
+    dummyFileAttachment,
+  ]);
 
   //-- set up handlers for attachments
   const handleNewAttachment = (event: React.SyntheticEvent) => {
