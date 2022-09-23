@@ -5,7 +5,7 @@ import Head from "next/head";
 import Link from "next/link";
 
 //Interfaces
-import { IFormData, IAttachment, IInstitution } from "types";
+import { IFormData, IAttachment, IUploadAttachment, IInstitution } from "types";
 
 //Bootstrap
 import Container from "react-bootstrap/Container";
@@ -35,6 +35,7 @@ import {
 
 import Favicons from "components/head/favicons";
 import SyllabusCreationStatus from "components/Syllabus/SyllabusCreationStatus";
+import AttachmentItemFile from "components/Syllabus/AttachmentItemFile";
 
 export const getStaticProps: GetStaticProps = async () => {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -302,13 +303,19 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
   };
 
   //-- data set up for attachments
-  const att = {} as IAttachment;
-  att.id = "0";
-  const [attachmentData, setAttachmentData] = useState([att]);
+  const dummyLinkAttachment: IUploadAttachment = {
+    id: 0,
+    name: "Banana Link",
+    description: "Real nice links.",
+    url: "www.banana.com",
+    type: "url",
+  };
+
+  const [attachmentData, setAttachmentData] = useState([dummyLinkAttachment]);
 
   //-- set up handlers for attachments
   const handleNewAttachment = (event: React.SyntheticEvent) => {
-    const a = {} as IAttachment;
+    const a = {} as IUploadAttachment;
     a.id = `${attachmentData.length}`;
     setAttachmentData([...attachmentData, a]);
   };
@@ -330,7 +337,19 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     setAttachmentData(u);
   };
 
-  //setup elements for attachment
+  //display elements for attachment
+  const getUploadedAttachments = (attachmentData: IUploadAttachment[]) => {
+    const uploadedAttachments = attachmentData.map((attachment, index) => (
+      <AttachmentItemFile
+        key={index}
+        name={attachment.name}
+        size={attachment.size}
+        type={attachment.type}
+        url={attachment.url}
+      />
+    ));
+    return uploadedAttachments;
+  };
   let attachments = [];
   for (let i = 0; i < attachmentData.length; i++) {
     attachments.push(
@@ -707,19 +726,19 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                   <hr className="my-3" />
                   {/* TODO: Make attachments work */}
                   <div className="mb-5">
-                    <h2 className="h4">Attachments</h2>
-                    {attachments}
-                    <Button
-                      type="button"
-                      onClick={handleNewAttachment}
-                      data-cy="attachment-add"
-                    >
-                      Add attachment
-                    </Button>
+                    <h2 className="h4">
+                      Attachments ({attachmentData.length})
+                    </h2>
+                    {getUploadedAttachments(attachmentData)}
+                    {/* {attachments} */}
+                    <NewSyllabusAttachment
+                      attachmentData={attachmentData}
+                      setAttachmentData={setAttachmentData}
+                    />
                   </div>
 
                   <Button type="submit" data-cy="courseSubmitButton">
-                    Submit form
+                    Submit New Syllabus
                   </Button>
 
                   {error !== "" ? (

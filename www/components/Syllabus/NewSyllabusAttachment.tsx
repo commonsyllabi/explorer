@@ -1,43 +1,60 @@
 import { Container, Badge, Form, Tabs, Tab, Button } from "react-bootstrap";
 import { useEffect, useState } from "react";
 
-import { IAttachment } from "types";
+import { IAttachment, IUploadAttachment } from "types";
 
 interface INewSyllabusAttachmentProps {
-  attachment: IAttachment;
-  updateAttachment: Function;
-  removeAttachment: Function;
+  attachmentData: IUploadAttachment[];
+  setAttachmentData: Function;
 }
 
 const NewSyllbusAttachment: React.FunctionComponent<
   INewSyllabusAttachmentProps
-> = ({ attachment, updateAttachment, removeAttachment }) => {
-  // Set up attachement & file data
-  const [attachmentData, setAttachmentData] = useState(attachment);
+> = ({ attachmentData, setAttachmentData }) => {
+  // Set up file data
+  const attachmentInfo: IUploadAttachment = {
+    id: attachmentData.length,
+    name: "",
+    description: "",
+    file: undefined,
+    size: "",
+    url: "",
+    type: "",
+  };
+  const [thisAttachment, setThisAttachment] = useState(attachmentInfo);
   const [fileData, setFileData] = useState({
     name: "",
     size: "",
     type: "",
   });
 
-  useEffect(() => {
-    console.log(`updating attached data: ${attachmentData}`);
-    updateAttachment(attachmentData);
-  }, [attachmentData]);
+  // For togging between file and url upload UI
+  const [showFileUI, setShowFileUI] = useState(true);
+  const toggleUI = () => {
+    if (showFileUI === true) {
+      setShowFileUI(false);
+    } else {
+      setShowFileUI(true);
+    }
+  };
+
+  // useEffect(() => {
+  //   console.log(`updating attached data: ${attachmentData}`);
+  //   updateAttachment(attachmentData);
+  // }, [attachmentData]);
 
   const handleAttachmentName = (event: React.SyntheticEvent): void => {
     event.preventDefault();
 
     const t = event.target as HTMLInputElement;
-    setAttachmentData({ ...attachment, name: t.value });
+    setThisAttachment({ ...thisAttachment, name: t.value });
   };
 
   const handleAttachmentDescription = (event: React.SyntheticEvent): void => {
     event.preventDefault();
 
     const t = event.target as HTMLInputElement;
-    setAttachmentData({ ...attachment, description: t.value });
-    updateAttachment(attachmentData);
+    setThisAttachment({ ...thisAttachment, description: t.value });
   };
 
   const handleAttachmentFile = (event: React.SyntheticEvent): void => {
@@ -47,7 +64,12 @@ const NewSyllbusAttachment: React.FunctionComponent<
     if (t.files == null) return;
 
     const f = t.files[0] as File;
-    setAttachmentData({ ...attachment, file: f });
+    setThisAttachment({
+      ...thisAttachment,
+      file: f,
+      size: (f.size * 0.000001).toFixed(2), //-- from byte to megabyte});
+      type: f.type,
+    });
 
     setFileData({
       name: f.name,
@@ -60,89 +82,96 @@ const NewSyllbusAttachment: React.FunctionComponent<
     event.preventDefault();
 
     const t = event.target as HTMLInputElement;
-    setAttachmentData({ ...attachment, url: t.value });
+    setThisAttachment({ ...thisAttachment, url: t.value });
   };
 
-  const handleRemoveAttachment = (): void => {
-    removeAttachment(attachmentData.id);
+  //TODO: clear url or file data when radio buttons are clicked, so
+  //user can't submit both url and file.
+
+  const handleSubmitNewAttachment = () => {
+    setAttachmentData([...attachmentData, thisAttachment]);
+    //TODO: reset form
   };
 
   return (
     <>
-      <div className="course-attachments p-3 mb-3 border rounded bg-light">
-        <div className="attachment-item">
-          {fileData.name == "" ? (
-            <></>
-          ) : (
-            <>
-              <h4 className="h5">{fileData.name}</h4>
-              <div className="d-flex">
-                <p className="mb-0">Size: {fileData.size} Mb</p>
-                <p className="mx-3">|</p>
-                <p>
-                  Type: <Badge bg="secondary">{fileData.type}</Badge>
-                </p>
-              </div>
-            </>
-          )}
-          <div className="gap-3">
-            <Form.Group className="mb-1">
-              <Form.Label>Attachment Name*</Form.Label>
-              <Form.Control
-                onChange={handleAttachmentName}
-                type="text"
-                id="name"
-                placeholder="required"
-                data-cy={"attachment-name-" + attachment.id}
-              />
-            </Form.Group>
+      <div className="p-3 mb-3 gap-3 border rounded bg-light">
+        <Form.Group className="mb-1">
+          <Form.Label>Attachment Name*</Form.Label>
+          <Form.Control
+            onChange={handleAttachmentName}
+            type="text"
+            id="name"
+            placeholder="required"
+            data-cy="new-attachment-name"
+          />
+        </Form.Group>
 
+        <Form.Group>
+          <Form.Label>Description</Form.Label>
+          <Form.Control
+            onChange={handleAttachmentDescription}
+            type="text"
+            id="description"
+            placeholder="optional"
+            as="textarea"
+            rows={2}
+            data-cy="new-attachment-description"
+          />
+        </Form.Group>
+
+        <Form.Group className="d-flex pt-3 pb-2 gap-3">
+          <Form.Label>Attachment Type:</Form.Label>
+          <Form.Check
+            type="radio"
+            label="file upload"
+            id="typeFile"
+            checked={showFileUI}
+            onChange={toggleUI}
+            data-cy={"new-attachment-type-file"}
+          />
+          <Form.Check
+            type="radio"
+            label="url"
+            id="typeUrl"
+            checked={!showFileUI}
+            onChange={toggleUI}
+            data-cy={"new-attachment-type-url"}
+          />
+        </Form.Group>
+        {showFileUI ? (
+          <div id="uploadControlsFile">
             <Form.Group>
-              <Form.Label>Description</Form.Label>
+              <Form.Label>Upload your file here</Form.Label>
               <Form.Control
-                onChange={handleAttachmentDescription}
-                type="text"
-                id="description"
-                placeholder="optional"
-                data-cy={"attachment-description-" + attachment.id}
+                onChange={handleAttachmentFile}
+                type="file"
+                id="file"
+                data-cy={"new-attachment-file"}
               />
             </Form.Group>
-
-            <Tabs defaultActiveKey="File" className="mt-3">
-              <Tab eventKey="File" title="File">
-                <Form.Group>
-                  <Form.Label>Upload your file here</Form.Label>
-                  <Form.Control
-                    onChange={handleAttachmentFile}
-                    type="file"
-                    id="file"
-                    data-cy={"attachment-file-" + attachment.id}
-                  />
-                </Form.Group>
-              </Tab>
-              <Tab eventKey="URL" title="URL">
-                <Form.Group>
-                  <Form.Label>Enter your URL here</Form.Label>
-                  <Form.Control
-                    onChange={handleAttachmentURL}
-                    type="text"
-                    id="url"
-                    data-cy={"attachment-url-" + attachment.id}
-                  />
-                </Form.Group>
-              </Tab>
-            </Tabs>
           </div>
-          <Button
-            variant="danger"
-            size="sm"
-            className="m-3"
-            onClick={handleRemoveAttachment}
-            data-cy={"attachment-remove-" + attachment.id}
-          >
-            Remove
-          </Button>
-        </div>
+        ) : (
+          <div id="uploadControlsUrl">
+            <Form.Group>
+              <Form.Label>Enter your URL here</Form.Label>
+              <Form.Control
+                onChange={handleAttachmentURL}
+                type="text"
+                id="url"
+                data-cy={"new-attachment-url"}
+              />
+            </Form.Group>
+          </div>
+        )}
+        <Button
+          type="button"
+          onClick={handleSubmitNewAttachment}
+          data-cy="attachment-add"
+          className="mt-3 mb-2"
+        >
+          Add attachment
+        </Button>
       </div>
     </>
   );
