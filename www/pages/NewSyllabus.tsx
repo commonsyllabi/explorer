@@ -324,48 +324,18 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     dummyFileAttachment,
   ]);
 
-  //-- set up handlers for attachments
-  const handleNewAttachment = (event: React.SyntheticEvent) => {
-    const a = {} as IUploadAttachment;
-    a.id = `${attachmentData.length}`;
-    setAttachmentData([...attachmentData, a]);
-  };
-
-  const updateAttachment = (updated: IAttachment) => {
-    let u = attachmentData.map((a) => {
-      if (a.id == updated.id) return updated;
-      else return a;
-    });
-
-    setAttachmentData(u);
-  };
-
-  const removeAttachment = (id: String) => {
-    let u = attachmentData.filter((a) => {
-      return a.id != id;
-    });
-
-    setAttachmentData(u);
-  };
-
   //display elements for attachment
   const getUploadedAttachments = (attachmentData: IUploadAttachment[]) => {
     const uploadedAttachments = attachmentData.map((attachment) => (
-      <AttachmentItemFile attachment={attachment} />
+      <AttachmentItemFile
+        key={`attachment-${attachment.id}`}
+        attachment={attachment}
+        attachmentData={attachmentData}
+        setAttachmentData={setAttachmentData}
+      />
     ));
     return uploadedAttachments;
   };
-  let attachments = [];
-  for (let i = 0; i < attachmentData.length; i++) {
-    attachments.push(
-      <NewSyllabusAttachment
-        attachment={attachmentData[i]}
-        updateAttachment={updateAttachment}
-        removeAttachment={removeAttachment}
-        key={`attachment-${i}`}
-      />
-    );
-  }
 
   //if submitted, show progress and status confirmation
   if (status === "authenticated" && formSubmitted === true) {

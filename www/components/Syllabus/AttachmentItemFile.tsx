@@ -5,17 +5,32 @@ import { IUploadAttachment } from "types";
 
 interface IAttachmentItemFileProps {
   attachment: IUploadAttachment;
+  attachmentData: IUploadAttachment[];
+  setAttachmentData: Function;
 }
 
 const AttachmentItemFile: React.FunctionComponent<IAttachmentItemFileProps> = ({
   attachment,
+  attachmentData,
+  setAttachmentData,
 }) => {
+  const removeAttachment = (event: React.SyntheticEvent) => {
+    const t = event.target as HTMLInputElement;
+    let keepTheseAttachments = attachmentData.filter((attachment) => {
+      return attachment.id != parseInt(t.id);
+    });
+    setAttachmentData(keepTheseAttachments);
+    console.log(`REMOVE ME!!!!`);
+  };
+
   if (attachment.type === "url") {
     return (
       <>
         <Card className="mb-3">
           <Card.Body>
-            <Card.Title>{attachment.name}</Card.Title>
+            <Card.Title>
+              {attachment.name} ({attachment.id})
+            </Card.Title>
             <div>
               <p>
                 <a href={attachment.url} target="_blank" rel="noreferrer">
@@ -31,7 +46,14 @@ const AttachmentItemFile: React.FunctionComponent<IAttachmentItemFileProps> = ({
                 </p>
               )}
             </div>
-            <Button variant="danger">Delete</Button>
+            <Button
+              variant="danger"
+              size="sm"
+              id={attachment.id.toString()}
+              onClick={removeAttachment}
+            >
+              Delete
+            </Button>
           </Card.Body>
         </Card>
       </>
@@ -41,7 +63,9 @@ const AttachmentItemFile: React.FunctionComponent<IAttachmentItemFileProps> = ({
       <>
         <Card className="mb-3">
           <Card.Body>
-            <Card.Title>{attachment.name}</Card.Title>
+            <Card.Title>
+              {attachment.name} ({attachment.id})
+            </Card.Title>
             <div>
               <p className="small text-muted mb-0">Description:</p>
               {attachment.description ? (
@@ -62,7 +86,14 @@ const AttachmentItemFile: React.FunctionComponent<IAttachmentItemFileProps> = ({
                 <Badge bg="secondary">{attachment.type}</Badge>
               </p>
             </div>
-            <Button variant="danger">Delete</Button>
+            <Button
+              variant="danger"
+              size="sm"
+              id={attachment.id.toString()}
+              onClick={removeAttachment}
+            >
+              Delete
+            </Button>
           </Card.Body>
         </Card>
       </>

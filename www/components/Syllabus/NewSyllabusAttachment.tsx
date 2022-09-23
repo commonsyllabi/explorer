@@ -1,5 +1,5 @@
 import { Form, Button } from "react-bootstrap";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { IUploadAttachment } from "types";
 
@@ -12,8 +12,17 @@ const NewSyllbusAttachment: React.FunctionComponent<
   INewSyllabusAttachmentProps
 > = ({ attachmentData, setAttachmentData }) => {
   // Set up file data
+  const setNewId = () => {
+    let currentGreatestId;
+    if (attachmentData.length) {
+      currentGreatestId = attachmentData[attachmentData.length - 1].id + 1;
+    } else {
+      currentGreatestId = 0;
+    }
+    setThisAttachment({ ...thisAttachment, id: currentGreatestId });
+  };
   const blankAttachment: IUploadAttachment = {
-    id: attachmentData.length,
+    id: 0,
     name: "",
     description: "",
     file: undefined,
@@ -57,7 +66,8 @@ const NewSyllbusAttachment: React.FunctionComponent<
   const handleChange = (event: React.SyntheticEvent) => {
     const t = event.target as HTMLInputElement;
     setThisAttachment({ ...thisAttachment, [t.id]: t.value });
-    console.log(`${[t.id]}: ${t.value}`);
+    //console.log(JSON.stringify(thisAttachment));
+    // console.log(`${[t.id]}: ${t.value}`);
   };
 
   const handleAttachmentFile = (event: React.SyntheticEvent): void => {
@@ -83,16 +93,25 @@ const NewSyllbusAttachment: React.FunctionComponent<
 
   const handleSubmitNewAttachment = (): void => {
     setAttachmentData([...attachmentData, thisAttachment]);
-    resetForm();
   };
+
+  //After new attachment is added to attachmentData, reset form
+  useEffect(() => {
+    resetForm();
+  }, [attachmentData]);
 
   const resetForm = (): void => {
     setThisAttachment(blankAttachment);
+    setNewId();
+    console.log(`Reset form called.`);
+    console.log(`thisAttachment: ${JSON.stringify(thisAttachment)}`);
+    // console.log(`blankAttachment: ${JSON.stringify(blankAttachment)}`);
   };
 
   return (
     <>
       <div className="p-3 mb-3 gap-3 border rounded bg-light">
+        <p>Current Id: {thisAttachment.id}</p>
         <Form.Group className="mb-1">
           <Form.Label>Attachment Name*</Form.Label>
           <Form.Control
