@@ -78,18 +78,6 @@ func TestSyllabusModel(t *testing.T) {
 		assert.NotZero(t, result.CreatedAt)
 	})
 
-	t.Run("Test create syllabus with attachments", func(t *testing.T) {
-		attachments := make([]models.Attachment, 3)
-		syll := models.Syllabus{
-			Title:       "Test Title with Attachments",
-			Attachments: attachments,
-		}
-		_, err := models.CreateSyllabus(userID, &syll)
-		require.Nil(t, err)
-		t.Skip("TODO -- issue with creating attachments as nested structs")
-		// assert.Equal(t, len(syll.Attachments), len(result.Attachments))
-	})
-
 	t.Run("Test get syllabus", func(t *testing.T) {
 		syll, err := models.GetSyllabus(syllabusID)
 		require.Nil(t, err)

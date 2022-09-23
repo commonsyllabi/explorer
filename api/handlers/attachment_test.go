@@ -1,7 +1,9 @@
 package handlers_test
 
 import (
+	"bytes"
 	"encoding/json"
+	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -39,30 +41,21 @@ func TestAttachmentHandler(t *testing.T) {
 	})
 
 	t.Run("Test create attachment with file", func(t *testing.T) {
-		f := make(url.Values)
-		f.Set("name", "Test Attachment file")
-		f.Set("desc", "")
-		f.Set("url", "")
-
 		q := make(url.Values)
-		q.Set("syllabusID", syllabusID.String())
+		q.Set("syllabus_id", syllabusID.String())
 
-		t.Skip("how to upload a file with echo test")
-		// var fw io.Writer
-		// file := mustOpen(attachmentFilePath)
-		// fw, err := w.CreateFormFile("file", file.Name())
-		// if err != nil {
-		// 	t.Error(err)
-		// }
-
-		// if _, err := io.Copy(fw, file); err != nil {
-		// 	t.Error(err)
-		// }
-		//
+		body := new(bytes.Buffer)
+		writer := multipart.NewWriter(body)
+		writer.WriteField("name", "Test Attachment file")
+		writer.WriteField("description", "Test description")
+		writer.WriteField("url", "")
+		part, _ := writer.CreateFormFile("file", "file.csv") //-- todo open actual file
+		part.Write([]byte(`wovon man kann nicht sprechen, darüber muss man schweigen.`))
+		writer.Close()
 
 		res := httptest.NewRecorder()
-		req := httptest.NewRequest(http.MethodPost, "/attachments?"+q.Encode(), strings.NewReader(f.Encode()))
-		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationForm)
+		req := httptest.NewRequest(http.MethodPost, "/attachments?"+q.Encode(), body)
+		req.Header.Set(echo.HeaderContentType, writer.FormDataContentType()) // <<< important part
 		c := echo.New().NewContext(req, res)
 		c.Set("config", conf)
 
