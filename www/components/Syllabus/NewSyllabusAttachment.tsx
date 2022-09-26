@@ -42,7 +42,7 @@ const NewSyllbusAttachment: React.FunctionComponent<
   // For togging between file and url upload UI
   const [showFileUI, setShowFileUI] = useState(true);
   const toggleUI = () => {
-    if (showFileUI === true) {
+    if (showFileUI) {
       //reset the file/url fields of any old data upon toggle
       setThisAttachment({
         ...thisAttachment,
@@ -56,7 +56,7 @@ const NewSyllbusAttachment: React.FunctionComponent<
       //reset the file/url fields of any old data upon toggle
       setThisAttachment({
         ...thisAttachment,
-        type: "",
+        type: "file",
         url: "",
         file: undefined,
         size: "",
@@ -150,15 +150,16 @@ const NewSyllbusAttachment: React.FunctionComponent<
             type="radio"
             label="file upload"
             id="typeFile"
-            checked={showFileUI ? true : false}
+            name="attachmentType"
             onChange={toggleUI}
             data-cy={"new-attachment-type-file"}
+            defaultChecked={true}
           />
           <Form.Check
             type="radio"
             label="url"
             id="typeUrl"
-            checked={showFileUI ? false : true}
+            name="attachmentType"
             onChange={toggleUI}
             data-cy={"new-attachment-type-url"}
           />
@@ -183,7 +184,7 @@ const NewSyllbusAttachment: React.FunctionComponent<
                 onChange={handleChange}
                 type="text"
                 id="url"
-                value={thisAttachment.url}
+                // value={thisAttachment.url || ""}
                 data-cy={"new-attachment-url"}
               />
             </Form.Group>
