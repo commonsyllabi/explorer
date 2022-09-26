@@ -82,3 +82,13 @@ export interface IAttachment {
   file: File;
   url: string;
 }
+
+export interface IUploadAttachment {
+  id: number;
+  name: string;
+  description?: string;
+  file?: File;
+  size?: string;
+  url?: string;
+  type?: string;
+}

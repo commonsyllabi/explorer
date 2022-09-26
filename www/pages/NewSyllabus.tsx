@@ -5,7 +5,7 @@ import Head from "next/head";
 import Link from "next/link";
 
 //Interfaces
-import { IFormData, IAttachment, IInstitution } from "types";
+import { IFormData, IAttachment, IUploadAttachment, IInstitution } from "types";
 
 //Bootstrap
 import Container from "react-bootstrap/Container";
@@ -35,6 +35,7 @@ import {
 
 import Favicons from "components/head/favicons";
 import SyllabusCreationStatus from "components/Syllabus/SyllabusCreationStatus";
+import AttachmentItemFile from "components/Syllabus/AttachmentItemFile";
 
 export const getStaticProps: GetStaticProps = async () => {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -147,13 +148,13 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
 
     console.log(formData);
 
-    // Make POST request header
+    // Make syllabus POST request header
     const postHeader = new Headers();
     if (session != null && session.user != null)
       postHeader.append("Authorization", `Bearer ${session.user.token}`);
     else console.warn("No session found!");
 
-    // Make POST request body
+    // Make syllabus POST request body
     let body = new FormData();
 
     for (let [key, value] of Object.entries(formData)) {
@@ -252,6 +253,19 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
             })
               .then((res) => {
                 console.log(res);
+                if (res.status === 201) {
+                  const responseBody = res.json();
+                  console.log(`SUCCESS, attachments created.`);
+                  console.log(`Attachments POST response: ${responseBody}`);
+                  setAttachmentsCreated("created");
+                  return responseBody;
+                } else {
+                  const responseErrorMsg = res.text();
+                  console.log(`ERROR, attachments failed.`);
+                  console.log(`Attachments POST response: ${responseErrorMsg}`);
+                  setAttachmentsCreated("failed");
+                  return responseErrorMsg;
+                }
               })
               .catch((err) => {
                 console.log(err);
@@ -302,46 +316,39 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
   };
 
   //-- data set up for attachments
-  const att = {} as IAttachment;
-  att.id = "0";
-  const [attachmentData, setAttachmentData] = useState([att]);
-
-  //-- set up handlers for attachments
-  const handleNewAttachment = (event: React.SyntheticEvent) => {
-    const a = {} as IAttachment;
-    a.id = `${attachmentData.length}`;
-    setAttachmentData([...attachmentData, a]);
+  const dummyLinkAttachment: IUploadAttachment = {
+    id: 0,
+    name: "Banana Link",
+    description: "Real nice links.",
+    url: "www.banana.com",
+    type: "url",
   };
 
-  const updateAttachment = (updated: IAttachment) => {
-    let u = attachmentData.map((a) => {
-      if (a.id == updated.id) return updated;
-      else return a;
-    });
-
-    setAttachmentData(u);
+  const dummyFileAttachment: IUploadAttachment = {
+    id: 1,
+    name: "Tropical File",
+    description: "What a lovely file",
+    type: "pdf",
+    size: "32.0mb",
   };
 
-  const removeAttachment = (id: String) => {
-    let u = attachmentData.filter((a) => {
-      return a.id != id;
-    });
+  const [attachmentData, setAttachmentData] = useState([
+    dummyLinkAttachment,
+    dummyFileAttachment,
+  ]);
 
-    setAttachmentData(u);
-  };
-
-  //setup elements for attachment
-  let attachments = [];
-  for (let i = 0; i < attachmentData.length; i++) {
-    attachments.push(
-      <NewSyllabusAttachment
-        attachment={attachmentData[i]}
-        updateAttachment={updateAttachment}
-        removeAttachment={removeAttachment}
-        key={`attachment-${i}`}
+  //display elements for attachment
+  const getUploadedAttachments = (attachmentData: IUploadAttachment[]) => {
+    const uploadedAttachments = attachmentData.map((attachment) => (
+      <AttachmentItemFile
+        key={`attachment-${attachment.id}`}
+        attachment={attachment}
+        attachmentData={attachmentData}
+        setAttachmentData={setAttachmentData}
       />
-    );
-  }
+    ));
+    return uploadedAttachments;
+  };
 
   //if submitted, show progress and status confirmation
   if (status === "authenticated" && formSubmitted === true) {
@@ -707,19 +714,19 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                   <hr className="my-3" />
                   {/* TODO: Make attachments work */}
                   <div className="mb-5">
-                    <h2 className="h4">Attachments</h2>
-                    {attachments}
-                    <Button
-                      type="button"
-                      onClick={handleNewAttachment}
-                      data-cy="attachment-add"
-                    >
-                      Add attachment
-                    </Button>
+                    <h2 className="h4">
+                      Attachments ({attachmentData.length})
+                    </h2>
+                    {getUploadedAttachments(attachmentData)}
+                    {/* {attachments} */}
+                    <NewSyllabusAttachment
+                      attachmentData={attachmentData}
+                      setAttachmentData={setAttachmentData}
+                    />
                   </div>
 
                   <Button type="submit" data-cy="courseSubmitButton">
-                    Submit form
+                    Submit New Syllabus
                   </Button>
 
                   {error !== "" ? (
