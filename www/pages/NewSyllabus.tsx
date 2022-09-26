@@ -148,13 +148,13 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
 
     console.log(formData);
 
-    // Make POST request header
+    // Make syllabus POST request header
     const postHeader = new Headers();
     if (session != null && session.user != null)
       postHeader.append("Authorization", `Bearer ${session.user.token}`);
     else console.warn("No session found!");
 
-    // Make POST request body
+    // Make syllabus POST request body
     let body = new FormData();
 
     for (let [key, value] of Object.entries(formData)) {
@@ -253,6 +253,19 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
             })
               .then((res) => {
                 console.log(res);
+                if (res.status === 201) {
+                  const responseBody = res.json();
+                  console.log(`SUCCESS, attachments created.`);
+                  console.log(`Attachments POST response: ${responseBody}`);
+                  setAttachmentsCreated("created");
+                  return responseBody;
+                } else {
+                  const responseErrorMsg = res.text();
+                  console.log(`ERROR, attachments failed.`);
+                  console.log(`Attachments POST response: ${responseErrorMsg}`);
+                  setAttachmentsCreated("failed");
+                  return responseErrorMsg;
+                }
               })
               .catch((err) => {
                 console.log(err);

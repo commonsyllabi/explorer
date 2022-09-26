@@ -12,15 +12,7 @@ const NewSyllbusAttachment: React.FunctionComponent<
   INewSyllabusAttachmentProps
 > = ({ attachmentData, setAttachmentData }) => {
   // Set up file data
-  const setNewId = () => {
-    let currentGreatestId;
-    if (attachmentData.length) {
-      currentGreatestId = attachmentData[attachmentData.length - 1].id + 1;
-    } else {
-      currentGreatestId = 0;
-    }
-    setThisAttachment({ ...thisAttachment, id: currentGreatestId });
-  };
+
   const blankAttachment: IUploadAttachment = {
     id: 0,
     name: "",
@@ -37,6 +29,16 @@ const NewSyllbusAttachment: React.FunctionComponent<
     type: "",
   });
 
+  const setNewId = () => {
+    let currentGreatestId;
+    if (attachmentData.length) {
+      currentGreatestId = attachmentData[attachmentData.length - 1].id + 1;
+    } else {
+      currentGreatestId = 0;
+    }
+    setThisAttachment({ ...blankAttachment, id: currentGreatestId });
+  };
+
   // For togging between file and url upload UI
   const [showFileUI, setShowFileUI] = useState(true);
   const toggleUI = () => {
@@ -49,7 +51,7 @@ const NewSyllbusAttachment: React.FunctionComponent<
         file: undefined,
         size: "",
       });
-      setShowFileUI(false);
+      setShowFileUI(false); //TODO: changing state of showFileUI causes warning on radio button component, value undefined at some point?
     } else {
       //reset the file/url fields of any old data upon toggle
       setThisAttachment({
@@ -100,8 +102,12 @@ const NewSyllbusAttachment: React.FunctionComponent<
     resetForm();
   }, [attachmentData]);
 
+  useEffect(() => {
+    console.log(`thisAttachment: ${JSON.stringify(thisAttachment)}`);
+  }, [thisAttachment]);
+
   const resetForm = (): void => {
-    setThisAttachment(blankAttachment);
+    // setThisAttachment(blankAttachment);
     setNewId();
     console.log(`Reset form called.`);
     console.log(`thisAttachment: ${JSON.stringify(thisAttachment)}`);
@@ -144,7 +150,7 @@ const NewSyllbusAttachment: React.FunctionComponent<
             type="radio"
             label="file upload"
             id="typeFile"
-            checked={showFileUI}
+            checked={showFileUI ? true : false}
             onChange={toggleUI}
             data-cy={"new-attachment-type-file"}
           />
@@ -152,7 +158,7 @@ const NewSyllbusAttachment: React.FunctionComponent<
             type="radio"
             label="url"
             id="typeUrl"
-            checked={!showFileUI}
+            checked={showFileUI ? false : true}
             onChange={toggleUI}
             data-cy={"new-attachment-type-url"}
           />
