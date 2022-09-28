@@ -18,7 +18,11 @@ export const getSyllabusCards = (
       uuid={item.uuid}
       status={item.status}
       title={item.title}
-      year={item? item.institutions? item.institutions[0].date.year : "2022" : "2022"}
+      year={
+        item.institutions && item.institutions.length
+          ? item.institutions[0].date.year
+          : "YEAR"
+      }
       courseNumber={item.course_number}
       author={item.user.name ? item.user.name : userName}
       authorUUID={userUuid ? userUuid : item.user_uuid}
