@@ -109,7 +109,7 @@ const AddAcademicFieldsForm: React.FunctionComponent<
           </Form.Select>
         </div>
       </div>
-      <Button variant="secondary">Add another field</Button>
+      {/* <Button variant="secondary">Add another category</Button> */}
     </Form.Group>
   );
 };
