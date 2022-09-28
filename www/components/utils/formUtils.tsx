@@ -1,6 +1,7 @@
 import Form from "react-bootstrap/Form";
 
 import models from "models.json"; //import academic field codes
+import modelsIsced from "models-isced.json"; //import tiered academic field codes
 
 //Get public/private form label
 export const getPublicPrivateLabel = (status: string) => {
@@ -53,11 +54,45 @@ const setUpLanguages = () => {
 export const generateLanguageOptions = () => {
   const languages = setUpLanguages();
   const elements = Object.keys(languages).map((langCode) => (
-    <option key={langCode} value={langCode.toUpperCase()}>
+    <option key={`${langCode}}`} value={langCode.toUpperCase()}>
       {langCode.toUpperCase()} – {languages[langCode]}
     </option>
   ));
   return <>{elements}</>;
+};
+
+//Return <option> elemtns for ACADEMIC_FIELD data,
+//params: ACADEMIC_FIELDS_BROAD, ACADEMIC_FIELDS_NARROW or ACADEMIC_FIELDS_DETAILS
+const generateAcademicFields = (ACAD_FIELD_JSON_DATA: {
+  [key: string]: string;
+}) => {
+  const acadFields: { [key: string]: string | { [key: string]: string } } =
+    ACAD_FIELD_JSON_DATA;
+
+  const acadFieldsElements = Object.keys(acadFields).map((fieldCode) => (
+    <option key={fieldCode} value={fieldCode}>
+      <>
+        {fieldCode} - {acadFields[fieldCode]}
+      </>
+    </option>
+  ));
+
+  return <>{acadFieldsElements}</>;
+};
+
+//Return <option> elements for ACADEMIC_FIELDS_BROAD
+export const generateAcadFieldsBroad = () => {
+  return generateAcademicFields(modelsIsced.BROAD_FIELDS);
+};
+
+//Return <option> elements for ACADEMIC_FIELDS_NARROW
+export const generateAcadFieldsNarrow = (broadFieldCode: string) => {
+  return generateAcademicFields(modelsIsced.NARROW_FIELDS[broadFieldCode]);
+};
+
+//Return <option> elements for ACADEMIC_FIELDS_DETAILED
+export const generateAcadFieldsDetailed = (narrowFieldCode: string) => {
+  return generateAcademicFields(modelsIsced.DETAILED_FIELDS[narrowFieldCode]);
 };
 
 //Return <Form.Check/> (checkbox) elements for academic fields

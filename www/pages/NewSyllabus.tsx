@@ -34,6 +34,7 @@ import {
   generateCountryOptions,
   generateLanguageOptions,
 } from "components/utils/formUtils";
+import AddAcademicFieldsForm from "components/NewSyllabus/AddAcademicFieldsForm";
 
 export const getStaticProps: GetStaticProps = async () => {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -293,6 +294,10 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     const t = event.target as HTMLInputElement;
     setInstitutionData([{ ...institutionData[0], [t.id]: t.value }]);
     console.log(`${[t.id]}: ${t.value}`);
+  };
+
+  const setAcadFieldsData = (acadFieldsArray: string[]) => {
+    setFormData({ ...formData, ["academic_fields"]: acadFieldsArray });
   };
 
   // TODO: Update this for the next academic field input system
@@ -564,38 +569,9 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                     </div>
                   </Form.Group>
 
-                  <Form.Group className="mb-5">
-                    <Form.Label htmlFor="academic_fields" className="mb-0">
-                      Academic Field
-                    </Form.Label>
-                    <div
-                      className="d-flex gap-2 mb-3"
-                      id="academicFieldsInputSection"
-                      data-cy="academicFieldsInputSection"
-                    >
-                      <Form.Select id="academic_field_broad">
-                        <option value="">–</option>
-                        <option value="1">Broad 1</option>
-                        <option value="2">Broad 2</option>
-                        <option value="3">Broad 3</option>
-                      </Form.Select>
-
-                      <Form.Select disabled id="academic_field_narrow">
-                        <option value="">–</option>
-                        <option value="1">Narrow 1</option>
-                        <option value="2">Narrow 2</option>
-                        <option value="3">Narrow 3</option>
-                      </Form.Select>
-
-                      <Form.Select disabled id="academic_field_detailed">
-                        <option value="">–</option>
-                        <option value="1">Detailed 1</option>
-                        <option value="2">Detailed 2</option>
-                        <option value="3">Detailed 3</option>
-                      </Form.Select>
-                    </div>
-                    <Button variant="secondary">Add another field</Button>
-                  </Form.Group>
+                  <AddAcademicFieldsForm
+                    setAcadFieldsData={setAcadFieldsData}
+                  />
 
                   <Form.Group className="mb-5">
                     <Form.Label htmlFor="academic_level" className="mb-0">
