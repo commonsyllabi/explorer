@@ -86,12 +86,12 @@ export const generateAcadFieldsBroad = () => {
 };
 
 //Return <option> elements for ACADEMIC_FIELDS_NARROW
-export const generateAcadFieldsNarrow = (broadFieldCode: string) => {
-  return generateAcademicFields(modelsIsced.NARROW_FIELDS[broadFieldCode]);
+export const generateAcadFieldsNarrow = (broadFieldCode: keyof typeof modelsIsced['NARROW_FIELDS']) => {
+    return generateAcademicFields(modelsIsced.NARROW_FIELDS[broadFieldCode]);
 };
 
 //Return <option> elements for ACADEMIC_FIELDS_DETAILED
-export const generateAcadFieldsDetailed = (narrowFieldCode: string) => {
+export const generateAcadFieldsDetailed = (narrowFieldCode: keyof typeof modelsIsced['DETAILED_FIELDS']) => {
   return generateAcademicFields(modelsIsced.DETAILED_FIELDS[narrowFieldCode]);
 };
 
