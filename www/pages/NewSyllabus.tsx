@@ -18,10 +18,13 @@ import { Alert, FormSelect, Tabs, Tab } from "react-bootstrap";
 import Badge from "react-bootstrap/Badge";
 
 //Components
+import Favicons from "components/head/favicons";
 import GlobalNav from "components/GlobalNav";
-import NewSyllabusAttachment from "components/Syllabus/NewSyllabusAttachment";
-import InstitutionCreationStatus from "components/Syllabus/InstitutionCreationStatus";
-import AttachmentsCreationStatus from "components/Syllabus/AttachmentsCreationStatus";
+import NewSyllabusAttachment from "components/NewSyllabus/NewSyllabusAttachment";
+import InstitutionCreationStatus from "components/NewSyllabus/InstitutionCreationStatus";
+import AttachmentsCreationStatus from "components/NewSyllabus/AttachmentsCreationStatus";
+import SyllabusCreationStatus from "components/NewSyllabus/SyllabusCreationStatus";
+import AttachmentItemFile from "components/NewSyllabus/AttachmentItemFile";
 
 //UI Utils
 import { getPublicPrivateLabel } from "components/utils/formUtils";
@@ -30,12 +33,7 @@ import { getPublicPrivateLabel } from "components/utils/formUtils";
 import {
   generateCountryOptions,
   generateLanguageOptions,
-  generateAcademicFieldsCheckboxes,
 } from "components/utils/formUtils";
-
-import Favicons from "components/head/favicons";
-import SyllabusCreationStatus from "components/Syllabus/SyllabusCreationStatus";
-import AttachmentItemFile from "components/Syllabus/AttachmentItemFile";
 
 export const getStaticProps: GetStaticProps = async () => {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -297,6 +295,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     console.log(`${[t.id]}: ${t.value}`);
   };
 
+  // TODO: Update this for the next academic field input system
   const handleAcademicFieldChange = (event: React.SyntheticEvent) => {
     const allInputGroups: HTMLCollection =
       document.getElementsByClassName("academicFieldInput");
@@ -570,14 +569,32 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                       Academic Field
                     </Form.Label>
                     <div
-                      className="col-6"
+                      className="d-flex gap-2 mb-3"
                       id="academicFieldsInputSection"
                       data-cy="academicFieldsInputSection"
                     >
-                      {generateAcademicFieldsCheckboxes(
-                        handleAcademicFieldChange
-                      )}
+                      <Form.Select id="academic_field_broad">
+                        <option value="">–</option>
+                        <option value="1">Broad 1</option>
+                        <option value="2">Broad 2</option>
+                        <option value="3">Broad 3</option>
+                      </Form.Select>
+
+                      <Form.Select disabled id="academic_field_narrow">
+                        <option value="">–</option>
+                        <option value="1">Narrow 1</option>
+                        <option value="2">Narrow 2</option>
+                        <option value="3">Narrow 3</option>
+                      </Form.Select>
+
+                      <Form.Select disabled id="academic_field_detailed">
+                        <option value="">–</option>
+                        <option value="1">Detailed 1</option>
+                        <option value="2">Detailed 2</option>
+                        <option value="3">Detailed 3</option>
+                      </Form.Select>
                     </div>
+                    <Button variant="secondary">Add another field</Button>
                   </Form.Group>
 
                   <Form.Group className="mb-5">

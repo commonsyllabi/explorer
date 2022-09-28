@@ -20,7 +20,7 @@ const AttachmentItemFile: React.FunctionComponent<IAttachmentItemFileProps> = ({
       return attachment.id != parseInt(t.id);
     });
     setAttachmentData(keepTheseAttachments);
-    console.log(`REMOVE ME!!!!`);
+    // console.log(`REMOVE ME!!!!`);
   };
 
   if (attachment.type === "url") {
