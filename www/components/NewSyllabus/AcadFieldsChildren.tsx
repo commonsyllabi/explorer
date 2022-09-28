@@ -1,4 +1,5 @@
 import * as React from "react";
+import modelsIsced from "models-isced.json"; //import tiered academic field codes
 
 import {
   generateAcadFieldsNarrow,
@@ -25,14 +26,18 @@ const AcadFieldsChildren: React.FunctionComponent<IAcadFieldsChildrenProps> = ({
       return (
         <>
           <option value="">–</option>
-          {generateAcadFieldsNarrow(parentFieldCode)}
+          {generateAcadFieldsNarrow(
+            parentFieldCode as keyof typeof modelsIsced["NARROW_FIELDS"]
+          )}
         </>
       );
     } else {
       return (
         <>
           <option value="">–</option>
-          {generateAcadFieldsDetailed(parentFieldCode)}
+          {generateAcadFieldsDetailed(
+            parentFieldCode as keyof typeof modelsIsced["DETAILED_FIELDS"]
+          )}
         </>
       );
     }
