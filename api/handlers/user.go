@@ -7,7 +7,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/commonsyllabi/explorer/api/auth"
 	zero "github.com/commonsyllabi/explorer/api/logger"
 	"github.com/commonsyllabi/explorer/api/models"
 	"github.com/commonsyllabi/explorer/mailer"
@@ -83,11 +82,11 @@ func CreateUser(c echo.Context) error {
 }
 
 func UpdateUser(c echo.Context) error {
-	user_uuid, err := auth.Authenticate(c)
-	if err != nil {
-		zero.Error(err.Error())
+	user_uuid := mustGetUser(c)
+	if user_uuid == uuid.Nil {
 		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
+
 	id := c.Param("id")
 	uid, err := uuid.Parse(id)
 	if err != nil {
@@ -124,9 +123,8 @@ func UpdateUser(c echo.Context) error {
 }
 
 func AddUserInstitution(c echo.Context) error {
-	user_uuid, err := auth.Authenticate(c)
-	if err != nil {
-		zero.Error(err.Error())
+	user_uuid := mustGetUser(c)
+	if user_uuid == uuid.Nil {
 		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
 
@@ -180,9 +178,8 @@ func GetUser(c echo.Context) error {
 }
 
 func RemoveUserInstitution(c echo.Context) error {
-	user_uuid, err := auth.Authenticate(c)
-	if err != nil {
-		zero.Error(err.Error())
+	user_uuid := mustGetUser(c)
+	if user_uuid == uuid.Nil {
 		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
 
@@ -210,11 +207,11 @@ func RemoveUserInstitution(c echo.Context) error {
 }
 
 func DeleteUser(c echo.Context) error {
-	user_uuid, err := auth.Authenticate(c)
-	if err != nil {
-		zero.Error(err.Error())
+	user_uuid := mustGetUser(c)
+	if user_uuid == uuid.Nil {
 		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
+
 	id := c.Param("id")
 	uid, err := uuid.Parse(id)
 	if err != nil {

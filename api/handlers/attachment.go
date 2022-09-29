@@ -11,7 +11,6 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/commonsyllabi/explorer/api/auth"
 	"github.com/commonsyllabi/explorer/api/config"
 	zero "github.com/commonsyllabi/explorer/api/logger"
 	"github.com/commonsyllabi/explorer/api/models"
@@ -30,10 +29,9 @@ func GetAllAttachments(c echo.Context) error {
 }
 
 func CreateAttachment(c echo.Context) error {
-	user_uuid, err := auth.Authenticate(c)
-	if err != nil {
-		zero.Error(err.Error())
-		return c.String(http.StatusUnauthorized, "Unauthorized")
+	user_uuid := mustGetUser(c)
+	if user_uuid == uuid.Nil {
+		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
 
 	conf, ok := c.Get("config").(config.Config)
@@ -42,7 +40,7 @@ func CreateAttachment(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, "There was an error uploading your syllabus. Please try again later.")
 	}
 
-	err = sanitizeAttachment(c)
+	err := sanitizeAttachment(c)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusBadRequest, err.Error())
@@ -131,10 +129,9 @@ func CreateAttachment(c echo.Context) error {
 }
 
 func UpdateAttachment(c echo.Context) error {
-	user_uuid, err := auth.Authenticate(c)
-	if err != nil {
-		zero.Error(err.Error())
-		return c.String(http.StatusUnauthorized, "Unauthorized")
+	user_uuid := mustGetUser(c)
+	if user_uuid == uuid.Nil {
+		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
 
 	id := c.Param("id")
@@ -205,11 +202,11 @@ func GetAttachment(c echo.Context) error {
 }
 
 func DeleteAttachment(c echo.Context) error {
-	user_uuid, err := auth.Authenticate(c)
-	if err != nil {
-		zero.Error(err.Error())
-		return c.String(http.StatusUnauthorized, "Unauthorized")
+	user_uuid := mustGetUser(c)
+	if user_uuid == uuid.Nil {
+		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
+
 	id := c.Param("id")
 	uid, err := uuid.Parse(id)
 	if err != nil {

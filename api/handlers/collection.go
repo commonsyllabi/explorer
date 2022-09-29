@@ -3,11 +3,9 @@ package handlers
 import (
 	"fmt"
 	"net/http"
-	"os"
 	"reflect"
 	"strings"
 
-	"github.com/commonsyllabi/explorer/api/auth"
 	zero "github.com/commonsyllabi/explorer/api/logger"
 	"github.com/commonsyllabi/explorer/api/models"
 	"github.com/google/uuid"
@@ -25,12 +23,12 @@ func GetAllCollections(c echo.Context) error {
 }
 
 func CreateCollection(c echo.Context) error {
-	_, err := auth.Authenticate(c)
-	if err != nil {
-		zero.Error(err.Error())
+	user_uuid := mustGetUser(c)
+	if user_uuid == uuid.Nil {
 		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
-	err = sanitizeCollection(c)
+
+	err := sanitizeCollection(c)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusBadRequest, "Please check your input information.")
@@ -43,11 +41,7 @@ func CreateCollection(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "There was an error parsing your input information.")
 	}
 
-	var userID uuid.UUID
-	if os.Getenv("API_MODE") == "test" {
-		userID = uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c8a8")
-	}
-	coll, err = models.CreateCollection(userID, &coll)
+	coll, err = models.CreateCollection(user_uuid, &coll)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusInternalServerError, "There was an error creating the Collection.")
@@ -57,10 +51,11 @@ func CreateCollection(c echo.Context) error {
 }
 
 func UpdateCollection(c echo.Context) error {
-	user_uuid, err := auth.Authenticate(c)
-	if err != nil {
+	user_uuid := mustGetUser(c)
+	if user_uuid == uuid.Nil {
 		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
+
 	id := c.Param("id")
 	uid, err := uuid.Parse(id)
 	if err != nil {
@@ -95,10 +90,11 @@ func UpdateCollection(c echo.Context) error {
 }
 
 func AddCollectionSyllabus(c echo.Context) error {
-	user_uuid, err := auth.Authenticate(c)
-	if err != nil {
+	user_uuid := mustGetUser(c)
+	if user_uuid == uuid.Nil {
 		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
+
 	coll_id := c.Param("id")
 	coll_uid, err := uuid.Parse(coll_id)
 	if err != nil {
@@ -167,9 +163,9 @@ func GetCollectionSyllabi(c echo.Context) error {
 
 func GetCollectionSyllabus(c echo.Context) error {
 	// authenticating to return unlisted but owned syllabi
-	user_uuid, err := auth.Authenticate(c)
-	if err != nil || user_uuid == uuid.Nil {
-		zero.Debug(err.Error())
+	user_uuid := mustGetUser(c)
+	if user_uuid == uuid.Nil {
+		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
 
 	coll_id := c.Param("id")
@@ -198,10 +194,11 @@ func GetCollectionSyllabus(c echo.Context) error {
 }
 
 func DeleteCollection(c echo.Context) error {
-	user_uuid, err := auth.Authenticate(c)
-	if err != nil {
+	user_uuid := mustGetUser(c)
+	if user_uuid == uuid.Nil {
 		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
+
 	id := c.Param("id")
 	uid, err := uuid.Parse(id)
 	if err != nil {
@@ -218,8 +215,8 @@ func DeleteCollection(c echo.Context) error {
 }
 
 func RemoveCollectionSyllabus(c echo.Context) error {
-	user_uuid, err := auth.Authenticate(c)
-	if err != nil {
+	user_uuid := mustGetUser(c)
+	if user_uuid == uuid.Nil {
 		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
 

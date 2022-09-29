@@ -15,7 +15,6 @@ Syllabus exploring and sharing platform
 
 ### todo
 
-- should move the logic of parsing uuid from handlers to the authenticate function (i.e. it returns directly a uuid, not a string)
 - definitely add a middleware authentication and pass it around (then, in protected routes, check if the uuid is Nil, then abort)
 
 - think about user input validation/sanitization
