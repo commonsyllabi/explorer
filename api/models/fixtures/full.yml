@@ -106,3 +106,36 @@
   name: "Common Syllabi"
   email: "mail@commonsyllabi.org"
   password: [36, 50, 97, 36, 49, 48, 36, 121, 72, 53, 79, 110, 76, 51, 98, 57, 112, 80, 81, 53, 49, 104, 54, 100, 74, 121, 54, 79, 101, 47, 117, 119, 78, 76, 57, 103, 107, 100, 88, 51, 90, 111, 73, 75, 80, 117, 113, 57, 104, 69, 102, 103, 85, 67, 51, 73, 56, 88, 113, 67]
+  syllabi:
+    - uuid: '46de6a2b-aacb-4c24-b1e1-6665821f846a'
+      title: "Politics of Code"
+      status: "listed"
+      language: fr
+      academic_level: 1
+      academic_fields:
+        - 100
+        - 200
+      description: "While our relationships between ourselves, our environment, and other people are inherently political, computer technologies and technology companies consistently claim to remain “neutral”.\nThis course will assume the opposite—software is political—, and focus on how software applications share commonalities with political systems, how they affect their users as political actors and how we can build alternatives or improvements to those systems."
+      duration: 14
+      attachments:
+        - uuid: 'c55f0baf-12b8-4bdb-b5e6-6660bff8ab21'
+          name: "Class website"
+          url: "https://githb.com/periode/politics-of-code"
+      tags:
+        - "politics"
+        - "code"
+        - "critical"
+    - uuid: '46de6a2b-666b-4c24-b1e1-3495821f8469'
+      title: "Augmenting the Gallery"
+      description: "Wall labels, audio guides, and informative maps are just some of the ways by which galleries and museums convey information and hidden narratives about a collection. Given the changing role of museums and galleries in the 21st century, how can we utilize new tools such as Augmented Reality (AR) to design and deliver immersive experiences that breathe new life into an exhibit? How can such tools do so without distracting from the power and importance of a collection, or by purposefully challenging problematic aspects such as an exhibit’s disputed provenance or ethical concerns? And how can these tools make collections more accessible to a wider audience?\nThis course mobilizes resources from museography, art history, sociology, interaction design and 3D, real-time development to answer these questions. Topics covered include exhibition installation and curation, mixed reality production in Unity, and mobile development for Augmented Reality. The course is open to students from a variety of academic backgrounds interested in gaining hands-on experience in applying new technologies to exhibition spaces."
+      language: en
+      academic_level: 2
+      duration: 14
+      attachments:
+        - uuid: 'c6660baf-12b8-4bdb-b5e6-2280bee8ab21'
+          name: "Course website"
+          url: "https://github.com/periode/augmenting-gallery"
+      tags:
+        - "museum studies"
+        - "augmented reality"
+        - "interactive media"
