@@ -63,7 +63,6 @@ const Home: NextPage<IHomeProps> = ({ syllabiListings }) => {
       </Head>
       <Container fluid id="header-section" className="sticky-top">
         <GlobalNav />
-        <FiltersBar />
       </Container>
 
       <Container>
