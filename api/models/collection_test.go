@@ -13,10 +13,10 @@ func TestCollectionModel(t *testing.T) {
 	teardown := setup(t)
 	defer teardown(t)
 
-	t.Run("Test get all collections", func(t *testing.T) {
+	t.Run("Test get all listed and owned collections", func(t *testing.T) {
 		res, err := models.GetAllCollections(userID)
 		require.Nil(t, err)
-		assert.Equal(t, len(res), 2)
+		assert.Equal(t, len(res), 3)
 	})
 
 	t.Run("Test create collection", func(t *testing.T) {

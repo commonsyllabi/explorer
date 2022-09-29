@@ -327,6 +327,27 @@ func TestSyllabusHandler(t *testing.T) {
 		assert.Equal(t, "Ungewohnt", syll.Title)
 	})
 
+	t.Run("Test get syllabus with listed collections", func(t *testing.T) {
+		res := httptest.NewRecorder()
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		c := echo.New().NewContext(req, res)
+		c.SetPath("/syllabi")
+		c.SetParamNames("id")
+		c.SetParamValues(syllabusID.String())
+
+		handlers.GetSyllabus(c)
+		assert.Equal(t, http.StatusOK, res.Code)
+
+		var syll models.Syllabus
+		err := json.Unmarshal(res.Body.Bytes(), &syll)
+		require.Nil(t, err)
+		assert.Equal(t, 1, len(syll.Collections))
+	})
+
+	t.Run("Test get syllabus with unlisted collections", func(t *testing.T) {
+		t.Log("todo")
+	})
+
 	t.Run("Test get syllabus by slug", func(t *testing.T) {
 		res := httptest.NewRecorder()
 		req := httptest.NewRequest(http.MethodGet, "/", nil)

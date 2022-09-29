@@ -91,6 +91,9 @@
   collections:
     - uuid: 'b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a7'
       name: "Design syllabi"
+      status: "listed"
+    - uuid: 'b9e4c3ed-ac4f-66e6-bb43-5123b7b6d7a7'
+      name: "Design syllabi"
 
 - uuid: 'e7b74bcd-c864-41ee-b5a7-d3031f76c8a0'
   status: "confirmed"
