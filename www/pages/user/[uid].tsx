@@ -3,6 +3,7 @@ import type { GetServerSideProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 import { IUser } from "types";
 
@@ -21,7 +22,6 @@ import Tabs from "react-bootstrap/Tabs";
 
 import { getSyllabusCards } from "components/utils/getSyllabusCards";
 import UserProfileSidebar from "components/User/UserProfileSidebar";
-import { propTypes } from "react-bootstrap/esm/Image";
 import { getCollectionCards } from "components/utils/getCollectionCards";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -43,8 +43,25 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 const About: NextPage<IUser> = (props) => {
   const router = useRouter();
-  const focusedTab = router.query["tab"];
 
+  const { data: session, status } = useSession();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  const checkIfAdmin = () => {
+    if (session != null && session.user != null) {
+      const loggedInId = session.user._id;
+      if (loggedInId === props.uuid) {
+        // console.log(`THIS IS YOUR OWN PROFILE PAGE.`);
+        return true;
+      } else {
+        // console.log(`THIS IS NOT YOUR PROFILE PAGE, VIEWING AS GUEST.`);
+        return false;
+      }
+    }
+    return false;
+  };
+
+  const focusedTab = router.query["tab"];
   const activeTab = focusedTab ? focusedTab : "syllabi";
 
   return (
@@ -63,7 +80,7 @@ const About: NextPage<IUser> = (props) => {
       </Container>
       <Container>
         <Row>
-          <UserProfileSidebar props={props} />
+          <UserProfileSidebar props={props} isAdmin={checkIfAdmin()} />
           <Col>
             <div className="py-4">
               <Tabs

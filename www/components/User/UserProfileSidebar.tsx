@@ -34,10 +34,12 @@ const getinstitutionNames = (
 
 interface IUserProfileSidebarProps {
   props: IUser;
+  isAdmin: boolean;
 }
 
 const UserProfileSidebar: React.FunctionComponent<IUserProfileSidebarProps> = ({
   props,
+  isAdmin,
 }) => {
   return (
     <Col lg="4">
@@ -61,11 +63,13 @@ const UserProfileSidebar: React.FunctionComponent<IUserProfileSidebarProps> = ({
         </div>
       </div>
       <UserListingsSection
+        isAdmin={isAdmin}
         sectionTitle="Syllabi"
         sectionContents={getPublicSyllabiList(props.syllabi)}
         sectionPrivateContents={getPrivateSyllabiList(props.syllabi)}
       />
       <UserListingsSection
+        isAdmin={isAdmin}
         sectionTitle="Collections"
         sectionContents={getPublicCollectionList(props.collections)}
         sectionPrivateContents={getPrivateCollectionList(props.collections)}
