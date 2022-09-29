@@ -22,13 +22,13 @@ func TestSyllabusModel(t *testing.T) {
 	searchParams["levels"] = "%"
 	searchParams["tags"] = "%"
 
-	t.Run("Test get all syllabi", func(t *testing.T) {
+	t.Run("Test get all listed syllabi", func(t *testing.T) {
 		syll, err := models.GetSyllabi(searchParams, userID)
 		require.Nil(t, err)
 		assert.Equal(t, 2, len(syll))
 	})
 
-	t.Run("Test get all syllabi written in french", func(t *testing.T) {
+	t.Run("Test get all listed syllabi written in french", func(t *testing.T) {
 		searchParams["languages"] = "%(de)%"
 		syll, err := models.GetSyllabi(searchParams, userID)
 		require.Nil(t, err)
@@ -36,7 +36,7 @@ func TestSyllabusModel(t *testing.T) {
 		searchParams["languages"] = "%"
 	})
 
-	t.Run("Test get all syllabi with keywords search", func(t *testing.T) {
+	t.Run("Test get all listed syllabi with keywords search", func(t *testing.T) {
 		searchParams["keywords"] = "%(berlin|architektur)%"
 		syll, err := models.GetSyllabi(searchParams, userID)
 		require.Nil(t, err)
@@ -44,7 +44,7 @@ func TestSyllabusModel(t *testing.T) {
 		searchParams["keywords"] = "%"
 	})
 
-	t.Run("Test get all syllabi with tag search", func(t *testing.T) {
+	t.Run("Test get all listed syllabi with tag search", func(t *testing.T) {
 		searchParams["tags"] = "%(design)%"
 		syll, err := models.GetSyllabi(searchParams, userID)
 		require.Nil(t, err)
@@ -52,7 +52,7 @@ func TestSyllabusModel(t *testing.T) {
 		searchParams["tags"] = "%"
 	})
 
-	t.Run("Test get all syllabi with levels", func(t *testing.T) {
+	t.Run("Test get all listed syllabi with levels", func(t *testing.T) {
 		searchParams["levels"] = "%(2)%"
 		syll, err := models.GetSyllabi(searchParams, userID)
 		require.Nil(t, err)
@@ -60,7 +60,7 @@ func TestSyllabusModel(t *testing.T) {
 		searchParams["levels"] = "%"
 	})
 
-	t.Run("Test get all syllabi with fields", func(t *testing.T) {
+	t.Run("Test get all listed syllabi with fields", func(t *testing.T) {
 		searchParams["fields"] = "%(100)%"
 		syll, err := models.GetSyllabi(searchParams, userID)
 		require.Nil(t, err)
@@ -85,6 +85,11 @@ func TestSyllabusModel(t *testing.T) {
 		assert.Equal(t, syllabusTitle, syll.Title)
 		assert.Equal(t, syllabusUserName, syll.User.Name)
 		assert.Equal(t, 1, len(syll.Institutions))
+	})
+
+	t.Run("Test get unlisted syllabus with unauthenticated user", func(t *testing.T) {
+		_, err := models.GetSyllabus(syllabusUnlistedID, userUnknownID)
+		assert.NotNil(t, err)
 	})
 
 	t.Run("Test get syllabus by slug", func(t *testing.T) {

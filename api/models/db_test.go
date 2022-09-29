@@ -12,13 +12,14 @@ import (
 )
 
 var (
-	databaseTestURL   string = "postgres://postgres:postgres@localhost:5432/explorer-test"
-	syllabusID        uuid.UUID
-	syllabusSlug      string
-	syllabusTitle     string
-	syllabusUserName  string
-	syllabusDeleteID  uuid.UUID
-	syllabusUnknownID uuid.UUID
+	databaseTestURL    string = "postgres://postgres:postgres@localhost:5432/explorer-test"
+	syllabusID         uuid.UUID
+	syllabusUnlistedID uuid.UUID
+	syllabusSlug       string
+	syllabusTitle      string
+	syllabusUserName   string
+	syllabusDeleteID   uuid.UUID
+	syllabusUnknownID  uuid.UUID
 
 	collectionID        uuid.UUID
 	collectionSlug      string
@@ -56,6 +57,7 @@ func TestInitDB(t *testing.T) {
 
 func setup(t *testing.T) func(t *testing.T) {
 	syllabusID = uuid.MustParse("46de6a2b-aacb-4c24-b1e1-3495821f846a")
+	syllabusUnlistedID = uuid.MustParse("46de6a2b-aacb-4c24-b1e1-3495821f8469")
 	syllabusSlug = "ungewohnt-46de6a2b"
 	syllabusTitle = "Ungewohnt"
 	syllabusUserName = "Justyna Poplawska"

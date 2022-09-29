@@ -48,11 +48,11 @@ func TestUserModel(t *testing.T) {
 		assert.Equal(t, 2, len(result.Education))
 	})
 
-	t.Run("Test get user with syllabi and collections", func(t *testing.T) {
+	t.Run("Test get user with listed syllabi and collections", func(t *testing.T) {
 		user, err := models.GetUser(userID)
 		require.Nil(t, err)
 		assert.Equal(t, user.Name, userName)
-		assert.Equal(t, 2, len(user.Syllabi))
+		assert.Equal(t, 1, len(user.Syllabi))
 		assert.Equal(t, 1, len(user.Collections))
 	})
 

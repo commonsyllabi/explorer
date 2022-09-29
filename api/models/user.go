@@ -57,9 +57,21 @@ func CreateUser(user *User) (User, error) {
 
 func GetUser(uuid uuid.UUID) (User, error) {
 	var user User
-	err := db.Preload("Syllabi").Preload("Collections").Where("uuid = ?", uuid).First(&user).Error
+	err := db.Preload("Collections").Where("uuid = ?", uuid).First(&user).Error
 	if err != nil {
 		return user, err
+	}
+
+	var sylls []Syllabus
+	err = db.Model(&user).Association("Syllabi").Find(&sylls)
+	if err != nil {
+		return user, err
+	}
+
+	for _, syll := range sylls {
+		if syll.Status == "listed" {
+			user.Syllabi = append(user.Syllabi, syll)
+		}
 	}
 
 	var insts []Institution
@@ -75,9 +87,21 @@ func GetUser(uuid uuid.UUID) (User, error) {
 
 func GetUserByEmail(email string) (User, error) {
 	var user User
-	err := db.Preload("Syllabi").Preload("Collections").Where("email = ?", email).Find(&user).Error
+	err := db.Preload("Collections").Where("email = ?", email).Find(&user).Error
 	if err != nil {
 		return user, err
+	}
+
+	var sylls []Syllabus
+	err = db.Model(&user).Association("Syllabi").Find(&sylls)
+	if err != nil {
+		return user, err
+	}
+
+	for _, syll := range sylls {
+		if syll.Status == "listed" {
+			user.Syllabi = append(user.Syllabi, syll)
+		}
 	}
 
 	var insts []Institution
@@ -93,9 +117,21 @@ func GetUserByEmail(email string) (User, error) {
 
 func GetUserBySlug(slug string) (User, error) {
 	var user User
-	err := db.Preload("Syllabi").Preload("Collections").Where("slug = ?", slug).Find(&user).Error
+	err := db.Preload("Collections").Where("slug = ?", slug).Find(&user).Error
 	if err != nil {
 		return user, err
+	}
+
+	var sylls []Syllabus
+	err = db.Model(&user).Association("Syllabi").Find(&sylls)
+	if err != nil {
+		return user, err
+	}
+
+	for _, syll := range sylls {
+		if syll.Status == "listed" {
+			user.Syllabi = append(user.Syllabi, syll)
+		}
 	}
 
 	var insts []Institution
