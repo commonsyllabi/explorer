@@ -162,7 +162,7 @@ func GetUser(c echo.Context) error {
 			return c.String(http.StatusBadRequest, "Not a valid ID")
 		}
 
-		user, err := models.GetUserBySlug(id)
+		user, err := models.GetUserBySlug(id, user_uuid)
 		if err != nil {
 			return c.String(http.StatusNotFound, "There was an error getting the requested User.")
 		}

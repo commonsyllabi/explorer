@@ -90,7 +90,7 @@ func TestSyllabusHandler(t *testing.T) {
 		sylls := make([]models.Syllabus, 0)
 		err := json.Unmarshal(res.Body.Bytes(), &sylls)
 		require.Nil(t, err)
-		assert.Equal(t, 2, len(sylls))
+		assert.Equal(t, 3, len(sylls))
 	})
 
 	t.Run("Test get all syllabi in academic fields", func(t *testing.T) {
@@ -107,7 +107,7 @@ func TestSyllabusHandler(t *testing.T) {
 		sylls := make([]models.Syllabus, 0)
 		err := json.Unmarshal(res.Body.Bytes(), &sylls)
 		require.Nil(t, err)
-		assert.Equal(t, 1, len(sylls))
+		assert.Equal(t, 2, len(sylls))
 	})
 
 	t.Run("Test get all syllabi in wrong academic fields", func(t *testing.T) {

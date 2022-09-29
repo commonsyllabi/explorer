@@ -25,7 +25,7 @@ func TestSyllabusModel(t *testing.T) {
 	t.Run("Test get all listed syllabi", func(t *testing.T) {
 		syll, err := models.GetSyllabi(searchParams, userID)
 		require.Nil(t, err)
-		assert.Equal(t, 2, len(syll))
+		assert.Equal(t, 3, len(syll))
 	})
 
 	t.Run("Test get all listed syllabi written in french", func(t *testing.T) {
@@ -64,7 +64,7 @@ func TestSyllabusModel(t *testing.T) {
 		searchParams["fields"] = "%(100)%"
 		syll, err := models.GetSyllabi(searchParams, userID)
 		require.Nil(t, err)
-		assert.Equal(t, 1, len(syll))
+		assert.Equal(t, 2, len(syll))
 		searchParams["fields"] = "%"
 	})
 

@@ -86,7 +86,7 @@ func GetUser(uuid uuid.UUID, user_uuid uuid.UUID) (User, error) {
 	return user, err
 }
 
-func GetUserByEmail(email string) (User, error) {
+func GetUserByEmail(email string, user_uuid uuid.UUID) (User, error) {
 	var user User
 	err := db.Preload("Collections").Where("email = ?", email).Find(&user).Error
 	if err != nil {
@@ -100,7 +100,7 @@ func GetUserByEmail(email string) (User, error) {
 	}
 
 	for _, syll := range sylls {
-		if syll.Status == "listed" {
+		if syll.Status == "listed" || syll.UserUUID == user_uuid {
 			user.Syllabi = append(user.Syllabi, syll)
 		}
 	}
@@ -116,7 +116,7 @@ func GetUserByEmail(email string) (User, error) {
 	return user, err
 }
 
-func GetUserBySlug(slug string) (User, error) {
+func GetUserBySlug(slug string, user_uuid uuid.UUID) (User, error) {
 	var user User
 	err := db.Preload("Collections").Where("slug = ?", slug).Find(&user).Error
 	if err != nil {
@@ -130,7 +130,7 @@ func GetUserBySlug(slug string) (User, error) {
 	}
 
 	for _, syll := range sylls {
-		if syll.Status == "listed" {
+		if syll.Status == "listed" || syll.UserUUID == user_uuid {
 			user.Syllabi = append(user.Syllabi, syll)
 		}
 	}

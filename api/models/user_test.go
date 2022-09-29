@@ -57,14 +57,14 @@ func TestUserModel(t *testing.T) {
 	})
 
 	t.Run("Test get user by email", func(t *testing.T) {
-		user, err := models.GetUserByEmail(userEmail)
+		user, err := models.GetUserByEmail(userEmail, uuid.Nil)
 		require.Nil(t, err)
 		assert.Equal(t, user.Email, userEmail)
 		assert.Equal(t, user.Name, userName)
 	})
 
 	t.Run("Test get user by slug", func(t *testing.T) {
-		user, err := models.GetUserBySlug(userSlug)
+		user, err := models.GetUserBySlug(userSlug, uuid.Nil)
 		require.Nil(t, err)
 		assert.Equal(t, user.Email, userEmail)
 		assert.Equal(t, user.Name, userName)

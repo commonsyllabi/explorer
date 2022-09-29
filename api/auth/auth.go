@@ -77,7 +77,7 @@ func Login(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "Parameters can't be empty")
 	}
 
-	user, err := models.GetUserByEmail(email.Address)
+	user, err := models.GetUserByEmail(email.Address, uuid.Nil)
 	if err != nil || user.Status == models.UserPending {
 		zero.Error(err.Error())
 		return c.String(http.StatusUnauthorized, "Authentication failed")
@@ -153,7 +153,7 @@ func RequestRecover(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, err)
 	}
 
-	user, err := models.GetUserByEmail(email.Address)
+	user, err := models.GetUserByEmail(email.Address, uuid.Nil)
 	if err != nil {
 		return c.JSON(http.StatusNotFound, err)
 	}
