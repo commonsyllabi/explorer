@@ -13,7 +13,8 @@ import (
 )
 
 func GetAllCollections(c echo.Context) error {
-	collections, err := models.GetAllCollections()
+	user_uuid := mustGetUser(c)
+	collections, err := models.GetAllCollections(user_uuid)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusInternalServerError, "There was an error getting the Collections.")
@@ -71,7 +72,7 @@ func UpdateCollection(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "There was an error parsing the updated information.")
 	}
 
-	coll, err := models.GetCollection(uid)
+	coll, err := models.GetCollection(uid, user_uuid)
 	if err != nil {
 		return c.String(http.StatusNotFound, "We couldn't find the Collection to update.")
 	}
@@ -119,6 +120,7 @@ func AddCollectionSyllabus(c echo.Context) error {
 }
 
 func GetCollection(c echo.Context) error {
+	user_uuid := mustGetUser(c)
 	id := c.Param("id")
 	uid, err := uuid.Parse(id)
 	if err != nil {
@@ -127,7 +129,7 @@ func GetCollection(c echo.Context) error {
 			return c.String(http.StatusBadRequest, "Not a valid ID")
 		}
 
-		coll, err := models.GetCollectionBySlug(id)
+		coll, err := models.GetCollectionBySlug(id, user_uuid)
 		if err != nil {
 			return c.String(http.StatusNotFound, "There was an error getting the requested Collection.")
 		}
@@ -135,7 +137,7 @@ func GetCollection(c echo.Context) error {
 
 	}
 
-	coll, err := models.GetCollection(uid)
+	coll, err := models.GetCollection(uid, user_uuid)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusNotFound, "We couldn't find the Collection.")
@@ -145,6 +147,7 @@ func GetCollection(c echo.Context) error {
 }
 
 func GetCollectionSyllabi(c echo.Context) error {
+	user_uuid := mustGetUser(c)
 	id := c.Param("id")
 	uid, err := uuid.Parse(id)
 	if err != nil {
@@ -152,7 +155,7 @@ func GetCollectionSyllabi(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "not a valid ID")
 	}
 
-	coll, err := models.GetCollection(uid)
+	coll, err := models.GetCollection(uid, user_uuid)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusBadRequest, "We couldn't find the Collection.")
@@ -180,7 +183,7 @@ func GetCollectionSyllabus(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "Not a valid Syllabus ID.")
 	}
 
-	_, err = models.GetCollection(coll_uid)
+	_, err = models.GetCollection(coll_uid, user_uuid)
 	if err != nil {
 		return c.String(http.StatusNotFound, "We couldn't find the Collection.")
 	}
@@ -233,7 +236,7 @@ func RemoveCollectionSyllabus(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, "Not a valid Syllabus ID.")
 	}
 
-	_, err = models.GetCollection(coll_uid)
+	_, err = models.GetCollection(coll_uid, user_uuid)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusNotFound, "There was an error finding the Collection.")

@@ -98,6 +98,18 @@ func GetSyllabus(uuid uuid.UUID, user_uuid uuid.UUID) (Syllabus, error) {
 
 	syll.Institutions = append(syll.Institutions, insts...)
 
+	var colls []Collection
+	err = db.Model(&syll).Association("Collections").Find(&colls)
+	if err != nil {
+		return syll, err
+	}
+
+	for _, c := range colls {
+		if c.Status == "listed" || c.UserUUID == user_uuid {
+			syll.Collections = append(syll.Collections, &c)
+		}
+	}
+
 	return syll, nil
 }
 
@@ -115,6 +127,18 @@ func GetSyllabusBySlug(slug string, user_uuid uuid.UUID) (Syllabus, error) {
 	}
 
 	syll.Institutions = append(syll.Institutions, insts...)
+
+	var colls []Collection
+	err = db.Model(&syll).Association("Collections").Find(&colls)
+	if err != nil {
+		return syll, err
+	}
+
+	for _, c := range colls {
+		if c.Status == "listed" || c.UserUUID == user_uuid {
+			syll.Collections = append(syll.Collections, &c)
+		}
+	}
 
 	return syll, nil
 }

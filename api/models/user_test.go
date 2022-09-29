@@ -53,7 +53,7 @@ func TestUserModel(t *testing.T) {
 		require.Nil(t, err)
 		assert.Equal(t, user.Name, userName)
 		assert.Equal(t, 1, len(user.Syllabi))
-		assert.Equal(t, 1, len(user.Collections))
+		assert.Equal(t, 2, len(user.Collections))
 	})
 
 	t.Run("Test get user by email", func(t *testing.T) {

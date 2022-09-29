@@ -87,7 +87,7 @@ func TestCollectionHandler(t *testing.T) {
 		err := json.Unmarshal(res.Body.Bytes(), &coll)
 		require.Nil(t, err)
 		assert.Equal(t, collectionID, coll.UUID)
-		assert.Equal(t, "Good Stuff", coll.Name)
+		assert.Equal(t, collectionName, coll.Name)
 		assert.Equal(t, 1, len(coll.Syllabi))
 	})
 
@@ -107,7 +107,7 @@ func TestCollectionHandler(t *testing.T) {
 		err := json.Unmarshal(res.Body.Bytes(), &coll)
 		require.Nil(t, err)
 		assert.Equal(t, collectionID, coll.UUID)
-		assert.Equal(t, "Good Stuff", coll.Name)
+		assert.Equal(t, collectionName, coll.Name)
 		assert.Equal(t, 1, len(coll.Syllabi))
 	})
 

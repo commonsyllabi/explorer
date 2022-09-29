@@ -50,7 +50,10 @@
         - "design"
   collections:
     - uuid: 'b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a9'
-      name: "Good Stuff"
+      name: "Good public stuff"
+      status: "listed"
+    - uuid: 'b9e4666d-ac4f-4e44-bb43-5123b7b6d7a9'
+      name: "Good private stuff"
 
 
 - uuid: 'e7b74bcd-c864-41ee-b5a7-d3031f76c8a9'
