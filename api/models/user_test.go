@@ -49,7 +49,7 @@ func TestUserModel(t *testing.T) {
 	})
 
 	t.Run("Test get user with listed syllabi and collections", func(t *testing.T) {
-		user, err := models.GetUser(userID)
+		user, err := models.GetUser(userID, uuid.Nil)
 		require.Nil(t, err)
 		assert.Equal(t, user.Name, userName)
 		assert.Equal(t, 1, len(user.Syllabi))
@@ -71,13 +71,13 @@ func TestUserModel(t *testing.T) {
 	})
 
 	t.Run("Test get non-existing user", func(t *testing.T) {
-		user, err := models.GetUser(userUnknownID)
+		user, err := models.GetUser(userUnknownID, uuid.Nil)
 		require.NotNil(t, err)
 		assert.True(t, user.CreatedAt.IsZero())
 	})
 
 	t.Run("Test update user", func(t *testing.T) {
-		user, err := models.GetUser(userID)
+		user, err := models.GetUser(userID, userID)
 		require.Nil(t, err)
 
 		user.Email = "test@updated.com"
@@ -90,7 +90,7 @@ func TestUserModel(t *testing.T) {
 	})
 
 	t.Run("Test update user non-owner", func(t *testing.T) {
-		user, err := models.GetUser(userID)
+		user, err := models.GetUser(userID, userUnknownID)
 		require.Nil(t, err)
 
 		user.Email = "test@updated.com"

@@ -30,7 +30,7 @@ func TestCollectionModel(t *testing.T) {
 		coll := models.Collection{
 			Name: "Test Name 2",
 		}
-		result, err := models.CreateCollection(user.UUID, &coll)
+		result, err := models.CreateCollection(&coll, user.UUID)
 		require.Nil(t, err)
 
 		assert.Equal(t, coll.Name, result.Name)

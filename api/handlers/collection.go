@@ -41,7 +41,7 @@ func CreateCollection(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "There was an error parsing your input information.")
 	}
 
-	coll, err = models.CreateCollection(user_uuid, &coll)
+	coll, err = models.CreateCollection(&coll, user_uuid)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusInternalServerError, "There was an error creating the Collection.")

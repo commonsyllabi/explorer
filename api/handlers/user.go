@@ -100,7 +100,7 @@ func UpdateUser(c echo.Context) error {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
 
-	_, err = models.GetUser(uid)
+	_, err = models.GetUser(uid, user_uuid)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusNotFound, "We could not find the requested user.")
@@ -152,6 +152,8 @@ func AddUserInstitution(c echo.Context) error {
 }
 
 func GetUser(c echo.Context) error {
+	user_uuid := mustGetUser(c)
+
 	id := c.Param("id")
 	uid, err := uuid.Parse(id)
 	if err != nil {
@@ -168,7 +170,7 @@ func GetUser(c echo.Context) error {
 		return c.JSON(http.StatusOK, user)
 	}
 
-	user, err := models.GetUser(uid)
+	user, err := models.GetUser(uid, user_uuid)
 	if err != nil {
 		zero.Errorf("error getting User by UUID %v: %s", id, err)
 		c.String(http.StatusNotFound, "We couldn't find the User.")

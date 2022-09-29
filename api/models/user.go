@@ -55,7 +55,7 @@ func CreateUser(user *User) (User, error) {
 	return *user, result.Error
 }
 
-func GetUser(uuid uuid.UUID) (User, error) {
+func GetUser(uuid uuid.UUID, user_uuid uuid.UUID) (User, error) {
 	var user User
 	err := db.Preload("Collections").Where("uuid = ?", uuid).First(&user).Error
 	if err != nil {
@@ -70,7 +70,7 @@ func GetUser(uuid uuid.UUID) (User, error) {
 
 	fmt.Println("ALLOW RETURN OF UNLISTED SYLLABI IF USER IS LOGGED IN")
 	for _, syll := range sylls {
-		if syll.Status == "listed" {
+		if syll.Status == "listed" || syll.UserUUID == user_uuid {
 			user.Syllabi = append(user.Syllabi, syll)
 		}
 	}
@@ -176,7 +176,7 @@ func AddInstitutionToUser(uuid uuid.UUID, user_uuid uuid.UUID, inst *Institution
 		return user, err
 	}
 
-	updated, err := GetUser(user_uuid)
+	updated, err := GetUser(user_uuid, user_uuid)
 	return updated, err
 }
 
@@ -198,7 +198,7 @@ func RemoveInstitutionFromUser(uuid uuid.UUID, inst_uuid uuid.UUID, user_uuid uu
 		return user, err
 	}
 
-	updated, err := GetUser(user_uuid)
+	updated, err := GetUser(user_uuid, user_uuid)
 	return updated, err
 }
 

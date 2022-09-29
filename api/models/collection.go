@@ -36,8 +36,8 @@ func (c *Collection) BeforeCreate(tx *gorm.DB) (err error) {
 	return nil
 }
 
-func CreateCollection(user_uuid uuid.UUID, coll *Collection) (Collection, error) {
-	user, err := GetUser(user_uuid)
+func CreateCollection(coll *Collection, user_uuid uuid.UUID) (Collection, error) {
+	user, err := GetUser(user_uuid, user_uuid)
 	if err != nil {
 		return *coll, err
 	}

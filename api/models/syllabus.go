@@ -67,7 +67,7 @@ func (s *Syllabus) IsEmpty() bool {
 }
 
 func CreateSyllabus(syll *Syllabus, user_uuid uuid.UUID) (Syllabus, error) {
-	user, err := GetUser(user_uuid)
+	user, err := GetUser(user_uuid, user_uuid)
 	if err != nil {
 		return *syll, err
 	}
