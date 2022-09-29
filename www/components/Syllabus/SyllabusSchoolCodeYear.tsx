@@ -1,10 +1,10 @@
 import * as React from "react";
 
 interface ISyllabusSchoolCodeYearProps {
-  institution?: string;
-  courseNumber?: string;
-  term?: string;
-  year?: string;
+  institution?: string | null;
+  courseNumber?: string | null;
+  term?: string | null;
+  year?: string | null;
 }
 
 const SyllabusSchoolCodeYear: React.FunctionComponent<

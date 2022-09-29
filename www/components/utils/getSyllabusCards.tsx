@@ -4,8 +4,8 @@ import { ISyllabus } from "types";
 
 export const getSyllabusCards = (
   syllabiArray: ISyllabus[] | undefined,
-  userName?: string,
-  userUuid?: string
+  userName: string,
+  isAdmin?: boolean
 ) => {
   if (!syllabiArray || syllabiArray.length === 0) {
     return null;
@@ -15,20 +15,11 @@ export const getSyllabusCards = (
   const syllabiCards = syllabiArray.map((item) => (
     <SyllabusCard
       key={item.uuid}
-      uuid={item.uuid}
-      status={item.status}
-      title={item.title}
-      year={
-        item.institutions && item.institutions.length
-          ? item.institutions[0].date.year
-          : "YEAR"
-      }
-      courseNumber={item.course_number}
-      author={item.user.name ? item.user.name : userName}
-      authorUUID={userUuid ? userUuid : item.user_uuid}
-      description={item.description}
-      tags={item.tags}
+      userName={userName}
+      props={item}
+      isAdmin={isAdmin ? isAdmin : false}
     />
   ));
+
   return <div className="d-flex flex-column gap-3">{syllabiCards}</div>;
 };

@@ -8,30 +8,22 @@ import Tags from "./Tags";
 import PubBadge from "./PubBadge";
 import { getServerSideProps } from "pages";
 
+import { getSyllabiUrl, getUserUrl } from "components/utils/getLinks";
+
+import { ISyllabus } from "types";
+
 interface ISyllabusCardProps {
-  uuid: string;
-  status: string;
-  institution?: string;
-  courseNumber?: string;
-  term?: string;
-  year?: string;
-  title: string;
-  author?: string;
-  authorUUID: string;
-  description: string;
-  tags?: string[];
+  userName?: string;
+  props: ISyllabus;
+  isAdmin: boolean;
 }
 
-const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = (props) => {
-  const getSyllabiUrl = (uuid: string) => {
-    return "/syllabus/" + uuid;
-  };
-
-  const getUserUrl = (uuid: string) => {
-    //-- TODO switch from user to userS
-    return "/user/" + uuid;
-  };
-
+const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = ({
+  props,
+  userName,
+  isAdmin,
+}) => {
+  // Helper functions to parse data to props
   const getVisbility = (status: string) => {
     if (status === "unlisted") {
       return false;
@@ -42,26 +34,76 @@ const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = (props) => {
     }
   };
 
+  const getInstitutionName = () => {
+    console.log(`props.institutions: ${JSON.stringify(props.institutions)}`);
+    if (props.institutions) {
+      if (props.institutions[0]) {
+        return props.institutions[0]["name"];
+      }
+      return null;
+    }
+    return null;
+  };
+
+  const getInstitutionTermInfo = () => {
+    if (props.institutions) {
+      if (props.institutions[0]) {
+        if (props.institutions[0]["date"]) {
+          if (props.institutions[0].date.term) {
+            return props.institutions[0].date.term;
+          }
+          return null;
+        }
+        return null;
+      }
+      return null;
+    }
+    return null;
+  };
+
+  const getInstitutionYearInfo = () => {
+    if (props.institutions) {
+      if (props.institutions[0]) {
+        if (props.institutions[0]["date"]) {
+          return props.institutions[0].date.year;
+        }
+        return null;
+      }
+      return null;
+    }
+    return null;
+  };
+
+  const getUserName = () => {
+    if (userName) {
+      return userName;
+    } else if (props.user.name) {
+      return props.user.name;
+    } else {
+      return null;
+    }
+  };
+
   return (
     <Card data-cy="syllabusCard">
       <Card.Body>
         <SyllabusSchoolCodeYear
-          institution={props.institution}
-          courseNumber={props.courseNumber}
-          term={props.term}
-          year={props.year}
+          institution={getInstitutionName()}
+          courseNumber={props.course_number ? props.course_number : null}
+          term={getInstitutionTermInfo()}
+          year={getInstitutionYearInfo()}
         />
         <Card.Title>
           <Link href={getSyllabiUrl(props.uuid)}>
             <a>{props.title}</a>
           </Link>
           {/* TODO: make public /private tags display only if logged in */}
-          <PubBadge isPublic={getVisbility(props.status)} />
+          {isAdmin ? <PubBadge isPublic={getVisbility(props.status)} /> : null}
         </Card.Title>
         <div className="course-author">
-          {props.author ? (
+          {getUserName() ? (
             <p>
-              <Link href={getUserUrl(props.authorUUID)}>{props.author}</Link>
+              <Link href={getUserUrl(props.user_uuid)}>{getUserName()}</Link>
             </p>
           ) : (
             <p className="text-muted">

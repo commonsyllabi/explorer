@@ -86,11 +86,16 @@ const About: NextPage<IUser> = (props) => {
               <Tabs
                 defaultActiveKey={activeTab as string}
                 id="user-syllabi-collections-tabs"
-                className="mb-3"
+                className="mb-3 gap-2"
               >
                 <Tab eventKey="syllabi" title="Syllabi">
                   <div className="d-flex justify-content-between align-items-baseline py-2">
-                    <h2 className="inline h5">Syllabi shared by you</h2>
+                    {checkIfAdmin() ? (
+                      <h2 className="inline h5">Syllabi by you</h2>
+                    ) : (
+                      <h2 className="inline h5">Syllabi by {props.name}</h2>
+                    )}
+
                     <div className="d-flex gap-2">
                       <Form>
                         <Form.Control
@@ -108,12 +113,20 @@ const About: NextPage<IUser> = (props) => {
                     </div>
                   </div>
                   <div id="syllabi">
-                    {getSyllabusCards(props.syllabi, props.name, props.uuid)}
+                    {getSyllabusCards(
+                      props.syllabi,
+                      props.name,
+                      checkIfAdmin()
+                    )}
                   </div>
                 </Tab>
                 <Tab eventKey="collections" title="Collections">
                   <div className="d-flex justify-content-between align-items-baseline py-2">
-                    <h2 className="inline h5">Your Collections</h2>
+                    {checkIfAdmin() ? (
+                      <h2 className="inline h5">Your Collections</h2>
+                    ) : (
+                      <h2 className="inline h5">Collections by {props.name}</h2>
+                    )}
                     <div className="d-flex gap-2">
                       <Form>
                         <Form.Control
