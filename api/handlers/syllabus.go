@@ -21,13 +21,24 @@ var (
 )
 
 func GetSyllabi(c echo.Context) error {
+	// authenticating to return unlisted but owned syllabi
+	sessionID, err := auth.Authenticate(c)
+	if err != nil || sessionID == "" {
+		zero.Debug(err.Error())
+	}
+
+	user_uuid, err := uuid.Parse(sessionID)
+	if err != nil {
+		zero.Debug(err.Error())
+	}
+
 	params, err := parseSearchParams(c)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusBadRequest, "There was an error in parsing your search parameters.")
 	}
 
-	syllabi, err := models.GetSyllabi(params)
+	syllabi, err := models.GetSyllabi(params, user_uuid)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusInternalServerError, "There was an error getting the syllabi.")
@@ -75,6 +86,17 @@ func CreateSyllabus(c echo.Context) error {
 }
 
 func GetSyllabus(c echo.Context) error {
+	// authenticating to return unlisted but owned syllabi
+	sessionID, err := auth.Authenticate(c)
+	if err != nil || sessionID == "" {
+		zero.Debug(err.Error())
+	}
+
+	user_uuid, err := uuid.Parse(sessionID)
+	if err != nil {
+		zero.Debug(err.Error())
+	}
+
 	id := c.Param("id")
 	uid, err := uuid.Parse(id)
 	if err != nil {
@@ -83,14 +105,14 @@ func GetSyllabus(c echo.Context) error {
 			return c.String(http.StatusBadRequest, "Not a valid ID")
 		}
 
-		syll, err := models.GetSyllabusBySlug(id)
+		syll, err := models.GetSyllabusBySlug(id, user_uuid)
 		if err != nil {
 			return c.String(http.StatusNotFound, "There was an error getting the requested Syllabus.")
 		}
 		return c.JSON(http.StatusOK, syll)
 	}
 
-	syll, err := models.GetSyllabus(uid)
+	syll, err := models.GetSyllabus(uid, user_uuid)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusNotFound, "There was an error getting the requested Syllabus.")
@@ -144,13 +166,24 @@ func AddSyllabusInstitution(c echo.Context) error {
 }
 
 func GetSyllabusAttachments(c echo.Context) error {
+	// authenticating to return unlisted but owned syllabi
+	sessionID, err := auth.Authenticate(c)
+	if err != nil || sessionID == "" {
+		zero.Debug(err.Error())
+	}
+
+	user_uuid, err := uuid.Parse(sessionID)
+	if err != nil {
+		zero.Debug(err.Error())
+	}
+
 	id := c.Param("id")
 	uid, err := uuid.Parse(id)
 	if err != nil {
 		return c.String(http.StatusBadRequest, "Not a valid ID.")
 	}
 
-	syll, err := models.GetSyllabus(uid)
+	syll, err := models.GetSyllabus(uid, user_uuid)
 	if err != nil {
 		return c.String(http.StatusNotFound, "There was an error getting the requested Syllabus.")
 	}
@@ -159,6 +192,17 @@ func GetSyllabusAttachments(c echo.Context) error {
 }
 
 func GetSyllabusAttachment(c echo.Context) error {
+	// authenticating to return unlisted but owned syllabi
+	sessionID, err := auth.Authenticate(c)
+	if err != nil || sessionID == "" {
+		zero.Debug(err.Error())
+	}
+
+	user_uuid, err := uuid.Parse(sessionID)
+	if err != nil {
+		zero.Debug(err.Error())
+	}
+
 	uid := parseUUIDParam(c, "id")
 	if uid == uuid.Nil {
 		return c.String(http.StatusBadRequest, "Not a valid Syllabus ID.")
@@ -168,10 +212,10 @@ func GetSyllabusAttachment(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "Not a valid Attachment ID.")
 	}
 
-	_, err := models.GetSyllabus(uid)
+	_, err = models.GetSyllabus(uid, user_uuid)
 	if err != nil {
 		zero.Error(err.Error())
-		return c.String(http.StatusNotFound, "There was an error getting the Syllabus.")
+		return c.String(http.StatusNotFound, "There was an error verifying that the Syllabus exists.")
 	}
 
 	res, err := models.GetAttachment(att_uid)
@@ -188,6 +232,8 @@ func UpdateSyllabus(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
+	requester_uuid := uuid.MustParse(requester_uid)
+
 	uid := parseUUIDParam(c, "id")
 	if uid == uuid.Nil {
 		return c.String(http.StatusBadRequest, "Not a valid ID.")
@@ -210,7 +256,7 @@ func UpdateSyllabus(c echo.Context) error {
 		return c.String(http.StatusNoContent, "You must specify at least one field to update the Syllabus.")
 	}
 
-	syll, err := models.GetSyllabus(uid)
+	syll, err := models.GetSyllabus(uid, requester_uuid)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusNotFound, "There was an error getting the Syllabus.")

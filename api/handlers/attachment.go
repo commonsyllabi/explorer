@@ -30,11 +30,13 @@ func GetAllAttachments(c echo.Context) error {
 }
 
 func CreateAttachment(c echo.Context) error {
-	_, err := auth.Authenticate(c)
+	user_id, err := auth.Authenticate(c)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusUnauthorized, "Unauthorized")
 	}
+
+	user_uuid := uuid.MustParse(user_id)
 
 	conf, ok := c.Get("config").(config.Config)
 	if !ok {
@@ -121,7 +123,7 @@ func CreateAttachment(c echo.Context) error {
 		}
 	}
 
-	created, err := models.CreateAttachment(syll_id, &att)
+	created, err := models.CreateAttachment(syll_id, &att, user_uuid)
 	if err != nil {
 		zero.Errorf("error creating Attachment: %v", err)
 		return c.String(http.StatusInternalServerError, "Error linking the attachment to the syllabus.")

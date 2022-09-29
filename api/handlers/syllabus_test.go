@@ -90,7 +90,7 @@ func TestSyllabusHandler(t *testing.T) {
 		sylls := make([]models.Syllabus, 0)
 		err := json.Unmarshal(res.Body.Bytes(), &sylls)
 		require.Nil(t, err)
-		assert.Equal(t, 4, len(sylls))
+		assert.Equal(t, 2, len(sylls))
 	})
 
 	t.Run("Test get all syllabi in academic fields", func(t *testing.T) {
@@ -237,8 +237,8 @@ func TestSyllabusHandler(t *testing.T) {
 
 	t.Run("Test get all syllabi with combined filters", func(t *testing.T) {
 		q := make(url.Values)
-		q.Set("levels", "1")
-		q.Set("keywords", "communication")
+		q.Set("levels", "2")
+		q.Set("keywords", "architektur")
 
 		res := httptest.NewRecorder()
 		req := httptest.NewRequest(http.MethodGet, "/syllabi/?"+q.Encode(), nil)

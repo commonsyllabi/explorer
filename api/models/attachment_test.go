@@ -29,7 +29,7 @@ func TestAttachmentModel(t *testing.T) {
 		att := models.Attachment{
 			Name: "Test Name 2",
 		}
-		created, err := models.CreateAttachment(result.UUID, &att)
+		created, err := models.CreateAttachment(result.UUID, &att, userID)
 		require.Nil(t, err)
 		assert.Equal(t, att.Name, created.Name)
 		assert.Equal(t, syll.Title, created.Syllabus.Title)

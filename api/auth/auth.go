@@ -36,7 +36,7 @@ func Authenticate(c echo.Context) (string, error) {
 	if t != "" {
 		token, err := uuid.Parse(t)
 		if err != nil {
-			return "unauthorized token", err
+			return "", err
 		}
 
 		if token.String() != "" && token.String() == os.Getenv("ADMIN_KEY") {
