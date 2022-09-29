@@ -27,26 +27,26 @@ type JWTCustomClaims struct {
 	jwt.StandardClaims
 }
 
-func Authenticate(c echo.Context) (string, error) {
+func Authenticate(c echo.Context) (uuid.UUID, error) {
 	if os.Getenv("API_MODE") == "test" {
-		return "e7b74bcd-c864-41ee-b5a7-d3031f76c8a8", nil
+		return uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c8a8"), nil
 	}
 
 	t := c.QueryParam("token")
 	if t != "" {
 		token, err := uuid.Parse(t)
 		if err != nil {
-			return "", err
+			return uuid.Nil, err
 		}
 
-		if token.String() != "" && token.String() == os.Getenv("ADMIN_KEY") {
-			return token.String(), nil
+		if token != uuid.Nil && token.String() == os.Getenv("ADMIN_KEY") {
+			return token, nil
 		}
 	}
 
 	authHeader := c.Request().Header["Authorization"]
 	if len(authHeader) == 0 {
-		return "", fmt.Errorf("no authorization header provided")
+		return uuid.Nil, fmt.Errorf("no authorization header provided")
 	}
 	raw := c.Request().Header["Authorization"][0]
 	tokenString := strings.Split(raw, " ")[1]
@@ -58,16 +58,16 @@ func Authenticate(c echo.Context) (string, error) {
 	})
 
 	if err != nil {
-		return "", err
+		return uuid.Nil, err
 	}
 
 	if !token.Valid {
-		return "", fmt.Errorf("unauthorized user - %v", token)
+		return uuid.Nil, fmt.Errorf("unauthorized user - %v", token)
 	}
 
 	claims := token.Claims.(*JWTCustomClaims)
 
-	return claims.UUID, nil
+	return uuid.MustParse(claims.UUID), nil
 }
 
 func Login(c echo.Context) error {

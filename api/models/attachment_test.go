@@ -23,7 +23,7 @@ func TestAttachmentModel(t *testing.T) {
 		syll := models.Syllabus{
 			Title: "Test Title 2",
 		}
-		result, err := models.CreateSyllabus(userID, &syll)
+		result, err := models.CreateSyllabus(&syll, userID)
 		require.Nil(t, err)
 
 		att := models.Attachment{

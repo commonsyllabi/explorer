@@ -22,13 +22,8 @@ var (
 
 func GetSyllabi(c echo.Context) error {
 	// authenticating to return unlisted but owned syllabi
-	sessionID, err := auth.Authenticate(c)
-	if err != nil || sessionID == "" {
-		zero.Debug(err.Error())
-	}
-
-	user_uuid, err := uuid.Parse(sessionID)
-	if err != nil {
+	user_uuid, err := auth.Authenticate(c)
+	if err != nil || user_uuid == uuid.Nil {
 		zero.Debug(err.Error())
 	}
 
@@ -48,16 +43,10 @@ func GetSyllabi(c echo.Context) error {
 }
 
 func CreateSyllabus(c echo.Context) error {
-	sessionID, err := auth.Authenticate(c)
+	user_uuid, err := auth.Authenticate(c)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusUnauthorized, "unauthorized")
-	}
-
-	userID, err := uuid.Parse(sessionID)
-	if err != nil {
-		zero.Error(err.Error())
-		return c.String(http.StatusUnauthorized, "unauthorized UUID")
 	}
 
 	err = sanitizeSyllabusCreate(c)
@@ -74,9 +63,9 @@ func CreateSyllabus(c echo.Context) error {
 	}
 
 	if os.Getenv("API_MODE") == "test" {
-		userID = uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c8a8")
+		user_uuid = uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c8a8")
 	}
-	syll, err = models.CreateSyllabus(userID, &syll)
+	syll, err = models.CreateSyllabus(&syll, user_uuid)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusInternalServerError, "There was an error creating the Syllabus.")
@@ -87,14 +76,10 @@ func CreateSyllabus(c echo.Context) error {
 
 func GetSyllabus(c echo.Context) error {
 	// authenticating to return unlisted but owned syllabi
-	sessionID, err := auth.Authenticate(c)
-	if err != nil || sessionID == "" {
-		zero.Debug(err.Error())
-	}
-
-	user_uuid, err := uuid.Parse(sessionID)
+	user_uuid, err := auth.Authenticate(c)
 	if err != nil {
-		zero.Debug(err.Error())
+		zero.Error(err.Error())
+		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
 
 	id := c.Param("id")
@@ -122,7 +107,7 @@ func GetSyllabus(c echo.Context) error {
 }
 
 func AddSyllabusAttachment(c echo.Context) error {
-	requester_uid, err := auth.Authenticate(c)
+	user_uuid, err := auth.Authenticate(c)
 	if err != nil {
 		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
@@ -132,7 +117,7 @@ func AddSyllabusAttachment(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "Invalid UUID")
 	}
 
-	syll, err := models.AddAttachmentToSyllabus(uid, att_uid, uuid.MustParse(requester_uid))
+	syll, err := models.AddAttachmentToSyllabus(uid, att_uid, user_uuid)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusNotFound, "We couldn't add the  Attachment to the requested Syllabus.")
@@ -142,7 +127,7 @@ func AddSyllabusAttachment(c echo.Context) error {
 }
 
 func AddSyllabusInstitution(c echo.Context) error {
-	requester_uid, err := auth.Authenticate(c)
+	user_uuid, err := auth.Authenticate(c)
 	if err != nil {
 		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
@@ -156,7 +141,7 @@ func AddSyllabusInstitution(c echo.Context) error {
 	var inst models.Institution
 	c.Bind(&inst)
 
-	syll, err := models.AddInstitutionToSyllabus(uid, uuid.MustParse(requester_uid), &inst)
+	syll, err := models.AddInstitutionToSyllabus(uid, user_uuid, &inst)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusNotFound, "There was an error adding the Institution to the Syllabus.")
@@ -167,14 +152,10 @@ func AddSyllabusInstitution(c echo.Context) error {
 
 func GetSyllabusAttachments(c echo.Context) error {
 	// authenticating to return unlisted but owned syllabi
-	sessionID, err := auth.Authenticate(c)
-	if err != nil || sessionID == "" {
-		zero.Debug(err.Error())
-	}
-
-	user_uuid, err := uuid.Parse(sessionID)
+	user_uuid, err := auth.Authenticate(c)
 	if err != nil {
-		zero.Debug(err.Error())
+		zero.Error(err.Error())
+		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
 
 	id := c.Param("id")
@@ -193,14 +174,10 @@ func GetSyllabusAttachments(c echo.Context) error {
 
 func GetSyllabusAttachment(c echo.Context) error {
 	// authenticating to return unlisted but owned syllabi
-	sessionID, err := auth.Authenticate(c)
-	if err != nil || sessionID == "" {
-		zero.Debug(err.Error())
-	}
-
-	user_uuid, err := uuid.Parse(sessionID)
+	user_uuid, err := auth.Authenticate(c)
 	if err != nil {
-		zero.Debug(err.Error())
+		zero.Error(err.Error())
+		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
 
 	uid := parseUUIDParam(c, "id")
@@ -228,11 +205,11 @@ func GetSyllabusAttachment(c echo.Context) error {
 }
 
 func UpdateSyllabus(c echo.Context) error {
-	requester_uid, err := auth.Authenticate(c)
+	user_uuid, err := auth.Authenticate(c)
 	if err != nil {
 		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
-	requester_uuid := uuid.MustParse(requester_uid)
+	requester_uuid := user_uuid
 
 	uid := parseUUIDParam(c, "id")
 	if uid == uuid.Nil {
@@ -268,7 +245,7 @@ func UpdateSyllabus(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "There was an error getting the information to update the Syllabus.")
 	}
 
-	updated, err := models.UpdateSyllabus(uid, uuid.MustParse(requester_uid), &syll)
+	updated, err := models.UpdateSyllabus(uid, user_uuid, &syll)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusInternalServerError, "There was an error updating the Syllabus.")
@@ -278,7 +255,7 @@ func UpdateSyllabus(c echo.Context) error {
 }
 
 func DeleteSyllabus(c echo.Context) error {
-	requester_uid, err := auth.Authenticate(c)
+	user_uuid, err := auth.Authenticate(c)
 	if err != nil {
 		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
@@ -286,7 +263,7 @@ func DeleteSyllabus(c echo.Context) error {
 	if uid == uuid.Nil {
 		return c.String(http.StatusBadRequest, "Invalid UUID")
 	}
-	syll, err := models.DeleteSyllabus(uid, uuid.MustParse(requester_uid))
+	syll, err := models.DeleteSyllabus(uid, user_uuid)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusNotFound, "There was an error deleting the Syllabus.")
@@ -296,7 +273,7 @@ func DeleteSyllabus(c echo.Context) error {
 }
 
 func RemoveSyllabusAttachment(c echo.Context) error {
-	requester_uid, err := auth.Authenticate(c)
+	user_uuid, err := auth.Authenticate(c)
 	if err != nil {
 		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
@@ -310,7 +287,7 @@ func RemoveSyllabusAttachment(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "Not a valid Attachment ID")
 	}
 
-	syll, err := models.RemoveAttachmentFromSyllabus(uid, att_uid, uuid.MustParse(requester_uid))
+	syll, err := models.RemoveAttachmentFromSyllabus(uid, att_uid, user_uuid)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusNotFound, "There was an error removing the Attachment form the Syllabus.")
@@ -320,7 +297,7 @@ func RemoveSyllabusAttachment(c echo.Context) error {
 }
 
 func RemoveSyllabusInstitution(c echo.Context) error {
-	requester_uid, err := auth.Authenticate(c)
+	user_uuid, err := auth.Authenticate(c)
 	if err != nil {
 		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
@@ -334,7 +311,7 @@ func RemoveSyllabusInstitution(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "Not a valid Institution ID.")
 	}
 
-	syll, err := models.RemoveInstitutionFromSyllabus(uid, inst_uid, uuid.MustParse(requester_uid))
+	syll, err := models.RemoveInstitutionFromSyllabus(uid, inst_uid, user_uuid)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusNotFound, "There was an error removing the Institution.")
