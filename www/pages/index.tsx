@@ -17,8 +17,6 @@ export const getServerSideProps: GetServerSideProps = async () => {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   const url = new URL("syllabi/", apiUrl);
 
-  console.log(`LANDING SYLLABI FETCH URL: ${url}`);
-
   const res = (await fetch(url).catch((err) => {
     console.log(`error fetching backend: ${err}`);
 
@@ -35,13 +33,12 @@ export const getServerSideProps: GetServerSideProps = async () => {
         syllabiListings: [],
       },
     };
-  } else {
   }
-  const syllabiListings = await res.json();
+  const payload = await res.json();
 
   return {
     props: {
-      syllabiListings: syllabiListings,
+      syllabiListings: payload.syllabi,
     },
   };
 };
