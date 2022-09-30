@@ -35,7 +35,6 @@ const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = ({
   };
 
   const getInstitutionName = () => {
-    console.log(`props.institutions: ${JSON.stringify(props.institutions)}`);
     if (props.institutions) {
       if (props.institutions[0]) {
         return props.institutions[0]["name"];

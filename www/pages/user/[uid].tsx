@@ -5,7 +5,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 
-import { IUser } from "types";
+import { ISyllabus, IUser } from "types";
 
 import Favicons from "components/head/favicons";
 import GlobalNav from "components/GlobalNav";
@@ -29,9 +29,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   const url = new URL(`users/${userId}`, apiUrl);
 
-  console.log(`USER ID: ${userId}`);
-  console.log(`API URL: ${apiUrl}`);
-  console.log(`FETCH URL: ${url}`);
+  // console.log(`USER ID: ${userId}`);
+  // console.log(`API URL: ${apiUrl}`);
+  // console.log(`FETCH URL: ${url}`);
 
   const res = await fetch(url);
   const userInfo = await res.json();
@@ -63,6 +63,37 @@ const About: NextPage<IUser> = (props) => {
 
   const focusedTab = router.query["tab"];
   const activeTab = focusedTab ? focusedTab : "syllabi";
+
+  const [syllFilter, setSyllFilter] = useState("");
+  const [collFilter, setCollFilter] = useState("");
+
+  const handleFilterChange = (event: React.SyntheticEvent) => {
+    const t = event.target as HTMLInputElement;
+    if (t.id === "collFilter") {
+      setCollFilter(t.value);
+    }
+    if (t.id === "syllFilter") {
+      setSyllFilter(t.value);
+    }
+    console.log(`syllFilter: ${syllFilter}; collFilter: ${collFilter}`);
+    return;
+  };
+
+  const filteredSyllabi = (contentArray: ISyllabus[]) => {
+    if (props.syllabi === undefined) {
+      return undefined;
+    }
+    if (syllFilter.length > 0) {
+      const results = props.syllabi.filter((item) => {
+        return (
+          item.title.includes(syllFilter) ||
+          item.description.includes(syllFilter)
+        );
+      });
+      return results;
+    }
+    return props.syllabi;
+  };
 
   return (
     <>
@@ -99,12 +130,16 @@ const About: NextPage<IUser> = (props) => {
                     <div className="d-flex gap-2">
                       <Form>
                         <Form.Control
+                          id="syllFilter"
                           type="Filter"
                           className="form-control"
                           placeholder="Filter..."
                           aria-label="Filter"
+                          value={syllFilter}
+                          onChange={handleFilterChange}
                         />
                       </Form>
+
                       <Link href="/NewSyllabus">
                         <Button variant="primary" aria-label="New Syllabus">
                           + New
@@ -114,7 +149,7 @@ const About: NextPage<IUser> = (props) => {
                   </div>
                   <div id="syllabi">
                     {getSyllabusCards(
-                      props.syllabi,
+                      filteredSyllabi(),
                       props.name,
                       checkIfAdmin()
                     )}
@@ -130,10 +165,13 @@ const About: NextPage<IUser> = (props) => {
                     <div className="d-flex gap-2">
                       <Form>
                         <Form.Control
+                          id="collFilter"
                           type="Filter"
                           className="form-control"
                           placeholder="Filter..."
                           aria-label="Filter"
+                          value={collFilter}
+                          onChange={handleFilterChange}
                         />
                       </Form>
                       <Button variant="primary" aria-label="New Collection">
@@ -145,7 +183,7 @@ const About: NextPage<IUser> = (props) => {
                     {getCollectionCards(
                       props.collections,
                       props.name,
-                      props.uuid
+                      checkIfAdmin()
                     )}
                   </div>
                 </Tab>

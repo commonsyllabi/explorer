@@ -2,10 +2,10 @@ import * as React from "react";
 import Link from "next/link";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
-import SyllabusSchoolCodeYear from "components/Syllabus/SyllabusSchoolCodeYear";
 import PubBadge from "./PubBadge";
 import { getIsPublic } from "components/utils/getIsPublic";
 import Tags from "./Tags";
+import { getUserUrl } from "./utils/getLinks";
 
 interface ICollectionCardProps {
   uuid: string;
@@ -16,6 +16,7 @@ interface ICollectionCardProps {
   userName: string;
   userUuid: string;
   syllabiCount?: number;
+  isAdmin: boolean;
 }
 
 const CollectionCard: React.FunctionComponent<ICollectionCardProps> = (
@@ -28,11 +29,13 @@ const CollectionCard: React.FunctionComponent<ICollectionCardProps> = (
           <Link href={`/collections/${props.uuid}`}>
             <a>{props.name}</a>
           </Link>
-          <PubBadge isPublic={getIsPublic(props.status)} />
+          {props.isAdmin ? (
+            <PubBadge isPublic={getIsPublic(props.status)} />
+          ) : null}
         </Card.Title>
         <p className="collection-meta small">
           collection by{" "}
-          <Link href={`/user/${props.userUuid}`}>{props.userName}</Link> |
+          <Link href={getUserUrl(props.userUuid)}>{props.userName}</Link> |
           contains {props.syllabiCount} syllabi
         </p>
         <Card.Text className="course-description">

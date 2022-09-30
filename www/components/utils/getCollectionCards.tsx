@@ -4,7 +4,7 @@ import CollectionCard from "components/CollectionCard";
 export const getCollectionCards = (
   collectionArray: ICollection[] | undefined,
   userName?: string,
-  userUuid?: string
+  isAdmin?: boolean
 ) => {
   if (!collectionArray || collectionArray.length === 0) {
     return null;
@@ -19,8 +19,9 @@ export const getCollectionCards = (
       description={item.description}
       tags={item.tags}
       userName={userName ? userName : "Netochka Nezvanova"}
-      userUuid={userUuid ? userUuid : item.user_uuid}
+      userUuid={item.user_uuid}
       syllabiCount={item.syllabi ? item.syllabi.length : 0}
+      isAdmin={isAdmin ? isAdmin : false}
     />
   ));
 
