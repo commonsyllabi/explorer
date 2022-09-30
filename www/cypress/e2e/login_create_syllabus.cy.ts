@@ -15,10 +15,8 @@ describe('Create a new syllabus', () => {
 
     it('logs in and creates a syllabus', () => {
         cy.intercept('GET', '/auth/signin',(req) => {
-            console.log('intercepted auth')
             req.continue((res) => {
-              console.log('intercepted auth res')
-              if(res.statusCode != 200) throw new Error(`Error logging the user in ${res.statusMessage}`)
+              if(res.statusCode != 200) throw new Error(`[cypress] error logging inthe user (${res.statusMessage})`)
             })
           }).as('login')
 
@@ -34,28 +32,28 @@ describe('Create a new syllabus', () => {
         cy.intercept('POST', '/syllabi/*/institutions', (req) => {
             req.continue((res) => {
                 if(res.statusCode == 200) console.log('[cypress] created institution', res.body);
-                else throw new Error('failed to create institution')
+                else throw new Error('[cypress] failed to create institution')
             })
         }).as('createInstitution')
 
         cy.intercept('POST', '/attachments/*', (req) => {
             req.continue((res) => {
                 if(res.statusCode == 201) console.log('[cypress] created attachment',   res.body);
-                else throw new Error('failed to create attachment')
+                else throw new Error('[cypress] failed to create attachment')
                 
             })
         }).as('createAttachment')
 
-        cy.contains('Login').click({ force: true })
+        cy.get('[data-cy="Login"]').click()
 
         cy.get('[data-cy="Login-email"]').type("pierre.depaz@gmail.com")
         cy.get('[data-cy="Login-password"]').type("12345678")
 
         cy.get('[data-cy="Login-submit"]').click()
         cy.wait('@login')
-        // cy.get('[data-cy="Logged user"]')
+        cy.wait(1000)
 
-        cy.contains('+ New Syllabus').click()
+        cy.get('[data-cy="newSyllabusLink"]').click()
 
         cy.get('[data-cy="courseTitleInput"]').type("Test class 1", {force: true})
 
@@ -69,18 +67,14 @@ describe('Create a new syllabus', () => {
         cy.get('[data-cy="courseDurationInput"]').type('7', {force: true})
         cy.get('[data-cy="courseDescriptionInput"]').type('Lorem ipsum dolores sit descriptio nuncam sed que tantamus', {force: true})
 
-        //-- adding and removing some attachments
-        cy.get('[data-cy="attachment-add"]').click({force: true})
-        cy.get('[data-cy="attachment-remove-0"]').click({force: true})
-
-        
+        //-- add url attachment
         cy.get('[data-cy="new-attachment-name"]').type('Weblink test', {force: true})
         cy.get('[data-cy="new-attachment-description"]').type('This is optional', {force: true})
         cy.get('[data-cy="new-attachment-type-url"]').click({force: true})
         cy.get('[data-cy="new-attachment-url"]').type('https://test.enframed.net', {force: true})
         cy.get('[data-cy="attachment-add"]').click({force: true})
 
-        
+        //-- add file attachment
         cy.get('[data-cy="new-attachment-name"]').type('File test', {force: true})
         cy.get('[data-cy="new-attachment-description"]').type('This is also optional', {force: true})
         cy.get('[data-cy="new-attachment-type-file"]').click({force: true})
@@ -97,7 +91,7 @@ describe('Create a new syllabus', () => {
 
   describe('Visit the newly created syllabus', () => {
     it('navigate to the syllabus page', () => {
-        if(!newSyllabusUUID) throw new Error(`incorrect newSyllabusUUI: ${newSyllabusUUID}`)
+        if(!newSyllabusUUID) throw new Error(`incorrect newSyllabusUUID: ${newSyllabusUUID}`)
         
         cy.visit(`/syllabus/${newSyllabusUUID}`)
 
