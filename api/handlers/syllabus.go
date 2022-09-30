@@ -36,7 +36,13 @@ func GetSyllabi(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, "There was an error getting the syllabi.")
 	}
 
-	return c.JSON(http.StatusOK, syllabi)
+	total, pages, err := models.GetSyllabiCount()
+	if err != nil {
+		zero.Error(err.Error())
+		return c.String(http.StatusInternalServerError, "There was an error getting the syllabus count.")
+	}
+
+	return c.JSON(http.StatusOK, echo.Map{"syllabi": syllabi, "total": total, "pages": pages})
 }
 
 func CreateSyllabus(c echo.Context) error {
