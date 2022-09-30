@@ -18,6 +18,12 @@ import SyllabusFooter from "components/Syllabus/SyllabusFooter";
 import Tags from "components/Tags";
 import Link from "next/link";
 
+import {
+  getInstitutionName,
+  getInstitutionTermInfo,
+  getInstitutionYearInfo,
+} from "components/utils/getInstitutionInfo";
+
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const syllabusId = context.params!.sid;
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -70,10 +76,10 @@ const Syllabus: NextPage<ISyllabus> = (props) => {
         <Row className="d-flex justify-content-center">
           <Col className="pt-3 pb-5 d-flex flex-column gap-3" lg={10}>
             <SyllabusSchoolCodeYear
-              institution={props.institutions && props.institutions[0].name}
+              institution={getInstitutionName(props.institutions)}
               courseNumber={props.course_number}
-              year={props.institutions && props.institutions[0].date.year}
-              term={props.institutions && props.institutions[0].date.term}
+              year={getInstitutionYearInfo(props.institutions)}
+              term={getInstitutionTermInfo(props.institutions)}
             />
             <h1 className="p-0 m-0">
               {props.title ? props.title : "Course Title"}

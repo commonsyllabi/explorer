@@ -9,6 +9,11 @@ import PubBadge from "./PubBadge";
 import { getServerSideProps } from "pages";
 
 import { getSyllabiUrl, getUserUrl } from "components/utils/getLinks";
+import {
+  getInstitutionName,
+  getInstitutionTermInfo,
+  getInstitutionYearInfo,
+} from "components/utils/getInstitutionInfo";
 
 import { ISyllabus } from "types";
 
@@ -23,7 +28,6 @@ const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = ({
   userName,
   isAdmin,
 }) => {
-  // Helper functions to parse data to props
   const getVisbility = (status: string) => {
     if (status === "unlisted") {
       return false;
@@ -32,45 +36,6 @@ const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = ({
     } else {
       return null;
     }
-  };
-
-  const getInstitutionName = () => {
-    if (props.institutions) {
-      if (props.institutions[0]) {
-        return props.institutions[0]["name"];
-      }
-      return null;
-    }
-    return null;
-  };
-
-  const getInstitutionTermInfo = () => {
-    if (props.institutions) {
-      if (props.institutions[0]) {
-        if (props.institutions[0]["date"]) {
-          if (props.institutions[0].date.term) {
-            return props.institutions[0].date.term;
-          }
-          return null;
-        }
-        return null;
-      }
-      return null;
-    }
-    return null;
-  };
-
-  const getInstitutionYearInfo = () => {
-    if (props.institutions) {
-      if (props.institutions[0]) {
-        if (props.institutions[0]["date"]) {
-          return props.institutions[0].date.year;
-        }
-        return null;
-      }
-      return null;
-    }
-    return null;
   };
 
   const getUserName = () => {
@@ -87,10 +52,10 @@ const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = ({
     <Card data-cy="syllabusCard">
       <Card.Body>
         <SyllabusSchoolCodeYear
-          institution={getInstitutionName()}
+          institution={getInstitutionName(props.institutions)}
           courseNumber={props.course_number ? props.course_number : null}
-          term={getInstitutionTermInfo()}
-          year={getInstitutionYearInfo()}
+          term={getInstitutionTermInfo(props.institutions)}
+          year={getInstitutionYearInfo(props.institutions)}
           academicLevel={props.academic_level}
         />
         <Card.Title>
