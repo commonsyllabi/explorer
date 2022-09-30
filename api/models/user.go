@@ -68,7 +68,6 @@ func GetUser(uuid uuid.UUID, user_uuid uuid.UUID) (User, error) {
 		return user, err
 	}
 
-	fmt.Println("ALLOW RETURN OF UNLISTED SYLLABI IF USER IS LOGGED IN")
 	for _, syll := range sylls {
 		if syll.Status == "listed" || syll.UserUUID == user_uuid {
 			user.Syllabi = append(user.Syllabi, syll)
