@@ -55,11 +55,23 @@ func CreateUser(user *User) (User, error) {
 	return *user, result.Error
 }
 
-func GetUser(uuid uuid.UUID) (User, error) {
+func GetUser(uuid uuid.UUID, user_uuid uuid.UUID) (User, error) {
 	var user User
-	err := db.Preload("Syllabi").Preload("Collections").Where("uuid = ?", uuid).First(&user).Error
+	err := db.Preload("Collections").Where("uuid = ?", uuid).First(&user).Error
 	if err != nil {
 		return user, err
+	}
+
+	var sylls []Syllabus
+	err = db.Model(&user).Association("Syllabi").Find(&sylls)
+	if err != nil {
+		return user, err
+	}
+
+	for _, syll := range sylls {
+		if syll.Status == "listed" || syll.UserUUID == user_uuid {
+			user.Syllabi = append(user.Syllabi, syll)
+		}
 	}
 
 	var insts []Institution
@@ -73,11 +85,23 @@ func GetUser(uuid uuid.UUID) (User, error) {
 	return user, err
 }
 
-func GetUserByEmail(email string) (User, error) {
+func GetUserByEmail(email string, user_uuid uuid.UUID) (User, error) {
 	var user User
-	err := db.Preload("Syllabi").Preload("Collections").Where("email = ?", email).Find(&user).Error
+	err := db.Preload("Collections").Where("email = ?", email).Find(&user).Error
 	if err != nil {
 		return user, err
+	}
+
+	var sylls []Syllabus
+	err = db.Model(&user).Association("Syllabi").Find(&sylls)
+	if err != nil {
+		return user, err
+	}
+
+	for _, syll := range sylls {
+		if syll.Status == "listed" || syll.UserUUID == user_uuid {
+			user.Syllabi = append(user.Syllabi, syll)
+		}
 	}
 
 	var insts []Institution
@@ -91,11 +115,23 @@ func GetUserByEmail(email string) (User, error) {
 	return user, err
 }
 
-func GetUserBySlug(slug string) (User, error) {
+func GetUserBySlug(slug string, user_uuid uuid.UUID) (User, error) {
 	var user User
-	err := db.Preload("Syllabi").Preload("Collections").Where("slug = ?", slug).Find(&user).Error
+	err := db.Preload("Collections").Where("slug = ?", slug).Find(&user).Error
 	if err != nil {
 		return user, err
+	}
+
+	var sylls []Syllabus
+	err = db.Model(&user).Association("Syllabi").Find(&sylls)
+	if err != nil {
+		return user, err
+	}
+
+	for _, syll := range sylls {
+		if syll.Status == "listed" || syll.UserUUID == user_uuid {
+			user.Syllabi = append(user.Syllabi, syll)
+		}
 	}
 
 	var insts []Institution
@@ -139,7 +175,7 @@ func AddInstitutionToUser(uuid uuid.UUID, user_uuid uuid.UUID, inst *Institution
 		return user, err
 	}
 
-	updated, err := GetUser(user_uuid)
+	updated, err := GetUser(user_uuid, user_uuid)
 	return updated, err
 }
 
@@ -161,7 +197,7 @@ func RemoveInstitutionFromUser(uuid uuid.UUID, inst_uuid uuid.UUID, user_uuid uu
 		return user, err
 	}
 
-	updated, err := GetUser(user_uuid)
+	updated, err := GetUser(user_uuid, user_uuid)
 	return updated, err
 }
 

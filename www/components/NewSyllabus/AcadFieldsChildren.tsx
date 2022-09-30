@@ -7,15 +7,17 @@ import {
 } from "components/utils/formUtils";
 
 interface IAcadFieldsChildrenProps {
-  parentFieldCode?: string | undefined;
+  narrowFieldCode?: keyof typeof modelsIsced['NARROW_FIELDS'] | undefined;
+  detailedFieldCode?: keyof typeof modelsIsced['DETAILED_FIELDS'] | undefined;
   fieldLabel: string;
 }
 
 const AcadFieldsChildren: React.FunctionComponent<IAcadFieldsChildrenProps> = ({
-  parentFieldCode,
+  narrowFieldCode,
+  detailedFieldCode,
   fieldLabel,
 }) => {
-  if (parentFieldCode === undefined || parentFieldCode.length === 0) {
+  if (narrowFieldCode === undefined || narrowFieldCode.length === 0 || detailedFieldCode === undefined || detailedFieldCode.length === 0) {
     return (
       <>
         <option value="">–</option>
@@ -26,18 +28,14 @@ const AcadFieldsChildren: React.FunctionComponent<IAcadFieldsChildrenProps> = ({
       return (
         <>
           <option value="">–</option>
-          {generateAcadFieldsNarrow(
-            parentFieldCode as keyof typeof modelsIsced["NARROW_FIELDS"]
-          )}
+          {generateAcadFieldsNarrow(narrowFieldCode)}
         </>
       );
     } else {
       return (
         <>
           <option value="">–</option>
-          {generateAcadFieldsDetailed(
-            parentFieldCode as keyof typeof modelsIsced["DETAILED_FIELDS"]
-          )}
+          {generateAcadFieldsDetailed(detailedFieldCode)}
         </>
       );
     }

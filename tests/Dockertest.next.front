@@ -25,8 +25,9 @@ COPY ./www .
 # Uncomment the following line in case you want to disable telemetry during the build.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
-ENV API_URL http://backend_explorer:3046
-ENV NEXT_PUBLIC_API_URL http://backend_explorer:3046
+ENV API_URL https://api.common-syllabi.org
+ENV NEXT_PUBLIC_API_URL https://api.common-syllabi.org
+ENV NEXTAUTH_URL https://api.common-syllabi.org/auth
 RUN yarn build
 
 # If using npm comment out above and use below instead
@@ -36,7 +37,7 @@ RUN yarn build
 FROM node:16-alpine AS runner
 WORKDIR /app
 
-ENV NODE_ENV test
+# ENV NODE_ENV test
 # Uncomment the following line in case you want to disable telemetry during runtime.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
@@ -49,6 +50,7 @@ COPY --from=builder /app/public ./public
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder /app/.env.docker ./
 
 USER nextjs
 

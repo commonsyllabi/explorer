@@ -8,17 +8,15 @@ describe('Create a new syllabus', () => {
     it('navigates to the home page', () => {
         cy.visit('/')
 
-        cy.get('[data-cy="syllabusCard"]').should('have.length', 4)
+        cy.get('[data-cy="syllabusCard"]').should('have.length.greaterThan', 1)
 
         cy.get('[data-cy="Login"]').click()
     })
 
     it('logs in and creates a syllabus', () => {
         cy.intercept('GET', '/auth/signin',(req) => {
-            console.log('intercepted auth')
             req.continue((res) => {
-              console.log('intercepted auth res')
-              if(res.statusCode != 200) throw new Error(`Error logging the user in ${res.statusMessage}`)
+              if(res.statusCode != 200) throw new Error(`[cypress] error logging inthe user (${res.statusMessage})`)
             })
           }).as('login')
 
@@ -34,50 +32,54 @@ describe('Create a new syllabus', () => {
         cy.intercept('POST', '/syllabi/*/institutions', (req) => {
             req.continue((res) => {
                 if(res.statusCode == 200) console.log('[cypress] created institution', res.body);
-                else throw new Error('failed to create institution')
+                else throw new Error('[cypress] failed to create institution')
             })
         }).as('createInstitution')
 
         cy.intercept('POST', '/attachments/*', (req) => {
             req.continue((res) => {
                 if(res.statusCode == 201) console.log('[cypress] created attachment',   res.body);
-                else throw new Error('failed to create attachment')
+                else throw new Error('[cypress] failed to create attachment')
                 
             })
         }).as('createAttachment')
 
-        cy.contains('Login').click({ force: true })
+        cy.get('[data-cy="Login"]').click()
 
         cy.get('[data-cy="Login-email"]').type("pierre.depaz@gmail.com")
         cy.get('[data-cy="Login-password"]').type("12345678")
 
         cy.get('[data-cy="Login-submit"]').click()
         cy.wait('@login')
-        // cy.get('[data-cy="Logged user"]')
+        cy.wait(1000)
 
-        cy.contains('+ New Syllabus').click()
+        cy.get('[data-cy="newSyllabusLink"]').click()
 
         cy.get('[data-cy="courseTitleInput"]').type("Test class 1", {force: true})
 
+        //-- click twice to check that toggle works and make sure it is set to listed
         cy.get('[data-cy="courseStatusInput"]').click({force: true})
+        cy.get('[data-cy="courseStatusInput"]').click({force: true})
+
         cy.get('[data-cy="courseCodeInput"]').type("IMANY-UH-1001", {force: true})
         cy.get('[data-cy="academicLevelInput"]').select('1', {force: true})
         cy.get('[data-cy="courseLanguageInput"]').select('FR', {force: true})
         cy.get('[data-cy="courseDurationInput"]').type('7', {force: true})
         cy.get('[data-cy="courseDescriptionInput"]').type('Lorem ipsum dolores sit descriptio nuncam sed que tantamus', {force: true})
 
+        //-- add url attachment
+        cy.get('[data-cy="new-attachment-name"]').type('Weblink test', {force: true})
+        cy.get('[data-cy="new-attachment-description"]').type('This is optional', {force: true})
+        cy.get('[data-cy="new-attachment-type-url"]').click({force: true})
+        cy.get('[data-cy="new-attachment-url"]').type('https://test.enframed.net', {force: true})
         cy.get('[data-cy="attachment-add"]').click({force: true})
+
+        //-- add file attachment
+        cy.get('[data-cy="new-attachment-name"]').type('File test', {force: true})
+        cy.get('[data-cy="new-attachment-description"]').type('This is also optional', {force: true})
+        cy.get('[data-cy="new-attachment-type-file"]').click({force: true})
+        cy.get('[data-cy="new-attachment-file"]').selectFile('cypress/fixtures/test_attachment.txt', {log: true, force: true})
         cy.get('[data-cy="attachment-add"]').click({force: true})
-        cy.get('[data-cy="attachment-remove-2"]').click({force: true})
-
-        cy.get('[data-cy="attachment-name-0"]').type('Weblink test', {force: true})
-        cy.get('[data-cy="attachment-description-0"]').type('This is optional', {force: true})
-        cy.contains('URL').click({force: true})
-        cy.get('[data-cy="attachment-url-0"]').type('https://test.enframed.net', {force: true})
-
-        cy.get('[data-cy="attachment-name-1"]').type('File test', {force: true})
-        cy.get('[data-cy="attachment-description-1"]').type('This is also optional', {force: true})
-        cy.get('[data-cy="attachment-file-1"]').selectFile('cypress/fixtures/test_attachment.txt', {log: true, force: true})
 
         cy.get('[data-cy="courseSubmitButton"').click()
 
@@ -89,7 +91,7 @@ describe('Create a new syllabus', () => {
 
   describe('Visit the newly created syllabus', () => {
     it('navigate to the syllabus page', () => {
-        if(!newSyllabusUUID) throw new Error(`incorrect newSyllabusUUI: ${newSyllabusUUID}`)
+        if(!newSyllabusUUID) throw new Error(`incorrect newSyllabusUUID: ${newSyllabusUUID}`)
         
         cy.visit(`/syllabus/${newSyllabusUUID}`)
 

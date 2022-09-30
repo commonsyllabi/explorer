@@ -44,24 +44,13 @@ services:
       context: .
       dockerfile: tests/Dockertest.next.front
     environment:
-      API_URL: http://backend_explorer:3046
-      NEXT_PUBLIC_API_URL: http://backend_explorer:3046
-      NEXTAUTH_URL: http://backend_explorer3046/auth
+      API_URL: "http://backend_explorer:3046"
+      NEXT_PUBLIC_API_URL: "http://backend_explorer:3046"
+      NEXTAUTH_URL: "http://backend_explorer:3046/auth"
     depends_on:
       - backend_explorer
-
-  e2e_tests:
-    container_name: e2e_tests
-    image: cypress
-    build:
-      context: .
-      dockerfile: tests/Dockertest.cypress.front
-    depends_on:
-      - frontend_test_explorer
-    environment:
-      - CYPRESS_baseUrl=http://frontend_test_explorer:3000
-    volumes:
-      - ./www/cypress:/cypress
+    ports:
+     - 3000:3000
 
 volumes:
   pgdata_explorer_test:

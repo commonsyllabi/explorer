@@ -13,10 +13,10 @@ func TestCollectionModel(t *testing.T) {
 	teardown := setup(t)
 	defer teardown(t)
 
-	t.Run("Test get all collections", func(t *testing.T) {
-		res, err := models.GetAllCollections()
+	t.Run("Test get all listed and owned collections", func(t *testing.T) {
+		res, err := models.GetAllCollections(userID)
 		require.Nil(t, err)
-		assert.Equal(t, len(res), 2)
+		assert.Equal(t, len(res), 3)
 	})
 
 	t.Run("Test create collection", func(t *testing.T) {
@@ -30,7 +30,7 @@ func TestCollectionModel(t *testing.T) {
 		coll := models.Collection{
 			Name: "Test Name 2",
 		}
-		result, err := models.CreateCollection(user.UUID, &coll)
+		result, err := models.CreateCollection(&coll, user.UUID)
 		require.Nil(t, err)
 
 		assert.Equal(t, coll.Name, result.Name)
@@ -39,7 +39,7 @@ func TestCollectionModel(t *testing.T) {
 	})
 
 	t.Run("Test get collection", func(t *testing.T) {
-		coll, err := models.GetCollection(collectionID)
+		coll, err := models.GetCollection(collectionID, userID)
 		require.Nil(t, err)
 		assert.Equal(t, coll.UUID, collectionID)
 		assert.Equal(t, collectionName, coll.Name)
@@ -47,7 +47,7 @@ func TestCollectionModel(t *testing.T) {
 	})
 
 	t.Run("Test get collection by slug", func(t *testing.T) {
-		coll, err := models.GetCollectionBySlug(collectionSlug)
+		coll, err := models.GetCollectionBySlug(collectionSlug, userID)
 		require.Nil(t, err)
 		assert.Equal(t, coll.UUID, collectionID)
 		assert.Equal(t, collectionName, coll.Name)
@@ -55,7 +55,7 @@ func TestCollectionModel(t *testing.T) {
 	})
 
 	t.Run("Test get non-existing collection", func(t *testing.T) {
-		res, err := models.GetCollection(collectionUnknownID)
+		res, err := models.GetCollection(collectionUnknownID, userID)
 		assert.NotNil(t, err)
 		assert.True(t, res.CreatedAt.IsZero())
 	})
