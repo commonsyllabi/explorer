@@ -164,5 +164,5 @@ func handlePing(c echo.Context) error {
 }
 
 func handleNotFound(c echo.Context) error {
-	return c.String(http.StatusNotFound, "We couldn't find the requested information, sorry :(.")
+	return c.String(http.StatusNotFound, "We couldn't find the requested resource, sorry :(. You can check out the documentation at https://commonsyllabi.stoplight.io/")
 }
