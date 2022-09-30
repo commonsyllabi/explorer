@@ -79,7 +79,7 @@ const About: NextPage<IUser> = (props) => {
     return;
   };
 
-  const filteredSyllabi = (contentArray: ISyllabus[]) => {
+  const filteredSyllabi = () => {
     if (props.syllabi === undefined) {
       return undefined;
     }
@@ -93,6 +93,27 @@ const About: NextPage<IUser> = (props) => {
       return results;
     }
     return props.syllabi;
+  };
+
+  const filteredCollections = () => {
+    if (props.collections === undefined) {
+      return undefined;
+    }
+    if (collFilter.length > 0) {
+      const results = props.collections.filter((item) => {
+        if (item.name.includes(collFilter)) {
+          return true;
+        }
+        if (item.description) {
+          if (item.description.includes(collFilter)) {
+            return true;
+          }
+        }
+        return false;
+      });
+      return results;
+    }
+    return props.collections;
   };
 
   return (
@@ -181,7 +202,7 @@ const About: NextPage<IUser> = (props) => {
                   </div>
                   <div id="collections">
                     {getCollectionCards(
-                      props.collections,
+                      filteredCollections(),
                       props.name,
                       checkIfAdmin()
                     )}
