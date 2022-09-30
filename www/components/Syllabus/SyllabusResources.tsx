@@ -5,13 +5,13 @@ import { IResources, ISyllabus } from "types";
 import SyllabusResource from "components/Syllabus/SyllabusResource";
 
 interface ISyllabusResourcesProps {
-  resources: IResources[];
+  resources?: IResources[];
 }
 
 const SyllabusResources: React.FunctionComponent<ISyllabusResourcesProps> = ({
   resources,
 }) => {
-  if (resources.length < 1) {
+  if (resources === undefined || resources.length < 1) {
     return <p className="muted">No resources to show.</p>;
   }
   const resourceEls = resources.map((resource) => (

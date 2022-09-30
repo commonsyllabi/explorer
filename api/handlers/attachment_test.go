@@ -1,7 +1,9 @@
 package handlers_test
 
 import (
+	"bytes"
 	"encoding/json"
+	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -35,34 +37,25 @@ func TestAttachmentHandler(t *testing.T) {
 		atts := make([]models.Attachment, 0)
 		err := json.Unmarshal(res.Body.Bytes(), &atts)
 		require.Nil(t, err)
-		assert.Equal(t, 5, len(atts))
+		assert.Equal(t, 7, len(atts))
 	})
 
 	t.Run("Test create attachment with file", func(t *testing.T) {
-		f := make(url.Values)
-		f.Set("name", "Test Attachment file")
-		f.Set("desc", "")
-		f.Set("url", "")
-
 		q := make(url.Values)
-		q.Set("syllabusID", syllabusID.String())
+		q.Set("syllabus_id", syllabusID.String())
 
-		t.Skip("how to upload a file with echo test")
-		// var fw io.Writer
-		// file := mustOpen(attachmentFilePath)
-		// fw, err := w.CreateFormFile("file", file.Name())
-		// if err != nil {
-		// 	t.Error(err)
-		// }
-
-		// if _, err := io.Copy(fw, file); err != nil {
-		// 	t.Error(err)
-		// }
-		//
+		body := new(bytes.Buffer)
+		writer := multipart.NewWriter(body)
+		writer.WriteField("name", "Test Attachment file")
+		writer.WriteField("description", "Test description")
+		writer.WriteField("url", "")
+		part, _ := writer.CreateFormFile("file", "file.csv") //-- todo open actual file
+		part.Write([]byte(`wovon man kann nicht sprechen, darüber muss man schweigen.`))
+		writer.Close()
 
 		res := httptest.NewRecorder()
-		req := httptest.NewRequest(http.MethodPost, "/attachments?"+q.Encode(), strings.NewReader(f.Encode()))
-		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationForm)
+		req := httptest.NewRequest(http.MethodPost, "/attachments?"+q.Encode(), body)
+		req.Header.Set(echo.HeaderContentType, writer.FormDataContentType()) // <<< important part
 		c := echo.New().NewContext(req, res)
 		c.Set("config", conf)
 
@@ -144,6 +137,26 @@ func TestAttachmentHandler(t *testing.T) {
 		c := echo.New().NewContext(req, res)
 		c.SetParamNames("id")
 		c.SetParamValues(attachmentID.String())
+
+		handlers.GetAttachment(c)
+		assert.Equal(t, http.StatusOK, res.Code)
+
+		var att models.Attachment
+		err := json.Unmarshal(res.Body.Bytes(), &att)
+		require.Nil(t, err)
+		assert.Equal(t, attachmentID, att.UUID)
+		assert.Equal(t, "Chair website", att.Name)
+		assert.Equal(t, "https://fg.vanr.tu-berlin.de/ungewohnt/", att.URL)
+	})
+
+	t.Run("Test get attachment with slug", func(t *testing.T) {
+		res := httptest.NewRecorder()
+		req := httptest.NewRequest(http.MethodGet, "/attachments", nil)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationForm)
+
+		c := echo.New().NewContext(req, res)
+		c.SetParamNames("id")
+		c.SetParamValues(attachmentSlug)
 
 		handlers.GetAttachment(c)
 		assert.Equal(t, http.StatusOK, res.Code)

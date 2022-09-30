@@ -9,8 +9,8 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"strings"
 
-	"github.com/commonsyllabi/explorer/api/auth"
 	"github.com/commonsyllabi/explorer/api/config"
 	zero "github.com/commonsyllabi/explorer/api/logger"
 	"github.com/commonsyllabi/explorer/api/models"
@@ -29,10 +29,9 @@ func GetAllAttachments(c echo.Context) error {
 }
 
 func CreateAttachment(c echo.Context) error {
-	_, err := auth.Authenticate(c)
-	if err != nil {
-		zero.Error(err.Error())
-		return c.String(http.StatusUnauthorized, "Unauthorized")
+	user_uuid := mustGetUser(c)
+	if user_uuid == uuid.Nil {
+		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
 
 	conf, ok := c.Get("config").(config.Config)
@@ -41,7 +40,7 @@ func CreateAttachment(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, "There was an error uploading your syllabus. Please try again later.")
 	}
 
-	err = sanitizeAttachment(c)
+	err := sanitizeAttachment(c)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusBadRequest, err.Error())
@@ -81,14 +80,14 @@ func CreateAttachment(c echo.Context) error {
 		}
 		defer src.Close()
 
-		dst, err := os.Create(filepath.Join(dest, file.Filename))
+		target, err := os.Create(dest)
 		if err != nil {
 			zero.Error(err.Error())
 			return err
 		}
-		defer dst.Close()
+		defer target.Close()
 
-		if _, err = io.Copy(dst, src); err != nil {
+		if _, err = io.Copy(target, src); err != nil {
 			zero.Error(err.Error())
 			return c.String(http.StatusBadRequest, "Error saving File to disk.")
 		}
@@ -96,7 +95,7 @@ func CreateAttachment(c echo.Context) error {
 		att = models.Attachment{
 			Name:        name,
 			Description: desc,
-			URL:         dest,
+			URL:         fname,
 			Type:        "file",
 		}
 
@@ -120,7 +119,7 @@ func CreateAttachment(c echo.Context) error {
 		}
 	}
 
-	created, err := models.CreateAttachment(syll_id, &att)
+	created, err := models.CreateAttachment(syll_id, &att, user_uuid)
 	if err != nil {
 		zero.Errorf("error creating Attachment: %v", err)
 		return c.String(http.StatusInternalServerError, "Error linking the attachment to the syllabus.")
@@ -130,10 +129,9 @@ func CreateAttachment(c echo.Context) error {
 }
 
 func UpdateAttachment(c echo.Context) error {
-	requester_uid, err := auth.Authenticate(c)
-	if err != nil {
-		zero.Error(err.Error())
-		return c.String(http.StatusUnauthorized, "Unauthorized")
+	user_uuid := mustGetUser(c)
+	if user_uuid == uuid.Nil {
+		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
 
 	id := c.Param("id")
@@ -169,7 +167,7 @@ func UpdateAttachment(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "We could not parse the update data.")
 	}
 
-	updated, err := models.UpdateAttachment(uid, uuid.MustParse(requester_uid), &att)
+	updated, err := models.UpdateAttachment(uid, user_uuid, &att)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusInternalServerError, "Failed to update attachment, please try again later")
@@ -182,8 +180,16 @@ func GetAttachment(c echo.Context) error {
 	id := c.Param("id")
 	uid, err := uuid.Parse(id)
 	if err != nil {
-		zero.Error(err.Error())
-		return c.String(http.StatusBadRequest, "Not a valid ID")
+		if len(id) < 5 || !strings.Contains(id, "-") {
+			zero.Error(err.Error())
+			return c.String(http.StatusBadRequest, "Not a valid ID")
+		}
+
+		att, err := models.GetAttachmentBySlug(id)
+		if err != nil {
+			return c.String(http.StatusNotFound, "There was an error getting the requested Attachment.")
+		}
+		return c.JSON(http.StatusOK, att)
 	}
 
 	att, err := models.GetAttachment(uid)
@@ -196,11 +202,11 @@ func GetAttachment(c echo.Context) error {
 }
 
 func DeleteAttachment(c echo.Context) error {
-	requester_uid, err := auth.Authenticate(c)
-	if err != nil {
-		zero.Error(err.Error())
-		return c.String(http.StatusUnauthorized, "Unauthorized")
+	user_uuid := mustGetUser(c)
+	if user_uuid == uuid.Nil {
+		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
+
 	id := c.Param("id")
 	uid, err := uuid.Parse(id)
 	if err != nil {
@@ -208,7 +214,7 @@ func DeleteAttachment(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "Not a valid ID")
 	}
 
-	att, err := models.DeleteAttachment(uid, uuid.MustParse(requester_uid))
+	att, err := models.DeleteAttachment(uid, user_uuid)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusNotFound, "There was an error deleting the attachments.")
@@ -218,7 +224,7 @@ func DeleteAttachment(c echo.Context) error {
 }
 
 func sanitizeAttachment(c echo.Context) error {
-	if len(c.FormValue("name")) < 5 || len(c.FormValue("name")) > 50 {
+	if len(c.FormValue("name")) < 5 || len(c.FormValue("name")) > 150 {
 		return fmt.Errorf("the name of the Attachment should be between 10 and 50 characters: %d", len(c.FormValue("name")))
 	}
 

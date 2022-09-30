@@ -14,6 +14,7 @@ const SyllabusResource: React.FunctionComponent<ISyllabusResourceProps> = ({
   resourceDescription,
   resourceType,
 }) => {
+  const fileUrl = new URL(`static/${resourceUrl}`, process.env.NEXT_PUBLIC_API_URL)
   return (
     <div className="course-resource mb-4">
       <h3 className="h5">{resourceTitle}</h3>
@@ -21,11 +22,19 @@ const SyllabusResource: React.FunctionComponent<ISyllabusResourceProps> = ({
         <div>
           <dt className="m-0 pe-2">url:</dt>
           <dd className="m-0">
-            <Link href={resourceUrl}>
-              <a target="_blank" rel="noreferrer">
-                {resourceUrl}
-              </a>
-            </Link>
+            {resourceType === "file" ? (
+              <Link href={fileUrl}>
+                <a target="_blank" rel="noreferrer">
+                  {resourceUrl}
+                </a>
+              </Link>
+            ) : (
+              <Link href={resourceUrl}>
+                <a target="_blank" rel="noreferrer">
+                  {resourceUrl}
+                </a>
+              </Link>
+            )}
           </dd>
         </div>
 

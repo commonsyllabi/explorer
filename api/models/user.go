@@ -1,9 +1,13 @@
 package models
 
 import (
+	"fmt"
+	"math"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/gosimple/slug"
 	"github.com/lib/pq"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -27,6 +31,7 @@ type User struct {
 	Education pq.StringArray `gorm:"type:text[]" json:"education" form:"education[]"`
 	Email     string         `gorm:"unique;not null" json:"email" form:"email"`
 	Name      string         `gorm:"default:Anonymous User;not null" json:"name" form:"name"`
+	Slug      string         `gorm:"" json:"slug"`
 	Password  []byte         `gorm:"not null" json:"password"`
 	URLs      pq.StringArray `gorm:"type:text[]" json:"urls" form:"urls[]"`
 
@@ -36,16 +41,38 @@ type User struct {
 	Syllabi     []Syllabus   `gorm:"foreignKey:UserUUID;references:UUID" json:"syllabi"`
 }
 
+func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
+	s := strings.Split(slug.Make(u.Name), "-")
+	i := math.Min(float64(len(s)), 5)
+
+	u.Slug = fmt.Sprintf("%s-%s", strings.Join(s[:int(i)], "-"), u.UUID.String()[:8])
+
+	return nil
+}
+
 func CreateUser(user *User) (User, error) {
 	result := db.Create(user)
 	return *user, result.Error
 }
 
-func GetUser(uuid uuid.UUID) (User, error) {
+func GetUser(uuid uuid.UUID, user_uuid uuid.UUID) (User, error) {
 	var user User
-	err := db.Preload("Syllabi").Preload("Collections").Where("uuid = ?", uuid).First(&user).Error
+	err := db.Preload("Collections").Where("uuid = ?", uuid).First(&user).Error
 	if err != nil {
 		return user, err
+	}
+
+	var sylls []Syllabus
+	err = db.Model(&user).Association("Syllabi").Find(&sylls)
+	if err != nil {
+		return user, err
+	}
+
+	fmt.Println("ALLOW RETURN OF UNLISTED SYLLABI IF USER IS LOGGED IN")
+	for _, syll := range sylls {
+		if syll.Status == "listed" || syll.UserUUID == user_uuid {
+			user.Syllabi = append(user.Syllabi, syll)
+		}
 	}
 
 	var insts []Institution
@@ -59,11 +86,53 @@ func GetUser(uuid uuid.UUID) (User, error) {
 	return user, err
 }
 
-func GetUserByEmail(email string) (User, error) {
+func GetUserByEmail(email string, user_uuid uuid.UUID) (User, error) {
 	var user User
-	err := db.Preload("Syllabi").Preload("Collections").Where("email = ?", email).Find(&user).Error
+	err := db.Preload("Collections").Where("email = ?", email).Find(&user).Error
 	if err != nil {
 		return user, err
+	}
+
+	var sylls []Syllabus
+	err = db.Model(&user).Association("Syllabi").Find(&sylls)
+	if err != nil {
+		return user, err
+	}
+
+	for _, syll := range sylls {
+		if syll.Status == "listed" || syll.UserUUID == user_uuid {
+			user.Syllabi = append(user.Syllabi, syll)
+		}
+	}
+
+	var insts []Institution
+	err = db.Model(&user).Association("Institutions").Find(&insts)
+	if err != nil {
+		return user, err
+	}
+
+	user.Institutions = append(user.Institutions, insts...)
+
+	return user, err
+}
+
+func GetUserBySlug(slug string, user_uuid uuid.UUID) (User, error) {
+	var user User
+	err := db.Preload("Collections").Where("slug = ?", slug).Find(&user).Error
+	if err != nil {
+		return user, err
+	}
+
+	var sylls []Syllabus
+	err = db.Model(&user).Association("Syllabi").Find(&sylls)
+	if err != nil {
+		return user, err
+	}
+
+	for _, syll := range sylls {
+		if syll.Status == "listed" || syll.UserUUID == user_uuid {
+			user.Syllabi = append(user.Syllabi, syll)
+		}
 	}
 
 	var insts []Institution
@@ -107,7 +176,7 @@ func AddInstitutionToUser(uuid uuid.UUID, user_uuid uuid.UUID, inst *Institution
 		return user, err
 	}
 
-	updated, err := GetUser(user_uuid)
+	updated, err := GetUser(user_uuid, user_uuid)
 	return updated, err
 }
 
@@ -129,7 +198,7 @@ func RemoveInstitutionFromUser(uuid uuid.UUID, inst_uuid uuid.UUID, user_uuid uu
 		return user, err
 	}
 
-	updated, err := GetUser(user_uuid)
+	updated, err := GetUser(user_uuid, user_uuid)
 	return updated, err
 }
 

@@ -46,7 +46,7 @@ func TestAuth(t *testing.T) {
 	teardown := setup(t)
 	defer teardown(t)
 
-	var cookie http.Cookie
+	var token echo.Map
 
 	t.Run("Testing login", func(t *testing.T) {
 		data := url.Values{}
@@ -62,43 +62,19 @@ func TestAuth(t *testing.T) {
 		router.ServeHTTP(res, req)
 
 		require.Equal(t, http.StatusOK, res.Code)
-		require.NotZero(t, len(res.Result().Cookies()))
-		if len(res.Result().Cookies()) > 0 {
-			cookie = *res.Result().Cookies()[0]
-		}
 
-		assert.Equal(t, cookie.Name, "cosyl_auth")
+		err := json.Unmarshal(res.Body.Bytes(), &token)
+		require.Nil(t, err)
 	})
 
 	t.Run("Testing authorized access", func(t *testing.T) {
 		req := httptest.NewRequest(http.MethodGet, "/dashboard", nil)
-		req.AddCookie(&cookie)
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", token["token"]))
 
 		res := httptest.NewRecorder()
 		router.ServeHTTP(res, req)
 
 		assert.Equal(t, http.StatusOK, res.Code)
-	})
-
-	t.Run("Testing logout", func(t *testing.T) {
-		req := httptest.NewRequest(http.MethodGet, "/logout", nil)
-		req.AddCookie(&cookie)
-		res := httptest.NewRecorder()
-		router.ServeHTTP(res, req)
-
-		assert.Equal(t, http.StatusOK, res.Code)
-
-		require.NotZero(t, len(res.Result().Cookies()))
-		if len(res.Result().Cookies()) > 0 {
-			cookie = *res.Result().Cookies()[0]
-		}
-
-		req = httptest.NewRequest(http.MethodGet, "/dashboard", nil)
-		req.AddCookie(&cookie)
-		res = httptest.NewRecorder()
-		router.ServeHTTP(res, req)
-
-		assert.Equal(t, http.StatusUnauthorized, res.Code)
 	})
 
 	t.Run("Testing confirm user account", func(t *testing.T) {

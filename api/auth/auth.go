@@ -1,88 +1,114 @@
 package auth
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"net/mail"
 	"os"
 	"strings"
+	"time"
 
 	zero "github.com/commonsyllabi/explorer/api/logger"
 	"github.com/commonsyllabi/explorer/api/models"
 	"github.com/commonsyllabi/explorer/mailer"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/bcrypt"
+
+	"github.com/golang-jwt/jwt"
 )
 
-func Authenticate(c echo.Context) (string, error) {
+type JWTCustomClaims struct {
+	Name  string `json:"name"`
+	UUID  string `json:"uuid"`
+	Email string `json:"email"`
+	jwt.StandardClaims
+}
+
+func Authenticate(c echo.Context) (uuid.UUID, error) {
 	if os.Getenv("API_MODE") == "test" {
-		return "e7b74bcd-c864-41ee-b5a7-d3031f76c8a8", nil
+		return uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c8a8"), nil
 	}
 
 	t := c.QueryParam("token")
 	if t != "" {
 		token, err := uuid.Parse(t)
 		if err != nil {
-			return "unauthorized", err
+			return uuid.Nil, err
 		}
 
-		if token.String() != "" && token.String() == os.Getenv("ADMIN_KEY") {
-			return token.String(), nil
+		if token != uuid.Nil && token.String() == os.Getenv("ADMIN_KEY") {
+			return token, nil
 		}
 	}
 
-	sess, err := session.Get("cosyl_auth", c)
-	user := sess.Values["user"]
-	if user == nil || err != nil {
-		return "", fmt.Errorf("unauthorized user - %v", err)
+	authHeader := c.Request().Header["Authorization"]
+	if len(authHeader) == 0 {
+		return uuid.Nil, fmt.Errorf("no authorization header provided")
 	}
-	return fmt.Sprintf("%s", user), nil
+	raw := c.Request().Header["Authorization"][0]
+	tokenString := strings.Split(raw, " ")[1]
+	token, err := jwt.ParseWithClaims(tokenString, &JWTCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, errors.New("unexpected JWT signing method")
+		}
+		return []byte("cosyl"), nil
+	})
+
+	if err != nil {
+		return uuid.Nil, err
+	}
+
+	if !token.Valid {
+		return uuid.Nil, fmt.Errorf("unauthorized user - %v", token)
+	}
+
+	claims := token.Claims.(*JWTCustomClaims)
+
+	return uuid.MustParse(claims.UUID), nil
 }
 
 func Login(c echo.Context) error {
-	sess, _ := session.Get("cosyl_auth", c)
 	password := c.FormValue("password")
 	email, err := mail.ParseAddress(c.FormValue("email"))
 	if err != nil || strings.Trim(password, " ") == "" {
-		return c.JSON(http.StatusBadRequest, gin.H{"error": "Parameters can't be empty"})
+		return c.String(http.StatusBadRequest, "Parameters can't be empty")
 	}
 
-	user, err := models.GetUserByEmail(email.Address)
+	user, err := models.GetUserByEmail(email.Address, uuid.Nil)
 	if err != nil || user.Status == models.UserPending {
 		zero.Error(err.Error())
-		return c.JSON(http.StatusUnauthorized, gin.H{"error": "Authentication failed"})
+		return c.String(http.StatusUnauthorized, "Authentication failed")
 	}
 
 	err = bcrypt.CompareHashAndPassword(user.Password, []byte(password))
 	if err != nil {
 		zero.Error(err.Error())
-		return c.JSON(http.StatusUnauthorized, gin.H{"error": "Authentication failed"})
+		return c.String(http.StatusUnauthorized, "Authentication failed")
 	}
 
-	sess.Values["user"] = user.UUID.String()
-	if err := sess.Save(c.Request(), c.Response()); err != nil {
+	claims := &JWTCustomClaims{
+		user.Name,
+		user.UUID.String(),
+		user.Email,
+		jwt.StandardClaims{
+			ExpiresAt: time.Now().Add(time.Hour * 72).Unix(),
+		},
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	t, err := token.SignedString([]byte("cosyl"))
+	if err != nil {
 		zero.Error(err.Error())
-		return c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save session"})
-	}
-	return c.JSON(http.StatusOK, user)
-}
-
-func Logout(c echo.Context) error {
-	sess, _ := session.Get("cosyl_auth", c)
-	user := sess.Values["user"]
-	if user == nil {
-		return c.JSON(http.StatusNotFound, gin.H{"error": "Invalid session token"})
+		return c.String(http.StatusInternalServerError, "Authentication failed")
 	}
 
-	sess.Values["user"] = nil
-	if err := sess.Save(c.Request(), c.Response()); err != nil {
-		return c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save session"})
-	}
-
-	return c.JSON(http.StatusOK, gin.H{"message": "Successfully logged out"})
+	return c.JSON(http.StatusOK, echo.Map{
+		"user":  user,
+		"token": t,
+	})
 }
 
 type Token struct {
@@ -127,7 +153,7 @@ func RequestRecover(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, err)
 	}
 
-	user, err := models.GetUserByEmail(email.Address)
+	user, err := models.GetUserByEmail(email.Address, uuid.Nil)
 	if err != nil {
 		return c.JSON(http.StatusNotFound, err)
 	}
@@ -209,11 +235,10 @@ func Recover(c echo.Context) error {
 }
 
 func Dashboard(c echo.Context) error {
-	_, err := Authenticate(c)
+	uuid, err := Authenticate(c)
 	if err != nil {
 		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
-	sess, _ := session.Get("cosyl_auth", c)
-	user := sess.Values["user"]
-	return c.JSON(http.StatusOK, user)
+
+	return c.JSON(http.StatusOK, uuid)
 }

@@ -1,0 +1,347 @@
+{
+  "BROAD_FIELDS": {
+    "00": "Generic",
+    "01": "Education",
+    "02": "Arts and humanities",
+    "03": "Social sciences, journalism and information",
+    "04": "Business, sdministration and law",
+    "05": "Natural sciences, mathematics and statistics",
+    "06": "Information and communication technologies",
+    "07": "Engineering, manufacturing and construction",
+    "08": "Agriculture, forestry, fisheries and veterinary",
+    "09": "Health and Welfare",
+    "10": "Services"
+  },
+  "NARROW_FIELDS": {
+    "00": {
+      "001": "Basic programmes and qualifications",
+      "002": "Literacy and numeracy",
+      "003": "Personal skills and development"
+    },
+    "01": {
+      "011": "Education"
+    },
+    "02": {
+      "021": "Arts",
+      "022": "Humanities (except languages)",
+      "023": "Languages"
+    },
+    "03": {
+      "031": "Social and behavioural sciences",
+      "032": "Journalism and information"
+    },
+    "04": {
+      "041": "Business and administration",
+      "042": "Law"
+    },
+    "05": {
+      "051": "Biological and related sciences",
+      "052": "Environment",
+      "053": "Physical sciences",
+      "054": "Mathematics and statistics"
+    },
+    "06": {
+      "061": "Information and Communication Technologies"
+    },
+    "07": {
+      "071": "Engineering and engineering trades",
+      "072": "Manufacturing and processing",
+      "073": "Architecture and construction"
+    },
+    "08": {
+      "081": "Agriculture",
+      "082": "Forestry",
+      "083": "Fisheries",
+      "084": "Veterinary"
+    },
+    "09": {
+      "091": "Health",
+      "092": "Welfare"
+    },
+    "10": {
+      "101": "Personal services",
+      "102": "Hygiene and occupational health services",
+      "103": "Security services",
+      "104": "Transport"
+    }
+  },
+  "DETAILED_FIELDS": {
+    "001": {
+      "0011": "Basic programmes and qualifications",
+      "0021": "Literacy and numeracy",
+      "0031": "Personal skills and development"
+    },
+    "002": {
+      "0011": "Basic programmes and qualifications",
+      "0021": "Literacy and numeracy",
+      "0031": "Personal skills and development"
+    },
+    "003": {
+      "0011": "Basic programmes and qualifications",
+      "0021": "Literacy and numeracy",
+      "0031": "Personal skills and development"
+    },
+    "011": {
+      "0111": "Education science",
+      "0112": "Training for pre-school teachers",
+      "0113": "Teacher training without subject specialization",
+      "0114": "Teacher training with subject specialization"
+    },
+    "021": {
+      "0211": "Audio-visual techniques and media production",
+      "0212": "Fashion, interior and industrial design",
+      "0213": "Fine arts",
+      "0214": "Handicrafts",
+      "0215": "Music and performing arts"
+    },
+    "022": {
+      "0221": "Religion and theology",
+      "0222": "History and archeology",
+      "0223": "Philosophy and ethics"
+    },
+    "023": {
+      "0231": "Language acquisition",
+      "0232": "Literature and linguistics"
+    },
+    "031": {
+      "0311": "Economics",
+      "0312": "Political sciences and civics",
+      "0313": "Psychology",
+      "0314": "Sociology and cultural studies"
+    },
+    "032": {
+      "0321": "Journalism and reporting",
+      "0322": "Library, information and archival studies"
+    },
+    "041": {
+      "0411": "Accounting and taxation",
+      "0412": "Finance, banking and insurance",
+      "0413": "Management and administration",
+      "0414": "Marketing and advertising",
+      "0415": "Secretarial and office work",
+      "0416": "Wholesale and retail sales",
+      "0417": "Work skills"
+    },
+    "042": {
+      "0421": "Law"
+    },
+    "051": {
+      "0511": "Biology",
+      "0512": "Biochemistry"
+    },
+    "052": {
+      "0521": "Environmental sciences",
+      "0522": "Natural environments and wildlife"
+    },
+    "053": {
+      "0531": "Chemistry",
+      "0532": "Earth sciences",
+      "0533": "Physics"
+    },
+    "054": {
+      "0541": "Mathematics",
+      "0542": "Statistics"
+    },
+    "061": {
+      "0611": "Computer use",
+      "0612": "Database and network design and administration",
+      "0613": "Software and application development and anaysis"
+    },
+    "071": {
+      "0711": "Chemical engineering and processes",
+      "0712": "Environmental protextion technology",
+      "0713": "Electricity and energy",
+      "0714": "Electronics and automation",
+      "0715": "Mechanics and metal trades",
+      "0716": "Motor vehicles, ships and aircrafts"
+    },
+    "072": {
+      "0721": "Food processing",
+      "0722": "Materials (glass, paper, plastic and wood)",
+      "0723": "Textile (clothes, footwear, leather)",
+      "0724": "Mining and extraction"
+    },
+    "073": {
+      "0731": "Architecture and town planning",
+      "0732": "Building and civil engineering"
+    },
+    "081": {
+      "0811": "Crop and livestock production",
+      "0812": "Horticulture"
+    },
+    "082": {
+      "0821": "Forestry"
+    },
+    "083": {
+      "0831": "Fisheries"
+    },
+    "084": {
+      "0841": "Veterinary"
+    },
+    "091": {
+      "0911": "Dental studies",
+      "0912": "Medicine",
+      "0913": "Nursing and midwifery",
+      "0914": "Medical diagnostic and treatment technology",
+      "0915": "Therapy and rehabilitation",
+      "0916": "Pharmacy",
+      "0917": "Traditional and complementary medicine and therapy"
+    },
+    "092": {
+      "0921": "Care of the elderly and of disabled adults",
+      "0922": "Child care and youth services",
+      "0923": "Social work and counselling"
+    },
+    "101": {
+      "1011": "Domestic services",
+      "1012": "Hair and beauty services",
+      "1013": "Hotel, restaurants and catering",
+      "1014": "Sports",
+      "1015": "Travel, tourism, and leisure"
+    },
+    "102": {
+      "1021": "Community sanitation",
+      "1022": "Occupational and health and safety"
+    },
+    "103": {
+      "1031": "Military and defence",
+      "1032": "Protection of persons and property"
+    },
+    "104": {
+      "1041": "Transportation services"
+    }
+  },
+
+  "ACADEMIC_FIELDS": {
+    "00": "Generic",
+    "001": "Basic programmes and qualifications",
+    "002": "Literacy and numeracy",
+    "003": "Personal skills and development",
+    "0011": "Basic programmes and qualifications",
+    "0021": "Literacy and numeracy",
+    "0031": "Personal skills and development",
+
+    "01": "Education",
+    "011": "Education",
+    "0111": "Education science",
+    "0112": "Training for pre-school teachers",
+    "0113": "Teacher training without subject specialization",
+    "0114": "Teacher training with subject specialization",
+
+    "02": "Arts and humanities",
+    "021": "Arts",
+    "0211": "Audio-visual techniques and media production",
+    "0212": "Fashion, interior and industrial design",
+    "0213": "Fine arts",
+    "0214": "Handicrafts",
+    "0215": "Music and performing arts",
+    "022": "Humanities (except languages)",
+    "0221": "Religion and theology",
+    "0222": "History and archeology",
+    "0223": "Philosophy and ethics",
+    "023": "Languages",
+    "0231": "Language acquisition",
+    "0232": "Literature and linguistics",
+
+    "03": "Social sciences, journalism and information",
+    "031": "Social and behavioural sciences",
+    "0311": "Economics",
+    "0312": "Political sciences and civics",
+    "0313": "Psychology",
+    "0314": "Sociology and cultural studies",
+    "032": "Journalism and information",
+    "0321": "Journalism and reporting",
+    "0322": "Library, information and archival studies",
+
+    "04": "Business, sdministration and law",
+    "041": "Business and administration",
+    "0411": "Accounting and taxation",
+    "0412": "Finance, banking and insurance",
+    "0413": "Management and administration",
+    "0414": "Marketing and advertising",
+    "0415": "Secretarial and office work",
+    "0416": "Wholesale and retail sales",
+    "0417": "Work skills",
+    "042": "Law",
+    "0421": "Law",
+
+    "05": "Natural sciences, mathematics and statistics",
+    "051": "Biological and related sciences",
+    "0511": "Biology",
+    "0512": "Biochemistry",
+    "052": "Environment",
+    "0521": "Environmental sciences",
+    "0522": "Natural environments and wildlife",
+    "053": "Physical sciences",
+    "0531": "Chemistry",
+    "0532": "Earth sciences",
+    "0533": "Physics",
+    "054": "Mathematics and statistics",
+    "0541": "Mathematics",
+    "0542": "Statistics",
+
+    "06": "Information and communication technologies",
+    "061": "Information and Communication Technologies",
+    "0611": "Computer use",
+    "0612": "Database and network design and administration",
+    "0613": "Software and application development and anaysis",
+
+    "07": "Engineering, manufacturing and construction",
+    "071": "Engineering and engineering trades",
+    "0711": "Chemical engineering and processes",
+    "0712": "Environmental protextion technology",
+    "0713": "Electricity and energy",
+    "0714": "Electronics and automation",
+    "0715": "Mechanics and metal trades",
+    "0716": "Motor vehicles, ships and aircrafts",
+    "072": "Manufacturing and processing",
+    "0721": "Food processing",
+    "0722": "Materials (glass, paper, plastic and wood)",
+    "0723": "Textile (clothes, footwear, leather)",
+    "0724": "Mining and extraction",
+    "073": "Architecture and construction",
+    "0731": "Architecture and town planning",
+    "0732": "Building and civil engineering",
+
+    "08": "Agriculture, forestry, fisheries and veterinary",
+    "081": "Agriculture",
+    "0811": "Crop and livestock production",
+    "0812": "Horticulture",
+    "082": "Forestry",
+    "0821": "Forestry",
+    "083": "Fisheries",
+    "0831": "Fisheries",
+    "084": "Veterinary",
+    "0841": "Veterinary",
+
+    "09": "Health and Welfare",
+    "091": "Health",
+    "0911": "Dental studies",
+    "0912": "Medicine",
+    "0913": "Nursing and midwifery",
+    "0914": "Medical diagnostic and treatment technology",
+    "0915": "Therapy and rehabilitation",
+    "0916": "Pharmacy",
+    "0917": "Traditional and complementary medicine and therapy",
+    "092": "Welfare",
+    "0921": "Care of the elderly and of disabled adults",
+    "0922": "Child care and youth services",
+    "0923": "Social work and counselling",
+
+    "10": "Services",
+    "101": "Personal services",
+    "1011": "Domestic services",
+    "1012": "Hair and beauty services",
+    "1013": "Hotel, restaurants and catering",
+    "1014": "Sports",
+    "1015": "Travel, tourism, and leisure",
+    "102": "Hygiene and occupational health services",
+    "1021": "Community sanitation",
+    "1022": "Occupational and health and safety",
+    "103": "Security services",
+    "1031": "Military and defence",
+    "1032": "Protection of persons and property",
+    "104": "Transport",
+    "1041": "Transportation services"
+  }
+}

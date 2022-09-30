@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"net/mail"
 	"os"
+	"strings"
 
-	"github.com/commonsyllabi/explorer/api/auth"
 	zero "github.com/commonsyllabi/explorer/api/logger"
 	"github.com/commonsyllabi/explorer/api/models"
 	"github.com/commonsyllabi/explorer/mailer"
@@ -82,11 +82,11 @@ func CreateUser(c echo.Context) error {
 }
 
 func UpdateUser(c echo.Context) error {
-	requester_uid, err := auth.Authenticate(c)
-	if err != nil {
-		zero.Error(err.Error())
+	user_uuid := mustGetUser(c)
+	if user_uuid == uuid.Nil {
 		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
+
 	id := c.Param("id")
 	uid, err := uuid.Parse(id)
 	if err != nil {
@@ -100,7 +100,7 @@ func UpdateUser(c echo.Context) error {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
 
-	_, err = models.GetUser(uid)
+	_, err = models.GetUser(uid, user_uuid)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusNotFound, "We could not find the requested user.")
@@ -113,7 +113,7 @@ func UpdateUser(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "There was an error getting the update data.")
 	}
 
-	updated, err := models.UpdateUser(uid, uuid.MustParse(requester_uid), &user)
+	updated, err := models.UpdateUser(uid, user_uuid, &user)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusInternalServerError, "There was an error updating the user.")
@@ -123,9 +123,8 @@ func UpdateUser(c echo.Context) error {
 }
 
 func AddUserInstitution(c echo.Context) error {
-	requester_uid, err := auth.Authenticate(c)
-	if err != nil {
-		zero.Error(err.Error())
+	user_uuid := mustGetUser(c)
+	if user_uuid == uuid.Nil {
 		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
 
@@ -137,9 +136,13 @@ func AddUserInstitution(c echo.Context) error {
 	}
 
 	var inst models.Institution
-	c.Bind(&inst)
+	err = c.Bind(&inst)
+	if err != nil {
+		zero.Error(err.Error())
+		return c.String(http.StatusBadRequest, "We had a problem binding your information, please check it again.")
+	}
 
-	syll, err := models.AddInstitutionToUser(user_uid, uuid.MustParse(requester_uid), &inst)
+	syll, err := models.AddInstitutionToUser(user_uid, user_uuid, &inst)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusInternalServerError, "We had a problem adding the Institution to the User profile.")
@@ -149,27 +152,36 @@ func AddUserInstitution(c echo.Context) error {
 }
 
 func GetUser(c echo.Context) error {
+	user_uuid := mustGetUser(c)
+
 	id := c.Param("id")
 	uid, err := uuid.Parse(id)
 	if err != nil {
-		zero.Error(err.Error())
-		return c.String(http.StatusBadRequest, "Not a valid ID")
+		if len(id) < 5 || !strings.Contains(id, "-") {
+			zero.Error(err.Error())
+			return c.String(http.StatusBadRequest, "Not a valid ID")
+		}
+
+		user, err := models.GetUserBySlug(id, user_uuid)
+		if err != nil {
+			return c.String(http.StatusNotFound, "There was an error getting the requested User.")
+		}
+
+		return c.JSON(http.StatusOK, user)
 	}
 
-	user, err := models.GetUser(uid)
+	user, err := models.GetUser(uid, user_uuid)
 	if err != nil {
-		zero.Errorf("error getting User %v: %s", id, err)
+		zero.Errorf("error getting User by UUID %v: %s", id, err)
 		c.String(http.StatusNotFound, "We couldn't find the User.")
 	}
 
 	return c.JSON(http.StatusOK, user)
-
 }
 
 func RemoveUserInstitution(c echo.Context) error {
-	requester_uid, err := auth.Authenticate(c)
-	if err != nil {
-		zero.Error(err.Error())
+	user_uuid := mustGetUser(c)
+	if user_uuid == uuid.Nil {
 		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
 
@@ -187,7 +199,7 @@ func RemoveUserInstitution(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, "Not a valid institution ID.")
 	}
 
-	syll, err := models.RemoveInstitutionFromUser(user_uid, inst_uid, uuid.MustParse(requester_uid))
+	syll, err := models.RemoveInstitutionFromUser(user_uid, inst_uid, user_uuid)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusInternalServerError, "There was an error removing the Institution.")
@@ -197,11 +209,11 @@ func RemoveUserInstitution(c echo.Context) error {
 }
 
 func DeleteUser(c echo.Context) error {
-	requester_uid, err := auth.Authenticate(c)
-	if err != nil {
-		zero.Error(err.Error())
+	user_uuid := mustGetUser(c)
+	if user_uuid == uuid.Nil {
 		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
+
 	id := c.Param("id")
 	uid, err := uuid.Parse(id)
 	if err != nil {
@@ -209,7 +221,7 @@ func DeleteUser(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "Not a valid ID.")
 	}
 
-	user, err := models.DeleteUser(uid, uuid.MustParse(requester_uid))
+	user, err := models.DeleteUser(uid, user_uuid)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusNotFound, "Error finding the user to delete.")

@@ -2,9 +2,9 @@ import Container from "react-bootstrap/Container";
 import Dropdown from "react-bootstrap/Dropdown";
 import { FunctionComponent } from "react";
 
-export const FiltersBar: FunctionComponent = () => {
+const FiltersBar: React.FunctionComponent = () => {
   return (
-    <Container className="border-bottom">
+    <Container fluid className="border-bottom">
       <div className="py-3 d-grid gap-2 d-flex justify-content-center">
         <Dropdown>
           <Dropdown.Toggle variant="light" id="dropdown-level">
@@ -57,3 +57,5 @@ export const FiltersBar: FunctionComponent = () => {
     </Container>
   );
 };
+
+export default FiltersBar;

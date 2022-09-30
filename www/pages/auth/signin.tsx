@@ -1,6 +1,7 @@
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
-import { GlobalNav } from "components/GlobalNav";
+import GlobalNav from "components/GlobalNav";
+import Link from "next/link";
 
 import {
   Alert,
@@ -11,15 +12,17 @@ import {
   Col,
   Container,
   Form,
+  FormControlProps,
 } from "react-bootstrap";
-import { useState } from "react";
+import React, { useState } from "react";
 
-import { signIn } from "next-auth/react";
+import { useSession, signIn, signOut } from "next-auth/react";
 import Router from "next/router";
+import Favicons from "components/head/favicons";
 
 export const getStaticProps: GetStaticProps = async () => {
   const states = ["Login", "Sign up"];
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  const apiUrl = process.env.NODE_ENV == 'test' ? 'http://backend_explorer:3046/' : process.env.NEXT_PUBLIC_API_URL;
   return {
     props: { apiUrl: apiUrl, states: states },
   };
@@ -31,11 +34,18 @@ interface IAuthProps {
 }
 
 const SignIn: NextPage<IAuthProps> = (props) => {
+  const { data: session, status } = useSession();
   const url = new URL("users/", props.apiUrl);
 
   const [log, setLog] = useState("");
   const [error, setError] = useState("");
   const [isCreated, setCreated] = useState(false);
+
+  const [signupName, setSignupName] = useState("");
+  const [signupEmail, setSignupEmail] = useState("");
+  const [signupEmailConf, setSignupEmailConf] = useState("");
+  const [signupPassword, setSignupPassword] = useState("");
+  const [signupPasswordConf, setSignupPasswordConf] = useState("");
 
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -45,48 +55,39 @@ const SignIn: NextPage<IAuthProps> = (props) => {
     const u = t.children[0].children[1] as HTMLInputElement;
     const p = t.children[1].children[1] as HTMLInputElement;
     console.warn("Sanitize the input!");
-    // TODO: catch signin error
     signIn("credentials", {
       username: u.value,
       password: p.value,
-      redirect: false
-    })
-      .then(result => {
-        if (!result || result.error) setError("There was an error logging you in. Please check your credentials")
-        else Router.push("/")
-      })
+      redirect: false,
+    }).then((result) => {
+      if (!result || result.error)
+        setError(
+          "There was an error logging you in. Please check your credentials"
+        );
+      else Router.push("/");
+    });
   };
 
-  const handleSignup = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSignup = (e: React.BaseSyntheticEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
-    const t = e.target as HTMLInputElement;
-    const name = t.children[0].children[1] as HTMLInputElement;
-    const email = t.children[1].children[1] as HTMLInputElement;
-    const email_conf = t.children[1].children[3] as HTMLInputElement;
-
-    const password = t.children[2].children[1] as HTMLInputElement;
-    const password_conf = t.children[2].children[3] as HTMLInputElement;
-
-    // console.log(`signing up with:\nname: ${name.value}\nemail: ${email.value} - ${email_conf.value}\npassword: ${password.value} - ${password_conf.value}`);
-
-    if (email.value !== email_conf.value) {
+    if (signupEmail !== signupEmailConf) {
       setLog("Emails should match!");
       return;
     }
 
-    if (password.value !== password_conf.value) {
+    if (signupPassword !== signupPasswordConf) {
       setLog("Passwords should match!");
       return;
     }
 
-    if (password.value.length < 8) {
+    if (signupPassword.length < 8) {
       setLog("Password should be at least 8 characters");
       return;
     }
 
-    if (name.value === "") {
+    if (signupName === "") {
       setLog("Name cannot be empty");
       return;
     }
@@ -97,9 +98,9 @@ const SignIn: NextPage<IAuthProps> = (props) => {
     h.append("Content-Type", "application/x-www-form-urlencoded");
 
     const b = new URLSearchParams();
-    b.append("name", name.value);
-    b.append("email", email.value);
-    b.append("password", password.value);
+    b.append("name", signupName);
+    b.append("email", signupEmail);
+    b.append("password", signupPassword);
 
     fetch(url.href, {
       method: "POST",
@@ -118,116 +119,228 @@ const SignIn: NextPage<IAuthProps> = (props) => {
       });
   };
 
+  const handleSignupName = (e: React.BaseSyntheticEvent) => {
+    const v = e.target.value as string;
+    setSignupName(v);
+  };
+
+  const handleSignupEmail = (e: React.BaseSyntheticEvent) => {
+    const v = e.target.value as string;
+    setSignupEmail(v);
+  };
+
+  const handleSignupEmailConf = (e: React.BaseSyntheticEvent) => {
+    const v = e.target.value as string;
+    setSignupEmailConf(v);
+  };
+
+  const handleSignupPassword = (e: React.BaseSyntheticEvent) => {
+    const v = e.target.value as string;
+    setSignupPassword(v);
+  };
+
+  const handleSignupPasswordConf = (e: React.BaseSyntheticEvent) => {
+    const v = e.target.value as string;
+    setSignupPasswordConf(v);
+  };
+
+  //if already signed in, render usder info
+  if (status === "authenticated") {
+    return (
+      <>
+        <Head>
+          <title>Sign In: Syllabi Explorer</title>
+          <meta name="description" content="Sign in to Syllabi Explorer" />
+          <Favicons />
+        </Head>
+
+        <Container fluid>
+          <GlobalNav />
+        </Container>
+        <Container>
+          <Row>
+            <Col className="col-8 offset-2 py-5">
+              <h1 className="h3 mb-3">
+                You are logged in as{" "}
+                <Link href={`/user/${session.user._id}`}>
+                  {session.user.name}
+                </Link>
+                .
+              </h1>
+              <Button href="#" onClick={() => signOut({ callbackUrl: "/" })}>
+                {" "}
+                Sign Out
+              </Button>
+            </Col>
+          </Row>
+        </Container>
+      </>
+    );
+  }
+
+  //else render login form
   return (
-    <Container>
+    <>
       <Head>
         <title>Sign In: Syllabi Explorer</title>
         <meta name="description" content="Sign in to Syllabi Explorer" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <GlobalNav />
 
-      <Row>
-        <Col lg={{ span: 6, offset: 3 }} className="mt-5">
-          {isCreated === false ? (
-            <Container>
-              <Tabs defaultActiveKey={props.states[0]} id="tab">
-                {/* LOGIN */}
-                <Tab eventKey="Login" title="Login">
-                  <Form className="mt-2" onSubmit={handleLogin}>
-                    <Form.Group className="mb-3" controlId="loginBasicEmail">
-                      <Form.Label>Email address</Form.Label>
-                      <Form.Control
-                        required
-                        name="username"
-                        type="email"
-                        placeholder="Enter email"
-                      />
-                      <Form.Text className="text-muted">
-                        We&#39;ll never share your email with anyone else.
-                      </Form.Text>
-                    </Form.Group>
+      <Container fluid>
+        <GlobalNav />
+      </Container>
+      <Container>
+        <Row>
+          <Col lg={{ span: 6, offset: 3 }} className="mt-5">
+            {isCreated === false ? (
+              <Container>
+                <Tabs defaultActiveKey={props.states[0]} id="tab">
+                  {/* LOGIN */}
+                  <Tab eventKey="Login" title="Login">
+                    <Form className="mt-2" onSubmit={handleLogin}>
+                      <Form.Group className="mb-3" controlId="loginBasicEmail">
+                        <Form.Label>Email address</Form.Label>
+                        <Form.Control
+                          required
+                          name="username"
+                          type="email"
+                          placeholder="Enter email"
+                          data-cy="Login-email"
+                        />
+                        <Form.Text className="text-muted">
+                          We&#39;ll never share your email with anyone else.
+                        </Form.Text>
+                      </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="loginBasicPassword">
-                      <Form.Label>Password</Form.Label>
-                      <Form.Control
-                        required
-                        name="password"
-                        type="password"
-                        placeholder="Password"
-                      />
-                    </Form.Group>
+                      <Form.Group
+                        className="mb-3"
+                        controlId="loginBasicPassword"
+                      >
+                        <Form.Label>Password</Form.Label>
+                        <Form.Control
+                          required
+                          name="password"
+                          type="password"
+                          placeholder="Password"
+                          data-cy="Login-password"
+                        />
+                      </Form.Group>
 
-                    <Button variant="primary" type="submit">
-                      Submit
-                    </Button>
-                  </Form>
-                </Tab>
+                      <Button
+                        variant="primary"
+                        type="submit"
+                        data-cy="Login-submit"
+                      >
+                        Submit
+                      </Button>
+                    </Form>
+                  </Tab>
 
-                {/* SIGN UP */}
-                <Tab eventKey="Sign up" title="Sign up">
-                  <Form className="mt-2" onSubmit={handleSignup}>
-                    <Form.Group className="mb-3" controlId="signupBasicName">
-                      <Form.Label>Name</Form.Label>
-                      <Form.Control type="text" placeholder="Enter name" />
-                    </Form.Group>
+                  {/* SIGN UP */}
+                  <Tab eventKey="Sign up" title="Sign up" data-cy="Sign up">
+                    <Form className="mt-2" onSubmit={handleSignup}>
+                      <Form.Group className="mb-3" controlId="signupBasicName">
+                        <Form.Label>Name</Form.Label>
+                        <Form.Control
+                          type="text"
+                          placeholder="Enter name"
+                          data-cy="Signup-name"
+                          onChange={handleSignupName}
+                        />
+                      </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="signupBasicEmail">
-                      <Form.Label>Email address</Form.Label>
-                      <Form.Control type="email" placeholder="Enter email" />
-                    </Form.Group>
+                      <Form.Group className="mb-3" controlId="signupBasicEmail">
+                        <Form.Label>Email address</Form.Label>
+                        <Form.Control
+                          type="email"
+                          placeholder="Enter email"
+                          data-cy="Signup-email"
+                          onChange={handleSignupEmail}
+                        />
+                      </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="signupBasicEmailConfirm">
-                      <Form.Label>Confirm email address</Form.Label>
-                      <Form.Control type="email" placeholder="Confirm email"
-                      />
-                      <Form.Text className="text-muted">
-                        We&#39;ll never share your email with anyone else.
-                      </Form.Text>
-                    </Form.Group>
+                      <Form.Group
+                        className="mb-3"
+                        controlId="signupBasicEmailConfirm"
+                      >
+                        <Form.Label>Confirm email address</Form.Label>
+                        <Form.Control
+                          type="email"
+                          placeholder="Confirm email"
+                          data-cy="Signup-email-conf"
+                          onChange={handleSignupEmailConf}
+                        />
+                        <Form.Text className="text-muted">
+                          We&#39;ll never share your email with anyone else.
+                        </Form.Text>
+                      </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="signupBasicPassword">
-                      <Form.Label>Password</Form.Label>
-                      <Form.Control type="password" placeholder="Password" />
-                    </Form.Group>
+                      <Form.Group
+                        className="mb-3"
+                        controlId="signupBasicPassword"
+                      >
+                        <Form.Label>Password</Form.Label>
+                        <Form.Control
+                          type="password"
+                          placeholder="Password"
+                          data-cy="Signup-password"
+                          onChange={handleSignupPassword}
+                        />
+                      </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="signupBasicPasswordConfirm">
-                      <Form.Label>Confirm password</Form.Label>
-                      <Form.Control type="password" placeholder="Confirm password" />
-                    </Form.Group>
+                      <Form.Group
+                        className="mb-3"
+                        controlId="signupBasicPasswordConfirm"
+                      >
+                        <Form.Label>Confirm password</Form.Label>
+                        <Form.Control
+                          type="password"
+                          placeholder="Confirm password"
+                          data-cy="Signup-password-conf"
+                          onChange={handleSignupPasswordConf}
+                        />
+                      </Form.Group>
 
-                    <Button variant="primary" type="submit">
-                      Sign up
-                    </Button>
-                  </Form>
-                </Tab>
-              </Tabs>
+                      <Button
+                        variant="primary"
+                        type="submit"
+                        data-cy="Signup-submit"
+                      >
+                        Sign up
+                      </Button>
+                    </Form>
+                  </Tab>
+                </Tabs>
 
-              {log !== "" ? (
-                <Alert variant="warning" className="mt-3">
-                  {log}
-                </Alert>
-              ) : (
-                <></>
-              )}
+                {log !== "" ? (
+                  <Alert variant="warning" className="mt-3">
+                    {log}
+                  </Alert>
+                ) : (
+                  <></>
+                )}
 
-              {error !== "" ? (
-                <Alert variant="danger" className="mt-3">
-                  {error}
-                </Alert>
-              ) : (
-                <></>
-              )}
-            </Container>
-          ) : (
-            <>
-              <h1>Your account was created!</h1>
-              <p>Please check your email address to activate your account.</p>
-            </>
-          )}
-        </Col>
-      </Row>
-    </Container>
+                {error !== "" ? (
+                  <Alert variant="danger" className="mt-3">
+                    {error}
+                  </Alert>
+                ) : (
+                  <></>
+                )}
+              </Container>
+            ) : (
+              <>
+                <h1 data-cy="Success" className="h2">
+                  Your account was created!
+                </h1>
+                <p>Please check your email address to activate your account.</p>
+              </>
+            )}
+          </Col>
+        </Row>
+      </Container>
+    </>
   );
 };
 

@@ -22,49 +22,49 @@ func TestSyllabusModel(t *testing.T) {
 	searchParams["levels"] = "%"
 	searchParams["tags"] = "%"
 
-	t.Run("Test get all syllabi", func(t *testing.T) {
-		syll, err := models.GetSyllabi(searchParams)
+	t.Run("Test get all listed syllabi", func(t *testing.T) {
+		syll, err := models.GetSyllabi(searchParams, userID)
 		require.Nil(t, err)
-		assert.Equal(t, 4, len(syll))
+		assert.Equal(t, 3, len(syll))
 	})
 
-	t.Run("Test get all syllabi written in french", func(t *testing.T) {
-		searchParams["languages"] = "%(fr)%"
-		syll, err := models.GetSyllabi(searchParams)
+	t.Run("Test get all listed syllabi written in french", func(t *testing.T) {
+		searchParams["languages"] = "%(de)%"
+		syll, err := models.GetSyllabi(searchParams, userID)
 		require.Nil(t, err)
-		assert.Equal(t, 1, len(syll))
+		assert.Equal(t, 2, len(syll))
 		searchParams["languages"] = "%"
 	})
 
-	t.Run("Test get all syllabi with keywords search", func(t *testing.T) {
-		searchParams["keywords"] = "%(culture|design)%"
-		syll, err := models.GetSyllabi(searchParams)
+	t.Run("Test get all listed syllabi with keywords search", func(t *testing.T) {
+		searchParams["keywords"] = "%(berlin|architektur)%"
+		syll, err := models.GetSyllabi(searchParams, userID)
 		require.Nil(t, err)
 		assert.Equal(t, 2, len(syll))
 		searchParams["keywords"] = "%"
 	})
 
-	t.Run("Test get all syllabi with tag search", func(t *testing.T) {
+	t.Run("Test get all listed syllabi with tag search", func(t *testing.T) {
 		searchParams["tags"] = "%(design)%"
-		syll, err := models.GetSyllabi(searchParams)
+		syll, err := models.GetSyllabi(searchParams, userID)
 		require.Nil(t, err)
-		assert.Equal(t, 2, len(syll))
+		assert.Equal(t, 1, len(syll))
 		searchParams["tags"] = "%"
 	})
 
-	t.Run("Test get all syllabi with levels", func(t *testing.T) {
+	t.Run("Test get all listed syllabi with levels", func(t *testing.T) {
 		searchParams["levels"] = "%(2)%"
-		syll, err := models.GetSyllabi(searchParams)
+		syll, err := models.GetSyllabi(searchParams, userID)
 		require.Nil(t, err)
 		assert.Equal(t, 1, len(syll))
 		searchParams["levels"] = "%"
 	})
 
-	t.Run("Test get all syllabi with fields", func(t *testing.T) {
+	t.Run("Test get all listed syllabi with fields", func(t *testing.T) {
 		searchParams["fields"] = "%(100)%"
-		syll, err := models.GetSyllabi(searchParams)
+		syll, err := models.GetSyllabi(searchParams, userID)
 		require.Nil(t, err)
-		assert.Equal(t, 1, len(syll))
+		assert.Equal(t, 2, len(syll))
 		searchParams["fields"] = "%"
 	})
 
@@ -72,26 +72,28 @@ func TestSyllabusModel(t *testing.T) {
 		syll := models.Syllabus{
 			Title: "Test Title 2",
 		}
-		result, err := models.CreateSyllabus(userID, &syll)
+		result, err := models.CreateSyllabus(&syll, userID)
 		require.Nil(t, err)
 		assert.Equal(t, syll.Title, result.Title)
 		assert.NotZero(t, result.CreatedAt)
 	})
 
-	t.Run("Test create syllabus with attachments", func(t *testing.T) {
-		attachments := make([]models.Attachment, 3)
-		syll := models.Syllabus{
-			Title:       "Test Title with Attachments",
-			Attachments: attachments,
-		}
-		_, err := models.CreateSyllabus(userID, &syll)
+	t.Run("Test get syllabus", func(t *testing.T) {
+		syll, err := models.GetSyllabus(syllabusID, userID)
 		require.Nil(t, err)
-		t.Skip("TODO -- issue with creating attachments as nested structs")
-		// assert.Equal(t, len(syll.Attachments), len(result.Attachments))
+		assert.Equal(t, syll.UUID, syllabusID)
+		assert.Equal(t, syllabusTitle, syll.Title)
+		assert.Equal(t, syllabusUserName, syll.User.Name)
+		assert.Equal(t, 1, len(syll.Institutions))
 	})
 
-	t.Run("Test get syllabus", func(t *testing.T) {
-		syll, err := models.GetSyllabus(syllabusID)
+	t.Run("Test get unlisted syllabus with unauthenticated user", func(t *testing.T) {
+		_, err := models.GetSyllabus(syllabusUnlistedID, userUnknownID)
+		assert.NotNil(t, err)
+	})
+
+	t.Run("Test get syllabus by slug", func(t *testing.T) {
+		syll, err := models.GetSyllabusBySlug(syllabusSlug, userID)
 		require.Nil(t, err)
 		assert.Equal(t, syll.UUID, syllabusID)
 		assert.Equal(t, syllabusTitle, syll.Title)
@@ -100,7 +102,7 @@ func TestSyllabusModel(t *testing.T) {
 	})
 
 	t.Run("Test get non-existing syllabus", func(t *testing.T) {
-		syll, err := models.GetSyllabus(syllabusUnknownID)
+		syll, err := models.GetSyllabus(syllabusUnknownID, userID)
 		assert.NotNil(t, err)
 		assert.True(t, syll.CreatedAt.IsZero())
 	})

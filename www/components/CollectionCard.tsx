@@ -25,14 +25,14 @@ const CollectionCard: React.FunctionComponent<ICollectionCardProps> = (
     <Card>
       <Card.Body>
         <Card.Title>
-          <Link href={`/collection/${props.uuid}`}>
+          <Link href={`/collections/${props.uuid}`}>
             <a>{props.name}</a>
           </Link>
           <PubBadge isPublic={getIsPublic(props.status)} />
         </Card.Title>
         <p className="collection-meta small">
           collection by{" "}
-          <Link href={`user/${props.userUuid}`}>{props.userName}</Link> |
+          <Link href={`/user/${props.userUuid}`}>{props.userName}</Link> |
           contains {props.syllabiCount} syllabi
         </p>
         <Card.Text className="course-description">

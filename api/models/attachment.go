@@ -1,9 +1,13 @@
 package models
 
 import (
+	"fmt"
+	"math"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/gosimple/slug"
 	"gorm.io/gorm"
 )
 
@@ -18,13 +22,23 @@ type Attachment struct {
 	Syllabus     Syllabus  `gorm:"foreignKey:SyllabusUUID;references:UUID" json:"syllabus"`
 
 	Name        string `gorm:"not null" json:"name" form:"name"`
+	Slug        string `gorm:"" json:"slug"`
 	Type        string `gorm:"not null" json:"type" form:"type"`
 	Description string `json:"description" form:"description"`
 	URL         string `gorm:"not null" json:"url" form:"url"`
 }
 
-func CreateAttachment(syllabus_uuid uuid.UUID, att *Attachment) (Attachment, error) {
-	syll, err := GetSyllabus(syllabus_uuid)
+func (a *Attachment) BeforeCreate(tx *gorm.DB) (err error) {
+	sp := strings.Split(slug.Make(a.Name), "-")
+	i := math.Min(float64(len(sp)), 5)
+
+	a.Slug = fmt.Sprintf("%s-%s", strings.Join(sp[:int(i)], "-"), a.UUID.String()[:8])
+
+	return nil
+}
+
+func CreateAttachment(syllabus_uuid uuid.UUID, att *Attachment, user_uuid uuid.UUID) (Attachment, error) {
+	syll, err := GetSyllabus(syllabus_uuid, user_uuid)
 	if err != nil {
 		return *att, err
 	}
@@ -42,6 +56,12 @@ func CreateAttachment(syllabus_uuid uuid.UUID, att *Attachment) (Attachment, err
 func GetAttachment(uuid uuid.UUID) (Attachment, error) {
 	var att Attachment
 	result := db.Preload("Syllabus").Where("uuid = ?", uuid).First(&att)
+	return att, result.Error
+}
+
+func GetAttachmentBySlug(slug string) (Attachment, error) {
+	var att Attachment
+	result := db.Preload("Syllabus").Where("slug = ?", slug).First(&att)
 	return att, result.Error
 }
 

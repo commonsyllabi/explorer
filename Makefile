@@ -13,10 +13,14 @@ test:
 
 docker-test:
 	make clean
-	docker compose -f docker-compose.test.yml up --build --remove-orphans backend_test_explorer
+	docker compose -f docker-compose.test.yml up --build --remove-orphans e2e_tests
 
 clean:
 	docker compose -f docker-compose.test.yml down
 	docker compose -f docker-compose.test.yml down --volumes
 	docker compose down
 	docker compose down --volumes
+
+rm:
+	docker rm -f $(docker ps -aq)
+	docker network rm $(docker network ls -q)

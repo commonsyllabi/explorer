@@ -1,10 +1,12 @@
 import * as React from "react";
 import Link from "next/link";
+import type { GetStaticProps } from "next";
 
 import Card from "react-bootstrap/Card";
 import SyllabusSchoolCodeYear from "components/Syllabus/SyllabusSchoolCodeYear";
 import Tags from "./Tags";
 import PubBadge from "./PubBadge";
+import { getServerSideProps } from "pages";
 
 interface ISyllabusCardProps {
   uuid: string;
@@ -14,7 +16,7 @@ interface ISyllabusCardProps {
   term?: string;
   year?: string;
   title: string;
-  author: string;
+  author?: string;
   authorUUID: string;
   description: string;
   tags?: string[];
@@ -41,7 +43,7 @@ const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = (props) => {
   };
 
   return (
-    <Card>
+    <Card data-cy="syllabusCard">
       <Card.Body>
         <SyllabusSchoolCodeYear
           institution={props.institution}
@@ -50,10 +52,10 @@ const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = (props) => {
           year={props.year}
         />
         <Card.Title>
-          {/* TODO: make public /private tags display only if logged in */}
           <Link href={getSyllabiUrl(props.uuid)}>
             <a>{props.title}</a>
           </Link>
+          {/* TODO: make public /private tags display only if logged in */}
           <PubBadge isPublic={getVisbility(props.status)} />
         </Card.Title>
         <div className="course-author">

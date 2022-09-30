@@ -1,9 +1,13 @@
 package models
 
 import (
+	"fmt"
+	"math"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/gosimple/slug"
 	"gorm.io/gorm"
 )
 
@@ -20,10 +24,20 @@ type Collection struct {
 	Syllabi  []*Syllabus `gorm:"many2many:collections_syllabi;" json:"syllabi"`
 
 	Name string `gorm:"not null" json:"name" form:"name" binding:"required"`
+	Slug string `gorm:"" json:"slug"`
 }
 
-func CreateCollection(user_uuid uuid.UUID, coll *Collection) (Collection, error) {
-	user, err := GetUser(user_uuid)
+func (c *Collection) BeforeCreate(tx *gorm.DB) (err error) {
+	sp := strings.Split(slug.Make(c.Name), "-")
+	i := math.Min(float64(len(sp)), 5)
+
+	c.Slug = fmt.Sprintf("%s-%s", strings.Join(sp[:int(i)], "-"), c.UUID.String()[:8])
+
+	return nil
+}
+
+func CreateCollection(coll *Collection, user_uuid uuid.UUID) (Collection, error) {
+	user, err := GetUser(user_uuid, user_uuid)
 	if err != nil {
 		return *coll, err
 	}
@@ -33,13 +47,13 @@ func CreateCollection(user_uuid uuid.UUID, coll *Collection) (Collection, error)
 		return *coll, err
 	}
 
-	created, err := GetCollection(coll.UUID)
+	created, err := GetCollection(coll.UUID, user_uuid)
 	return created, err
 }
 
-func GetCollection(uuid uuid.UUID) (Collection, error) {
+func GetCollection(uuid uuid.UUID, user_uuid uuid.UUID) (Collection, error) {
 	var coll Collection
-	result := db.Preload("User").Where("uuid = ?", uuid).First(&coll)
+	result := db.Preload("User").Where("uuid = ? AND (status = 'listed' OR user_uuid = ?)", uuid, user_uuid).First(&coll)
 	if result.Error != nil {
 		return coll, result.Error
 	}
@@ -51,15 +65,39 @@ func GetCollection(uuid uuid.UUID) (Collection, error) {
 	}
 
 	for _, s := range syllabi {
-		coll.Syllabi = append(coll.Syllabi, &s)
+		if s.Status == "listed" || s.UserUUID == user_uuid {
+			coll.Syllabi = append(coll.Syllabi, &s)
+		}
 	}
 
 	return coll, err
 }
 
-func GetAllCollections() ([]Collection, error) {
+func GetCollectionBySlug(slug string, user_uuid uuid.UUID) (Collection, error) {
+	var coll Collection
+	result := db.Preload("User").Where("slug = ?", slug).First(&coll)
+	if result.Error != nil {
+		return coll, result.Error
+	}
+
+	var syllabi []Syllabus
+	err := db.Model(&coll).Association("Syllabi").Find(&syllabi)
+	if err != nil {
+		return coll, err
+	}
+
+	for _, s := range syllabi {
+		if s.Status == "listed" || s.UserUUID == user_uuid {
+			coll.Syllabi = append(coll.Syllabi, &s)
+		}
+	}
+
+	return coll, err
+}
+
+func GetAllCollections(user_uuid uuid.UUID) ([]Collection, error) {
 	coll := make([]Collection, 0)
-	result := db.Find(&coll)
+	result := db.Preload("User").Where("status = 'listed' OR user_uuid = ?", user_uuid).Find(&coll)
 	return coll, result.Error
 }
 
@@ -92,7 +130,7 @@ func AddSyllabusToCollection(coll_uuid uuid.UUID, syll_uuid uuid.UUID, user_uuid
 		return coll, err
 	}
 
-	updated, err := GetCollection(coll_uuid)
+	updated, err := GetCollection(coll_uuid, user_uuid)
 	return updated, err
 }
 

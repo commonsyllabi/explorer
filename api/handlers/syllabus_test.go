@@ -21,19 +21,24 @@ import (
 
 var (
 	syllabusID        uuid.UUID
+	syllabusSlug      string
 	syllabusDeleteID  uuid.UUID
 	syllabusUnknownID uuid.UUID
 
 	collectionID        uuid.UUID
+	collectionName      string
+	collectionSlug      string
 	collectionDeleteID  uuid.UUID
 	collectionUnknownID uuid.UUID
 
 	attachmentID        uuid.UUID
+	attachmentSlug      string
 	attachmentDeleteID  uuid.UUID
 	attachmentUnknownID uuid.UUID
 	attachmentFilePath  string
 
 	userID        uuid.UUID
+	userSlug      string
 	userDeleteID  uuid.UUID
 	userUnknownID uuid.UUID
 
@@ -43,19 +48,24 @@ var (
 func setup(t *testing.T) func(t *testing.T) {
 	os.Setenv("API_MODE", "test")
 	syllabusID = uuid.MustParse("46de6a2b-aacb-4c24-b1e1-3495821f846a")
+	syllabusSlug = "ungewohnt-46de6a2b"
 	syllabusDeleteID = uuid.MustParse("46de6a2b-aacb-4c24-b1e1-3495821f8469")
 	syllabusUnknownID = uuid.New()
 
 	collectionID = uuid.MustParse("b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a9")
+	collectionName = "Good public stuff"
+	collectionSlug = "good-public-stuff-b9e4c3ed"
 	collectionDeleteID = uuid.MustParse("b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a9")
 	collectionUnknownID = uuid.New()
 
 	attachmentID = uuid.MustParse("c55f0baf-12b8-4bdb-b5e6-2280bff8ab21")
+	attachmentSlug = "chair-website-c55f0baf"
 	attachmentDeleteID = uuid.MustParse("c55f0baf-12b8-4bdb-b5e6-2280bff8ab30")
 	attachmentUnknownID = uuid.New()
 	attachmentFilePath = filepath.Join(models.Basepath, "../../tests/files/image.png")
 
 	userID = uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c8a8")
+	userSlug = "justyna-poplawska-e7b74bcd"
 	userDeleteID = uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c8a9")
 	userUnknownID = uuid.New()
 
@@ -82,7 +92,7 @@ func TestSyllabusHandler(t *testing.T) {
 		sylls := make([]models.Syllabus, 0)
 		err := json.Unmarshal(res.Body.Bytes(), &sylls)
 		require.Nil(t, err)
-		assert.Equal(t, 4, len(sylls))
+		assert.Equal(t, 3, len(sylls))
 	})
 
 	t.Run("Test get all syllabi in academic fields", func(t *testing.T) {
@@ -99,7 +109,7 @@ func TestSyllabusHandler(t *testing.T) {
 		sylls := make([]models.Syllabus, 0)
 		err := json.Unmarshal(res.Body.Bytes(), &sylls)
 		require.Nil(t, err)
-		assert.Equal(t, 1, len(sylls))
+		assert.Equal(t, 2, len(sylls))
 	})
 
 	t.Run("Test get all syllabi in wrong academic fields", func(t *testing.T) {
@@ -229,8 +239,8 @@ func TestSyllabusHandler(t *testing.T) {
 
 	t.Run("Test get all syllabi with combined filters", func(t *testing.T) {
 		q := make(url.Values)
-		q.Set("levels", "1")
-		q.Set("keywords", "communication")
+		q.Set("levels", "2")
+		q.Set("keywords", "architektur")
 
 		res := httptest.NewRecorder()
 		req := httptest.NewRequest(http.MethodGet, "/syllabi/?"+q.Encode(), nil)
@@ -307,6 +317,44 @@ func TestSyllabusHandler(t *testing.T) {
 		c.SetPath("/syllabi")
 		c.SetParamNames("id")
 		c.SetParamValues(syllabusID.String())
+
+		handlers.GetSyllabus(c)
+		assert.Equal(t, http.StatusOK, res.Code)
+
+		var syll models.Syllabus
+		err := json.Unmarshal(res.Body.Bytes(), &syll)
+		require.Nil(t, err)
+		assert.Equal(t, "Ungewohnt", syll.Title)
+	})
+
+	t.Run("Test get syllabus with listed collections", func(t *testing.T) {
+		res := httptest.NewRecorder()
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		c := echo.New().NewContext(req, res)
+		c.SetPath("/syllabi")
+		c.SetParamNames("id")
+		c.SetParamValues(syllabusID.String())
+
+		handlers.GetSyllabus(c)
+		assert.Equal(t, http.StatusOK, res.Code)
+
+		var syll models.Syllabus
+		err := json.Unmarshal(res.Body.Bytes(), &syll)
+		require.Nil(t, err)
+		assert.Equal(t, 1, len(syll.Collections))
+	})
+
+	t.Run("Test get syllabus with unlisted collections", func(t *testing.T) {
+		t.Log("todo")
+	})
+
+	t.Run("Test get syllabus by slug", func(t *testing.T) {
+		res := httptest.NewRecorder()
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		c := echo.New().NewContext(req, res)
+		c.SetPath("/syllabi")
+		c.SetParamNames("id")
+		c.SetParamValues(syllabusSlug)
 
 		handlers.GetSyllabus(c)
 		assert.Equal(t, http.StatusOK, res.Code)

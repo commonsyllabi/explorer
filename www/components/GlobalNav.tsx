@@ -6,9 +6,11 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import Button from "react-bootstrap/Button";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { setEnvironmentData } from "worker_threads";
+import Router from "next/router";
 
-export function GlobalNav() {
+const GlobalNav: React.FunctionComponent = () => {
   const { data: session, status } = useSession();
+
   if (status === "authenticated") {
     return (
       <Navbar
@@ -18,30 +20,45 @@ export function GlobalNav() {
       >
         <Container>
           <Navbar.Brand href="/">Syllabi Explorer</Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Toggle aria-controls="global-nav" />
         </Container>
         <Container>
-          <Navbar.Collapse id="basic-navbar-nav" className="flex-row-reverse">
+          <Navbar.Collapse id="global-nav" className="flex-row-reverse">
             <Nav className="float-end">
-              <Nav.Link href="/about" className="py-3 text-end">
-                About
-              </Nav.Link>
-              <Nav.Link href="/NewSyllabus" className="py-3 text-end">
+              <Nav.Link href="/NewSyllabus" className="py-3 text-end" data-cy="newSyllabusLink">
                 + New Syllabus
               </Nav.Link>
-              <Nav.Link
-                href={`/user/${session.user._id}`}
-                className="py-3 text-end"
+
+              <NavDropdown
+                title={session.user.name}
+                id="userNavDropdown"
+                className=" text-end align-self-center"
+                align="end"
+                data-cy="Logged user"
               >
-                {session.user.name}
-              </Nav.Link>
-              <Nav.Link
-                href="#"
-                className="py-3 text-end"
-                onClick={() => signOut({ callbackUrl: "/" })}
-              >
-                Sign Out
-              </Nav.Link>
+                <NavDropdown.Item
+                  href={`/user/${session.user._id}`}
+                  className="py-2 text-end"
+                >
+                  My Account
+                </NavDropdown.Item>
+
+                <NavDropdown.Item href="/about" className="py-2 text-end">
+                  About
+                </NavDropdown.Item>
+
+                <NavDropdown.Divider />
+
+                <NavDropdown.Item
+                  href="#"
+                  className="py-2 text-end"
+                  onClick={() => signOut({ redirect: false }).then((result) => {
+                    Router.push('/')
+                  })}
+                >
+                  Sign Out
+                </NavDropdown.Item>
+              </NavDropdown>
             </Nav>
           </Navbar.Collapse>
         </Container>
@@ -64,7 +81,12 @@ export function GlobalNav() {
               <Nav.Link href="/about" className="py-3 text-end">
                 About
               </Nav.Link>
-              <Nav.Link href="/auth/signin" className="py-3 text-end">
+              <Nav.Link
+                href="/auth/signin"
+                className="py-3 text-end"
+                id="login-btn"
+                data-cy="Login"
+              >
                 Login
               </Nav.Link>
             </Nav>
@@ -73,4 +95,6 @@ export function GlobalNav() {
       </Navbar>
     );
   }
-}
+};
+
+export default GlobalNav;

@@ -3,10 +3,9 @@ package handlers
 import (
 	"fmt"
 	"net/http"
-	"os"
 	"reflect"
+	"strings"
 
-	"github.com/commonsyllabi/explorer/api/auth"
 	zero "github.com/commonsyllabi/explorer/api/logger"
 	"github.com/commonsyllabi/explorer/api/models"
 	"github.com/google/uuid"
@@ -14,7 +13,8 @@ import (
 )
 
 func GetAllCollections(c echo.Context) error {
-	collections, err := models.GetAllCollections()
+	user_uuid := mustGetUser(c)
+	collections, err := models.GetAllCollections(user_uuid)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusInternalServerError, "There was an error getting the Collections.")
@@ -24,12 +24,12 @@ func GetAllCollections(c echo.Context) error {
 }
 
 func CreateCollection(c echo.Context) error {
-	_, err := auth.Authenticate(c)
-	if err != nil {
-		zero.Error(err.Error())
+	user_uuid := mustGetUser(c)
+	if user_uuid == uuid.Nil {
 		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
-	err = sanitizeCollection(c)
+
+	err := sanitizeCollection(c)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusBadRequest, "Please check your input information.")
@@ -42,11 +42,7 @@ func CreateCollection(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "There was an error parsing your input information.")
 	}
 
-	var userID uuid.UUID
-	if os.Getenv("API_MODE") == "test" {
-		userID = uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c8a8")
-	}
-	coll, err = models.CreateCollection(userID, &coll)
+	coll, err = models.CreateCollection(&coll, user_uuid)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusInternalServerError, "There was an error creating the Collection.")
@@ -56,10 +52,11 @@ func CreateCollection(c echo.Context) error {
 }
 
 func UpdateCollection(c echo.Context) error {
-	requester_uid, err := auth.Authenticate(c)
-	if err != nil {
+	user_uuid := mustGetUser(c)
+	if user_uuid == uuid.Nil {
 		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
+
 	id := c.Param("id")
 	uid, err := uuid.Parse(id)
 	if err != nil {
@@ -75,7 +72,7 @@ func UpdateCollection(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "There was an error parsing the updated information.")
 	}
 
-	coll, err := models.GetCollection(uid)
+	coll, err := models.GetCollection(uid, user_uuid)
 	if err != nil {
 		return c.String(http.StatusNotFound, "We couldn't find the Collection to update.")
 	}
@@ -85,7 +82,7 @@ func UpdateCollection(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "Error binding to the Collection to update.")
 	}
 
-	updated, err := models.UpdateCollection(uid, uuid.MustParse(requester_uid), &coll)
+	updated, err := models.UpdateCollection(uid, user_uuid, &coll)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "Error updating the Collection. Please try again later.")
 	}
@@ -94,10 +91,11 @@ func UpdateCollection(c echo.Context) error {
 }
 
 func AddCollectionSyllabus(c echo.Context) error {
-	requester_uid, err := auth.Authenticate(c)
-	if err != nil {
+	user_uuid := mustGetUser(c)
+	if user_uuid == uuid.Nil {
 		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
+
 	coll_id := c.Param("id")
 	coll_uid, err := uuid.Parse(coll_id)
 	if err != nil {
@@ -112,7 +110,7 @@ func AddCollectionSyllabus(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "Not a valid Syllabus ID.")
 	}
 
-	coll, err := models.AddSyllabusToCollection(coll_uid, syll_uid, uuid.MustParse(requester_uid))
+	coll, err := models.AddSyllabusToCollection(coll_uid, syll_uid, user_uuid)
 	if err != nil {
 		zero.Error(err.Error())
 		c.String(http.StatusInternalServerError, "We couldn't add the Syllabus to the Collection.")
@@ -122,14 +120,24 @@ func AddCollectionSyllabus(c echo.Context) error {
 }
 
 func GetCollection(c echo.Context) error {
+	user_uuid := mustGetUser(c)
 	id := c.Param("id")
 	uid, err := uuid.Parse(id)
 	if err != nil {
-		zero.Error(err.Error())
-		return c.String(http.StatusBadRequest, "Not a valid ID.")
+		if len(id) < 5 || !strings.Contains(id, "-") {
+			zero.Error(err.Error())
+			return c.String(http.StatusBadRequest, "Not a valid ID")
+		}
+
+		coll, err := models.GetCollectionBySlug(id, user_uuid)
+		if err != nil {
+			return c.String(http.StatusNotFound, "There was an error getting the requested Collection.")
+		}
+		return c.JSON(http.StatusOK, coll)
+
 	}
 
-	coll, err := models.GetCollection(uid)
+	coll, err := models.GetCollection(uid, user_uuid)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusNotFound, "We couldn't find the Collection.")
@@ -139,6 +147,7 @@ func GetCollection(c echo.Context) error {
 }
 
 func GetCollectionSyllabi(c echo.Context) error {
+	user_uuid := mustGetUser(c)
 	id := c.Param("id")
 	uid, err := uuid.Parse(id)
 	if err != nil {
@@ -146,7 +155,7 @@ func GetCollectionSyllabi(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "not a valid ID")
 	}
 
-	coll, err := models.GetCollection(uid)
+	coll, err := models.GetCollection(uid, user_uuid)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusBadRequest, "We couldn't find the Collection.")
@@ -156,6 +165,12 @@ func GetCollectionSyllabi(c echo.Context) error {
 }
 
 func GetCollectionSyllabus(c echo.Context) error {
+	// authenticating to return unlisted but owned syllabi
+	user_uuid := mustGetUser(c)
+	if user_uuid == uuid.Nil {
+		return c.String(http.StatusUnauthorized, "unauthorized")
+	}
+
 	coll_id := c.Param("id")
 	coll_uid, err := uuid.Parse(coll_id)
 	if err != nil {
@@ -168,12 +183,12 @@ func GetCollectionSyllabus(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "Not a valid Syllabus ID.")
 	}
 
-	_, err = models.GetCollection(coll_uid)
+	_, err = models.GetCollection(coll_uid, user_uuid)
 	if err != nil {
 		return c.String(http.StatusNotFound, "We couldn't find the Collection.")
 	}
 
-	syll, err := models.GetSyllabus(syll_uid)
+	syll, err := models.GetSyllabus(syll_uid, user_uuid)
 	if err != nil {
 		return c.String(http.StatusBadRequest, "We couldn't find the Syllabus.")
 	}
@@ -182,17 +197,18 @@ func GetCollectionSyllabus(c echo.Context) error {
 }
 
 func DeleteCollection(c echo.Context) error {
-	requester_uid, err := auth.Authenticate(c)
-	if err != nil {
+	user_uuid := mustGetUser(c)
+	if user_uuid == uuid.Nil {
 		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
+
 	id := c.Param("id")
 	uid, err := uuid.Parse(id)
 	if err != nil {
 		return c.String(http.StatusBadRequest, "Not a valid ID")
 	}
 
-	coll, err := models.DeleteCollection(uid, uuid.MustParse(requester_uid))
+	coll, err := models.DeleteCollection(uid, user_uuid)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusNotFound, "There was an error deleting the Collection.")
@@ -202,8 +218,8 @@ func DeleteCollection(c echo.Context) error {
 }
 
 func RemoveCollectionSyllabus(c echo.Context) error {
-	requester_uid, err := auth.Authenticate(c)
-	if err != nil {
+	user_uuid := mustGetUser(c)
+	if user_uuid == uuid.Nil {
 		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
 
@@ -220,13 +236,13 @@ func RemoveCollectionSyllabus(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, "Not a valid Syllabus ID.")
 	}
 
-	_, err = models.GetCollection(coll_uid)
+	_, err = models.GetCollection(coll_uid, user_uuid)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusNotFound, "There was an error finding the Collection.")
 	}
 
-	syll, err := models.GetSyllabus(syll_uid)
+	syll, err := models.GetSyllabus(syll_uid, user_uuid)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusNotFound, "There was an error finding the Syllabus.")
@@ -234,7 +250,7 @@ func RemoveCollectionSyllabus(c echo.Context) error {
 
 	zero.Warn("the way to remove a syllabus from a collection needs to be updated")
 
-	updated, err := models.UpdateSyllabus(syll.UUID, uuid.MustParse(requester_uid), &syll)
+	updated, err := models.UpdateSyllabus(syll.UUID, user_uuid, &syll)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusInternalServerError, "There was an error updating the Collection.")

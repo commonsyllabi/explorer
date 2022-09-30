@@ -8,9 +8,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/gin-gonic/gin"
-	"github.com/gorilla/sessions"
-	"github.com/labstack/echo-contrib/session"
+	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 
@@ -23,7 +21,7 @@ import (
 var conf config.Config
 
 // StartServer gets his port and debug in the environment, registers the router, and registers the database closing on exit.
-func StartServer(port string, mode string, c config.Config) {
+func StartServer(port string, c config.Config) {
 	conf = c
 
 	err := os.MkdirAll(c.UploadsDir, os.ModePerm)
@@ -31,7 +29,6 @@ func StartServer(port string, mode string, c config.Config) {
 		panic(err)
 	}
 
-	gin.SetMode(mode)
 	router := SetupRouter()
 	s := &http.Server{
 		Addr:         ":" + port,
@@ -62,9 +59,6 @@ func StartServer(port string, mode string, c config.Config) {
 func SetupRouter() *echo.Echo {
 	r := echo.New()
 
-	store := sessions.NewCookieStore([]byte("cosyl_auth"))
-	store.Options.HttpOnly = true
-	r.Use(session.Middleware(store))
 	r.Use(middleware.CORS())
 	r.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: "\033[32m${time_rfc3339}\033[0m | ${method} | ${uri} | ${status} | ${remote_ip} | ${error.message}\n",
@@ -73,12 +67,11 @@ func SetupRouter() *echo.Echo {
 	r.Use(middleware.BodyLimit("16M"))
 	r.Use(injectConfig)
 
-	r.Static("/uploads", conf.UploadsDir)
+	r.Static("/static", conf.UploadsDir)
 
 	r.GET("/ping", handlePing)
 
 	r.POST("/login", auth.Login)
-	r.GET("/logout", auth.Logout)
 	r.GET("/dashboard", auth.Dashboard)
 
 	a := r.Group("/auth")
@@ -100,8 +93,8 @@ func SetupRouter() *echo.Echo {
 		syllabi.POST("/:id/institutions", handlers.AddSyllabusInstitution)
 		syllabi.DELETE("/:id/institutions/:inst_id", handlers.RemoveSyllabusInstitution)
 
-		syllabi.POST("/:id/institutions", handlers.AddSyllabusAttachment)
-		syllabi.DELETE("/:id/institutions/:inst_id", handlers.RemoveSyllabusAttachment)
+		syllabi.POST("/:id/attachments", handlers.AddSyllabusAttachment)
+		syllabi.DELETE("/:id/attachments/:att_id", handlers.RemoveSyllabusAttachment)
 	}
 
 	users := r.Group("/users")
@@ -150,6 +143,13 @@ func SetupRouter() *echo.Echo {
 
 func injectConfig(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
+		id, err := auth.Authenticate(c)
+		if err != nil {
+			zero.Warn(err.Error())
+			id = uuid.Nil
+		}
+		c.Set("user_uuid", id)
+
 		c.Set("config", conf)
 		if err := next(c); err != nil {
 			c.Error(err)
@@ -164,5 +164,5 @@ func handlePing(c echo.Context) error {
 }
 
 func handleNotFound(c echo.Context) error {
-	return c.String(http.StatusNotFound, "We couldn't find the requested information, sorry :(.")
+	return c.String(http.StatusNotFound, "We couldn't find the requested resource, sorry :(. You can check out the documentation at https://commonsyllabi.stoplight.io/")
 }

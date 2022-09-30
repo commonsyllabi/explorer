@@ -27,44 +27,36 @@ export default NextAuth({
                     redirect: 'follow'
                 };
 
-                const login_endpoint = new URL('/login', process.env.API_URL)
+                const apiUrl = process.env.NODE_ENV == 'test' ? 'http://backend_explorer:3046/' : process.env.NEXT_PUBLIC_API_URL;
+                const login_endpoint = new URL('/login', apiUrl)
                 const response = await fetch(login_endpoint.href, options)
                 if (response.ok) {
-                    // Any object returned will be saved in `user` property of the JWT
-                    const userData = await response.json()
-                    console.log(`LOGIN SUCCESS USER UUID: ${JSON.stringify(userData.uuid)}`)
+                    const data = await response.json()
                     const user = {
-                        _id: userData.uuid,
-                        email: userData.email,
-                        name: userData.name,
-                    };
+                        _id: data.user.uuid,
+                        email: data.user.email,
+                        name: data.user.name,
+                        token: data.token
+                    }
                     return user
                 } else {
-                    // If you return null then an error will be displayed advising the user to check their details.
                     return null
                 }
             }
         })
     ],
     callbacks: {
+        async jwt({ token, user }) { 
+            if (user) { 
+                token.user = user
+            }
+            return token;
+        },
         async session({ session, token, user }) {
-            // Send properties to the client, like an access_token from a provider.
-            // console.log(`SESSION - USER: ${user}`)
-            // console.log(`SESSION - SESSION: ${JSON.stringify(session)}`)
-            // console.log(`SESSION - TOKEN: ${JSON.stringify(token)}`)
             if (token.user) { 
                 session.user = token.user
             }
             return session
-        },
-        async jwt({ token, user }) { 
-            // console.log(`JWT - USER: ${user}`)
-            // console.log(`JWT - TOKEN: ${JSON.stringify(token)}`)
-            if (user) { 
-                // console.log("There's a user object!!")
-                token.user = user
-            }
-            return token;
         }
     },
     pages: {
