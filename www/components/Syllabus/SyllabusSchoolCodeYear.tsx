@@ -1,15 +1,17 @@
+import { getAcademicLevelText } from "components/utils/getAcademicLevel";
 import * as React from "react";
 
 interface ISyllabusSchoolCodeYearProps {
   institution?: string | null;
   courseNumber?: string | null;
+  academicLevel?: number | null;
   term?: string | null;
   year?: string | null;
 }
 
 const SyllabusSchoolCodeYear: React.FunctionComponent<
   ISyllabusSchoolCodeYearProps
-> = ({ institution, courseNumber, term, year }) => {
+> = ({ institution, courseNumber, academicLevel, term, year }) => {
   return (
     <div className="d-flex gap-3">
       {institution ? (
@@ -17,6 +19,14 @@ const SyllabusSchoolCodeYear: React.FunctionComponent<
       ) : (
         <p className="small text-muted">
           <em>institution</em>
+        </p>
+      )}
+
+      {academicLevel ? (
+        <p className="small">{getAcademicLevelText(academicLevel)}</p>
+      ) : (
+        <p className="small text-muted">
+          <em>academic level</em>
         </p>
       )}
 

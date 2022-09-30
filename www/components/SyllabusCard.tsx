@@ -91,6 +91,7 @@ const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = ({
           courseNumber={props.course_number ? props.course_number : null}
           term={getInstitutionTermInfo()}
           year={getInstitutionYearInfo()}
+          academicLevel={props.academic_level}
         />
         <Card.Title>
           <Link href={getSyllabiUrl(props.uuid)}>

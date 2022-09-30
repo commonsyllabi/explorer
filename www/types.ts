@@ -39,6 +39,7 @@ export interface ISyllabus {
   created_at: string;
   institutions?: IInstitution[];
   academic_fields?: number[];
+  academic_level?: number;
   user_uuid: string;
   user: IUser;
   tags?: string[];
