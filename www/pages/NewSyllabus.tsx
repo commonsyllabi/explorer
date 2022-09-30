@@ -38,9 +38,6 @@ import AddAcademicFieldsForm from "components/NewSyllabus/AddAcademicFieldsForm"
 
 export const getStaticProps: GetStaticProps = async () => {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-
-  console.log(`GetStaticProps API URL: ${apiUrl}`);
-
   return {
     props: { apiUrl: apiUrl },
   };
@@ -336,10 +333,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     size: "32.0mb",
   };
 
-  const [attachmentData, setAttachmentData] = useState([
-    dummyLinkAttachment,
-    dummyFileAttachment,
-  ]);
+  const [attachmentData, setAttachmentData] = useState(Array<IUploadAttachment>);
 
   //display elements for attachment
   const getUploadedAttachments = (attachmentData: IUploadAttachment[]) => {

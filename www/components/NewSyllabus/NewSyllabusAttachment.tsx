@@ -184,7 +184,6 @@ const NewSyllbusAttachment: React.FunctionComponent<
                 onChange={handleChange}
                 type="text"
                 id="url"
-                // value={thisAttachment.url || ""}
                 data-cy={"new-attachment-url"}
               />
             </Form.Group>

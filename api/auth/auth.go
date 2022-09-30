@@ -46,7 +46,7 @@ func Authenticate(c echo.Context) (uuid.UUID, error) {
 
 	authHeader := c.Request().Header["Authorization"]
 	if len(authHeader) == 0 {
-		return uuid.Nil, fmt.Errorf("no authorization header provided")
+		return uuid.Nil, nil
 	}
 	raw := c.Request().Header["Authorization"][0]
 	tokenString := strings.Split(raw, " ")[1]
