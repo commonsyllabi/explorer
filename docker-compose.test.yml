@@ -52,18 +52,5 @@ services:
     ports:
      - 3000:3000
 
-  e2e_tests:
-    container_name: e2e_tests
-    image: cypress
-    build:
-      context: .
-      dockerfile: tests/Dockertest.cypress.front
-    depends_on:
-      - frontend_test_explorer
-    environment:
-      - CYPRESS_baseUrl=http://frontend_test_explorer:3000
-    volumes:
-      - ./www/cypress:/cypress
-
 volumes:
   pgdata_explorer_test:
