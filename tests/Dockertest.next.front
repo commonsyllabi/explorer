@@ -27,6 +27,7 @@ COPY ./www .
 
 ENV API_URL http://backend_explorer:3046
 ENV NEXT_PUBLIC_API_URL http://backend_explorer:3046
+ENV NEXTAUTH_URL http://backend_explorer:3046/auth
 RUN yarn build
 
 # If using npm comment out above and use below instead

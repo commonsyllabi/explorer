@@ -13,7 +13,10 @@ test:
 
 docker-test:
 	make clean
-	docker compose -f docker-compose.test.yml up --build --remove-orphans e2e_tests
+	docker compose -f docker-compose.test.yml build 
+	docker compose -f docker-compose.test.yml up -d --build --remove-orphans frontend_test_explorer
+	cd www/ && yarn cypress:headless
+	docker compose -f docker-compose.test.yml down
 
 clean:
 	docker compose -f docker-compose.test.yml down
