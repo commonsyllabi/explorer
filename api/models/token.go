@@ -35,7 +35,7 @@ func GetTokenUser(token_uuid uuid.UUID) (User, error) {
 		return user, result.Error
 	}
 
-	user, err := GetUser(token.UserID)
+	user, err := GetUser(token.UserID, uuid.Nil)
 	if err != nil {
 		zero.Error(err.Error())
 		return user, err

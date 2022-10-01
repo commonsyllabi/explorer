@@ -5,6 +5,7 @@ import Form from "react-bootstrap/Form";
 import { generateAcadFieldsBroad } from "components/utils/formUtils";
 
 import AcadFieldsChildren from "./AcadFieldsChildren";
+import modelsIsced from "models-isced.json"; //import tiered academic field codes
 
 interface IAddAcademicFieldsFormProps {
   setAcadFieldsData: Function;
@@ -90,7 +91,9 @@ const AddAcademicFieldsForm: React.FunctionComponent<
             onChange={handleNarrowFieldChange}
           >
             <AcadFieldsChildren
-              parentFieldCode={broadField}
+              parentFieldCode={
+                broadField as keyof typeof modelsIsced["NARROW_FIELDS"]
+              }
               fieldLabel="Narrow"
             />
           </Form.Select>
@@ -103,7 +106,9 @@ const AddAcademicFieldsForm: React.FunctionComponent<
             onChange={handleDetailedFieldChange}
           >
             <AcadFieldsChildren
-              parentFieldCode={narrowField}
+              parentFieldCode={
+                narrowField as keyof typeof modelsIsced["DETAILED_FIELDS"]
+              }
               fieldLabel="Detailed"
             />
           </Form.Select>

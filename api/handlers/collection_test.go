@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
+	"os"
 	"strings"
 	"testing"
 
@@ -21,7 +22,8 @@ func TestCollectionHandler(t *testing.T) {
 	teardown := setup(t)
 	defer teardown(t)
 
-	t.Run("Test get all collections", func(t *testing.T) {
+	t.Run("Test get all listed collections", func(t *testing.T) {
+		os.Setenv("API_MODE", "debug")
 		res := httptest.NewRecorder()
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
 		c := echo.New().NewContext(req, res)
@@ -33,6 +35,21 @@ func TestCollectionHandler(t *testing.T) {
 		err := json.Unmarshal(res.Body.Bytes(), &colls)
 		require.Nil(t, err)
 		assert.Equal(t, 2, len(colls))
+		os.Setenv("API_MODE", "test")
+	})
+
+	t.Run("Test get all listed and owned collections", func(t *testing.T) {
+		res := httptest.NewRecorder()
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		c := echo.New().NewContext(req, res)
+		c.SetPath("/collections")
+		handlers.GetAllCollections(c)
+		assert.Equal(t, http.StatusOK, res.Code)
+
+		colls := make([]models.Collection, 0)
+		err := json.Unmarshal(res.Body.Bytes(), &colls)
+		require.Nil(t, err)
+		assert.Equal(t, 3, len(colls))
 	})
 
 	t.Run("Test create collection", func(t *testing.T) {
@@ -87,11 +104,11 @@ func TestCollectionHandler(t *testing.T) {
 		err := json.Unmarshal(res.Body.Bytes(), &coll)
 		require.Nil(t, err)
 		assert.Equal(t, collectionID, coll.UUID)
-		assert.Equal(t, "Good Stuff", coll.Name)
+		assert.Equal(t, collectionName, coll.Name)
 		assert.Equal(t, 1, len(coll.Syllabi))
 	})
 
-	t.Run("Test get collection", func(t *testing.T) {
+	t.Run("Test get collection by slug", func(t *testing.T) {
 		res := httptest.NewRecorder()
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
 
@@ -107,7 +124,7 @@ func TestCollectionHandler(t *testing.T) {
 		err := json.Unmarshal(res.Body.Bytes(), &coll)
 		require.Nil(t, err)
 		assert.Equal(t, collectionID, coll.UUID)
-		assert.Equal(t, "Good Stuff", coll.Name)
+		assert.Equal(t, collectionName, coll.Name)
 		assert.Equal(t, 1, len(coll.Syllabi))
 	})
 

@@ -8,7 +8,7 @@ describe('Create a new syllabus', () => {
     it('navigates to the home page', () => {
         cy.visit('/')
 
-        cy.get('[data-cy="syllabusCard"]').should('have.length', 4)
+        cy.get('[data-cy="syllabusCard"]').should('have.length.greaterThan', 1)
 
         cy.get('[data-cy="Login"]').click()
     })
@@ -59,25 +59,33 @@ describe('Create a new syllabus', () => {
 
         cy.get('[data-cy="courseTitleInput"]').type("Test class 1", {force: true})
 
+        //-- click twice to check that toggle works and make sure it is set to listed
         cy.get('[data-cy="courseStatusInput"]').click({force: true})
+        cy.get('[data-cy="courseStatusInput"]').click({force: true})
+
         cy.get('[data-cy="courseCodeInput"]').type("IMANY-UH-1001", {force: true})
         cy.get('[data-cy="academicLevelInput"]').select('1', {force: true})
         cy.get('[data-cy="courseLanguageInput"]').select('FR', {force: true})
         cy.get('[data-cy="courseDurationInput"]').type('7', {force: true})
         cy.get('[data-cy="courseDescriptionInput"]').type('Lorem ipsum dolores sit descriptio nuncam sed que tantamus', {force: true})
 
+        //-- adding and removing some attachments
         cy.get('[data-cy="attachment-add"]').click({force: true})
+        cy.get('[data-cy="attachment-remove-0"]').click({force: true})
+
+        
+        cy.get('[data-cy="new-attachment-name"]').type('Weblink test', {force: true})
+        cy.get('[data-cy="new-attachment-description"]').type('This is optional', {force: true})
+        cy.get('[data-cy="new-attachment-type-url"]').click({force: true})
+        cy.get('[data-cy="new-attachment-url"]').type('https://test.enframed.net', {force: true})
         cy.get('[data-cy="attachment-add"]').click({force: true})
-        cy.get('[data-cy="attachment-remove-2"]').click({force: true})
 
-        cy.get('[data-cy="attachment-name-0"]').type('Weblink test', {force: true})
-        cy.get('[data-cy="attachment-description-0"]').type('This is optional', {force: true})
-        cy.contains('URL').click({force: true})
-        cy.get('[data-cy="attachment-url-0"]').type('https://test.enframed.net', {force: true})
-
-        cy.get('[data-cy="attachment-name-1"]').type('File test', {force: true})
-        cy.get('[data-cy="attachment-description-1"]').type('This is also optional', {force: true})
-        cy.get('[data-cy="attachment-file-1"]').selectFile('cypress/fixtures/test_attachment.txt', {log: true, force: true})
+        
+        cy.get('[data-cy="new-attachment-name"]').type('File test', {force: true})
+        cy.get('[data-cy="new-attachment-description"]').type('This is also optional', {force: true})
+        cy.get('[data-cy="new-attachment-type-file"]').click({force: true})
+        cy.get('[data-cy="new-attachment-file"]').selectFile('cypress/fixtures/test_attachment.txt', {log: true, force: true})
+        cy.get('[data-cy="attachment-add"]').click({force: true})
 
         cy.get('[data-cy="courseSubmitButton"').click()
 

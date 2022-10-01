@@ -8,6 +8,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 
@@ -142,6 +143,13 @@ func SetupRouter() *echo.Echo {
 
 func injectConfig(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
+		id, err := auth.Authenticate(c)
+		if err != nil {
+			zero.Warn(err.Error())
+			id = uuid.Nil
+		}
+		c.Set("user_uuid", id)
+
 		c.Set("config", conf)
 		if err := next(c); err != nil {
 			c.Error(err)
@@ -156,5 +164,5 @@ func handlePing(c echo.Context) error {
 }
 
 func handleNotFound(c echo.Context) error {
-	return c.String(http.StatusNotFound, "We couldn't find the requested information, sorry :(.")
+	return c.String(http.StatusNotFound, "We couldn't find the requested resource, sorry :(. You can check out the documentation at https://commonsyllabi.stoplight.io/")
 }

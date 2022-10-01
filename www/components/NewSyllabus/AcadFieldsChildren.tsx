@@ -1,10 +1,11 @@
 import * as React from "react";
-import modelsIsced from "models-isced.json"; //import tiered academic field codes
 
 import {
   generateAcadFieldsNarrow,
   generateAcadFieldsDetailed,
 } from "components/utils/formUtils";
+
+import modelsIsced from "models-isced.json"; //import tiered academic field codes
 
 interface IAcadFieldsChildrenProps {
   parentFieldCode?: string | undefined;

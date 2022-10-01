@@ -50,6 +50,7 @@ const AttachmentItemFile: React.FunctionComponent<IAttachmentItemFileProps> = ({
               variant="danger"
               size="sm"
               id={attachment.id.toString()}
+              data-cy={`attachment-remove-${attachment.id.toString()}`}
               onClick={removeAttachment}
             >
               Delete
@@ -90,6 +91,7 @@ const AttachmentItemFile: React.FunctionComponent<IAttachmentItemFileProps> = ({
               variant="danger"
               size="sm"
               id={attachment.id.toString()}
+              data-cy={`attachment-remove-${attachment.id.toString()}`}
               onClick={removeAttachment}
             >
               Delete

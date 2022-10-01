@@ -66,8 +66,8 @@ func (s *Syllabus) IsEmpty() bool {
 	return (len(s.AcademicFields) == 0) && s.AcademicLevel == 0 && len(s.Assignments) == 0 && s.Description == "" && s.Duration == 0 && s.GradingRubric == "" && s.Language == "" && len(s.LearningOutcomes) == 0 && s.Other == "" && len(s.Readings) == 0 && len(s.Tags) == 0 && s.Title == "" && len(s.TopicOutlines) == 0
 }
 
-func CreateSyllabus(user_uuid uuid.UUID, syll *Syllabus) (Syllabus, error) {
-	user, err := GetUser(user_uuid)
+func CreateSyllabus(syll *Syllabus, user_uuid uuid.UUID) (Syllabus, error) {
+	user, err := GetUser(user_uuid, user_uuid)
 	if err != nil {
 		return *syll, err
 	}
@@ -77,15 +77,15 @@ func CreateSyllabus(user_uuid uuid.UUID, syll *Syllabus) (Syllabus, error) {
 		return *syll, err
 	}
 
-	created, err := GetSyllabus(syll.UUID)
+	created, err := GetSyllabus(syll.UUID, user_uuid)
 	return created, err
 }
 
 const PAGINATION_LIMIT = 15
 
-func GetSyllabus(uuid uuid.UUID) (Syllabus, error) {
+func GetSyllabus(uuid uuid.UUID, user_uuid uuid.UUID) (Syllabus, error) {
 	var syll Syllabus
-	result := db.Preload("User").Preload("Attachments").Where("uuid = ? ", uuid).First(&syll)
+	result := db.Preload("User").Preload("Attachments").Where("uuid = ? AND (status = 'listed' OR user_uuid = ?)", uuid, user_uuid).First(&syll)
 	if result.Error != nil {
 		return syll, result.Error
 	}
@@ -98,12 +98,24 @@ func GetSyllabus(uuid uuid.UUID) (Syllabus, error) {
 
 	syll.Institutions = append(syll.Institutions, insts...)
 
+	var colls []Collection
+	err = db.Model(&syll).Association("Collections").Find(&colls)
+	if err != nil {
+		return syll, err
+	}
+
+	for _, c := range colls {
+		if c.Status == "listed" || c.UserUUID == user_uuid {
+			syll.Collections = append(syll.Collections, &c)
+		}
+	}
+
 	return syll, nil
 }
 
-func GetSyllabusBySlug(slug string) (Syllabus, error) {
+func GetSyllabusBySlug(slug string, user_uuid uuid.UUID) (Syllabus, error) {
 	var syll Syllabus
-	result := db.Preload("User").Preload("Attachments").Where("slug = ? ", slug).First(&syll)
+	result := db.Preload("User").Preload("Attachments").Where("slug = ? AND (status = 'listed' OR user_uuid = ?)", slug, user_uuid).First(&syll)
 	if result.Error != nil {
 		return syll, result.Error
 	}
@@ -116,10 +128,22 @@ func GetSyllabusBySlug(slug string) (Syllabus, error) {
 
 	syll.Institutions = append(syll.Institutions, insts...)
 
+	var colls []Collection
+	err = db.Model(&syll).Association("Collections").Find(&colls)
+	if err != nil {
+		return syll, err
+	}
+
+	for _, c := range colls {
+		if c.Status == "listed" || c.UserUUID == user_uuid {
+			syll.Collections = append(syll.Collections, &c)
+		}
+	}
+
 	return syll, nil
 }
 
-func GetSyllabi(params map[string]any) ([]Syllabus, error) {
+func GetSyllabi(params map[string]any, user_uuid uuid.UUID) ([]Syllabus, error) {
 	var syllabi []Syllabus
 
 	page := (params["page"].(int) - 1) * PAGINATION_LIMIT
@@ -127,7 +151,7 @@ func GetSyllabi(params map[string]any) ([]Syllabus, error) {
 		page = 0
 	}
 
-	result := db.Limit(PAGINATION_LIMIT).Offset(page).Where("language SIMILAR TO ? AND (lower(description) SIMILAR TO ? OR lower(title) SIMILAR TO ?) AND ARRAY_TO_STRING(tags, ' ') SIMILAR TO ? AND academic_level::TEXT SIMILAR TO ? AND ARRAY_TO_STRING(academic_fields, ' ') SIMILAR TO ?", params["languages"], params["keywords"], params["keywords"], params["tags"], params["levels"], params["fields"]).Preload("User").Preload("Institutions").Preload("Attachments").Find(&syllabi)
+	result := db.Limit(PAGINATION_LIMIT).Offset(page).Where("language SIMILAR TO ? AND (lower(description) SIMILAR TO ? OR lower(title) SIMILAR TO ?) AND ARRAY_TO_STRING(tags, ' ') SIMILAR TO ? AND academic_level::TEXT SIMILAR TO ? AND ARRAY_TO_STRING(academic_fields, ' ') SIMILAR TO ? AND (status = 'listed' OR user_uuid = ?)", params["languages"], params["keywords"], params["keywords"], params["tags"], params["levels"], params["fields"], user_uuid.String()).Preload("User").Preload("Institutions").Preload("Attachments").Find(&syllabi)
 
 	return syllabi, result.Error
 
@@ -162,7 +186,7 @@ func AddAttachmentToSyllabus(syll_uuid uuid.UUID, att_uuid uuid.UUID, user_uuid 
 		return syll, err
 	}
 
-	updated, err := GetSyllabus(syll_uuid)
+	updated, err := GetSyllabus(syll_uuid, user_uuid)
 	return updated, err
 }
 

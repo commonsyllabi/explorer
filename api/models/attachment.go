@@ -37,8 +37,8 @@ func (a *Attachment) BeforeCreate(tx *gorm.DB) (err error) {
 	return nil
 }
 
-func CreateAttachment(syllabus_uuid uuid.UUID, att *Attachment) (Attachment, error) {
-	syll, err := GetSyllabus(syllabus_uuid)
+func CreateAttachment(syllabus_uuid uuid.UUID, att *Attachment, user_uuid uuid.UUID) (Attachment, error) {
+	syll, err := GetSyllabus(syllabus_uuid, user_uuid)
 	if err != nil {
 		return *att, err
 	}

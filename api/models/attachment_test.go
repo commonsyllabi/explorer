@@ -16,20 +16,20 @@ func TestAttachmentModel(t *testing.T) {
 	t.Run("Test get all attachments", func(t *testing.T) {
 		res, err := models.GetAllAttachments()
 		require.Nil(t, err)
-		assert.Equal(t, 5, len(res))
+		assert.Equal(t, 7, len(res))
 	})
 
 	t.Run("Test create attachment", func(t *testing.T) {
 		syll := models.Syllabus{
 			Title: "Test Title 2",
 		}
-		result, err := models.CreateSyllabus(userID, &syll)
+		result, err := models.CreateSyllabus(&syll, userID)
 		require.Nil(t, err)
 
 		att := models.Attachment{
 			Name: "Test Name 2",
 		}
-		created, err := models.CreateAttachment(result.UUID, &att)
+		created, err := models.CreateAttachment(result.UUID, &att, userID)
 		require.Nil(t, err)
 		assert.Equal(t, att.Name, created.Name)
 		assert.Equal(t, syll.Title, created.Syllabus.Title)

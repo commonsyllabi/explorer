@@ -26,6 +26,7 @@ var (
 	syllabusUnknownID uuid.UUID
 
 	collectionID        uuid.UUID
+	collectionName      string
 	collectionSlug      string
 	collectionDeleteID  uuid.UUID
 	collectionUnknownID uuid.UUID
@@ -52,7 +53,8 @@ func setup(t *testing.T) func(t *testing.T) {
 	syllabusUnknownID = uuid.New()
 
 	collectionID = uuid.MustParse("b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a9")
-	collectionSlug = "good-stuff-b9e4c3ed"
+	collectionName = "Good public stuff"
+	collectionSlug = "good-public-stuff-b9e4c3ed"
 	collectionDeleteID = uuid.MustParse("b9e4c3ed-ac4f-4e44-bb43-5123b7b6d7a9")
 	collectionUnknownID = uuid.New()
 
@@ -90,7 +92,7 @@ func TestSyllabusHandler(t *testing.T) {
 		sylls := make([]models.Syllabus, 0)
 		err := json.Unmarshal(res.Body.Bytes(), &sylls)
 		require.Nil(t, err)
-		assert.Equal(t, 4, len(sylls))
+		assert.Equal(t, 3, len(sylls))
 	})
 
 	t.Run("Test get all syllabi in academic fields", func(t *testing.T) {
@@ -107,7 +109,7 @@ func TestSyllabusHandler(t *testing.T) {
 		sylls := make([]models.Syllabus, 0)
 		err := json.Unmarshal(res.Body.Bytes(), &sylls)
 		require.Nil(t, err)
-		assert.Equal(t, 1, len(sylls))
+		assert.Equal(t, 2, len(sylls))
 	})
 
 	t.Run("Test get all syllabi in wrong academic fields", func(t *testing.T) {
@@ -237,8 +239,8 @@ func TestSyllabusHandler(t *testing.T) {
 
 	t.Run("Test get all syllabi with combined filters", func(t *testing.T) {
 		q := make(url.Values)
-		q.Set("levels", "1")
-		q.Set("keywords", "communication")
+		q.Set("levels", "2")
+		q.Set("keywords", "architektur")
 
 		res := httptest.NewRecorder()
 		req := httptest.NewRequest(http.MethodGet, "/syllabi/?"+q.Encode(), nil)
@@ -323,6 +325,27 @@ func TestSyllabusHandler(t *testing.T) {
 		err := json.Unmarshal(res.Body.Bytes(), &syll)
 		require.Nil(t, err)
 		assert.Equal(t, "Ungewohnt", syll.Title)
+	})
+
+	t.Run("Test get syllabus with listed collections", func(t *testing.T) {
+		res := httptest.NewRecorder()
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		c := echo.New().NewContext(req, res)
+		c.SetPath("/syllabi")
+		c.SetParamNames("id")
+		c.SetParamValues(syllabusID.String())
+
+		handlers.GetSyllabus(c)
+		assert.Equal(t, http.StatusOK, res.Code)
+
+		var syll models.Syllabus
+		err := json.Unmarshal(res.Body.Bytes(), &syll)
+		require.Nil(t, err)
+		assert.Equal(t, 1, len(syll.Collections))
+	})
+
+	t.Run("Test get syllabus with unlisted collections", func(t *testing.T) {
+		t.Log("todo")
 	})
 
 	t.Run("Test get syllabus by slug", func(t *testing.T) {
