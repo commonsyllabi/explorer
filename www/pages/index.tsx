@@ -36,18 +36,29 @@ export const getServerSideProps: GetServerSideProps = async () => {
   }
   const payload = await res.json();
 
+  console.log(`payload PAGES is: ${JSON.stringify(payload.pages)}`);
+  console.log(`payload TOTAL is: ${JSON.stringify(payload.total)}`);
+
   return {
     props: {
+      pages: payload.pages,
+      totalSyllabi: payload.total,
       syllabiListings: payload.syllabi,
     },
   };
 };
 
 interface IHomeProps {
+  pages: number;
+  totalSyllabi: number;
   syllabiListings: ISyllabus[];
 }
 
-const Home: NextPage<IHomeProps> = ({ syllabiListings }) => {
+const Home: NextPage<IHomeProps> = ({
+  pages,
+  totalSyllabi,
+  syllabiListings,
+}) => {
   return (
     <>
       <Head>
@@ -70,6 +81,9 @@ const Home: NextPage<IHomeProps> = ({ syllabiListings }) => {
           <Col lg={8} className="pt-3 pb-5 d-flex flex-column gap-3">
             {getSyllabusCards(syllabiListings)}
           </Col>
+        </Row>
+        <Row>
+          Pages: {pages}; Total: {totalSyllabi}
         </Row>
       </Container>
     </>
