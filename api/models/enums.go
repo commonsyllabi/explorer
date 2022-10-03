@@ -45,7 +45,7 @@ var ACADEMIC_FIELDS = map[int]string{
 	321: "Journalism and reporting",
 	322: "Library, information and archival studies",
 
-	400: "Business, sdministration and law",
+	400: "Business, Administration and law",
 	41:  "Business and administration",
 	411: "Accounting and taxation",
 	412: "Finance, banking and insurance",
