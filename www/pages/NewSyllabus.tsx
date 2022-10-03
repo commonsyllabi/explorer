@@ -364,29 +364,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
         <Container>
           <Row className="pt-3 pb-3">
             <Col className="col-8 offset-2">
-              <h1 className="h3">Creating new syllabus...</h1>
-
-              <ul>
-                <SyllabusCreationStatus status={syllabusCreated} />
-                <li>
-                  syllabusCreated:
-                  <pre>{syllabusCreated}</pre>
-                </li>
-
-                <InstitutionCreationStatus status={institutionCreated} />
-                <li>
-                  institutionCreated:
-                  <pre>{institutionCreated}</pre>
-                </li>
-
-                <AttachmentsCreationStatus status={attachmentsCreated} />
-                <li>
-                  attachmentsCreated:
-                  <pre>{attachmentsCreated}</pre>
-                </li>
-              </ul>
-
-              {(syllabusCreated === "created" && attachmentsCreated === "created" && institutionCreated === "created")? (
+              {(syllabusCreated === "created" && attachmentsCreated === "created" && institutionCreated === "created") ? (
                 <>
                   <h2>Success!</h2>
                   <p>
@@ -397,7 +375,29 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                     .
                   </p>
                 </>
-              ) : (<></>)}
+              ) : (<>
+                <h1 className="h3">Creating new syllabus...</h1>
+
+                <ul>
+                  <SyllabusCreationStatus status={syllabusCreated} />
+                  <li>
+                    syllabusCreated:
+                    <pre>{syllabusCreated}</pre>
+                  </li>
+
+                  <InstitutionCreationStatus status={institutionCreated} />
+                  <li>
+                    institutionCreated:
+                    <pre>{institutionCreated}</pre>
+                  </li>
+
+                  <AttachmentsCreationStatus status={attachmentsCreated} />
+                  <li>
+                    attachmentsCreated:
+                    <pre>{attachmentsCreated}</pre>
+                  </li>
+                </ul>
+              </>)}
 
 
             </Col>
