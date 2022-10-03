@@ -13,6 +13,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
 import { getSyllabusCards } from "components/utils/getSyllabusCards";
+import NotFound from "components/NotFound";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const collectionId = context.params!.cid;
@@ -24,13 +25,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   console.log(`FETCH URL: ${url}`);
 
   const res = await fetch(url);
-  const collectionInfo = await res.json();
-
-  // console.log(collectionInfo);
-
-  return {
-    props: collectionInfo,
-  };
+  if (res.ok) {
+    const collectionInfo = await res.json();
+    return {
+      props: collectionInfo,
+    };
+  } else {
+    return {
+      props: {},
+    };
+  }
 };
 
 interface ICollectionProps {
@@ -44,6 +48,13 @@ interface ICollectionProps {
 }
 
 const Collection: NextPage<ICollectionProps> = (props) => {
+
+  if (Object.keys(props).length === 0) {
+    return (
+     <NotFound/>
+    )
+  }
+  
   return (
     <>
       <Head>
