@@ -1,8 +1,9 @@
 import Form from "react-bootstrap/Form";
-import { IUploadAttachment, IFormData } from "types"
+import { IUploadAttachment, IFormData, IFormInstitution } from "types"
 
 import models from "models.json"; //import academic field codes
 import modelsIsced from "models-isced.json"; //import tiered academic field codes
+import { Session } from "next-auth";
 
 //Get public/private form label
 export const getPublicPrivateLabel = (status: string) => {
@@ -88,7 +89,7 @@ export const generateAcadFieldsBroad = () => {
 
 //Return <option> elements for ACADEMIC_FIELDS_NARROW
 export const generateAcadFieldsNarrow = (broadFieldCode: keyof typeof modelsIsced['NARROW_FIELDS']) => {
-    return generateAcademicFields(modelsIsced.NARROW_FIELDS[broadFieldCode]);
+  return generateAcademicFields(modelsIsced.NARROW_FIELDS[broadFieldCode]);
 };
 
 //Return <option> elements for ACADEMIC_FIELDS_DETAILED
@@ -120,7 +121,7 @@ export const generateAcademicFieldsCheckboxes = (
 };
 
 
-export const isValidForm = (form: IFormData, attachments : IUploadAttachment[]) => {
+export const isValidForm = (form: IFormData, attachments: IUploadAttachment[]) => {
   const messages: string[] = []
 
   // requirements
@@ -177,3 +178,139 @@ export const isValidForm = (form: IFormData, attachments : IUploadAttachment[]) 
 
   return { errors: messages }
 }
+
+export const submitForm = (session: Session, form: IFormData, institution: IFormInstitution, attachments: IUploadAttachment[], endpoint: string) => {
+  // Make syllabus POST request header
+  const postHeader = new Headers();
+  postHeader.append("Authorization", `Bearer ${session.user.token}`);
+
+  // Make syllabus POST request body
+  let body = new FormData();
+  for (let [key, value] of Object.entries(form)) {
+    body.append(key, value as string);
+  }
+
+  // todo: have a 'pending' status
+  const syll_endpoint = new URL("/syllabi/", endpoint);
+  fetch(syll_endpoint, {
+    method: "POST",
+    headers: postHeader,
+    body: body,
+  })
+    .then((res) => {
+      if (res.status == 201) {
+        const responseBody = res.json();
+        console.log("SUCCESS, syllabus created.");
+        console.log(`Syllabus POST response: ${responseBody}`);
+        setCreated(true);
+        setSyllabusCreated("created");
+        return responseBody; // should we instead return just the uuid?
+      } else {
+        setSyllabusCreated("failed");
+        return res.text();
+      }
+    })
+    .then((body) => {
+      if (typeof body == "string") {
+        // if it's an error, it returns text
+        setError(body);
+      } else if (typeof body == "object") {
+        // Now that syllabus is created...
+        // Set the newly created syllabus UUID
+        setSyllabusUUID(body.uuid);
+
+        // and make institution & attachments POST requests
+        const instit_endpoint = new URL(
+          `/syllabi/${body.uuid}/institutions`,
+          endpoint
+        );
+        submitInstitution(institution, instit_endpoint, postHeader)
+
+        const attach_endpoint = new URL(
+          `/attachments/?syllabus_id=${body.uuid}`,
+          endpoint
+        );
+        submitAttachments(attachments, attach_endpoint, postHeader)
+      }
+    })
+    .catch((err) => {
+      console.error(`Error: ${err}`);
+    });
+}
+
+export const submitInstitution = (institution: IFormInstitution, endpoint: URL, h: Headers) => {
+  //--------------------------------------
+  // POST institution
+  const i = new FormData();
+  i.append("name", institution.name);
+  i.append("url", institution.url);
+  i.append("country", institution.country);
+  i.append("date_year", institution.date.year);
+  i.append("date_term", institution.date.term);
+
+  fetch(endpoint, {
+    method: "POST",
+    headers: h,
+    body: i,
+  })
+    .then((res) => {
+      console.log(res);
+      if (res.status === 200) {
+        const responseBody = res.json();
+        console.log(`SUCCESS, Institutions created.`);
+        console.log(`Institution POST response: ${responseBody}`);
+        setInstitutionCreated("created");
+        return responseBody;
+      } else {
+        const responseErrorMsg = res.text();
+        console.log(`ERROR, institutions failed.`);
+        console.log(`Institution POST response: ${responseErrorMsg}`);
+        setInstitutionCreated("failed");
+        return responseErrorMsg;
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+
+export const submitAttachments = (attachments: IUploadAttachment[], endpoint: URL, h: Headers) => {
+  // POST attachments
+  // strange that we have a different pattern from institutions
+  // here(i guess attahcment is at a higher class than institution)
+  console.log(`adding ${attachments.length} attachments`);
+  attachments.map((att) => {
+    console.warn(`Uploading non-validated ${JSON.stringify(att)}`);
+
+    const a = new FormData();
+    a.append("name", att.name);
+    a.append("description", att.description ? att.description : "");
+    a.append("file", att.file ? att.file : "");
+    a.append("url", att.url ? att.url : ""); //-- otherwise it defaults to "undefined"
+
+    fetch(endpoint, {
+      method: "POST",
+      headers: h,
+      body: a,
+    })
+      .then((res) => {
+        console.log(res);
+        if (res.status === 201) {
+          const responseBody = res.json();
+          console.log(`SUCCESS, attachments created.`);
+          console.log(`Attachments POST response: ${responseBody}`);
+          setAttachmentsCreated("created");
+          return responseBody;
+        } else {
+          const responseErrorMsg = res.text();
+          console.log(`ERROR, attachments failed.`);
+          console.log(`Attachments POST response: ${responseErrorMsg}`);
+          setAttachmentsCreated("failed");
+          return responseErrorMsg;
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  });
+} 

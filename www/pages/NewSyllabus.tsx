@@ -5,7 +5,7 @@ import Head from "next/head";
 import Link from "next/link";
 
 //Interfaces
-import { IFormData, IAttachment, IUploadAttachment, IInstitution } from "types";
+import { IFormData, IAttachment, IUploadAttachment, IInstitution, IFormInstitution } from "types";
 
 //Bootstrap
 import Container from "react-bootstrap/Container";
@@ -27,7 +27,7 @@ import SyllabusCreationStatus from "components/NewSyllabus/SyllabusCreationStatu
 import AttachmentItemFile from "components/NewSyllabus/AttachmentItemFile";
 
 //UI Utils
-import { getPublicPrivateLabel } from "components/utils/formUtils";
+import { getPublicPrivateLabel, submitForm } from "components/utils/formUtils";
 
 //Utils for generating components from data libraries
 import {
@@ -115,15 +115,17 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
   //   },
   // ]);
 
-  const [institutionData, setInstitutionData] = useState([
+  const [institutionData, setInstitutionData] = useState<IFormInstitution>(
     {
       name: "Hogwarts",
       country: "012",
       url: "http://hogwarts.com",
-      year: "2022",
-      term: "Spring Semester",
+      date: {
+        year: "2022",
+        term: "Spring Semester",
+      }
     },
-  ]);
+  );
 
 
   const [log, setLog] = useState("");
@@ -153,133 +155,8 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
       return;
     }
 
-    // Make syllabus POST request header
-    const postHeader = new Headers();
-    postHeader.append("Authorization", `Bearer ${session.user.token}`);
-
-    // Make syllabus POST request body
-    let body = new FormData();
-    for (let [key, value] of Object.entries(formData)) {
-      body.append(key, value as string);
-    }
-
-    // todo: have a 'pending' status
-    const syll_endpoint = new URL("/syllabi/", props.apiUrl);
-    fetch(syll_endpoint, {
-      method: "POST",
-      headers: postHeader,
-      body: body,
-    })
-      .then((res) => {
-        setFormSubmitted(true);
-        if (res.status == 201) {
-          const responseBody = res.json();
-          console.log("SUCCESS, syllabus created.");
-          console.log(`Syllabus POST response: ${responseBody}`);
-          setCreated(true);
-          setSyllabusCreated("created");
-          return responseBody; // should we instead return just the uuid?
-        } else {
-          setSyllabusCreated("failed");
-          return res.text();
-        }
-      })
-      .then((body) => {
-        if (typeof body == "string") {
-          // if it's an error, it returns text
-          setError(body);
-        } else if (typeof body == "object") {
-          // Now that syllabus is created...
-          // Set the newly created syllabus UUID
-          setSyllabusUUID(body.uuid);
-
-          // and make institution & attachments POST requests
-          //--------------------------------------
-          // POST institution
-          const i = new FormData();
-          i.append("name", institutionData[0].name);
-          i.append("url", institutionData[0].url);
-          i.append("country", institutionData[0].country);
-          i.append("date_year", institutionData[0].year);
-          i.append("date_term", institutionData[0].term);
-
-          const instit_endpoint = new URL(
-            `/syllabi/${body.uuid}/institutions`,
-            props.apiUrl
-          );
-
-          fetch(instit_endpoint, {
-            method: "POST",
-            headers: postHeader,
-            body: i,
-          })
-            .then((res) => {
-              console.log(res);
-              if (res.status === 200) {
-                const responseBody = res.json();
-                console.log(`SUCCESS, Institutions created.`);
-                console.log(`Institution POST response: ${responseBody}`);
-                setInstitutionCreated("created");
-                return responseBody;
-              } else {
-                const responseErrorMsg = res.text();
-                console.log(`ERROR, institutions failed.`);
-                console.log(`Institution POST response: ${responseErrorMsg}`);
-                setInstitutionCreated("failed");
-                return responseErrorMsg;
-              }
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-
-          // POST attachments
-          // strange that we have a different pattern from institutions
-          // here(i guess attahcment is at a higher class than institution)
-          console.log(`adding ${attachmentData.length} attachments`);
-          const attach_endpoint = new URL(
-            `/attachments/?syllabus_id=${body.uuid}`,
-            props.apiUrl
-          );
-          attachmentData.map((att) => {
-            console.warn(`Uploading non-validated ${JSON.stringify(att)}`);
-
-            const a = new FormData();
-            a.append("name", att.name);
-            a.append("description", att.description ? att.description : "");
-            a.append("file", att.file ? att.file : "");
-            a.append("url", att.url ? att.url : ""); //-- otherwise it defaults to "undefined"
-
-            fetch(attach_endpoint, {
-              method: "POST",
-              headers: postHeader,
-              body: a,
-            })
-              .then((res) => {
-                console.log(res);
-                if (res.status === 201) {
-                  const responseBody = res.json();
-                  console.log(`SUCCESS, attachments created.`);
-                  console.log(`Attachments POST response: ${responseBody}`);
-                  setAttachmentsCreated("created");
-                  return responseBody;
-                } else {
-                  const responseErrorMsg = res.text();
-                  console.log(`ERROR, attachments failed.`);
-                  console.log(`Attachments POST response: ${responseErrorMsg}`);
-                  setAttachmentsCreated("failed");
-                  return responseErrorMsg;
-                }
-              })
-              .catch((err) => {
-                console.log(err);
-              });
-          });
-        }
-      })
-      .catch((err) => {
-        console.error(`Error: ${err}`);
-      });
+    setFormSubmitted(true);
+    submitForm(session, formData, institutionData, attachmentData, props.apiUrl)
   };
 
   //Handle form changes
@@ -297,7 +174,9 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
 
   const handleInstitutionChange = (event: React.SyntheticEvent) => {
     const t = event.target as HTMLInputElement;
-    setInstitutionData([{ ...institutionData[0], [t.id]: t.value }]);
+    //todo properly handle update
+    institutionData[t.id as string] = t.value
+    setInstitutionData(institutionData);
     console.log(`${[t.id]}: ${t.value}`);
   };
 
@@ -484,7 +363,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                           id="name"
                           placeholder="Black Mountain College"
                           onChange={handleInstitutionChange}
-                          value={institutionData[0].name}
+                          value={institutionData.name}
                           data-cy="instutionNameInput"
                         />
                       </div>
@@ -518,7 +397,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                           id="url"
                           placeholder="http://hogwarts.com"
                           onChange={handleInstitutionChange}
-                          value={institutionData[0].url}
+                          value={institutionData.url}
                           data-cy="instutionUrlInput"
                         />
                       </div>
@@ -534,7 +413,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                             id="year"
                             placeholder="2022"
                             onChange={handleInstitutionChange}
-                            value={institutionData[0].year}
+                            value={institutionData.date.year}
                             data-cy="instutionYearInput"
                           />
                           <Form.Control.Feedback type="invalid">
@@ -552,7 +431,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                             id="term"
                             placeholder="Spring Semester"
                             onChange={handleInstitutionChange}
-                            value={institutionData[0].term}
+                            value={institutionData.date.term}
                             data-cy="instutionTermInput"
                           />
                           <Form.Control.Feedback type="invalid">
