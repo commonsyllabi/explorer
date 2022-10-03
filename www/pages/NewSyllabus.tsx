@@ -386,7 +386,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                 </li>
               </ul>
 
-              {syllabusCreated === "created" ? (
+              {(syllabusCreated === "created" && attachmentsCreated === "created" && institutionCreated === "created")? (
                 <>
                   <h2>Success!</h2>
                   <p>
