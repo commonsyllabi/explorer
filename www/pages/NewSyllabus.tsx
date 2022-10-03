@@ -33,8 +33,10 @@ import { getPublicPrivateLabel } from "components/utils/formUtils";
 import {
   generateCountryOptions,
   generateLanguageOptions,
+  isValidForm
 } from "components/utils/formUtils";
 import AddAcademicFieldsForm from "components/NewSyllabus/AddAcademicFieldsForm";
+import { title } from "process";
 
 export const getStaticProps: GetStaticProps = async () => {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -123,6 +125,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     },
   ]);
 
+
   const [log, setLog] = useState("");
   const [error, setError] = useState("");
   const [isCreated, setCreated] = useState(false);
@@ -130,33 +133,36 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
   //Handle form submission
   const apiUrl = props.apiUrl;
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    // TODO: Validate form
     const form = event.currentTarget;
-    // if (form.checkValidity() === false) {
-    setFormSubmitted(true);
     event.preventDefault();
     event.stopPropagation();
-    // }
-    // setValidated(true);
-    // if (validated) {
-    //   //send post request
-    // }
-
     console.log(formData);
+
+    // bootstrap also supports validation with form.checkValidity()
+    const validForm = isValidForm(formData, attachmentData)
+    if (validForm.errors.length > 0) {
+      console.log(validForm.errors);
+      setError(validForm.errors.join('\n'))
+      return;
+    }
 
     // Make syllabus POST request header
     const postHeader = new Headers();
     if (session != null && session.user != null)
       postHeader.append("Authorization", `Bearer ${session.user.token}`);
-    else console.warn("No session found!");
+    else {
+      setError(`It seems you have been logged out. Please log in and try again.`)
+      console.warn("No session found!");
+      return;
+    }
 
     // Make syllabus POST request body
     let body = new FormData();
-
     for (let [key, value] of Object.entries(formData)) {
       body.append(key, value as string);
     }
 
+    // todo: have a 'pending' status
     const syll_endpoint = new URL("/syllabi/", props.apiUrl);
     fetch(syll_endpoint, {
       method: "POST",
@@ -164,6 +170,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
       body: body,
     })
       .then((res) => {
+        setFormSubmitted(true);
         if (res.status == 201) {
           const responseBody = res.json();
           console.log("SUCCESS, syllabus created.");

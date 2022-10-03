@@ -1,4 +1,5 @@
 import Form from "react-bootstrap/Form";
+import { IUploadAttachment, IFormData } from "types"
 
 import models from "models.json"; //import academic field codes
 import modelsIsced from "models-isced.json"; //import tiered academic field codes
@@ -117,3 +118,62 @@ export const generateAcademicFieldsCheckboxes = (
   ));
   return <>{acadFieldsCheckboxes}</>;
 };
+
+
+export const isValidForm = (form: IFormData, attachments : IUploadAttachment[]) => {
+  const messages: string[] = []
+
+  // requirements
+  // title > 3 && title < 150
+  if (form.title.length < 3 || form.title.length > 150) {
+    messages.push(`Title should be between 3 and 150 characters! (currently '${form.title}')`)
+  }
+
+  // check description as well
+
+  // language must comply
+  if (form.language.length < 2) {
+    messages.push(`Language should be BCP-47 compliant! (or at least 2 characters, currently '${form.language}')`)
+  }
+
+  // academic_level (come to think of it, this sounds abitrary, compared to not requiring academic_field)
+  const ac_levels = [0, 1, 2, 3]
+  if (!ac_levels.includes(form.academic_level)) {
+    messages.push(`You should pick an academic level: '${form.academic_level}'.)`)
+  }
+
+
+  // check that attachments are not null
+  if (attachments.length > 0) {
+    console.log(attachments);
+
+    for (const att of attachments) {
+      if (att.name.length < 3)
+        messages.push(`Check attachments name '${att.name}'`)
+      if (att.url != "") {
+        let u
+        try {
+          u = new URL(att.url as string)
+
+          if (att.file !== undefined)
+            messages.push(`Can't have both URL and file attachemnt. Please create a separate attachment if you wish to upload both.`)
+        } catch {
+          messages.push(`Check attachments url '${att.url}'`)
+        }
+      }
+
+      if (att.file && att.file?.size > 16777216) // 16mb
+        messages.push(`Check attachments file '${att.file.name}' size '${att.file.size}B'`)
+    }
+
+  }
+
+  // should we check that institution is not null? field names are:
+  // name
+  // country
+  // url
+  // year
+  // term
+
+  return { errors: messages }
+}
