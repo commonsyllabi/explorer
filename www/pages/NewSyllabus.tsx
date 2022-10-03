@@ -386,14 +386,20 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                 </li>
               </ul>
 
-              <h2>Success!</h2>
-              <p>
-                View{" "}
-                <Link href={`/syllabus/${syllabusUUID}`}>
-                  <a>{formData.title} here</a>
-                </Link>
-                .
-              </p>
+              {syllabusCreated === "created" ? (
+                <>
+                  <h2>Success!</h2>
+                  <p>
+                    View{" "}
+                    <Link href={`/syllabus/${syllabusUUID}`}>
+                      <a>{formData.title} here</a>
+                    </Link>
+                    .
+                  </p>
+                </>
+              ) : (<></>)}
+
+
             </Col>
           </Row>
         </Container>
