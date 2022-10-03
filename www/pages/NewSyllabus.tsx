@@ -138,6 +138,13 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     event.stopPropagation();
     console.log(formData);
 
+    // check if user is logged in
+    if (session == null || session.user == null) {
+      setError(`It seems you have been logged out. Please log in and try again.`)
+      console.warn("No session found!");
+      return;
+    }
+
     // bootstrap also supports validation with form.checkValidity()
     const validForm = isValidForm(formData, attachmentData)
     if (validForm.errors.length > 0) {
@@ -148,13 +155,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
 
     // Make syllabus POST request header
     const postHeader = new Headers();
-    if (session != null && session.user != null)
-      postHeader.append("Authorization", `Bearer ${session.user.token}`);
-    else {
-      setError(`It seems you have been logged out. Please log in and try again.`)
-      console.warn("No session found!");
-      return;
-    }
+    postHeader.append("Authorization", `Bearer ${session.user.token}`);
 
     // Make syllabus POST request body
     let body = new FormData();
