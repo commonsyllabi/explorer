@@ -16,6 +16,7 @@ import SyllabusSchoolCodeYear from "components/Syllabus/SyllabusSchoolCodeYear";
 import SyllabusResources from "components/Syllabus/SyllabusResources";
 import SyllabusFooter from "components/Syllabus/SyllabusFooter";
 import Tags from "components/Tags";
+import NotFound from "components/NotFound";
 import Link from "next/link";
 
 import {
@@ -34,18 +35,27 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   // console.log(`FETCH URL: ${url}`);
 
   const res = await fetch(url);
-  const syllabusInfo = await res.json();
-
-  // console.log(userInfo);
-
-  return {
-    props: syllabusInfo,
-  };
+  if (res.ok) {
+    const syllabusInfo = await res.json();
+    return {
+      props: syllabusInfo,
+    };
+  } else {
+    return {
+      props: {},
+    };
+  }
 };
 
 const Syllabus: NextPage<ISyllabus> = (props) => {
   const router = useRouter();
   const { sid } = router.query;
+
+  if (Object.keys(props).length === 0) {
+    return (
+     <NotFound/>
+    )
+  }
 
   return (
     <>

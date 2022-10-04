@@ -23,6 +23,7 @@ import Tabs from "react-bootstrap/Tabs";
 import { getSyllabusCards } from "components/utils/getSyllabusCards";
 import UserProfileSidebar from "components/User/UserProfileSidebar";
 import { getCollectionCards } from "components/utils/getCollectionCards";
+import NotFound from "components/NotFound";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const userId = context.params!.uid;
@@ -34,18 +35,31 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   // console.log(`FETCH URL: ${url}`);
 
   const res = await fetch(url);
-  const userInfo = await res.json();
+  if (res.ok) {
+    const userInfo = await res.json();
+    return {
+      props: userInfo,
+    };
+  } else {
+    return {
+      props: {},
+    };
+  }
 
-  return {
-    props: userInfo,
-  };
 };
 
 const About: NextPage<IUser> = (props) => {
   const router = useRouter();
-
   const { data: session, status } = useSession();
   const [isAdmin, setIsAdmin] = useState(false);
+  const [syllFilter, setSyllFilter] = useState("");
+  const [collFilter, setCollFilter] = useState("");
+
+  if (Object.keys(props).length === 0) {
+    return (
+      <NotFound />
+    )
+  }
 
   const checkIfAdmin = () => {
     if (session != null && session.user != null) {
@@ -63,9 +77,6 @@ const About: NextPage<IUser> = (props) => {
 
   const focusedTab = router.query["tab"];
   const activeTab = focusedTab ? focusedTab : "syllabi";
-
-  const [syllFilter, setSyllFilter] = useState("");
-  const [collFilter, setCollFilter] = useState("");
 
   const handleFilterChange = (event: React.SyntheticEvent) => {
     const t = event.target as HTMLInputElement;

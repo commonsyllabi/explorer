@@ -13,12 +13,12 @@ export const getCollectionCards = (
   const collectionCards = collectionArray.map((item) => (
     <CollectionCard
       key={item.uuid}
+      userName={userName ? userName : "Netochka Nezvanova"}
       uuid={item.uuid}
       name={item.name}
       status={item.status}
       description={item.description}
       tags={item.tags}
-      userName={userName ? userName : "Netochka Nezvanova"}
       userUuid={item.user_uuid}
       syllabiCount={item.syllabi ? item.syllabi.length : 0}
       isAdmin={isAdmin ? isAdmin : false}

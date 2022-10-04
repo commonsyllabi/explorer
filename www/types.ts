@@ -21,6 +21,14 @@ export interface IInstitution {
   position?: string;
 }
 
+export interface IFormInstitution {
+  name: string;
+  country: string;
+  date_term: string;
+  date_year: string;
+  url: string;
+}
+
 export interface ICollection {
   uuid: string;
   name: string;

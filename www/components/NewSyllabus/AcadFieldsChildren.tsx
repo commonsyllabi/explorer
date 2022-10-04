@@ -1,23 +1,22 @@
 import * as React from "react";
-import modelsIsced from "models-isced.json"; //import tiered academic field codes
 
 import {
   generateAcadFieldsNarrow,
   generateAcadFieldsDetailed,
 } from "components/utils/formUtils";
 
+import modelsIsced from "models-isced.json"; //import tiered academic field codes
+
 interface IAcadFieldsChildrenProps {
-  narrowFieldCode?: keyof typeof modelsIsced['NARROW_FIELDS'] | undefined;
-  detailedFieldCode?: keyof typeof modelsIsced['DETAILED_FIELDS'] | undefined;
+  parentFieldCode?: string | undefined;
   fieldLabel: string;
 }
 
 const AcadFieldsChildren: React.FunctionComponent<IAcadFieldsChildrenProps> = ({
-  narrowFieldCode,
-  detailedFieldCode,
+  parentFieldCode,
   fieldLabel,
 }) => {
-  if (narrowFieldCode === undefined || narrowFieldCode.length === 0 || detailedFieldCode === undefined || detailedFieldCode.length === 0) {
+  if (parentFieldCode === undefined || parentFieldCode.length === 0) {
     return (
       <>
         <option value="">–</option>
@@ -28,14 +27,18 @@ const AcadFieldsChildren: React.FunctionComponent<IAcadFieldsChildrenProps> = ({
       return (
         <>
           <option value="">–</option>
-          {generateAcadFieldsNarrow(narrowFieldCode)}
+          {generateAcadFieldsNarrow(
+            parentFieldCode as keyof typeof modelsIsced["NARROW_FIELDS"]
+          )}
         </>
       );
     } else {
       return (
         <>
           <option value="">–</option>
-          {generateAcadFieldsDetailed(detailedFieldCode)}
+          {generateAcadFieldsDetailed(
+            parentFieldCode as keyof typeof modelsIsced["DETAILED_FIELDS"]
+          )}
         </>
       );
     }

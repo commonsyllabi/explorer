@@ -9,7 +9,7 @@ const UserInstitutions: React.FunctionComponent<IUserInstitutionsProps> = ({
   institutions,
 }) => {
   // if no data
-  if (institutions === undefined) {
+  if (institutions === undefined || institutions === null) {
     return null;
   }
   // if data is a single string

@@ -2,7 +2,6 @@ import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 
 import GlobalNav from "components/GlobalNav";
-import FiltersBar from "components/FiltersBar";
 import TagsFiltersBar from "components/TagFiltersBar";
 
 import { getSyllabusCards } from "../components/utils/getSyllabusCards";

@@ -1,5 +1,7 @@
 import { ICollection } from "types";
 
+import { getCollectioniUrl } from "components/utils/getLinks";
+
 const getCollectionList = (
   collectionArray: ICollection[] | undefined,
   filterPrivate: boolean
@@ -12,7 +14,7 @@ const getCollectionList = (
         if (collectionArray[i].status === "unlisted") {
           let collection = {
             uuid: collectionArray[i].uuid,
-            url: "/collection/" + collectionArray[i].uuid,
+            url: getCollectioniUrl(collectionArray[i].uuid),
             title: collectionArray[i].name,
           };
           collectionList.push(collection);
@@ -21,7 +23,7 @@ const getCollectionList = (
         if (collectionArray[i].status === "listed") {
           let collection = {
             uuid: collectionArray[i].uuid,
-            url: "/collection/" + collectionArray[i].uuid,
+            url: getCollectioniUrl(collectionArray[i].uuid),
             title: collectionArray[i].name,
           };
           collectionList.push(collection);

@@ -91,7 +91,9 @@ const AddAcademicFieldsForm: React.FunctionComponent<
             onChange={handleNarrowFieldChange}
           >
             <AcadFieldsChildren
-              narrowFieldCode={broadField as keyof typeof modelsIsced['NARROW_FIELDS']}
+              parentFieldCode={
+                broadField as keyof typeof modelsIsced["NARROW_FIELDS"]
+              }
               fieldLabel="Narrow"
             />
           </Form.Select>
@@ -104,7 +106,9 @@ const AddAcademicFieldsForm: React.FunctionComponent<
             onChange={handleDetailedFieldChange}
           >
             <AcadFieldsChildren
-              detailedFieldCode={narrowField as keyof typeof modelsIsced['DETAILED_FIELDS']}
+              parentFieldCode={
+                narrowField as keyof typeof modelsIsced["DETAILED_FIELDS"]
+              }
               fieldLabel="Detailed"
             />
           </Form.Select>
