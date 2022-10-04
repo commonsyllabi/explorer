@@ -183,7 +183,12 @@ export const submitForm = async (form: IFormData, endpoint: string, h: Headers):
 
   let body = new FormData();
   for (let [key, value] of Object.entries(form)) {
-    body.append(key, value as string);
+    if(key == "tags")
+      for (const t of value) {
+        body.append("tags[]", t as string)
+      }
+    else
+      body.append(key, value as string);
   }
 
   // todo: have a 'pending' status

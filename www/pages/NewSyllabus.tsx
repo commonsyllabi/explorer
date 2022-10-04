@@ -41,7 +41,6 @@ import {
 } from "components/utils/formUtils";
 
 import AddAcademicFieldsForm from "components/NewSyllabus/AddAcademicFieldsForm";
-import { title } from "process";
 
 export const getStaticProps: GetStaticProps = async () => {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -110,16 +109,6 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     duration: 0,
   });
 
-  // const [institutionData, setInstitutionData] = useState([
-  //   {
-  //     name: "",
-  //     country: "",
-  //     url: "",
-  //     year: "",
-  //     term: "",
-  //   },
-  // ]);
-
   const [institutionData, setInstitutionData] = useState<IFormInstitution>(
     {
       name: "Hogwarts",
@@ -129,7 +118,6 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
       date_term: "Spring Semester",
     },
   );
-
 
   const [log, setLog] = useState("");
   const [error, setError] = useState("");
@@ -183,6 +171,10 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
         }
       })
 
+    if(attachmentData.length === 0){
+      setAttachmentsCreated("created")
+      return
+    }
     const attach_endpoint = new URL(`/attachments/?syllabus_id=${body.uuid}`, props.apiUrl);
     attachmentData.map((att) => {
       submitAttachments(att, attach_endpoint, postHeader)
@@ -196,13 +188,14 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     })
   };
 
-  //Handle form changes
   const handleChange = (event: React.SyntheticEvent) => {
     const t = event.target as HTMLInputElement;
     if (t.id === "status") {
-      //handle public/private toggle
       const newStatus = formData.status === "unlisted" ? "listed" : "unlisted";
       setFormData({ ...formData, [t.id]: newStatus });
+    } else if (t.id === "tags") {
+      const tags = t.value.split(',').map(tag => tag.trim())
+      setFormData({...formData, ["tags"]: [...tags]})
     } else {
       setFormData({ ...formData, [t.id]: t.value });
     }
@@ -210,7 +203,6 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
 
   const handleInstitutionChange = (event: React.SyntheticEvent) => {
     const t = event.target as HTMLInputElement;
-    //todo properly handle update
     const key = t.id as keyof IFormInstitution
     institutionData[key] = t.value
     setInstitutionData(institutionData);
@@ -548,6 +540,23 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                   <hr className="my-3" />
 
                   <Form.Group className="mb-3">
+                    <Form.Label htmlFor="tags">Tags</Form.Label>
+                    <Form.Control
+                      required
+                      id="tags"
+                      onChange={handleChange}
+                      as="textarea"
+                      placeholder="Course tags..."
+                      data-cy="courseTagsInput"
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      Please provide a comma-separated list of tags
+                    </Form.Control.Feedback>
+                  </Form.Group>
+
+                  <hr className="my-3" />
+
+                  <Form.Group className="mb-3">
                     <Form.Label htmlFor="description">Description*</Form.Label>
                     <Form.Control
                       required
@@ -629,13 +638,11 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                   </Form.Group>
 
                   <hr className="my-3" />
-                  {/* TODO: Make attachments work */}
                   <div className="mb-5">
                     <h2 className="h4">
                       Attachments ({attachmentData.length})
                     </h2>
                     {getUploadedAttachments(attachmentData)}
-                    {/* {attachments} */}
                     <NewSyllabusAttachment
                       attachmentData={attachmentData}
                       setAttachmentData={setAttachmentData}

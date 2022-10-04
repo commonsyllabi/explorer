@@ -100,7 +100,7 @@ const AddAcademicFieldsForm: React.FunctionComponent<
         </div>
 
         <div className="col-4">
-          <p className="small text-muted mb-0">NARROW</p>
+          <p className="small text-muted mb-0">DETAILED</p>
           <Form.Select
             id="academic_field_detailed"
             onChange={handleDetailedFieldChange}
