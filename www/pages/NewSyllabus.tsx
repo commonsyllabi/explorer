@@ -26,15 +26,20 @@ import AttachmentsCreationStatus from "components/NewSyllabus/AttachmentsCreatio
 import SyllabusCreationStatus from "components/NewSyllabus/SyllabusCreationStatus";
 import AttachmentItemFile from "components/NewSyllabus/AttachmentItemFile";
 
-//UI Utils
-import { getPublicPrivateLabel, submitForm } from "components/utils/formUtils";
 
-//Utils for generating components from data libraries
 import {
+  //UI Utils
+  getPublicPrivateLabel,
+  //Utils for generating components from data libraries
   generateCountryOptions,
   generateLanguageOptions,
-  isValidForm
+  isValidForm,
+  //Utils for fetch requests
+  submitForm,
+  submitInstitution,
+  submitAttachments,
 } from "components/utils/formUtils";
+
 import AddAcademicFieldsForm from "components/NewSyllabus/AddAcademicFieldsForm";
 import { title } from "process";
 
@@ -120,21 +125,18 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
       name: "Hogwarts",
       country: "012",
       url: "http://hogwarts.com",
-      date: {
-        year: "2022",
-        term: "Spring Semester",
-      }
+      date_year: "2022",
+      date_term: "Spring Semester",
     },
   );
 
 
   const [log, setLog] = useState("");
   const [error, setError] = useState("");
-  const [isCreated, setCreated] = useState(false);
 
   //Handle form submission
   const apiUrl = props.apiUrl;
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     const form = event.currentTarget;
     event.preventDefault();
     event.stopPropagation();
@@ -154,9 +156,43 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
       setError(validForm.errors.join('\n'))
       return;
     }
+    
+    const postHeader = new Headers();
+    postHeader.append("Authorization", `Bearer ${session.user.token}`);
 
+    const res = await submitForm(formData, props.apiUrl, postHeader)
     setFormSubmitted(true);
-    submitForm(session, formData, institutionData, attachmentData, props.apiUrl)
+    if (res.status !== 201) {
+      const err = await res.text()
+      setError(err);
+      setSyllabusCreated("failed");
+      return
+    }
+
+    const body = await res.json();
+    setSyllabusCreated("created");
+    setSyllabusUUID(body.uuid);
+
+    const instit_endpoint = new URL(`/syllabi/${body.uuid}/institutions`, props.apiUrl);
+    const ires = await submitInstitution(institutionData, instit_endpoint, postHeader)
+    if (ires.status === 200) {
+      setInstitutionCreated("created");
+    } else {
+      setInstitutionCreated("failed");
+    }
+
+    const attach_endpoint = new URL(`/attachments/?syllabus_id=${body.uuid}`, props.apiUrl);
+    console.log(`adding ${attachmentData.length} attachments`);
+    attachmentData.map((att) => {
+      submitAttachments(att, attach_endpoint, postHeader)
+      .then(res => {
+        if (res.status === 201) {
+          setAttachmentsCreated("created");
+        } else {
+          setAttachmentsCreated("failed");
+        }
+      })
+    })
   };
 
   //Handle form changes
@@ -169,13 +205,13 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     } else {
       setFormData({ ...formData, [t.id]: t.value });
     }
-    console.log(`${[t.id]}: ${t.value}`);
   };
 
   const handleInstitutionChange = (event: React.SyntheticEvent) => {
     const t = event.target as HTMLInputElement;
     //todo properly handle update
-    institutionData[t.id as string] = t.value
+    const key = t.id as keyof IFormInstitution
+    institutionData[key] = t.value
     setInstitutionData(institutionData);
     console.log(`${[t.id]}: ${t.value}`);
   };
@@ -410,10 +446,10 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                           </Form.Label>
                           <Form.Control
                             required
-                            id="year"
+                            id="date_year"
                             placeholder="2022"
                             onChange={handleInstitutionChange}
-                            value={institutionData.date.year}
+                            value={institutionData.date_year}
                             data-cy="instutionYearInput"
                           />
                           <Form.Control.Feedback type="invalid">
@@ -428,10 +464,10 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                           </Form.Label>
                           <Form.Control
                             required
-                            id="term"
+                            id="date_term"
                             placeholder="Spring Semester"
                             onChange={handleInstitutionChange}
-                            value={institutionData.date.term}
+                            value={institutionData.date_term}
                             data-cy="instutionTermInput"
                           />
                           <Form.Control.Feedback type="invalid">

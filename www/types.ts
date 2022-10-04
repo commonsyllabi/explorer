@@ -24,10 +24,8 @@ export interface IInstitution {
 export interface IFormInstitution {
   name: string;
   country: string;
-  date: {
-    term: string;
-    year: string;
-  };
+  date_term: string;
+  date_year: string;
   url: string;
 }
 

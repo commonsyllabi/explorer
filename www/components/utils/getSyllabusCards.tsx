@@ -4,7 +4,7 @@ import { ISyllabus } from "types";
 
 export const getSyllabusCards = (
   syllabiArray: ISyllabus[] | undefined,
-  userName: string,
+  userName?: string | "anonymous",
   isAdmin?: boolean
 ) => {
   if (!syllabiArray || syllabiArray.length === 0) {

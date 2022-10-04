@@ -50,15 +50,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 const About: NextPage<IUser> = (props) => {
   const router = useRouter();
+  const { data: session, status } = useSession();
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [syllFilter, setSyllFilter] = useState("");
+  const [collFilter, setCollFilter] = useState("");
 
   if (Object.keys(props).length === 0) {
     return (
-     <NotFound/>
+      <NotFound />
     )
   }
-  
-  const { data: session, status } = useSession();
-  const [isAdmin, setIsAdmin] = useState(false);
 
   const checkIfAdmin = () => {
     if (session != null && session.user != null) {
@@ -76,9 +77,6 @@ const About: NextPage<IUser> = (props) => {
 
   const focusedTab = router.query["tab"];
   const activeTab = focusedTab ? focusedTab : "syllabi";
-
-  const [syllFilter, setSyllFilter] = useState("");
-  const [collFilter, setCollFilter] = useState("");
 
   const handleFilterChange = (event: React.SyntheticEvent) => {
     const t = event.target as HTMLInputElement;

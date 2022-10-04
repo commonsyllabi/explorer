@@ -102,16 +102,11 @@ const NewSyllbusAttachment: React.FunctionComponent<
     resetForm();
   }, [attachmentData]);
 
-  useEffect(() => {
-    console.log(`thisAttachment: ${JSON.stringify(thisAttachment)}`);
-  }, [thisAttachment]);
-
   const resetForm = (): void => {
     // setThisAttachment(blankAttachment);
     setNewId();
-    console.log(`Reset form called.`);
-    console.log(`thisAttachment: ${JSON.stringify(thisAttachment)}`);
-    // console.log(`blankAttachment: ${JSON.stringify(blankAttachment)}`);
+    // console.log(`Reset form called.`);
+    // console.log(`thisAttachment: ${JSON.stringify(thisAttachment)}`);
   };
 
   return (

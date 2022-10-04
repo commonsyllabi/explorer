@@ -23,7 +23,7 @@ const NotFound: React.FunctionComponent = (props) => {
                 <Row className="d-flex justify-content-center">
                     <Col className="pt-3 pb-5 d-flex flex-column gap-3" lg={10}>
                         <h1>Sorry!</h1>
-                        <p>We couldn't find what you were looking for.</p>
+                        <p>We couldn&apos;t find what you were looking for.</p>
                         <p>
                             Go back to the <Link href="/">the explorer</Link>.
                         </p>
