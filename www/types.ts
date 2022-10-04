@@ -107,5 +107,6 @@ export interface ISyllabiFilters {
   academic_field: string;
   academic_term: string;
   language: string;
-  tags: string[];
+  tags_include: string[];
+  tags_exclude: string[];
 }

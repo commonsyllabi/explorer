@@ -15,7 +15,8 @@ const TagsFiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => 
     academic_field: "",
     academic_term: "",
     language: "",
-    tags: [],
+    tags_include: [],
+    tags_exclude: [],
   })
 
   React.useEffect(() => {
@@ -96,6 +97,8 @@ const TagsFiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => 
                 <Form.Control
                   as="textarea"
                   aria-labelledby="search-includes-tags"
+                  id="tags_include"
+                  onChange={handleChange}
                 />
               </InputGroup>
             </Form>
@@ -109,6 +112,8 @@ const TagsFiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => 
                 <Form.Control
                   as="textarea"
                   aria-labelledby="search-excludes-tags"
+                  id="tags_exclude"
+                  onChange={handleChange}
                 />
               </InputGroup>
             </Form>

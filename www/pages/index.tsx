@@ -53,7 +53,8 @@ const Home: NextPage<IHomeProps> = ({ syllabiListings }) => {
     academic_field: "",
     academic_term: "",
     language: "",
-    tags: [],
+    tags_include: [],
+    tags_exclude: [],
   })
 
   const handleFilterChange = (filters : ISyllabiFilters) => {

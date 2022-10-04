@@ -19,6 +19,26 @@ export const getSyllabusCards = (
     if (filters.academic_level !== "" && item.academic_level?.toString() != filters.academic_level)
       return false
 
+    if(filters.tags_include.length != 0 && item !== undefined){
+      const tags = item.tags as string[]
+      let isIncluded = false
+      for (const t of tags) {
+        if(filters.tags_include.includes(t))
+          isIncluded = true
+      }
+
+      if(!isIncluded)
+        return false
+    }
+
+    if(filters.tags_exclude.length != 0 && item !== undefined){
+      const tags = item.tags as string[]
+      for (const t of tags) {
+        if(filters.tags_exclude.includes(t))
+          return false
+      }
+    }
+
     return true
   }
 
