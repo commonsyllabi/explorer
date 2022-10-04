@@ -1,11 +1,14 @@
+import React, { useEffect, useState } from "react";
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
+import { useRouter } from "next/router";
+import Link from "next/link";
 
 import GlobalNav from "components/GlobalNav";
-import FiltersBar from "components/FiltersBar";
 import TagsFiltersBar from "components/TagFiltersBar";
 
 import { getSyllabusCards } from "../components/utils/getSyllabusCards";
+import PaginationSection from "components/PaginationSection";
 
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -13,9 +16,10 @@ import Col from "react-bootstrap/Col";
 import { ISyllabus } from "types";
 import Favicons from "components/head/favicons";
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-  const url = new URL("syllabi/", apiUrl);
+  const page = query.page;
+  const url = new URL(`syllabi/?page=${page}`, apiUrl);
 
   const res = (await fetch(url).catch((err) => {
     console.log(`error fetching backend: ${err}`);
@@ -30,10 +34,13 @@ export const getServerSideProps: GetServerSideProps = async () => {
   if (!res.ok) {
     return {
       props: {
+        totalPages: 0,
+        totalSyllabi: 0,
         syllabiListings: [],
       },
     };
   }
+
   const payload = await res.json();
 
   console.log(`payload PAGES is: ${JSON.stringify(payload.pages)}`);
@@ -41,7 +48,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
   return {
     props: {
-      pages: payload.pages,
+      totalPages: payload.pages,
       totalSyllabi: payload.total,
       syllabiListings: payload.syllabi,
     },
@@ -49,16 +56,69 @@ export const getServerSideProps: GetServerSideProps = async () => {
 };
 
 interface IHomeProps {
-  pages: number;
+  totalPages: number;
   totalSyllabi: number;
   syllabiListings: ISyllabus[];
 }
 
 const Home: NextPage<IHomeProps> = ({
-  pages,
+  totalPages,
   totalSyllabi,
   syllabiListings,
 }) => {
+  const router = useRouter();
+
+  const pagginationHandler = (page: number) => {
+    // TODO: handle out of bounds page request
+    console.log(JSON.stringify(router.query));
+    const currentPath = router.query.pathname;
+    const currentQuery = {
+      page: page,
+    };
+    setActivePage(page);
+    router.push({
+      pathname: currentPath as string,
+      query: currentQuery,
+    });
+  };
+
+  const getCurrentPage = () => {
+    let currentPage = 0;
+    if (router.query.page) {
+      currentPage = parseInt(router.query.page);
+    }
+    return currentPage;
+  };
+
+  const [activePage, setActivePage] = useState(getCurrentPage());
+
+  const getPageContent = () => {
+    let pageContent = [];
+
+    if (activePage > totalPages || activePage < 1) {
+      pageContent.push(
+        <>
+          <h2 className="h3 mt-5">The requested page is out of bounds.</h2>
+          <Link href="">
+            <a
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                pagginationHandler(1);
+              }}
+            >
+              Go to main page
+            </a>
+          </Link>
+        </>
+      );
+    } else {
+      pageContent.push(getSyllabusCards(syllabiListings));
+    }
+
+    return pageContent;
+  };
+
   return (
     <>
       <Head>
@@ -79,11 +139,17 @@ const Home: NextPage<IHomeProps> = ({
             <TagsFiltersBar />
           </Col>
           <Col lg={8} className="pt-3 pb-5 d-flex flex-column gap-3">
-            {getSyllabusCards(syllabiListings)}
+            {getPageContent()}
           </Col>
         </Row>
         <Row>
-          Pages: {pages}; Total: {totalSyllabi}
+          TotalPages: {totalPages}; TotalSyllabi: {totalSyllabi}; CurrentPage :
+          {activePage}
+          <PaginationSection
+            totalPages={totalPages}
+            activePage={activePage}
+            handlePageChange={pagginationHandler}
+          />
         </Row>
       </Container>
     </>
