@@ -121,7 +121,7 @@ export const generateAcademicFieldsCheckboxes = (
 };
 
 
-export const isValidForm = (form: IFormData, attachments: IUploadAttachment[]) => {
+export const isValidForm = (form: IFormData, attachments: IUploadAttachment[], institution: IFormInstitution) => {
   const messages: string[] = []
 
   // requirements
@@ -169,12 +169,15 @@ export const isValidForm = (form: IFormData, attachments: IUploadAttachment[]) =
 
   }
 
-  // should we check that institution is not null? field names are:
-  // name
-  // country
-  // url
-  // year
-  // term
+  if (institution.name === "")
+    messages.push(`Check the institution name (${institution.name})`)
+
+  if (institution.country === "")
+    messages.push(`Check the institution country (${institution.country})`)
+
+  if (institution.date_year === "")
+    messages.push(`Check the institution year (${institution.date_year})`)
+
 
   return { errors: messages }
 }
@@ -183,7 +186,7 @@ export const submitForm = async (form: IFormData, endpoint: string, h: Headers):
 
   let body = new FormData();
   for (let [key, value] of Object.entries(form)) {
-    if(key == "tags")
+    if (key == "tags")
       for (const t of value) {
         body.append("tags[]", t as string)
       }
@@ -216,7 +219,7 @@ export const submitInstitution = (institution: IFormInstitution, endpoint: URL, 
     headers: h,
     body: i,
   })
-  
+
   return res
 }
 

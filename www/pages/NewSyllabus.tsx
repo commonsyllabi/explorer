@@ -138,9 +138,8 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     }
 
     // bootstrap also supports validation with form.checkValidity()
-    const validForm = isValidForm(formData, attachmentData)
+    const validForm = isValidForm(formData, attachmentData, institutionData)
     if (validForm.errors.length > 0) {
-      console.log(validForm.errors);
       setError(validForm.errors.join('\n'))
       return;
     }
