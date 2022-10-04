@@ -32,13 +32,12 @@ export const getServerSideProps: GetServerSideProps = async () => {
         syllabiListings: [],
       },
     };
-  } else {
   }
-  const syllabiListings = await res.json();
+  const payload = await res.json();
 
   return {
     props: {
-      syllabiListings: syllabiListings,
+      syllabiListings: payload.syllabi,
     },
   };
 };

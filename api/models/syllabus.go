@@ -143,6 +143,14 @@ func GetSyllabusBySlug(slug string, user_uuid uuid.UUID) (Syllabus, error) {
 	return syll, nil
 }
 
+// -- GetSyllabiCount returns the total number of listed syllabi, and the number of available pages
+func GetSyllabiCount() (int64, int, error) {
+	var syllabi []Syllabus
+	result := db.Where("status = 'listed'").Find(&syllabi)
+	pages := (int(result.RowsAffected) / PAGINATION_LIMIT) + 1
+	return result.RowsAffected, pages, result.Error
+}
+
 func GetSyllabi(params map[string]any, user_uuid uuid.UUID) ([]Syllabus, error) {
 	var syllabi []Syllabus
 
