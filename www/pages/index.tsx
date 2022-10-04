@@ -69,7 +69,6 @@ const Home: NextPage<IHomeProps> = ({
   const router = useRouter();
 
   const pagginationHandler = (page: number) => {
-    console.log(JSON.stringify(router.query));
     const currentPath = router.query.pathname;
     const currentQuery = {
       page: page,
@@ -82,11 +81,19 @@ const Home: NextPage<IHomeProps> = ({
   };
 
   const getCurrentPage = () => {
-    let currentPage = 0;
-    if (router.query.page) {
-      currentPage = parseInt(router.query.page);
+    const query = router.query;
+    if (query.page) {
+      const pageParams = query.page;
+      if (pageParams.length) {
+        //if multiple page params, return just the first
+        return parseInt(pageParams[0]);
+      } else {
+        //else if just one param, return that
+        return parseInt(pageParams as string);
+      }
     }
-    return currentPage;
+    //if no params return 0
+    return 0;
   };
 
   const [activePage, setActivePage] = useState(getCurrentPage());
