@@ -131,8 +131,15 @@
         - "politics"
         - "code"
         - "critical"
+      institutions:
+        - name: "NYU Abu Dhabi"
+          country: 12
+          url: "https://nyuad.nyu.edu"
+          date:
+            year: 2016
+            term: "fall"
+
     - uuid: '46de6a2b-666b-4c24-b1e1-3495821f8469'
-      
       title: "Augmenting the Gallery"
       status: "listed"
       description: "Wall labels, audio guides, and informative maps are just some of the ways by which galleries and museums convey information and hidden narratives about a collection. Given the changing role of museums and galleries in the 21st century, how can we utilize new tools such as Augmented Reality (AR) to design and deliver immersive experiences that breathe new life into an exhibit? How can such tools do so without distracting from the power and importance of a collection, or by purposefully challenging problematic aspects such as an exhibit’s disputed provenance or ethical concerns? And how can these tools make collections more accessible to a wider audience?\nThis course mobilizes resources from museography, art history, sociology, interaction design and 3D, real-time development to answer these questions. Topics covered include exhibition installation and curation, mixed reality production in Unity, and mobile development for Augmented Reality. The course is open to students from a variety of academic backgrounds interested in gaining hands-on experience in applying new technologies to exhibition spaces."
@@ -147,6 +154,14 @@
         - "museum studies"
         - "augmented reality"
         - "interactive media"
+      institutions:
+        - name: "NYU Berlin"
+          country: 12
+          url: "https://nyuad.nyu.edu"
+          date:
+            year: 2021
+            term: "fall"
+
     - uuid: '46de6a2b-666b-4c24-b1e1-3595821f8469'
       title: "Music Technology Fundamentals"
       status: "listed"
@@ -174,6 +189,14 @@
         - "Participation (30%)"
         - "Homework assignments (40%)"
         - "In-class tests (30%)"
+      institutions:
+        - name: "NYU Abu Dhabi"
+          country: 12
+          url: "https://nyuad.nyu.edu"
+          date:
+            year: 2020
+            term: "spring"
+
     - uuid: '46de6a2b-666b-4c24-b1e1-3695821f8469'
       title: "Yes Logo"
       status: "listed"
@@ -203,6 +226,14 @@
         - "Individual assignments (25%)"
         - "Final interview (15%)"
         - "Personal blog (20%)"
+      institutions:
+        - name: "NYU Abu Dhabi"
+          country: 12
+          url: "https://nyuad.nyu.edu"
+          date:
+            year: 2017
+            term: "summer"
+
     - uuid: '46de6a2b-666b-4c24-b1e1-3795821f8469'
       title: "Docu-Fiction Cinema"
       status: "listed"
@@ -229,6 +260,14 @@
         - "Film Exercises (20%)"
         - "Mid-Term Docu-Fiction Essay (20%)"
         - "Final Film (30%)"
+      institutions:
+        - name: "NYU Abu Dhabi"
+          country: 12
+          url: "https://nyuad.nyu.edu"
+          date:
+            year: 2020
+            term: "fall"
+
     - uuid: '46de6a2b-666b-4c24-b1e1-3895821f8469'
       title: "Paradise Lost: Muslims, Christians, and Jews in al-Andalus"
       status: "listed"
@@ -256,6 +295,14 @@
         - "First Analytical Essay (25%);"
         - "Second Analytical Essay (25%);"
         - "Research Paper (35%) (including final presentation)"
+      institutions:
+        - name: "NYU Abu Dhabi"
+          country: 12
+          url: "https://nyuad.nyu.edu"
+          date:
+            year: 2018
+            term: "fall"
+
     - uuid: '46de6a2b-666b-4c24-b1e1-3995821f8469'
       title: "Problems and Methods in Arab Crossroads Studies"
       status: "listed"
@@ -287,6 +334,14 @@
         - "Source-Critical Historical Analysis (20%);"
         - "Participant-Observation (20%);"
         - "Research Proposal (30%) (including final presentation)"
+      institutions:
+        - name: "NYU Abu Dhabi"
+          country: 12
+          url: "https://nyuad.nyu.edu"
+          date:
+            year: 2019
+            term: "fall"
+
     - uuid: '46de6a2b-666b-4c24-b1e1-4095821f8469'
       title: "Law in Entrepreneurship"
       status: "listed"
@@ -316,6 +371,14 @@
         - "three homework assignments (total of 45%, which is broken down in the Deliverables section below);"
         - "midterm examination or research paper (15%);"
         - "final examinations (25%)."
+      institutions:
+        - name: "NYU Abu Dhabi"
+          country: 12
+          url: "https://nyuad.nyu.edu"
+          date:
+            year: 2022
+            term: "spring"
+
     - uuid: '46de6a2b-666b-4c24-b1e1-4195821f8469'
       title: "Shared Worlds: The Interwoven Pasts of Spain and Morocco"
       status: "listed"
@@ -342,6 +405,14 @@
         - "response papers (20%)"
         - "first historiographic essay (30%)"
         - "trip journal/essay (35%)"
+      institutions:
+        - name: "NYU Abu Dhabi"
+          country: 12
+          url: "https://nyuad.nyu.edu"
+          date:
+            year: 2017
+            term: "fall"
+
     - uuid: '46de6a2b-666b-4c24-b1e1-4295821f8469'
       title: "Music, Electricity & Computation"
       status: "listed"
@@ -373,6 +444,14 @@
         - "project 2 (25%)"
         - "project 3 (25%)"
         - "homework (20%)"
+      institutions:
+        - name: "NYU Abu Dhabi"
+          country: 12
+          url: "https://nyuad.nyu.edu"
+          date:
+            year: 2021
+            term: "fall"
+
     - uuid: '46de6a2b-666b-4c24-b1e1-4395821f8469'
       title: "Sensors, Body and Motion"
       status: "listed"
@@ -405,6 +484,14 @@
         - "blog posts (20%)"
         - "midterm (interactive installation) (20%)"
         - "final (performance) (20%)"
+      institutions:
+        - name: "NYU Abu Dhabi"
+          country: 12
+          url: "https://nyuad.nyu.edu"
+          date:
+            year: 2020
+            term: "fall"
+
     - uuid: '46de6a2b-666b-4c24-b1e1-4495821f8469'
       title: "Dramatizing History"
       status: "listed"
@@ -431,6 +518,14 @@
         - "Workshop presentation (15%)"
         - "Journal presentation (15%"
         - "Final script (15%)"
+      institutions:
+        - name: "NYU Abu Dhabi"
+          country: 12
+          url: "https://nyuad.nyu.edu"
+          date:
+            year: 2021
+            term: "spring"
+
     - uuid: '46de6a2b-666b-4c24-b1e1-4595821f8469'
       title: "Mashups: Creating with Web APIs"
       status: "listed"
@@ -462,6 +557,13 @@
         - "20% Homework Assignments"
         - "30% Projects #1 & #2 (15% each)"
         - "25% Final Project"
+      institutions:
+        - name: "NYU Abu Dhabi"
+          country: 12
+          url: "https://nyuad.nyu.edu"
+          date:
+            year: 2017
+            term: "fall"
     - uuid: '46de6a2b-666b-4c24-b1e1-4695821f8469'
       title: "Projects in Painting 1: private theater, public meaning"
       status: "listed"
@@ -489,6 +591,14 @@
         - "Demonstrated comprehension of techniques from canvas and panel preparation to mixing and application of paint."
         - "Comprehension of ideas appropriate to painting. (Good “ideas” are not always good for painting.)"
         - "Comprehension of painting principles: Position/reposition, proximity, dark-light-middletone, closure, figure/ground relationships and an increased facility with brush work."
+      institutions:
+        - name: "NYU Abu Dhabi"
+          country: 12
+          url: "https://nyuad.nyu.edu"
+          date:
+            year: 2021
+            term: "fall"
+
     - uuid: '46de6a2b-666b-4c24-b1e1-4795821f8469'
       title: "Anthropology and the Arab World"
       status: "listed"
@@ -517,6 +627,14 @@
         - "Presentation"
         - "Evening Film Screening"
         - "Reading Responses"
+      institutions:
+        - name: "NYU Abu Dhabi"
+          country: 12
+          url: "https://nyuad.nyu.edu"
+          date:
+            year: 2020
+            term: "fall/spring"
+
     - uuid: '46de6a2b-666b-4c24-b1e1-4895821f8469'
       title: "Unmasking the Actor: Covering the face to liberate the body"
       status: "listed"
@@ -549,6 +667,14 @@
         - "Attentive listenting and involvement (25%)\nMost of the exercises require the attention of the spectator. The silent participation of students who are temporarily out of the work space can enrich a performance exercise. In group work, students will be asked to concentrate and remain present, and ready to collaborate. Distraction and carelessness can weaken a performance. Attentive listening and learning to give and receive constructive criticism are crucial traits of this class."
         - "Preparation (30%)\nStudents are expected to conduct research outside of class in order to generate original individual improvisation and creations. Their work must provide evidence that ample time was devoted to research and study, and applied to the practical exercises that will build their final projects.\nAt the end of each mask analysis - four in total - students are required to send an email to the instructor, reflecting upon class  experiences and participation in the work. At the end of Larval, Commedia and Clown sessions, students are expected to create a short scene/improvisation. This may take the form of a 3 to 5 minute original scene inspired by in-class improvisations."
         - "Progress (30%)\nOne third of the final grade is based on the student’s ability to understand and process new stimuli, ideas and working methods, and to progressively incorporate them in his/her practice as an actor. The ability to question their beliefs, not to remain anchored in previous habits and conventions, either physical and emotional, is taken into consideration here."
+      institutions:
+        - name: "NYU Abu Dhabi"
+          country: 12
+          url: "https://nyuad.nyu.edu"
+          date:
+            year: 2018
+            term: "winter"
+
     - uuid: '46de6a2b-666b-4c24-b1e1-4995821f8469'
       title: "A.rt I.ntel: Machine Learning for Artists"
       status: "listed"
@@ -583,6 +709,14 @@
         - "Documentation and Reading Responses: 20%"
         - "Exercises: 20%"
         - "Projects: 40%"
+      institutions:
+        - name: "NYU Abu Dhabi"
+          country: 12
+          url: "https://nyuad.nyu.edu"
+          date:
+            year: 2021
+            term: "spring"
+
     - uuid: '46de6a2b-666b-4c24-b1e1-5095821f8469'
       title: "Topics in the History of Philosophy"
       status: "listed"
@@ -615,6 +749,13 @@
         - "Essay #1 Epistemology/Metaphysics (35%)"
         - "Essay #2 Morals/Politics (35%)"
         - "Participation (10%)"
+      institutions:
+        - name: "NYU Abu Dhabi"
+          country: 12
+          url: "https://nyuad.nyu.edu"
+          date:
+            year: 2019
+            term: "spring"
 
     # - uuid: '46de6a2b-666b-4c24-b1e1-5895821f8469'
     #   title: ""
