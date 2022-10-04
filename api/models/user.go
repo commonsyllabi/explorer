@@ -57,7 +57,7 @@ func CreateUser(user *User) (User, error) {
 
 func GetUser(uuid uuid.UUID, user_uuid uuid.UUID) (User, error) {
 	var user User
-	err := db.Preload("Collections").Where("uuid = ?", uuid).First(&user).Error
+	err := db.Preload("Collections", "(status = 'listed' OR user_uuid = ?)", user_uuid).Where("uuid = ?", uuid).First(&user).Error
 	if err != nil {
 		return user, err
 	}

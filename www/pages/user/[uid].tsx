@@ -37,6 +37,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const res = await fetch(url);
   if (res.ok) {
     const userInfo = await res.json();
+    
     return {
       props: userInfo,
     };
