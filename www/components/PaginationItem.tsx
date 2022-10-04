@@ -15,7 +15,7 @@ const PaginationItem: React.FunctionComponent<IPaginationItemProps> = ({
     const t = event.target as HTMLInputElement;
     event.preventDefault();
     event.stopPropagation();
-    console.log(`TRYING TO GO TO PAGE ${t.id}`);
+    // console.log(`TRYING TO GO TO PAGE ${t.id}`);
     handlePageChange(parseInt(t.id));
   };
   if (isActive) {
@@ -25,7 +25,7 @@ const PaginationItem: React.FunctionComponent<IPaginationItemProps> = ({
           className="page-link"
           aria-label={`Current Page, Page ${pageNum}`}
           aria-current="true"
-          id={pageNum}
+          id={pageNum.toString()}
           onClick={getTargetPage}
           href="#"
         >
@@ -39,7 +39,7 @@ const PaginationItem: React.FunctionComponent<IPaginationItemProps> = ({
       <a
         className="page-link"
         aria-label={`Goto Page ${pageNum}`}
-        id={pageNum}
+        id={pageNum.toString()}
         onClick={getTargetPage}
         href="#"
       >

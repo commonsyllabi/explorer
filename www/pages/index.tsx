@@ -69,7 +69,6 @@ const Home: NextPage<IHomeProps> = ({
   const router = useRouter();
 
   const pagginationHandler = (page: number) => {
-    // TODO: handle out of bounds page request
     console.log(JSON.stringify(router.query));
     const currentPath = router.query.pathname;
     const currentQuery = {
@@ -115,7 +114,6 @@ const Home: NextPage<IHomeProps> = ({
     } else {
       pageContent.push(getSyllabusCards(syllabiListings));
     }
-
     return pageContent;
   };
 
@@ -143,8 +141,6 @@ const Home: NextPage<IHomeProps> = ({
           </Col>
         </Row>
         <Row>
-          TotalPages: {totalPages}; TotalSyllabi: {totalSyllabi}; CurrentPage :
-          {activePage}
           <PaginationSection
             totalPages={totalPages}
             activePage={activePage}
