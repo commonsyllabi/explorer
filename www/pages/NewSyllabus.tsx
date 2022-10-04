@@ -156,7 +156,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
       setError(validForm.errors.join('\n'))
       return;
     }
-    
+
     const postHeader = new Headers();
     postHeader.append("Authorization", `Bearer ${session.user.token}`);
 
@@ -174,24 +174,25 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     setSyllabusUUID(body.uuid);
 
     const instit_endpoint = new URL(`/syllabi/${body.uuid}/institutions`, props.apiUrl);
-    const ires = await submitInstitution(institutionData, instit_endpoint, postHeader)
-    if (ires.status === 200) {
-      setInstitutionCreated("created");
-    } else {
-      setInstitutionCreated("failed");
-    }
-
-    const attach_endpoint = new URL(`/attachments/?syllabus_id=${body.uuid}`, props.apiUrl);
-    console.log(`adding ${attachmentData.length} attachments`);
-    attachmentData.map((att) => {
-      submitAttachments(att, attach_endpoint, postHeader)
+    submitInstitution(institutionData, instit_endpoint, postHeader)
       .then(res => {
-        if (res.status === 201) {
-          setAttachmentsCreated("created");
+        if (res.status === 200) {
+          setInstitutionCreated("created");
         } else {
-          setAttachmentsCreated("failed");
+          setInstitutionCreated("failed");
         }
       })
+
+    const attach_endpoint = new URL(`/attachments/?syllabus_id=${body.uuid}`, props.apiUrl);
+    attachmentData.map((att) => {
+      submitAttachments(att, attach_endpoint, postHeader)
+        .then(res => {
+          if (res.status === 201) {
+            setAttachmentsCreated("created");
+          } else {
+            setAttachmentsCreated("failed");
+          }
+        })
     })
   };
 
