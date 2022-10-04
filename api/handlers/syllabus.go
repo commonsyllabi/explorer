@@ -16,8 +16,9 @@ import (
 )
 
 var (
-	minSyllabusTitleLength = 3
-	maxSyllabusTitleLength = 150
+	minSyllabusTitleLength       = 3
+	maxSyllabusTitleLength       = 150
+	minSyllabusDescriptionLength = 15
 )
 
 func GetSyllabi(c echo.Context) error {
@@ -404,7 +405,12 @@ func sanitizeSyllabusCreate(c echo.Context) error {
 	title := c.FormValue("title")
 	if len(title) < minSyllabusTitleLength ||
 		len(title) > maxSyllabusTitleLength {
-		return fmt.Errorf("the title must be between %d and %d characters: %d", minSyllabusTitleLength, maxSyllabusTitleLength, len(c.FormValue("title")))
+		return fmt.Errorf("the title must be between %d and %d characters: %d", minSyllabusTitleLength, maxSyllabusTitleLength, len(title))
+	}
+
+	description := c.FormValue("description")
+	if len(description) < minSyllabusDescriptionLength {
+		return fmt.Errorf("the description must be greater than %d characters: %d", minSyllabusDescriptionLength, len(description))
 	}
 
 	lang := c.FormValue("language")

@@ -258,6 +258,7 @@ func TestSyllabusHandler(t *testing.T) {
 	t.Run("Test create syllabus", func(t *testing.T) {
 		f := make(url.Values)
 		f.Set("title", "Test Syllabus Handling")
+		f.Set("description", "Lorem ipsum dolores sit amore.")
 		f.Set("language", "en")
 		f.Set("academic_level", "0")
 		f.Set("academic_fields[]", "300")
