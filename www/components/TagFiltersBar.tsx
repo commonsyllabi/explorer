@@ -13,7 +13,7 @@ const TagsFiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => 
   const [filters, setFilters] = React.useState<ISyllabiFilters>({
     academic_level: "",
     academic_field: "",
-    academic_term: "",
+    academic_year: "",
     language: "",
     tags_include: [],
     tags_exclude: [],
@@ -52,6 +52,13 @@ const TagsFiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => 
           <Form.Label className="small">Academic Year</Form.Label>
           <Form.Select id="academic_year" onChange={handleChange}>
             <option value="">All</option>
+            <option value="2016">2016</option>
+            <option value="2017">2017</option>
+            <option value="2018">2018</option>
+            <option value="2019">2019</option>
+            <option value="2020">2020</option>
+            <option value="2021">2021</option>
+            <option value="2022">2022</option>
           </Form.Select>
         </Form.Group>
       </div>

@@ -19,6 +19,9 @@ export const getSyllabusCards = (
     if (filters.academic_level !== "" && item.academic_level?.toString() != filters.academic_level)
       return false
 
+    if(filters.academic_year !== "" && item.institutions !== undefined && item.institutions[0].date.year != filters.academic_year)
+      return false
+
     if(filters.tags_include.length != 0 && item !== undefined){
       const tags = item.tags as string[]
       let isIncluded = false
