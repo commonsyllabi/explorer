@@ -101,3 +101,11 @@ export interface IUploadAttachment {
   url?: string;
   type?: string;
 }
+
+export interface ISyllabiFilters {
+  academic_level: string;
+  academic_field: string;
+  academic_term: string;
+  language: string;
+  tags: string[];
+}

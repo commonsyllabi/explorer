@@ -1,24 +1,48 @@
 import SyllabusCard from "components/SyllabusCard";
+import { useEffect, useState } from "react";
 
-import { ISyllabus } from "types";
+import { ISyllabiFilters, ISyllabus } from "types";
 
 export const getSyllabusCards = (
   syllabiArray: ISyllabus[] | undefined,
+  filters: ISyllabiFilters,
   userName?: string | "anonymous",
   isAdmin?: boolean
 ) => {
+  const [syllabiCards, setSyllabiCards] = useState<JSX.Element[]>()
+
   if (!syllabiArray || syllabiArray.length === 0) {
-    return null;
+    return;
   }
 
-  const syllabiCards = syllabiArray.map((item) => (
-    <SyllabusCard
-      key={item.uuid}
-      userName={userName}
-      props={item}
-      isAdmin={isAdmin ? isAdmin : false}
-    />
-  ));
+  const isShown = (filters: ISyllabiFilters, item: ISyllabus): boolean => {
+    if (filters.academic_level !== "" && item.academic_level?.toString() != filters.academic_level)
+      return false
 
-  return <div className="d-flex flex-column gap-3">{syllabiCards}</div>;
+    return true
+  }
+
+  useEffect(() => {
+    const sy = syllabiArray.filter(item => isShown(filters, item))
+    const sc = sy.map((item) => (
+      <SyllabusCard
+        key={item.uuid}
+        userName={userName}
+        props={item}
+        isAdmin={isAdmin ? isAdmin : false}
+      />
+    )
+    ) as JSX.Element[]
+
+    setSyllabiCards(sc)
+  }, [filters])
+
+
+  if (syllabiCards !== undefined && syllabiCards.length > 0)
+    return <div className="d-flex flex-column gap-3">{syllabiCards}</div>;
+  else
+    return <div className="d-flex flex-column gap-3">
+      <h1>Sorry!</h1>
+      <p>We couldn&apos;t find any syllabi matching your search filters.</p>
+    </div>;
 };

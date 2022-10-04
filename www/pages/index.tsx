@@ -9,8 +9,9 @@ import { getSyllabusCards } from "../components/utils/getSyllabusCards";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { ISyllabus } from "types";
+import { ISyllabiFilters, ISyllabus } from "types";
 import Favicons from "components/head/favicons";
+import { useState } from "react";
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -47,6 +48,18 @@ interface IHomeProps {
 }
 
 const Home: NextPage<IHomeProps> = ({ syllabiListings }) => {
+  const [filters, setFilters] = useState<ISyllabiFilters>({
+    academic_level: "",
+    academic_field: "",
+    academic_term: "",
+    language: "",
+    tags: [],
+  })
+
+  const handleFilterChange = (filters : ISyllabiFilters) => {
+    setFilters(filters)
+  }
+
   return (
     <>
       <Head>
@@ -64,10 +77,10 @@ const Home: NextPage<IHomeProps> = ({ syllabiListings }) => {
       <Container>
         <Row className="d-flex flex-row-reverse">
           <Col lg={4} className="pb-3 border-bottom border-lg-bottom-0">
-            <TagsFiltersBar />
+            <TagsFiltersBar updateFilters={handleFilterChange}/>
           </Col>
           <Col lg={8} className="pt-3 pb-5 d-flex flex-column gap-3">
-            {getSyllabusCards(syllabiListings)}
+            {getSyllabusCards(syllabiListings, filters)}
           </Col>
         </Row>
       </Container>

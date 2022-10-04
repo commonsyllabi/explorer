@@ -3,15 +3,39 @@ import { Container } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
+import { ISyllabiFilters } from "../types"
 
-const TagsFiltersBar: React.FunctionComponent = () => {
+interface syllabiFiltersProps {
+  updateFilters: (filters: ISyllabiFilters) => void
+}
+
+const TagsFiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => {
+  const [filters, setFilters] = React.useState<ISyllabiFilters>({
+    academic_level: "",
+    academic_field: "",
+    academic_term: "",
+    language: "",
+    tags: [],
+  })
+
+  React.useEffect(() => {
+    props.updateFilters(filters)
+  }, [filters])
+
+  const handleChange = (event: React.SyntheticEvent) => {
+    const t = event.target as HTMLInputElement
+    setFilters({ ...filters, [t.id]: t.value })
+  }
+
   return (
     <Container className="py-3 d-flex flex-column gap-3">
       {/* FILTER BY ACAD LEVEL */}
       <div>
         <Form.Group>
           <Form.Label className="small">Academic Level</Form.Label>
-          <Form.Select id="academic_level_filter">
+          <Form.Select
+            id="academic_level"
+            onChange={handleChange}>
             <option value="all">All</option>
             <option value="0">Other</option>
             <option value="1">Bachelor</option>
@@ -24,9 +48,9 @@ const TagsFiltersBar: React.FunctionComponent = () => {
       {/* FILTER BY ACADEMIC TERM */}
       <div>
         <Form.Group>
-          <Form.Label className="small">Academic Term</Form.Label>
-          <Form.Select id="academic_term_filter">
-            <option value="all">All</option>
+          <Form.Label className="small">Academic Year</Form.Label>
+          <Form.Select id="academic_year" onChange={handleChange}>
+            <option value="">All</option>
           </Form.Select>
         </Form.Group>
       </div>
@@ -35,8 +59,8 @@ const TagsFiltersBar: React.FunctionComponent = () => {
       <div>
         <Form.Group>
           <Form.Label className="small">Academic Field</Form.Label>
-          <Form.Select id="academic_field_filter">
-            <option value="all">All</option>
+          <Form.Select id="academic_field" onChange={handleChange}>
+            <option value="">All</option>
           </Form.Select>
         </Form.Group>
       </div>
@@ -45,20 +69,12 @@ const TagsFiltersBar: React.FunctionComponent = () => {
       <div>
         <Form.Group>
           <Form.Label className="small">Language / Region</Form.Label>
-          <Form.Check
-            type="radio"
-            label="lang1"
-            id="lang1"
-            name="languageFilter"
-            defaultChecked={true}
-          />
-          <Form.Check
-            type="radio"
-            label="lang2"
-            id="lang2"
-            name="languageFilter"
-            defaultChecked={false}
-          />
+          <Form.Select id="language" onChange={handleChange}>
+            <option value="">All</option>
+            <option value="en">English</option>
+            <option value="fr">French</option>
+            <option value="de">German</option>
+          </Form.Select>
         </Form.Group>
       </div>
 
