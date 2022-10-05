@@ -105,7 +105,7 @@ export interface IUploadAttachment {
 export interface ISyllabiFilters {
   academic_level: string;
   academic_field: string;
-  academic_term: string;
+  academic_year: string;
   language: string;
   tags_include: string[];
   tags_exclude: string[];

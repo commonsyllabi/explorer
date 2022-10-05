@@ -37,7 +37,7 @@ const TagsFiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => 
           <Form.Select
             id="academic_level"
             onChange={handleChange}>
-            <option value="all">All</option>
+            <option value="">All</option>
             <option value="0">Other</option>
             <option value="1">Bachelor</option>
             <option value="2">Master</option>
