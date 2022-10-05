@@ -110,3 +110,12 @@ export interface ISyllabiFilters {
   tags_include: string[];
   tags_exclude: string[];
 }
+
+export interface IMetaInformation {
+  total_pages: number,
+  total_syllabi: number,
+  languages: string[],
+  academic_fields: string[],
+  academic_levels: string[],
+  academic_years: string[],
+}

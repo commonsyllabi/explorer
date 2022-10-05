@@ -3,10 +3,11 @@ import { Container } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
-import { ISyllabiFilters } from "../types"
+import { ISyllabiFilters, IMetaInformation } from "../types"
 
 interface syllabiFiltersProps {
-  updateFilters: (filters: ISyllabiFilters) => void
+  updateFilters: (filters: ISyllabiFilters) => void;
+  meta: IMetaInformation
 }
 
 const TagsFiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => {
@@ -22,6 +23,8 @@ const TagsFiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => 
   React.useEffect(() => {
     props.updateFilters(filters)
   }, [filters])
+
+  //-- todo : generate the options dropdown html given the meta props (might be annoying to deal with fields and levels)
 
   const handleChange = (event: React.SyntheticEvent) => {
     const t = event.target as HTMLInputElement

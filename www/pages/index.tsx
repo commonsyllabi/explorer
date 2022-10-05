@@ -13,7 +13,7 @@ import PaginationSection from "components/PaginationSection";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { ISyllabiFilters, ISyllabus } from "types";
+import { IMetaInformation, ISyllabiFilters, ISyllabus } from "types";
 import Favicons from "components/head/favicons";
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
@@ -43,27 +43,23 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
   const payload = await res.json();
 
-  console.log(`payload PAGES is: ${JSON.stringify(payload.pages)}`);
-  console.log(`payload TOTAL is: ${JSON.stringify(payload.total)}`);
+  console.log(`payload meta is: ${JSON.stringify(payload.meta)}`);
 
   return {
     props: {
-      totalPages: payload.pages,
-      totalSyllabi: payload.total,
+      meta: payload.meta,
       syllabiListings: payload.syllabi,
     },
   };
 };
 
 interface IHomeProps {
-  totalPages: number;
-  totalSyllabi: number;
+  meta: IMetaInformation;
   syllabiListings: ISyllabus[];
 }
 
 const Home: NextPage<IHomeProps> = ({
-  totalPages,
-  totalSyllabi,
+  meta,
   syllabiListings,
 }) => {
   const router = useRouter();
@@ -101,7 +97,7 @@ const Home: NextPage<IHomeProps> = ({
   const getPageContent = () => {
     let pageContent = [];
 
-    if (activePage > totalPages || activePage < 1) {
+    if (activePage > meta["total_pages"] || activePage < 1) {
       pageContent.push(
         <>
           <h2 className="h3 mt-5">The requested page is out of bounds.</h2>
@@ -154,7 +150,7 @@ const Home: NextPage<IHomeProps> = ({
       <Container>
         <Row className="d-flex flex-row-reverse">
           <Col lg={4} className="pb-3 border-bottom border-lg-bottom-0">
-            <TagsFiltersBar updateFilters={handleFilterChange}/>
+            <TagsFiltersBar updateFilters={handleFilterChange} meta={meta}/>
           </Col>
           <Col lg={8} className="pt-3 pb-5 d-flex flex-column gap-3">
             {getPageContent()}
@@ -162,7 +158,7 @@ const Home: NextPage<IHomeProps> = ({
         </Row>
         <Row>
           <PaginationSection
-            totalPages={totalPages}
+            totalPages={meta["total_pages"]}
             activePage={activePage}
             handlePageChange={pagginationHandler}
           />

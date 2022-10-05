@@ -143,12 +143,74 @@ func GetSyllabusBySlug(slug string, user_uuid uuid.UUID) (Syllabus, error) {
 	return syll, nil
 }
 
-// -- GetSyllabiCount returns the total number of listed syllabi, and the number of available pages
-func GetSyllabiCount() (int64, int, error) {
+// -- GetSyllabiFilters returns the total number of listed syllabi, and the number of available pages
+// -- along with necessary filter params to further query
+func GetSyllabiFilters() (map[string]interface{}, error) {
+	var filters = make(map[string]interface{})
+
+	// select distinct from
 	var syllabi []Syllabus
-	result := db.Where("status = 'listed'").Find(&syllabi)
-	pages := (int(result.RowsAffected) / PAGINATION_LIMIT) + 1
-	return result.RowsAffected, pages, result.Error
+	res := db.Where("status = 'listed'").Find(&syllabi)
+	if res.Error != nil {
+		return filters, res.Error
+	}
+	total_syllabi := int(res.RowsAffected)
+	pages := (total_syllabi / PAGINATION_LIMIT) + 1
+
+	var languages []string
+	res = db.Model(Syllabus{}).Distinct("language").Find(&languages)
+	if res.Error != nil {
+		return filters, res.Error
+	}
+
+	var levels []string
+	res = db.Model(Syllabus{}).Distinct("academic_level").Find(&levels)
+	if res.Error != nil {
+		return filters, res.Error
+	}
+
+	var rawFields []string
+	res = db.Model(Syllabus{}).Distinct("academic_fields").Find(&rawFields)
+	if res.Error != nil {
+		return filters, res.Error
+	}
+
+	// todo: isn't this slow af?
+	var fields []string
+	for _, f := range rawFields {
+		// cleanup string into slice
+		f = f[1 : len(f)-1]
+		fs := strings.Split(f, ",")
+
+		// append if not present
+		for _, s := range fs {
+			isPresent := false
+			for _, field := range fields {
+				if s == field {
+					isPresent = true
+				}
+			}
+
+			if !isPresent {
+				fields = append(fields, s)
+			}
+		}
+	}
+
+	var years []string
+	res = db.Model(Institution{}).Distinct("date_year").Find(&years)
+	if res.Error != nil {
+		return filters, res.Error
+	}
+
+	filters["total_syllabi"] = total_syllabi
+	filters["total_pages"] = pages
+	filters["languages"] = languages
+	filters["academic_levels"] = levels
+	filters["academic_fields"] = fields
+	filters["academic_years"] = years
+
+	return filters, nil
 }
 
 func GetSyllabi(params map[string]any, user_uuid uuid.UUID) ([]Syllabus, error) {
