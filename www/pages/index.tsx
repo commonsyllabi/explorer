@@ -43,7 +43,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
   const payload = await res.json();
 
-  console.log(`payload meta is: ${JSON.stringify(payload.meta)}`);
+  // console.log(`payload meta is: ${JSON.stringify(payload.meta)}`);
 
   return {
     props: {

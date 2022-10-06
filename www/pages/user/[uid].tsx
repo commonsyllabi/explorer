@@ -62,6 +62,15 @@ const About: NextPage<IUser> = (props) => {
     )
   }
 
+  const default_filters = {
+    academic_level: "",
+    academic_field: "",
+    academic_year: "",
+    language: "",
+    tags_include: [],
+    tags_exclude: [],
+  }
+
   const checkIfAdmin = () => {
     if (session != null && session.user != null) {
       const loggedInId = session.user._id;
@@ -183,6 +192,7 @@ const About: NextPage<IUser> = (props) => {
                   <div id="syllabi">
                     {getSyllabusCards(
                       filteredSyllabi(),
+                      default_filters,
                       props.name,
                       checkIfAdmin()
                     )}
