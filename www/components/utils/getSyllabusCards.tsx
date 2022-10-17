@@ -5,11 +5,13 @@ import { ISyllabiFilters, ISyllabus } from "types";
 
 export const getSyllabusCards = (
   syllabiArray: ISyllabus[] | undefined,
+
   filters: ISyllabiFilters,
   userName?: string | "anonymous",
   isAdmin?: boolean
 ) => {
-  const [syllabiCards, setSyllabiCards] = useState<JSX.Element[]>();
+  // const [syllabiCards, setSyllabiCards] = useState<JSX.Element[]>()
+  let syllabiCards;
 
   if (!syllabiArray || syllabiArray.length === 0) {
     return;
@@ -19,6 +21,15 @@ export const getSyllabusCards = (
     if (
       filters.academic_level !== "" &&
       item.academic_level?.toString() != filters.academic_level
+    )
+      return false;
+
+    if (filters.language !== "" && item.language != filters.language)
+      return false;
+
+    if (
+      filters.academic_field !== "" &&
+      !item.academic_fields?.includes(parseInt(filters.academic_field))
     )
       return false;
 
@@ -49,19 +60,19 @@ export const getSyllabusCards = (
     return true;
   };
 
-  useEffect(() => {
-    const sy = syllabiArray.filter((item) => isShown(filters, item));
-    const sc = sy.map((item) => (
-      <SyllabusCard
-        key={item.uuid}
-        userName={userName}
-        props={item}
-        isAdmin={isAdmin ? isAdmin : false}
-      />
-    )) as JSX.Element[];
+  // useEffect(() => {
+  const sy = syllabiArray.filter((item) => isShown(filters, item));
+  const sc = sy.map((item) => (
+    <SyllabusCard
+      key={item.uuid}
+      userName={userName}
+      props={item}
+      isAdmin={isAdmin ? isAdmin : false}
+    />
+  )) as JSX.Element[];
 
-    setSyllabiCards(sc);
-  }, [filters]);
+  syllabiCards = sc;
+  // }, [filters])
 
   if (syllabiCards !== undefined && syllabiCards.length > 0)
     return <div className="d-flex flex-column gap-3">{syllabiCards}</div>;

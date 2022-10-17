@@ -3,10 +3,12 @@ import { Container } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
-import { ISyllabiFilters } from "../types"
+import { ISyllabiFilters, IMetaInformation } from "../types"
+import { getFieldsFilters, getLanguagesFilters, getLevelsFilters, getYearsFilters } from "./utils/getSearchFilters";
 
 interface syllabiFiltersProps {
-  updateFilters: (filters: ISyllabiFilters) => void
+  updateFilters: (filters: ISyllabiFilters) => void;
+  meta: IMetaInformation
 }
 
 const TagsFiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => {
@@ -23,8 +25,11 @@ const TagsFiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => 
     props.updateFilters(filters)
   }, [filters])
 
+  //-- todo : generate the options dropdown html given the meta props (might be annoying to deal with fields and levels)
+  
+
   const handleChange = (event: React.SyntheticEvent) => {
-    const t = event.target as HTMLInputElement
+    const t = event.target as HTMLInputElement    
     setFilters({ ...filters, [t.id]: t.value })
   }
 
@@ -37,11 +42,8 @@ const TagsFiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => 
           <Form.Select
             id="academic_level"
             onChange={handleChange}>
-            <option value="all">All</option>
-            <option value="0">Other</option>
-            <option value="1">Bachelor</option>
-            <option value="2">Master</option>
-            <option value="3">Doctoral</option>
+            <option value="">All</option>
+            {getLevelsFilters(props.meta.academic_levels)}
           </Form.Select>
         </Form.Group>
       </div>
@@ -52,13 +54,7 @@ const TagsFiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => 
           <Form.Label className="small">Academic Year</Form.Label>
           <Form.Select id="academic_year" onChange={handleChange}>
             <option value="">All</option>
-            <option value="2016">2016</option>
-            <option value="2017">2017</option>
-            <option value="2018">2018</option>
-            <option value="2019">2019</option>
-            <option value="2020">2020</option>
-            <option value="2021">2021</option>
-            <option value="2022">2022</option>
+            {getYearsFilters(props.meta.academic_years)}
           </Form.Select>
         </Form.Group>
       </div>
@@ -69,6 +65,7 @@ const TagsFiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => 
           <Form.Label className="small">Academic Field</Form.Label>
           <Form.Select id="academic_field" onChange={handleChange}>
             <option value="">All</option>
+            {getFieldsFilters(props.meta.academic_fields)}
           </Form.Select>
         </Form.Group>
       </div>
@@ -79,9 +76,7 @@ const TagsFiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => 
           <Form.Label className="small">Language / Region</Form.Label>
           <Form.Select id="language" onChange={handleChange}>
             <option value="">All</option>
-            <option value="en">English</option>
-            <option value="fr">French</option>
-            <option value="de">German</option>
+            {getLanguagesFilters(props.meta.languages)}
           </Form.Select>
         </Form.Group>
       </div>

@@ -49,6 +49,15 @@ interface ICollectionProps {
 
 const Collection: NextPage<ICollectionProps> = (props) => {
 
+  const default_filters = {
+    academic_level: "",
+    academic_field: "",
+    academic_year: "",
+    language: "",
+    tags_include: [],
+    tags_exclude: [],
+  }
+
   if (Object.keys(props).length === 0) {
     return (
      <NotFound/>
@@ -84,7 +93,7 @@ const Collection: NextPage<ICollectionProps> = (props) => {
             </p>
           )}
         </Row>
-        <Row className="gap-3 pb-5">{getSyllabusCards(props.syllabi, props.user.name)}</Row>
+        <Row className="gap-3 pb-5">{getSyllabusCards(props.syllabi, default_filters, props.user.name)}</Row>
       </Container>
     </>
   );

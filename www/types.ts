@@ -46,7 +46,8 @@ export interface ISyllabus {
   course_number?: string;
   created_at: string;
   institutions?: IInstitution[];
-  academic_fields?: number[];
+  language: string;
+  academic_fields: number[];
   academic_level?: number;
   user_uuid: string;
   user: IUser;
@@ -105,8 +106,17 @@ export interface IUploadAttachment {
 export interface ISyllabiFilters {
   academic_level: string;
   academic_field: string;
-  academic_term: string;
+  academic_year: string;
   language: string;
   tags_include: string[];
   tags_exclude: string[];
+}
+
+export interface IMetaInformation {
+  total_pages: number,
+  total_syllabi: number,
+  languages: string[],
+  academic_fields: string[],
+  academic_levels: string[],
+  academic_years: string[],
 }
