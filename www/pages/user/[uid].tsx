@@ -37,6 +37,18 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const res = await fetch(url);
   if (res.ok) {
     const userInfo = await res.json();
+    let full_syllabi = []
+    for (const syll of userInfo.syllabi) {
+      const r = await fetch(new URL(`syllabi/${syll.uuid}`, apiUrl))
+      if(r.ok){
+        const s = await r.json()
+        full_syllabi.push(s)
+      }else{
+        console.log('could not get syllabus', r.status);
+      }
+    }
+
+    userInfo.syllabi = full_syllabi
     
     return {
       props: userInfo,
