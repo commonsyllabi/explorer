@@ -37,7 +37,19 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const res = await fetch(url);
   if (res.ok) {
     const userInfo = await res.json();
-    
+    let full_syllabi = []
+    for (const syll of userInfo.syllabi) {
+      const r = await fetch(new URL(`syllabi/${syll.uuid}`, apiUrl))
+      if (r.ok) {
+        const s = await r.json()
+        full_syllabi.push(s)
+      } else {
+        console.log('could not get syllabus', r.status);
+      }
+    }
+
+    userInfo.syllabi = full_syllabi
+
     return {
       props: userInfo,
     };
@@ -107,8 +119,8 @@ const About: NextPage<IUser> = (props) => {
     if (syllFilter.length > 0) {
       const results = props.syllabi.filter((item) => {
         return (
-          item.title.includes(syllFilter) ||
-          item.description.includes(syllFilter)
+          item.title.toLowerCase().includes(syllFilter.toLowerCase()) ||
+          item.description.toLowerCase().includes(syllFilter.toLowerCase())
         );
       });
       return results;
@@ -122,11 +134,11 @@ const About: NextPage<IUser> = (props) => {
     }
     if (collFilter.length > 0) {
       const results = props.collections.filter((item) => {
-        if (item.name.includes(collFilter)) {
+        if (item.name.toLowerCase().includes(collFilter.toLowerCase())) {
           return true;
         }
         if (item.description) {
-          if (item.description.includes(collFilter)) {
+          if (item.description.toLowerCase().includes(collFilter.toLowerCase())) {
             return true;
           }
         }
@@ -175,18 +187,24 @@ const About: NextPage<IUser> = (props) => {
                           id="syllFilter"
                           type="Filter"
                           className="form-control"
-                          placeholder="Filter..."
+                          placeholder="Search syllabi..."
                           aria-label="Filter"
                           value={syllFilter}
                           onChange={handleFilterChange}
                         />
                       </Form>
 
-                      <Link href="/NewSyllabus">
-                        <Button variant="primary" aria-label="New Syllabus">
-                          + New
-                        </Button>
-                      </Link>
+                      {/* Only allow new syllabus to be created if one is one their own page */}
+                      {checkIfAdmin() ? (
+                        <Link href="/NewSyllabus">
+                          <Button variant="primary" aria-label="New Syllabus">
+                            + New Syllabus
+                          </Button>
+                        </Link>
+                      ) : (
+                        <></>
+                      )}
+
                     </div>
                   </div>
                   <div id="syllabi">

@@ -34,7 +34,7 @@ const SyllabusSchoolCodeYear: React.FunctionComponent<
         <p className="small">{courseNumber}</p>
       ) : (
         <p className="small text-muted">
-          <em>course code</em>
+          <em>no course code</em>
         </p>
       )}
 
