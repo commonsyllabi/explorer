@@ -41,6 +41,9 @@ const SignIn: NextPage<IAuthProps> = (props) => {
   const [error, setError] = useState("");
   const [isCreated, setCreated] = useState(false);
 
+  const [loginUsername, setLoginUsername] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+
   const [signupName, setSignupName] = useState("");
   const [signupEmail, setSignupEmail] = useState("");
   const [signupEmailConf, setSignupEmailConf] = useState("");
@@ -51,13 +54,10 @@ const SignIn: NextPage<IAuthProps> = (props) => {
     e.preventDefault();
     e.stopPropagation();
 
-    const t = e.target as HTMLInputElement;
-    const u = t.children[0].children[1] as HTMLInputElement;
-    const p = t.children[1].children[1] as HTMLInputElement;
     console.warn("Sanitize the input!");
     signIn("credentials", {
-      username: u.value,
-      password: p.value,
+      username: loginUsername,
+      password: loginPassword,
       redirect: false,
     }).then((result) => {
       if (!result || result.error)
@@ -117,6 +117,16 @@ const SignIn: NextPage<IAuthProps> = (props) => {
       .catch((err) => {
         console.error(err);
       });
+  };
+
+  const handleLoginUsername = (e: React.BaseSyntheticEvent) => {
+    const v = e.target.value as string;
+    setLoginUsername(v);
+  };
+
+  const handleLoginPassword = (e: React.BaseSyntheticEvent) => {
+    const v = e.target.value as string;
+    setLoginPassword(v);
   };
 
   const handleSignupName = (e: React.BaseSyntheticEvent) => {
@@ -207,6 +217,7 @@ const SignIn: NextPage<IAuthProps> = (props) => {
                           type="email"
                           placeholder="Enter email"
                           data-cy="Login-email"
+                          onChange={handleLoginUsername}
                         />
                         <Form.Text className="text-muted">
                           We&#39;ll never share your email with anyone else.
@@ -224,6 +235,7 @@ const SignIn: NextPage<IAuthProps> = (props) => {
                           type="password"
                           placeholder="Password"
                           data-cy="Login-password"
+                          onChange={handleLoginPassword}
                         />
                       </Form.Group>
 
