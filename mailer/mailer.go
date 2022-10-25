@@ -54,7 +54,7 @@ func (c DeletionPayload) Data() interface{} {
 }
 
 func loadTemplate(_name string, _data interface{}) (string, error) {
-	p := filepath.Join("./templates", fmt.Sprintf("%s.tmpl", _name))
+	p := filepath.Join("./api/templates", fmt.Sprintf("%s.tmpl", _name))
 	t, err := template.ParseFiles(p)
 
 	if err != nil {
