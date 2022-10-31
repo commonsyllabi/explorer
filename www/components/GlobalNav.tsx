@@ -85,7 +85,7 @@ const GlobalNav: React.FunctionComponent = () => {
           <Navbar.Collapse id="basic-navbar-nav" className="flex-row-reverse">
             <Nav className="float-end">
               <Nav.Link
-                href="/auth/signin"
+                href="/NewSyllabus"
                 className="py-3 text-end"
                 data-cy="newSyllabusLink"
               >
