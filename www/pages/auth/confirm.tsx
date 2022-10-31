@@ -50,8 +50,8 @@ const Confirm: NextPage<IConfirmProps> = (props) => {
   return (
     <>
       <Head>
-        <title>Sign In: Syllabi Explorer</title>
-        <meta name="description" content="Sign in to Syllabi Explorer" />
+        <title>Sign In: Cosyll</title>
+        <meta name="description" content="Sign in to Cosyll" />
         <Favicons />
       </Head>
       <Container fluid>

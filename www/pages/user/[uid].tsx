@@ -155,7 +155,7 @@ const About: NextPage<IUser> = (props) => {
         <title>{props.name}</title>
         <meta
           name="description"
-          content={`${props.name} shares and collects syllabi on Syllabi Explorer.`}
+          content={`${props.name} shares and collects syllabi on Cosyll.`}
         />
         <Favicons />
       </Head>

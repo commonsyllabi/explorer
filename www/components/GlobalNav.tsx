@@ -19,7 +19,7 @@ const GlobalNav: React.FunctionComponent = () => {
         className="d-flex justify-content-md-between border-bottom"
       >
         <Container>
-          <Navbar.Brand href="/">Syllabi Explorer</Navbar.Brand>
+          <Navbar.Brand href="/">Cosyll</Navbar.Brand>
           <Navbar.Toggle aria-controls="global-nav" />
         </Container>
         <Container>
@@ -78,7 +78,7 @@ const GlobalNav: React.FunctionComponent = () => {
         className="d-flex justify-content-md-between border-bottom"
       >
         <Container>
-          <Navbar.Brand href="/">Syllabi Explorer</Navbar.Brand>
+          <Navbar.Brand href="/">Cosyll</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
         </Container>
         <Container>
