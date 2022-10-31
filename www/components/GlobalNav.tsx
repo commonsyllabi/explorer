@@ -14,7 +14,8 @@ const GlobalNav: React.FunctionComponent = () => {
   if (status === "authenticated") {
     return (
       <Navbar
-        bg="light"
+        bg="dark"
+        variant="dark"
         expand="lg"
         className="d-flex justify-content-md-between border-bottom"
       >
@@ -73,7 +74,8 @@ const GlobalNav: React.FunctionComponent = () => {
   } else {
     return (
       <Navbar
-        bg="light"
+        bg="dark"
+        variant="dark"
         expand="lg"
         className="d-flex justify-content-md-between border-bottom"
       >
