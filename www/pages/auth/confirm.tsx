@@ -54,7 +54,7 @@ const Confirm: NextPage<IConfirmProps> = (props) => {
         <meta name="description" content="Sign in to Cosyll" />
         <Favicons />
       </Head>
-      <Container fluid>
+      <Container fluid id="header-section" className="sticky-top">
         <GlobalNav />
       </Container>
       <Container>

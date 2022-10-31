@@ -22,7 +22,10 @@ import Favicons from "components/head/favicons";
 
 export const getStaticProps: GetStaticProps = async () => {
   const states = ["Login", "Sign up"];
-  const apiUrl = process.env.NODE_ENV == 'test' ? 'http://backend_explorer:3046/' : process.env.NEXT_PUBLIC_API_URL;
+  const apiUrl =
+    process.env.NODE_ENV == "test"
+      ? "http://backend_explorer:3046/"
+      : process.env.NEXT_PUBLIC_API_URL;
   return {
     props: { apiUrl: apiUrl, states: states },
   };
@@ -164,7 +167,7 @@ const SignIn: NextPage<IAuthProps> = (props) => {
           <Favicons />
         </Head>
 
-        <Container fluid>
+        <Container fluid id="header-section" className="sticky-top">
           <GlobalNav />
         </Container>
         <Container>
@@ -197,7 +200,7 @@ const SignIn: NextPage<IAuthProps> = (props) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Container fluid>
+      <Container fluid id="header-section" className="sticky-top">
         <GlobalNav />
       </Container>
       <Container>
