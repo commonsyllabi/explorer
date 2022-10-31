@@ -136,7 +136,7 @@ const Home: NextPage<IHomeProps> = ({
   return (
     <>
       <Head>
-        <title>Syllabi Explorer</title>
+        <title>Cosyll</title>
         <meta
           name="description"
           content="Share and browse syllabi and course materials."

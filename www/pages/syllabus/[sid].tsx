@@ -63,7 +63,7 @@ const Syllabus: NextPage<ISyllabus> = (props) => {
         <title>{props.title}</title>
         <meta
           name="description"
-          content={`${props.title} by ${props.user.name} on Syllabi Explorer| ${props.description}`}
+          content={`${props.title} by ${props.user.name} on Cosyll| ${props.description}`}
         />
         <Favicons />
       </Head>

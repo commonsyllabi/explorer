@@ -159,8 +159,8 @@ const SignIn: NextPage<IAuthProps> = (props) => {
     return (
       <>
         <Head>
-          <title>Sign In: Syllabi Explorer</title>
-          <meta name="description" content="Sign in to Syllabi Explorer" />
+          <title>Sign In: Cosyll</title>
+          <meta name="description" content="Sign in to Cosyll" />
           <Favicons />
         </Head>
 
@@ -192,8 +192,8 @@ const SignIn: NextPage<IAuthProps> = (props) => {
   return (
     <>
       <Head>
-        <title>Sign In: Syllabi Explorer</title>
-        <meta name="description" content="Sign in to Syllabi Explorer" />
+        <title>Sign In: Cosyll</title>
+        <meta name="description" content="Sign in to Cosyll" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
