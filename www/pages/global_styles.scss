@@ -71,6 +71,11 @@ $dark: rgb(22, 22, 22);
   padding-left: 0;
   padding-right: 0;
 }
+.nav-tagline {
+  font-weight: 200;
+  color: $secondary;
+  padding-left: 1rem;
+}
 
 #footer {
   p {
