@@ -8,7 +8,7 @@ $secondary: #8d9297;
 $success: #408558;
 $info: #c7c8c9;
 $warning: #f7c244;
-$danger: #ac272d;
+$danger: #cb444a;
 $light: #f8f9fa;
 $dark: #222529;
 
@@ -22,7 +22,8 @@ $theme-colors: (
   "light": $light,
   "dark": $dark,
 );
-@import "~bootstrap/scss/bootstrap.scss";
+
+@import "bootstrap/scss/bootstrap.scss";
 
 // Responsive borders
 @each $breakpoint in map-keys($grid-breakpoints) {
