@@ -38,9 +38,9 @@ const About: NextPage = () => {
             Cosyll is first and foremost for educators, by educators. Whether to
             have a convenient place to publish your classes, to see how a
             similar class is being taught at another university, in another
-            country, or to find inspiration in your peers' works, Cosyll focuses
-            on exchange between teachers. In this spirit, we encourage the
-            sharing of documents one doesn't always easily find online:
+            country, or to find inspiration in your peers&apos; works, Cosyll
+            focuses on exchange between teachers. In this spirit, we encourage
+            the sharing of documents one doesn&apos;t always easily find online:
             schedules, assignments descriptions, works cited and referenced,
             class wikis, etc.
           </p>
@@ -48,15 +48,16 @@ const About: NextPage = () => {
             <b>Want to get involved?</b>
           </p>
           <p>
-            To get started, you can get a feeling for Cosyll's collection by
-            browsing the <a href="/">home page</a>. If you decide to contribute
-            yourself, start by <a href="/auth/signin">creating an account</a>,
-            and then <a href="/NewSyllabus">add your first syllabus</a>.
+            To get started, you can get a feeling for Cosyll&apos;s collection
+            by browsing the <a href="/">home page</a>. If you decide to
+            contribute yourself, start by{" "}
+            <a href="/auth/signin">creating an account</a>, and then{" "}
+            <a href="/NewSyllabus">add your first syllabus</a>.
           </p>
           <p>
-            If you're interested in the project and want to contribute to its
-            development, if you have specific questions about how syllabi are
-            handled, or if you just want to say hello, you can email us at{" "}
+            If you&apos;re interested in the project and want to contribute to
+            its development, if you have specific questions about how syllabi
+            are handled, or if you just want to say hello, you can email us at{" "}
             <a href="mailto:team@common-syllabi.org">team@common-syllabi.org</a>
             .
           </p>
@@ -111,7 +112,8 @@ const About: NextPage = () => {
           </div>
 
           <p>
-            We're open to collaborations and cooperations, don't hesitate to{" "}
+            We&apos;re open to collaborations and cooperations, don&apos;t
+            hesitate to{" "}
             <a href="mailto:team@common-syllabi.org">get in touch</a>!
           </p>
 
