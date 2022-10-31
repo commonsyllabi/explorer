@@ -133,7 +133,7 @@ const Home: NextPage<IHomeProps> = ({ meta, syllabiListings }) => {
   return (
     <>
       <Head>
-        <title>Syllabi Explorer</title>
+        <title>Cosyll</title>
         <meta
           name="description"
           content="Share and browse syllabi and course materials."

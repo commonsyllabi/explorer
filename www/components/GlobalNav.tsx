@@ -19,19 +19,22 @@ const GlobalNav: React.FunctionComponent = () => {
         expand="lg"
         className="d-flex justify-content-md-between border-bottom"
       >
-        <Container>
-          <Navbar.Brand href="/">Syllabi Explorer</Navbar.Brand>
+        <Container className="flex">
+          <Navbar.Brand href="/">Cosyll</Navbar.Brand>
+          <Navbar.Text>Browse and publish syllabi.</Navbar.Text>
           <Navbar.Toggle aria-controls="global-nav" />
         </Container>
         <Container>
           <Navbar.Collapse id="global-nav" className="flex-row-reverse">
             <Nav className="float-end">
+
+
               <Nav.Link
-                href="/NewSyllabus"
+                href="/about"
                 className="py-3 text-end"
-                data-cy="newSyllabusLink"
+                data-cy="aboutlink"
               >
-                + New Syllabus
+                About
               </Nav.Link>
 
               <NavDropdown
@@ -48,10 +51,6 @@ const GlobalNav: React.FunctionComponent = () => {
                   My Account
                 </NavDropdown.Item>
 
-                <NavDropdown.Item href="/about" className="py-2 text-end">
-                  About
-                </NavDropdown.Item>
-
                 <NavDropdown.Divider />
 
                 <NavDropdown.Item
@@ -66,6 +65,14 @@ const GlobalNav: React.FunctionComponent = () => {
                   Sign Out
                 </NavDropdown.Item>
               </NavDropdown>
+
+              <Nav.Link
+                href="/NewSyllabus"
+                className="py-3 text-end"
+                data-cy="newSyllabusLink"
+              >
+                + New Syllabus
+              </Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Container>
@@ -80,7 +87,8 @@ const GlobalNav: React.FunctionComponent = () => {
         className="d-flex justify-content-md-between border-bottom"
       >
         <Container>
-          <Navbar.Brand href="/">Syllabi Explorer</Navbar.Brand>
+          <Navbar.Brand href="/">Cosyll</Navbar.Brand>
+          <Navbar.Text>Browse and publish syllabi.</Navbar.Text>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
         </Container>
         <Container>
