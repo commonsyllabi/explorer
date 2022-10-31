@@ -22,6 +22,8 @@ $theme-colors: (
   "light": $light,
   "dark": $dark,
 );
+@import "~bootstrap/scss/bootstrap.scss";
+
 // Responsive borders
 @each $breakpoint in map-keys($grid-breakpoints) {
   @include media-breakpoint-up($breakpoint) {
