@@ -6,7 +6,8 @@ $info: #c7c8c9;
 $warning: #f7c244;
 $danger: #cb444a;
 $light: #f8f9fa;
-$dark: #222529;
+// $dark: #222529;
+$dark: rgb(22, 22, 22);
 
 @import "bootstrap/scss/functions";
 @import "bootstrap/scss/variables";
@@ -65,6 +66,15 @@ $dark: #222529;
 
 #header-section {
   background-color: white;
+}
+.sticky-top {
+  padding-left: 0;
+  padding-right: 0;
+}
+.nav-tagline {
+  font-weight: 200;
+  color: $secondary;
+  padding-left: 1rem;
 }
 
 #footer {

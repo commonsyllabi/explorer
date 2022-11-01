@@ -14,20 +14,22 @@ const GlobalNav: React.FunctionComponent = () => {
   if (status === "authenticated") {
     return (
       <Navbar
-        bg="light"
+        bg="dark"
+        variant="dark"
         expand="lg"
         className="d-flex justify-content-md-between border-bottom"
       >
         <Container className="flex">
-          <Navbar.Brand href="/">Cosyll</Navbar.Brand>
-          <Navbar.Text>Browse and publish syllabi.</Navbar.Text>
+          <Navbar.Brand href="/">
+            Cosyll
+            <span className="nav-tagline">Browse and Publish Syllabi</span>
+          </Navbar.Brand>
+
           <Navbar.Toggle aria-controls="global-nav" />
         </Container>
         <Container>
           <Navbar.Collapse id="global-nav" className="flex-row-reverse">
             <Nav className="float-end">
-
-
               <Nav.Link
                 href="/about"
                 className="py-3 text-end"
@@ -80,13 +82,17 @@ const GlobalNav: React.FunctionComponent = () => {
   } else {
     return (
       <Navbar
-        bg="light"
+        bg="dark"
+        variant="dark"
         expand="lg"
         className="d-flex justify-content-md-between border-bottom"
       >
         <Container>
-          <Navbar.Brand href="/">Cosyll</Navbar.Brand>
-          <Navbar.Text>Browse and publish syllabi.</Navbar.Text>
+          <Navbar.Brand href="/">
+            Cosyll
+            <span className="nav-tagline">Browse and Publish Syllabi</span>
+          </Navbar.Brand>
+
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
         </Container>
         <Container>
