@@ -19,6 +19,7 @@ const About: NextPage = () => {
         />
         <Favicons />
       </Head>
+      <GlobalNav></GlobalNav>
       <Container>
           <h2 className="pt-3 mt-5 mb-5">
             Cosyll is a platform for educators to publish and

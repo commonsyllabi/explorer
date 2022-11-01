@@ -109,7 +109,7 @@ const Syllabus: NextPage<ISyllabus> = (props) => {
               )}
             </div>
             <h2 className="h3">Course Overview</h2>
-            <p className="course-description">
+            <p className="course-description" style={{whiteSpace: 'pre-wrap'}}>
               {props.description
                 ? props.description
                 : "Course description goes here..."}

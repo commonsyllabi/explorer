@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 
 import GlobalNav from "components/GlobalNav";
-import TagsFiltersBar from "components/TagFiltersBar";
+import FiltersBar from "components/FiltersBar";
 
 import { getSyllabusCards } from "../components/utils/getSyllabusCards";
 import PaginationSection from "components/PaginationSection";
@@ -15,9 +15,11 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { IMetaInformation, ISyllabiFilters, ISyllabus } from "types";
 import Favicons from "components/head/favicons";
+import { Button, Form, InputGroup } from "react-bootstrap";
 
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
   const page = query.page ? query.page : 1;
   const url = new URL(`syllabi/?page=${page}`, apiUrl);
 
@@ -60,8 +62,18 @@ interface IHomeProps {
 
 const Home: NextPage<IHomeProps> = ({ meta, syllabiListings }) => {
   const router = useRouter();
+  const [syllabi, setSyllabi] = useState(syllabiListings)
+  const [searchTerms, setSearchTerms] = useState("")
+  const [filters, setFilters] = useState<ISyllabiFilters>({
+    academic_level: "",
+    academic_field: "",
+    academic_year: "",
+    language: "",
+    tags_include: [],
+    tags_exclude: [],
+  });
 
-  const pagginationHandler = (page: number) => {
+  const paginationHandler = (page: number) => {
     const currentPath = router.query.pathname;
     const currentQuery = {
       page: page,
@@ -103,7 +115,7 @@ const Home: NextPage<IHomeProps> = ({ meta, syllabiListings }) => {
               onClick={(event) => {
                 event.preventDefault();
                 event.stopPropagation();
-                pagginationHandler(1);
+                paginationHandler(1);
               }}
             >
               Go to main page
@@ -112,20 +124,42 @@ const Home: NextPage<IHomeProps> = ({ meta, syllabiListings }) => {
         </>
       );
     } else {
-      pageContent.push(getSyllabusCards(syllabiListings, filters));
+      pageContent.push(getSyllabusCards(syllabi, filters));
     }
     return pageContent;
   };
 
-  const [filters, setFilters] = useState<ISyllabiFilters>({
-    academic_level: "",
-    academic_field: "",
-    academic_year: "",
-    language: "",
-    tags_include: [],
-    tags_exclude: [],
-  });
+  const handleSearchChange = (e: React.BaseSyntheticEvent) => {
+    e.stopPropagation()
+    e.preventDefault()
+    const v = e.target.value
+    setSearchTerms(v)
+  }
 
+  const startSearch = () => {
+    const url = new URL(`syllabi/?keywords=${encodeURI(searchTerms)}`, apiUrl);
+
+    fetch(url)
+      .then(res => {
+        if (res.ok)
+          return res.json()
+        else
+          console.warn("Problem with search!")
+      })
+      .then(data => {
+        setSyllabi(data.syllabi)
+      })
+      .catch(err => {
+        console.error("Problem with search", err)
+      })
+  }
+
+  const clearSearch = () => {
+    const st = document.getElementById("search-terms") as HTMLInputElement
+    if(st != null) st.value = ""
+    setSearchTerms("")
+    setSyllabi(syllabiListings)
+  }
   const handleFilterChange = (filters: ISyllabiFilters) => {
     setFilters(filters);
   };
@@ -145,9 +179,27 @@ const Home: NextPage<IHomeProps> = ({ meta, syllabiListings }) => {
       </Container>
 
       <Container>
+        <Row>
+          <Container className="mt-3 mb-3 d-flex justify-content-between">
+            <InputGroup className="w-100 mt-3 mb-3">
+              <Form.Control
+                id="search-terms"
+                placeholder="Search syllabi (e.g. intro to sociology...)"
+                onChange={handleSearchChange}>
+              </Form.Control>
+              <Button onClick={clearSearch} variant="secondary">X</Button>
+              <Button onClick={startSearch} variant="primary">Search</Button>
+            </InputGroup>
+          </Container>
+        </Row>
+        <Row>
+          <Col>
+            {`Found ${syllabi.length} syllabi!`}
+          </Col>
+        </Row>
         <Row className="d-flex flex-row-reverse">
           <Col lg={4} className="pb-3 border-bottom border-lg-bottom-0">
-            <TagsFiltersBar updateFilters={handleFilterChange} meta={meta} />
+            <FiltersBar updateFilters={handleFilterChange} meta={meta} />
           </Col>
           <Col lg={8} className="pt-3 pb-5 d-flex flex-column gap-3">
             {getPageContent()}
@@ -157,7 +209,7 @@ const Home: NextPage<IHomeProps> = ({ meta, syllabiListings }) => {
           <PaginationSection
             totalPages={meta["total_pages"]}
             activePage={activePage}
-            handlePageChange={pagginationHandler}
+            handlePageChange={paginationHandler}
           />
         </Row>
       </Container>

@@ -9,7 +9,7 @@ import Col from "react-bootstrap/Col";
 
 import Favicons from "components/head/favicons";
 import GlobalNav from "components/GlobalNav";
-import TagsFiltersBar from "components/TagFiltersBar";
+import FiltersBar from "components/FiltersBar";
 import { getSyllabusCards } from "../../components/utils/getSyllabusCards";
 import { getCollectionCards } from "../../components/utils/getCollectionCards";
 
