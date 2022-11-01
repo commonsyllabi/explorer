@@ -4,6 +4,7 @@ import Image from "next/image"
 
 import Favicons from "components/head/favicons";
 import GlobalNav from "components/GlobalNav";
+import Link from "next/link";
 
 const About: NextPage = () => {
   return (
@@ -26,16 +27,16 @@ const About: NextPage = () => {
           This project aims at providing infrastructure for open-access of syllabi and curricula. By and large, knowledge is an activity which thrives on open sharing and collaborative progress; to foster knowledge exchange in higher-education, we need a place where we can meaningfully search, archive and reference syllabi.
         </p>
         <p>
-          Cosyll is first and foremost for educators, by educators. Whether to have a convenient place to publish your classes, to see how a similar class is being taught at another university, in another country, or to find inspiration in your peers' works, Cosyll focuses on exchange between teachers. In this spirit, we encourage the sharing of documents one doesn't always easily find online: schedules, assignments descriptions, works cited and referenced, class wikis, etc.
+          Cosyll is first and foremost for educators, by educators. Whether to have a convenient place to publish your classes, to see how a similar class is being taught at another university, in another country, or to find inspiration in your peers&apos; works, Cosyll focuses on exchange between teachers. In this spirit, we encourage the sharing of documents one does not always easily find online: schedules, assignments descriptions, works cited and referenced, class wikis, etc.
         </p>
         <p>
           <b>Want to get involved?</b>
         </p>
         <p>
-          To get started, you can get a feeling for Cosyll's collection by browsing the <a href="/">home page</a>. If you decide to contribute yourself, start by <a href="/auth/signin">creating an account</a>, and then <a href="/NewSyllabus">add your first syllabus</a>.
+          To get started, you can get a feeling for Cosyll&apos;s collection by browsing the <Link href="/">home page</Link>. If you decide to contribute yourself, start by <Link href="/auth/signin">creating an account</Link>, and then <Link href="/NewSyllabus">add your first syllabus</Link>.
         </p>
         <p>
-          If you're interested in the project and want to contribute to its development, if you have specific questions about how syllabi are handled, or if you just want to say hello, you can email us at <a href="mailto:team@common-syllabi.org">team@common-syllabi.org</a>.
+          If you are interested in the project and want to contribute to its development, if you have specific questions about how syllabi are handled, or if you just want to say hello, you can email us at <a href="mailto:team@common-syllabi.org">team@common-syllabi.org</a>.
         </p>
         <p>
           If you just want to keep track of the newest developments of the project, you can <a
@@ -52,7 +53,7 @@ const About: NextPage = () => {
         <p>
           We are a group of educators, designers and developers who firmly believe that open-access and information archival is essential to improve pedagogical practices. <a href="http://pierredepaz.net" target="_blank" rel="noopener noreferrer">Pierre Depaz</a> is the project lead; he teaches in various universities across France, Germany and the U.S. <a href="http://patshiu.com" target="_blank" rel="noopener noreferrer">Pat Shiu</a> is the lead designer and frontend developer, with an extensive background in web archival. <a href="http://github.com/grobie" target="_blank" rel="noopener noreferrer">Tobias Schmidt</a> is a software engineer with a decade of experience in building and maintaining robust infrastructures.
         </p>
-        <p>We're open to collaborations and cooperations, don't hesitate to <a href="mailto:team@common-syllabi.org">get in touch</a>!</p>
+        <p>We are open to collaborations and cooperations, do not hesitate to <a href="mailto:team@common-syllabi.org">get in touch</a>!</p>
 
         <div className="d-flex flex-column justify-content-center mb-5 mt-5">
           <h4 className="mb-3">Support</h4>

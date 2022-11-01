@@ -56,7 +56,7 @@ const AddAcademicFieldsForm: React.FunctionComponent<
     console.log(
       `broad: ${broadField}, narrow: ${narrowField}, detailed:${detailedField}`
     );
-    // console.log(acadFieldsArray);
+    
     setAcadFieldsData(acadFieldsArray);
   }, [broadField, narrowField, detailedField]);
 
