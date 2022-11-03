@@ -37,6 +37,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const res = await fetch(url);
   if (res.ok) {
     const userInfo = await res.json();
+
+    if(userInfo.syllabi === null)
+      return {
+        props: userInfo
+      }
+
     let full_syllabi = []
     for (const syll of userInfo.syllabi) {
       const r = await fetch(new URL(`syllabi/${syll.uuid}`, apiUrl))
@@ -47,7 +53,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         console.log('could not get syllabus', r.status);
       }
     }
-
     userInfo.syllabi = full_syllabi
 
     return {
@@ -214,7 +219,13 @@ const About: NextPage<IUser> = (props) => {
                       undefined,
                       props.name,
                       checkIfAdmin()
-                    )?.elements}
+                    )?.elements ? getSyllabusCards(
+                      filteredSyllabi(),
+                      default_filters,
+                      undefined,
+                      props.name,
+                      checkIfAdmin()
+                    )?.elements : "You do not have any syllabi yet."}
                   </div>
                 </Tab>
                 <Tab eventKey="collections" title="Collections">
@@ -246,7 +257,11 @@ const About: NextPage<IUser> = (props) => {
                       filteredCollections(),
                       props.name,
                       checkIfAdmin()
-                    )}
+                    ) ? getCollectionCards(
+                      filteredCollections(),
+                      props.name,
+                      checkIfAdmin()
+                    ) : "You do not have any collections yet."}
                   </div>
                 </Tab>
               </Tabs>

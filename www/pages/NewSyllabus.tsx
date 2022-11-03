@@ -55,16 +55,12 @@ interface INewSyllabusProps {
 
 const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
   const { data: session, status } = useSession();
-  const [validated, setValidated] = useState(true);
+  const [error, setError] = useState("");
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [syllabusCreated, setSyllabusCreated] = useState("pending");
   const [institutionCreated, setInstitutionCreated] = useState("pending");
   const [attachmentsCreated, setAttachmentsCreated] = useState("pending");
   const [syllabusUUID, setSyllabusUUID] = useState("");
-
-  useEffect(() => {
-    setValidated(true);
-  }, []);
 
   //Form data and submission handling
   //---------------------------------------
@@ -91,12 +87,12 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
 
   const [formData, setFormData] = useState<IFormData>({
     institutions: [],
-    title: "Test Dummy Course",
-    course_number: "DUM101",
-    description: "Some elegant description of this wonderful course.",
+    title: "",
+    course_number: "",
+    description: "",
     attachments: [],
     tags: [],
-    language: "EN",
+    language: "",
     learning_outcomes: [],
     topic_outlines: [],
     readings: [],
@@ -111,16 +107,13 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
 
   const [institutionData, setInstitutionData] = useState<IFormInstitution>(
     {
-      name: "Hogwarts",
-      country: "012",
-      url: "http://hogwarts.com",
-      date_year: "2022",
-      date_term: "Spring Semester",
+      name: "",
+      country: "",
+      url: "",
+      date_year: "",
+      date_term: "",
     },
   );
-
-  const [log, setLog] = useState("");
-  const [error, setError] = useState("");
 
   //Handle form submission
   const apiUrl = props.apiUrl;
@@ -170,7 +163,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
         }
       })
 
-    if(attachmentData.length === 0){
+    if (attachmentData.length === 0) {
       setAttachmentsCreated("created")
       return
     }
@@ -194,7 +187,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
       setFormData({ ...formData, [t.id]: newStatus });
     } else if (t.id === "tags") {
       const tags = t.value.split(',').map(tag => tag.trim())
-      setFormData({...formData, ["tags"]: [...tags]})
+      setFormData({ ...formData, ["tags"]: [...tags] })
     } else {
       setFormData({ ...formData, [t.id]: t.value });
     }
@@ -229,23 +222,6 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     }
     console.log(`checkedFields: ${checkedFields}`);
     setFormData({ ...formData, ["academic_fields"]: checkedFields });
-  };
-
-  //-- data set up for attachments
-  const dummyLinkAttachment: IUploadAttachment = {
-    id: 0,
-    name: "Banana Link",
-    description: "Real nice links.",
-    url: "www.banana.com",
-    type: "url",
-  };
-
-  const dummyFileAttachment: IUploadAttachment = {
-    id: 1,
-    name: "Tropical File",
-    description: "What a lovely file",
-    type: "pdf",
-    size: "32.0mb",
   };
 
   const [attachmentData, setAttachmentData] = useState(Array<IUploadAttachment>);
@@ -353,7 +329,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                     <Form.Control
                       required
                       id="title"
-                      placeholder="Web Design History"
+                      placeholder=""
                       onChange={handleChange}
                       value={formData.title}
                       data-cy="courseTitleInput"
@@ -389,7 +365,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                         <Form.Control
                           required
                           id="name"
-                          placeholder="Black Mountain College"
+                          placeholder=""
                           onChange={handleInstitutionChange}
                           value={institutionData.name}
                           data-cy="instutionNameInput"
@@ -423,7 +399,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                       <div className="col-8">
                         <Form.Control
                           id="url"
-                          placeholder="http://hogwarts.com"
+                          placeholder=""
                           onChange={handleInstitutionChange}
                           value={institutionData.url}
                           data-cy="instutionUrlInput"
@@ -439,7 +415,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                           <Form.Control
                             required
                             id="date_year"
-                            placeholder="2022"
+                            placeholder=""
                             onChange={handleInstitutionChange}
                             value={institutionData.date_year}
                             data-cy="instutionYearInput"
@@ -457,7 +433,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                           <Form.Control
                             required
                             id="date_term"
-                            placeholder="Spring Semester"
+                            placeholder=""
                             onChange={handleInstitutionChange}
                             value={institutionData.date_term}
                             data-cy="instutionTermInput"
@@ -476,7 +452,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                     <div className="col-4">
                       <Form.Control
                         id="course_number"
-                        placeholder="CS101"
+                        placeholder=""
                         onChange={handleChange}
                         value={formData.course_number}
                         data-cy="courseCodeInput"
@@ -545,7 +521,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                       id="tags"
                       onChange={handleChange}
                       as="textarea"
-                      placeholder="Course tags..."
+                      placeholder=""
                       data-cy="courseTagsInput"
                     />
                     <Form.Control.Feedback type="invalid">
@@ -674,29 +650,29 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
       <Head>
         <title>New Syllabus</title>
         <meta name="description" content="Create a new syllabus" />
-        <link rel="icon" href="/favicon.ico" />
+        <Favicons/>
       </Head>
-      <Container>
-        <div id="header-section" className="sticky-top">
-          <GlobalNav />
-        </div>
 
-        <Container>
-          <Row className="pt-3 pb-3">
-            <Col className="col-8 offset-2">
-              <h1 className="h3">New Syllabus</h1>
-            </Col>
-          </Row>
-          <Row className="gap-3 pb-5">
-            <Col className="col-8 offset-2">
-              <p>
-                To create a new syllabus, please{" "}
-                <Link href="/login">log in</Link> .
-              </p>
-            </Col>
-          </Row>
-        </Container>
+      <Container fluid id="header-section" className="sticky-top">
+        <GlobalNav />
       </Container>
+
+      <Container>
+        <Row className="pt-3 pb-3">
+          <Col className="col-8 offset-2">
+            <h1 className="h3">New Syllabus</h1>
+          </Col>
+        </Row>
+        <Row className="gap-3 pb-5">
+          <Col className="col-8 offset-2">
+            <p>
+              To create a new syllabus, please{" "}
+              <Link href="/auth/signin">log in</Link> .
+            </p>
+          </Col>
+        </Row>
+      </Container>
+
     </>
   );
 };
