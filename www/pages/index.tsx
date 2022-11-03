@@ -18,6 +18,8 @@ import Favicons from "components/head/favicons";
 import { Button, Form, InputGroup } from "react-bootstrap";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+const PAGINATION_LIMIT = 15
+
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
   const page = query.page ? query.page : 1;
@@ -45,11 +47,12 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
   const payload = await res.json();
 
-  // console.log(`payload meta is: ${JSON.stringify(payload.meta)}`);
+  const total_pages = Math.floor(payload.syllabi.length / PAGINATION_LIMIT) + 1
 
   return {
     props: {
       meta: payload.meta,
+      totalPages: total_pages,
       syllabiListings: payload.syllabi,
     },
   };
@@ -57,12 +60,15 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
 interface IHomeProps {
   meta: IMetaInformation;
+  total: number;
   syllabiListings: ISyllabus[];
 }
 
-const Home: NextPage<IHomeProps> = ({ meta, syllabiListings }) => {
+const Home: NextPage<IHomeProps> = ({ meta, total, syllabiListings }) => {
   const router = useRouter();
   const [syllabi, setSyllabi] = useState(syllabiListings)
+  const [syllabiCount, setSyllabiCount] = useState(syllabi.length)
+  const [totalPages, setTotalPages] = useState(total)
   const [searchTerms, setSearchTerms] = useState("")
   const [filters, setFilters] = useState<ISyllabiFilters>({
     academic_level: "",
@@ -72,6 +78,19 @@ const Home: NextPage<IHomeProps> = ({ meta, syllabiListings }) => {
     tags_include: [],
     tags_exclude: [],
   });
+
+  useEffect(() => {
+    //-- this useEffect() listens for changes from the search bar or the filters bar
+    //-- it resets the activePage to 1, then updates the cards, totals and pages
+
+    paginationHandler(1)
+    const s = getSyllabusCards(syllabi, filters, 1)
+    if(s === undefined)
+      return
+
+    setTotalPages(Math.ceil(s.total / PAGINATION_LIMIT))
+    setSyllabiCount(s.total)
+  }, [syllabi, filters])
 
   const paginationHandler = (page: number) => {
     const currentPath = router.query.pathname;
@@ -89,44 +108,21 @@ const Home: NextPage<IHomeProps> = ({ meta, syllabiListings }) => {
     const query = router.query;
     if (query.page) {
       const pageParams = query.page;
-      if (pageParams.length) {
-        //if multiple page params, return just the first
+      if (pageParams.length)
         return parseInt(pageParams[0]);
-      } else {
-        //else if just one param, return that
+      else
         return parseInt(pageParams as string);
-      }
     }
-    //if no params return 0
     return 1;
   };
 
   const [activePage, setActivePage] = useState(getCurrentPage());
 
   const getPageContent = () => {
-    let pageContent = [];
-
-    if (activePage > meta["total_pages"] || activePage < 1) {
-      pageContent.push(
-        <>
-          <h2 className="h3 mt-5">The requested page is out of bounds.</h2>
-          <Link href="">
-            <a
-              onClick={(event) => {
-                event.preventDefault();
-                event.stopPropagation();
-                paginationHandler(1);
-              }}
-            >
-              Go to main page
-            </a>
-          </Link>
-        </>
-      );
-    } else {
-      pageContent.push(getSyllabusCards(syllabi, filters));
-    }
-    return pageContent;
+    if (activePage > totalPages || activePage < 1)
+      return getSyllabusCards(syllabi, filters, 1)?.elements;
+    else
+      return getSyllabusCards(syllabi, filters, activePage)?.elements;
   };
 
   const handleSearchChange = (e: React.BaseSyntheticEvent) => {
@@ -160,6 +156,7 @@ const Home: NextPage<IHomeProps> = ({ meta, syllabiListings }) => {
     setSearchTerms("")
     setSyllabi(syllabiListings)
   }
+
   const handleFilterChange = (filters: ISyllabiFilters) => {
     setFilters(filters);
   };
@@ -194,7 +191,7 @@ const Home: NextPage<IHomeProps> = ({ meta, syllabiListings }) => {
         </Row>
         <Row>
           <Col>
-            {`Found ${syllabi.length} syllabi!`}
+            { syllabiCount === 1 ? `Found 1 syllabus.` : `Found ${syllabiCount} syllabi.`}
           </Col>
         </Row>
         <Row className="d-flex flex-row-reverse">
@@ -207,7 +204,7 @@ const Home: NextPage<IHomeProps> = ({ meta, syllabiListings }) => {
         </Row>
         <Row>
           <PaginationSection
-            totalPages={meta["total_pages"]}
+            totalPages={totalPages}
             activePage={activePage}
             handlePageChange={paginationHandler}
           />

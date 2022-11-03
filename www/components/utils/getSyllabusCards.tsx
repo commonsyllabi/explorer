@@ -7,6 +7,7 @@ export const getSyllabusCards = (
   syllabiArray: ISyllabus[] | undefined,
 
   filters: ISyllabiFilters,
+  activePage: number | 1,
   userName?: string | "anonymous",
   isAdmin?: boolean
 ) => {
@@ -18,13 +19,14 @@ export const getSyllabusCards = (
   }
 
   const isShown = (filters: ISyllabiFilters, item: ISyllabus): boolean => {
+
     if (
       filters.academic_level !== "" &&
       item.academic_level?.toString() != filters.academic_level
     )
       return false;
 
-    if (filters.language !== "" && item.language != filters.language)
+    if (filters.language !== "" && item.language !== filters.language)
       return false;
 
     if (
@@ -40,7 +42,7 @@ export const getSyllabusCards = (
     )
       return false;
 
-    if (filters.tags_include.length != 0 && item !== undefined) {
+    if (filters.tags_include.length > 0 && item !== undefined) {
       const tags = item.tags as string[];
       let isIncluded = false;
       for (const t of tags) {
@@ -50,7 +52,7 @@ export const getSyllabusCards = (
       if (!isIncluded) return false;
     }
 
-    if (filters.tags_exclude.length != 0 && item !== undefined) {
+    if (filters.tags_exclude.length > 0 && item !== undefined) {
       const tags = item.tags as string[];
       for (const t of tags) {
         if (filters.tags_exclude.includes(t)) return false;
@@ -60,9 +62,12 @@ export const getSyllabusCards = (
     return true;
   };
 
-  // useEffect(() => {
-  const sy = syllabiArray.filter((item) => isShown(filters, item));
-  const sc = sy.map((item) => (
+  const PAGINATION_LIMIT = 15;
+  const filtered = syllabiArray.filter((item) => isShown(filters, item));
+  const paginated = filtered.filter((item, index) => {
+    return (activePage - 1) * PAGINATION_LIMIT <= index && index < (activePage) * PAGINATION_LIMIT;
+  })
+  syllabiCards = paginated.map((item) => (
     <SyllabusCard
       key={item.uuid}
       userName={userName}
@@ -71,16 +76,18 @@ export const getSyllabusCards = (
     />
   )) as JSX.Element[];
 
-  syllabiCards = sc;
-  // }, [filters])
-
   if (syllabiCards !== undefined && syllabiCards.length > 0)
-    return <div className="d-flex flex-column gap-3">{syllabiCards}</div>;
+    return {
+      elements: <div className="d-flex flex-column gap-3">{syllabiCards}</div>,
+      total: filtered.length
+    };
   else
-    return (
-      <div className="d-flex flex-column gap-3">
+    return ({
+      elements: <div className="d-flex flex-column gap-3">
         <h1>Sorry!</h1>
         <p>We couldn&apos;t find any syllabi matching your search filters.</p>
-      </div>
+      </div>,
+      total: 0
+    }
     );
 };

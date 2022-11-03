@@ -76,7 +76,7 @@ const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = ({
             </p>
           )}
         </div>
-        <Card.Text className="course-description">
+        <Card.Text className="course-description" style={{whiteSpace: "pre-wrap"}}>
           {props.description}
         </Card.Text>
         <div className="course-tags d-flex gap-2">
