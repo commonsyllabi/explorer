@@ -165,7 +165,7 @@
     - uuid: '46de6a2b-666b-4c24-b1e1-3595821f8469'
       title: "Music Technology Fundamentals"
       status: "listed"
-      description: "This	course	is	designed	for	anyone	interested	in	producing	music	on	computer using	virtual	instruments,	samples	and	microphones.	Regardless	of	style,	this	course	provides	an	overview	of	the	wide	range	of	tools	available	to	the	modern	music	production.\nThis	is	an	“all-in-one”	course	for	(almost)	everything	related	to	music	technology,	the	basics	of	digital	audio,	physic	of	sound, music recording, binaural	audio,	musical	acoustics,	signal	flow, sound	synthesis,	music	production,	Game	Audio,	post-production and	mixing.\nStudents	will	also	study	the	elements	of	production	design,	composition,	song	form,	and	how	to	arrange,	edit,	build and	shape	a	song	using	different	D.A.Ws. In	this	course	students	will also learn	the	fundamentals	of	digital	audio,	studio	and	location	recording,	mixing,	and	MIDI sequencing	using	Logic	Pro	X,	Pro	Tools 12,	Ableton	Live,		music production,	and	audio	programming	using	Max.	Students	will also	be	briefly	introduced	to	a	wide- range	of	applications	(and	careers)	in	music	technology.\nThis	course	is	the	Gateway	to	the	Music	Technology	disciplinary area	courses	in	the	Music	Program	and	it	is	mandatory	for	all	Music	majors.	There	are	no	pre- requisitesfor	this	course	and	anyone	with	a	keen	interest	in	recording	and	production,	sequencing or	programming	is more than	welcome	to	take	it."
+      description: "This course is designed for anyone interested in producing music on computer using virtual instruments, samples and microphones. Regardless of style, this course provides an overview of the wide range of tools available to the modern music production.\nThis is an “all-in-one” course for (almost) everything related to music technology, the basics of digital audio, physic of sound, music recording, binaural audio, musical acoustics, signal flow, sound synthesis, music production, Game Audio, post-production and mixing.\nStudents will also study the elements of production design, composition, song form, and how to arrange, edit, build and shape a song using different D.A.Ws. In this course students will also learn the fundamentals of digital audio, studio and location recording, mixing, and MIDI sequencing using Logic Pro X, Pro Tools 12, Ableton Live, music production, and audio programming using Max. Students will also be briefly introduced to a wide- range of applications (and careers) in music technology.\nThis course is the Gateway to the Music Technology disciplinary area courses in the Music Program and it is mandatory for all Music majors. There are no pre- requisitesfor this course and anyone with a keen interest in recording and production, sequencing or programming is more than welcome to take it."
       language: en
       academic_level: 1
       duration: 14
@@ -180,8 +180,8 @@
         - "recording"
         - "sound"
       learning_outcomes:
-        - "Gain	knowledge	of the	theoretical	and	practical	foundations	of	music	technology"
-        - "Understand	the	basics	behind	studio	recording	and	computer	music	composition"
+        - "Gain knowledge of the theoretical and practical foundations of music technology"
+        - "Understand the basics behind studio recording and computer music composition"
       topic_outlines:
         - "Sound theory"
         - "Recording practice"
@@ -602,7 +602,7 @@
     - uuid: '46de6a2b-666b-4c24-b1e1-4795821f8469'
       title: "Anthropology and the Arab World"
       status: "listed"
-      description: "How	have anthropologists encountered, written about, and produced the “Arab world” over the past century? Beginning with early Western travelers’ imaginaries of Arabia and ending with a reflection on the role of anthropology (in the Muslim world, and more globally) today, this course provides an introduction to the anthropological project and to the everyday realities of people living in the region. Through ethnographic texts, films, and fieldwork, we will explore such topics as Orientalism and its legacy; constructs of youth, gender, family, and tribe; poetry and mediation; generational and social change; oil, development, and globalization; water, resource scarcity, and environmental governance; transnational labor, migration, and diaspora; the Islamic Revival and religious conversion; faith, medicine, and bioethics; displacement and dispossession; refugees and human rights; the Arab uprisings and their aftermath; and ethnographic representations and responsibilities."
+      description: "How have anthropologists encountered, written about, and produced the “Arab world” over the past century? Beginning with early Western travelers’ imaginaries of Arabia and ending with a reflection on the role of anthropology (in the Muslim world, and more globally) today, this course provides an introduction to the anthropological project and to the everyday realities of people living in the region. Through ethnographic texts, films, and fieldwork, we will explore such topics as Orientalism and its legacy; constructs of youth, gender, family, and tribe; poetry and mediation; generational and social change; oil, development, and globalization; water, resource scarcity, and environmental governance; transnational labor, migration, and diaspora; the Islamic Revival and religious conversion; faith, medicine, and bioethics; displacement and dispossession; refugees and human rights; the Arab uprisings and their aftermath; and ethnographic representations and responsibilities."
       language: en
       academic_level: 1
       academic_fields:
@@ -616,8 +616,8 @@
         - "Anthropology"
         - "Arab World"
       learning_outcomes:
-        - "I dentify	some	of	the	multiple	political,	social,	and	economic	developments	that have	occurred	in	the	Arab	world	since	the	beginning	of	the	20th century."
-        - "Demonstrate	a	familiarity	with	anthropological	approaches	to	the	study	of	the	Arab	world	and	to	the	thematic	topics	discussed	over	the	course	of	the	semester."
+        - "I dentify some of the multiple political, social, and economic developments that have occurred in the Arab world since the beginning of the 20th century."
+        - "Demonstrate a familiarity with anthropological approaches to the study of the Arab world and to the thematic topics discussed over the course of the semester."
       topic_outlines:
         - "Gulf Migration"
         - "Arab Spring"
