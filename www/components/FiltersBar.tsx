@@ -28,9 +28,20 @@ const FiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => {
   //-- todo : generate the options dropdown html given the meta props (might be annoying to deal with fields and levels)
   
 
-  const handleChange = (event: React.SyntheticEvent) => {
-    const t = event.target as HTMLInputElement    
+  const handleChange = (e: React.SyntheticEvent) => {
+    const t = e.target as HTMLInputElement    
     setFilters({ ...filters, [t.id]: t.value })
+  }
+
+  const handleReset = (e: React.SyntheticEvent) => {
+    setFilters({
+      academic_level: "",
+      academic_field: "",
+      academic_year: "",
+      language: "",
+      tags_include: [],
+      tags_exclude: [],
+    })
   }
 
   return (
@@ -41,6 +52,7 @@ const FiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => {
           <Form.Label className="small">Academic Level</Form.Label>
           <Form.Select
             id="academic_level"
+            value={filters.academic_level}
             onChange={handleChange}>
             <option value="">All</option>
             {getLevelsFilters(props.meta.academic_levels)}
@@ -52,7 +64,10 @@ const FiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => {
       <div>
         <Form.Group>
           <Form.Label className="small">Academic Year</Form.Label>
-          <Form.Select id="academic_year" onChange={handleChange}>
+          <Form.Select
+            id="academic_year"
+            value={filters.academic_year}
+            onChange={handleChange}>
             <option value="">All</option>
             {getYearsFilters(props.meta.academic_years)}
           </Form.Select>
@@ -63,7 +78,10 @@ const FiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => {
       <div>
         <Form.Group>
           <Form.Label className="small">Academic Field</Form.Label>
-          <Form.Select id="academic_field" onChange={handleChange}>
+          <Form.Select
+            id="academic_field"
+            value={filters.academic_field}
+            onChange={handleChange}>
             <option value="">All</option>
             {getFieldsFilters(props.meta.academic_fields)}
           </Form.Select>
@@ -74,7 +92,10 @@ const FiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => {
       <div>
         <Form.Group>
           <Form.Label className="small">Language / Region</Form.Label>
-          <Form.Select id="language" onChange={handleChange}>
+          <Form.Select
+            id="language"
+            value={filters.language}
+            onChange={handleChange}>
             <option value="">All</option>
             {getLanguagesFilters(props.meta.languages)}
           </Form.Select>
@@ -97,6 +118,7 @@ const FiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => {
                   as="textarea"
                   aria-labelledby="search-includes-tags"
                   id="tags_include"
+                  value={filters.tags_include}
                   onChange={handleChange}
                 />
               </InputGroup>
@@ -112,10 +134,15 @@ const FiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => {
                   as="textarea"
                   aria-labelledby="search-excludes-tags"
                   id="tags_exclude"
+                  value={filters.tags_exclude}
                   onChange={handleChange}
                 />
               </InputGroup>
             </Form>
+          </div>
+
+          <div>
+            <Button onClick={handleReset} className="mt-4 w-100" variant="light">Reset filters</Button>
           </div>
         </div>
       </div>
