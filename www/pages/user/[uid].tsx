@@ -211,9 +211,10 @@ const About: NextPage<IUser> = (props) => {
                     {getSyllabusCards(
                       filteredSyllabi(),
                       default_filters,
+                      undefined,
                       props.name,
                       checkIfAdmin()
-                    )}
+                    )?.elements}
                   </div>
                 </Tab>
                 <Tab eventKey="collections" title="Collections">

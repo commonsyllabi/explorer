@@ -93,7 +93,7 @@ const Collection: NextPage<ICollectionProps> = (props) => {
             </p>
           )}
         </Row>
-        <Row className="gap-3 pb-5">{getSyllabusCards(props.syllabi, default_filters, props.user.name)}</Row>
+        <Row className="gap-3 pb-5">{getSyllabusCards(props.syllabi, default_filters, undefined, props.user.name)?.elements}</Row>
       </Container>
     </>
   );
