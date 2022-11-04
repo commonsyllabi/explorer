@@ -53,9 +53,6 @@ const AddAcademicFieldsForm: React.FunctionComponent<
     if (detailedField.length > 0) {
       acadFieldsArray.push(detailedField);
     }
-    console.log(
-      `broad: ${broadField}, narrow: ${narrowField}, detailed:${detailedField}`
-    );
     
     setAcadFieldsData(acadFieldsArray);
   }, [broadField, narrowField, detailedField]);

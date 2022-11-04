@@ -55,7 +55,8 @@ interface INewSyllabusProps {
 
 const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
   const { data: session, status } = useSession();
-  const [error, setError] = useState("");
+  const [validated, setValidated] = useState(false);
+  const [errors, setErrors] = useState(Array);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [syllabusCreated, setSyllabusCreated] = useState("pending");
   const [institutionCreated, setInstitutionCreated] = useState("pending");
@@ -121,10 +122,15 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     const form = event.currentTarget;
     event.preventDefault();
     event.stopPropagation();
+    if (form.checkValidity() === false) {
+      setValidated(true)
+      // return
+    }
+
 
     // check if user is logged in
     if (session == null || session.user == null) {
-      setError(`It seems you have been logged out. Please log in and try again.`)
+      setErrors([`It seems you have been logged out. Please log in and try again.`])
       console.warn("No session found!");
       return;
     }
@@ -132,7 +138,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     // bootstrap also supports validation with form.checkValidity()
     const validForm = isValidForm(formData, attachmentData, institutionData)
     if (validForm.errors.length > 0) {
-      setError(validForm.errors.join('\n'))
+      setErrors(validForm.errors)
       return;
     }
 
@@ -143,7 +149,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     setFormSubmitted(true);
     if (res.status !== 201) {
       const err = await res.text()
-      setError(err);
+      setErrors([err]);
       setSyllabusCreated("failed");
       return
     }
@@ -301,7 +307,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
               <p className="small text-muted mb-3">
                 Signed in as {session.user.name} ({session.user.email}).
               </p>
-              <Form noValidate validated={false} onSubmit={handleSubmit}>
+              <Form noValidate validated={validated} onSubmit={handleSubmit}>
                 <fieldset>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="title">Course Title</Form.Label>
@@ -476,6 +482,9 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                     <Form.Text>
                       The language this class is primarily taught in.
                     </Form.Text>
+                    <Form.Control.Feedback type="invalid">
+                      Please provide the language in which this course was taught.
+                    </Form.Control.Feedback>
                   </Form.Group>
 
                   <div className="d-flex gap-3">
@@ -486,7 +495,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                       <Form.Control
                         id="duration"
                         onChange={handleChange}
-                        placeholder="3"
+                        placeholder=""
                         data-cy="courseDurationInput"
                       />
                     </Form.Group>
@@ -495,7 +504,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                   <hr className="my-3" />
 
                   <Form.Group className="mb-3">
-                    <Form.Label htmlFor="tags">Tags</Form.Label>
+                    <Form.Label htmlFor="tags">Tags*</Form.Label>
                     <Form.Control
                       required
                       id="tags"
@@ -608,13 +617,18 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                     Submit New Syllabus
                   </Button>
 
-                  {error !== "" ? (
-                    <Alert variant="danger" className="mt-3">
-                      {error}
-                    </Alert>
-                  ) : (
-                    <></>
-                  )}
+                  {errors.length > 0 ?
+                    errors.map((err) => {
+                      return (
+                        <Alert variant="danger" className="mt-3">
+                          {err as string}
+                        </Alert>
+                      )
+                    })
+
+                    : (
+                      <></>
+                    )}
                 </fieldset>
               </Form>
             </Col>
@@ -630,7 +644,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
       <Head>
         <title>New Syllabus</title>
         <meta name="description" content="Create a new syllabus" />
-        <Favicons/>
+        <Favicons />
       </Head>
 
       <Container fluid id="header-section" className="sticky-top">

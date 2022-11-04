@@ -68,8 +68,6 @@ const NewSyllbusAttachment: React.FunctionComponent<
   const handleChange = (event: React.SyntheticEvent) => {
     const t = event.target as HTMLInputElement;
     setThisAttachment({ ...thisAttachment, [t.id]: t.value });
-    //console.log(JSON.stringify(thisAttachment));
-    // console.log(`${[t.id]}: ${t.value}`);
   };
 
   const handleAttachmentFile = (event: React.SyntheticEvent): void => {
@@ -103,16 +101,12 @@ const NewSyllbusAttachment: React.FunctionComponent<
   }, [attachmentData]);
 
   const resetForm = (): void => {
-    // setThisAttachment(blankAttachment);
     setNewId();
-    // console.log(`Reset form called.`);
-    // console.log(`thisAttachment: ${JSON.stringify(thisAttachment)}`);
   };
 
   return (
     <>
       <div className="p-3 mb-3 gap-3 border rounded bg-light">
-        <p>Current Id: {thisAttachment.id}</p>
         <Form.Group className="mb-1">
           <Form.Label>Attachment Name*</Form.Label>
           <Form.Control

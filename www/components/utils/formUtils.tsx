@@ -127,20 +127,20 @@ export const isValidForm = (form: IFormData, attachments: IUploadAttachment[], i
   // requirements
   // title > 3 && title < 150
   if (form.title.length < 3 || form.title.length > 150) {
-    messages.push(`Title should be between 3 and 150 characters! (currently '${form.title}')`)
+    messages.push(`The title should be between 3 and 150 characters (currently ${form.title.length})`)
   }
 
   // check description as well
 
   // language must comply
   if (form.language.length < 2) {
-    messages.push(`Language should be BCP-47 compliant! (or at least 2 characters, currently '${form.language}')`)
+    messages.push(`The language should be BCP-47 compliant! (currently '${form.language.length > 0 ? form.language : "none"}')`)
   }
 
   // academic_level (come to think of it, this sounds abitrary, compared to not requiring academic_field)
   const ac_levels = ["0", "1", "2", "3"]
   if (!ac_levels.includes(form.academic_level.toString())) {
-    messages.push(`You should pick an academic level: '${form.academic_level}'.)`)
+    messages.push(`Please choose an academic level: '${form.academic_level}'.)`)
   }
 
 
@@ -150,33 +150,33 @@ export const isValidForm = (form: IFormData, attachments: IUploadAttachment[], i
 
     for (const att of attachments) {
       if (att.name.length < 3)
-        messages.push(`Check attachments name '${att.name}'`)
+        messages.push(`Check attachments name: '${att.name}' (should be longer than 3 characters)`)
       if (att.url != "") {
         let u
         try {
           u = new URL(att.url as string)
 
           if (att.file !== undefined)
-            messages.push(`Can't have both URL and file attachemnt. Please create a separate attachment if you wish to upload both.`)
+            messages.push(`Can't have both URL and file attachment. Please create a separate attachment if you wish to upload both.`)
         } catch {
-          messages.push(`Check attachments url '${att.url}'`)
+          messages.push(`Check that the attachment URL is valid: '${att.url}'`)
         }
       }
 
       if (att.file && att.file?.size > 16777216) // 16mb
-        messages.push(`Check attachments file '${att.file.name}' size '${att.file.size}B'`)
+        messages.push(`Check the size of '${att.file.name}' size: '${att.file.size}B' (Max: 16MB)`)
     }
 
   }
 
   if (institution.name === "")
-    messages.push(`Check the institution name (${institution.name})`)
+    messages.push(`Please add the name of the institution.`)
 
   if (institution.country === "")
-    messages.push(`Check the institution country (${institution.country})`)
+    messages.push(`Please add the country of the institution.`)
 
   if (institution.date_year === "")
-    messages.push(`Check the institution year (${institution.date_year})`)
+    messages.push(`Please add the year of the institution.`)
 
 
   return { errors: messages }
