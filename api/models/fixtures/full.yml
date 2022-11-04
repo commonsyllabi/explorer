@@ -112,6 +112,9 @@
   name: "Common Syllabi"
   email: "mail@commonsyllabi.org"
   password: [36, 50, 97, 36, 49, 48, 36, 121, 72, 53, 79, 110, 76, 51, 98, 57, 112, 80, 81, 53, 49, 104, 54, 100, 74, 121, 54, 79, 101, 47, 117, 119, 78, 76, 57, 103, 107, 100, 88, 51, 90, 111, 73, 75, 80, 117, 113, 57, 104, 69, 102, 103, 85, 67, 51, 73, 56, 88, 113, 67]
+  bio: "This is the official account of Cosyll, which uploads syllabi on behalf, and with the consent of, fellow educators."
+  education:
+    - "Prototype Fund (Bundesministerium für Bildung und Forschung"
   syllabi:
     - uuid: '46de6a2b-aacb-4c24-b1e1-6665821f846a'
       title: "Politics of Code"

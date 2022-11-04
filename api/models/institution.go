@@ -17,7 +17,7 @@ type Institution struct {
 	UUID      uuid.UUID      `gorm:"uniqueIndex;type:uuid;primaryKey;default:uuid_generate_v4()" json:"uuid" yaml:"uuid"`
 	Name      string         `json:"name" form:"name"`
 	Country   int            `json:"country" form:"country"`
-	Date      Date           `gorm:"embedded;embeddedPrefix:date_" json:"date" form:"date"`
+	Date      Date           `gorm:"embedded;embeddedPrefix:date_" json:"date"`
 	URL       string         `json:"url" form:"url"`
 	Position  string         `json:"position" form:"position"`
 }
