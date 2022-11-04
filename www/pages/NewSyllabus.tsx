@@ -618,9 +618,9 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                   </Button>
 
                   {errors.length > 0 ?
-                    errors.map((err) => {
+                    errors.map((err, index) => {
                       return (
-                        <Alert variant="danger" className="mt-3">
+                        <Alert variant="danger" className="mt-3" key={`error-${index}`}>
                           {err as string}
                         </Alert>
                       )

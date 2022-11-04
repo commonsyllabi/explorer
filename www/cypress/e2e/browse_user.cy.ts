@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 describe('Browses a user profile', () => {
     it('should navigate to the home page, browse some syllabi, and find a user', () => {
         cy.visit('/')
@@ -51,3 +53,5 @@ describe('Browses its own user profile', () => {
         cy.get('[data-cy="newSyllabusLink"]')
     })
 })
+
+export { }
