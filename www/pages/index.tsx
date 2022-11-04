@@ -66,6 +66,8 @@ interface IHomeProps {
 
 const Home: NextPage<IHomeProps> = ({ meta, total, syllabiListings }) => {
   const router = useRouter();
+  const [currentPath, setCurrentPath] = useState("")
+  const [currentQuery, setCurrentQuery] = useState({})
   const [syllabi, setSyllabi] = useState(syllabiListings)
   const [syllabiCount, setSyllabiCount] = useState(syllabi.length)
   const [totalPages, setTotalPages] = useState(total)
@@ -85,23 +87,23 @@ const Home: NextPage<IHomeProps> = ({ meta, total, syllabiListings }) => {
 
     paginationHandler(1)
     const s = getSyllabusCards(syllabi, filters, 1)
-    if(s === undefined)
+    if (s === undefined)
       return
 
     setTotalPages(Math.ceil(s.total / PAGINATION_LIMIT))
     setSyllabiCount(s.total)
   }, [syllabi, filters])
 
-  const paginationHandler = (page: number) => {
-    const currentPath = router.query.pathname;
-    const currentQuery = {
-      page: page,
-    };
-    setActivePage(page);
+  useEffect(() => {
     router.push({
       pathname: currentPath as string,
       query: currentQuery,
     });
+  }, [currentPath, currentQuery])
+
+  const paginationHandler = (page: number) => {
+    setCurrentQuery({...currentQuery, page: page});
+    setActivePage(page);
   };
 
   const getCurrentPage = () => {
@@ -144,6 +146,11 @@ const Home: NextPage<IHomeProps> = ({ meta, total, syllabiListings }) => {
       })
       .then(data => {
         setSyllabi(data.syllabi)
+        setSyllabiCount(data.syllabi.length)
+        setTotalPages(Math.ceil(data.syllabi.length / PAGINATION_LIMIT))
+
+        setCurrentPath(router.query.pathname as string);
+        setCurrentQuery({...router.query, keywords: searchTerms})
       })
       .catch(err => {
         console.error("Problem with search", err)
@@ -152,7 +159,7 @@ const Home: NextPage<IHomeProps> = ({ meta, total, syllabiListings }) => {
 
   const clearSearch = () => {
     const st = document.getElementById("search-terms") as HTMLInputElement
-    if(st != null) st.value = ""
+    if (st != null) st.value = ""
     setSearchTerms("")
     setSyllabi(syllabiListings)
   }
@@ -191,7 +198,7 @@ const Home: NextPage<IHomeProps> = ({ meta, total, syllabiListings }) => {
         </Row>
         <Row>
           <Col>
-            { syllabiCount === 1 ? `Found 1 syllabus.` : `Found ${syllabiCount} syllabi.`}
+            {syllabiCount === 1 ? `Found 1 syllabus.` : `Found ${syllabiCount} syllabi.`}
           </Col>
         </Row>
         <Row className="d-flex flex-row-reverse">
