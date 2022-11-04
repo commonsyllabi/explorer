@@ -88,6 +88,7 @@ const Syllabus: NextPage<ISyllabus> = (props) => {
             <SyllabusSchoolCodeYear
               institution={getInstitutionName(props.institutions)}
               courseNumber={props.course_number}
+              academicLevel={props.academic_level}
               year={getInstitutionYearInfo(props.institutions)}
               term={getInstitutionTermInfo(props.institutions)}
             />

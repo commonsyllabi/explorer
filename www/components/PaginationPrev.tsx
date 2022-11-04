@@ -23,7 +23,7 @@ const PaginationPrev: React.FunctionComponent<IPaginationPrevProps> = ({
     );
   }
   return (
-    <li className="page-item" onClick={getTargetPage}>
+    <li className="page-item" data-cy="prevPage" onClick={getTargetPage}>
       <span className="page-link">Previous</span>
     </li>
   );

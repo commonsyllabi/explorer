@@ -15,31 +15,18 @@ const PaginationSection: React.FunctionComponent<IPaginationSectionProps> = ({
   handlePageChange,
 }) => {
   //TODO - cases for getPageItems():
-  // DONE: only 1 page - don't display
-  // DONE: 2 to 8 pages - show each link item
   // 9 or more pages - show first 2 and last 2 link items with ellipses & form to go to page
   const getPageItems = () => {
     let pageButtonEls = [];
     for (let i = 1; i < totalPages + 1; i++) {
-      if (i === activePage) {
         pageButtonEls.push(
           <PaginationItem
             key={`pagination-${i}`}
             pageNum={i}
-            isActive={true}
+            isActive={i === activePage}
             handlePageChange={handlePageChange}
           />
         );
-      } else {
-        pageButtonEls.push(
-          <PaginationItem
-            key={`pagination-${i}`}
-            pageNum={i}
-            isActive={false}
-            handlePageChange={handlePageChange}
-          />
-        );
-      }
     }
     return pageButtonEls;
   };

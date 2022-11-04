@@ -73,7 +73,7 @@ const UserListingsSection: React.FunctionComponent<
 
         <div id="user-syllabi-index-public">
           {linkEls.length > 0 ? (
-            <ul className="list-unstyled pb-3">{linkEls}</ul>
+            <ul className="list-unstyled pb-3" data-cy={`user${sectionTitle}Listing`}>{linkEls}</ul>
           ) : (
             <p className="notice-empty text-muted pb-3">
               <em>No {sectionTitle.toLowerCase()}.</em>

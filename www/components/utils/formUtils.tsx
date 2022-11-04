@@ -190,8 +190,12 @@ export const submitForm = async (form: IFormData, endpoint: string, h: Headers):
       for (const t of value) {
         body.append("tags[]", t as string)
       }
+    else if(key == "academic_fields")
+      for (const t of value) {
+        body.append("academic_fields[]", t as string)
+      }
     else
-      body.append(key, value as string);
+      body.append(key, value as string);    
   }
 
   // todo: have a 'pending' status

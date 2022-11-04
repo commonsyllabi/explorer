@@ -25,7 +25,7 @@ const PaginationNext: React.FunctionComponent<IPaginationNextProps> = ({
     );
   }
   return (
-    <li className="page-item" onClick={getTargetPage}>
+    <li className="page-item" data-cy="nextPage" onClick={getTargetPage}>
       <span className="page-link">Next</span>
     </li>
   );

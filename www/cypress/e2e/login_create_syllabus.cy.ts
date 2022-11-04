@@ -61,8 +61,24 @@ describe('Create a new syllabus', () => {
         cy.get('[data-cy="courseStatusInput"]').click({force: true})
         cy.get('[data-cy="courseStatusInput"]').click({force: true})
 
-        cy.get('[data-cy="courseCodeInput"]').type("IMANY-UH-1001", {force: true})
-        cy.get('[data-cy="academicLevelInput"]').select('1', {force: true})
+        //-- add institution
+        cy.get('[data-cy="institutionNameInput"]').type('Khartum Jamiyat', {force: true})
+        cy.wait(500)
+        cy.get('[data-cy="institutionCountryInput"]').select('Sudan', {force: true})
+        cy.wait(500)
+        cy.get('[data-cy="institutionYearInput"]').type('2022', {force: true})
+        cy.wait(500)
+        cy.get('[data-cy="institutionTermInput"]').type('Summer', {force: true})
+        cy.wait(500)
+
+        
+        //-- add academic fields and check academic fields
+        cy.get('#academic_field_broad').select('02 - Arts and humanities', {force: true})
+        cy.get('#academic_field_narrow').select('021 - Arts', {force: true})
+        cy.get('#academic_field_detailed').select('0214 - Handicrafts', {force: true})
+
+        // cy.get('[data-cy="courseCodeInput"]').type("IMANY-UH-1001", {force: true})
+        cy.get('[data-cy="academicLevelInput"]').select('Master', {force:true})
         cy.get('[data-cy="courseLanguageInput"]').select('FR', {force: true})
         cy.get('[data-cy="courseDurationInput"]').type('7', {force: true})
         cy.get('[data-cy="courseDescriptionInput"]').type('Lorem ipsum dolores sit descriptio nuncam sed que tantamus', {force: true})
@@ -87,9 +103,7 @@ describe('Create a new syllabus', () => {
         cy.wait('@createInstitution')
         cy.wait('@createAttachment')
     })
-})
 
-  describe('Visit the newly created syllabus', () => {
     it('navigate to the syllabus page', () => {
         if(!newSyllabusUUID) throw new Error(`incorrect newSyllabusUUID: ${newSyllabusUUID}`)
         
@@ -97,9 +111,19 @@ describe('Create a new syllabus', () => {
 
         cy.get('h1').contains('Test class 1')
         cy.get('.course-instructors').children().first().contains('Pierre Depaz')
+
+        //-- check academic fields
+        //-- check institution
+        //-- 
         
         cy.get('.course-description')
         cy.get('.course-resource').should('have.length', 2)
+    })
+
+    it('navigate to the home page and signs out', () => {
+        cy.visit('/')
+        cy.get('[data-cy="newSyllabusLink"]').click({force: true})
+        cy.contains('log in').click()
     })
 })
 

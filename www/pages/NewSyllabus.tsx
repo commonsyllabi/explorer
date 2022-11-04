@@ -121,7 +121,6 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     const form = event.currentTarget;
     event.preventDefault();
     event.stopPropagation();
-    console.log(formData);
 
     // check if user is logged in
     if (session == null || session.user == null) {
@@ -198,30 +197,10 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     const key = t.id as keyof IFormInstitution
     institutionData[key] = t.value
     setInstitutionData(institutionData);
-    console.log(`${[t.id]}: ${t.value}`);
   };
 
   const setAcadFieldsData = (acadFieldsArray: string[]) => {
     setFormData({ ...formData, ["academic_fields"]: acadFieldsArray });
-  };
-
-  // TODO: Update this for the next academic field input system
-  const handleAcademicFieldChange = (event: React.SyntheticEvent) => {
-    const allInputGroups: HTMLCollection =
-      document.getElementsByClassName("academicFieldInput");
-    let checkedFields = [];
-    for (let i = 0; i < allInputGroups.length; i++) {
-      const fieldCode =
-        allInputGroups[i].getElementsByTagName("input")[0].value;
-      const isChecked =
-        allInputGroups[i].getElementsByTagName("input")[0].checked;
-      // console.log(`${fieldCode}: ${isChecked}`);
-      if (isChecked === true) {
-        checkedFields.push(fieldCode);
-      }
-    }
-    console.log(`checkedFields: ${checkedFields}`);
-    setFormData({ ...formData, ["academic_fields"]: checkedFields });
   };
 
   const [attachmentData, setAttachmentData] = useState(Array<IUploadAttachment>);
@@ -367,8 +346,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                           id="name"
                           placeholder=""
                           onChange={handleInstitutionChange}
-                          value={institutionData.name}
-                          data-cy="instutionNameInput"
+                          data-cy="institutionNameInput"
                         />
                       </div>
                       <Form.Control.Feedback type="invalid">
@@ -401,8 +379,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                           id="url"
                           placeholder=""
                           onChange={handleInstitutionChange}
-                          value={institutionData.url}
-                          data-cy="instutionUrlInput"
+                          data-cy="institutionUrlInput"
                         />
                       </div>
                     </Form.Group>
@@ -416,9 +393,11 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                             required
                             id="date_year"
                             placeholder=""
+                            type="number"
+                            min="1800"
+                            max={new Date().getFullYear()}
                             onChange={handleInstitutionChange}
-                            value={institutionData.date_year}
-                            data-cy="instutionYearInput"
+                            data-cy="institutionYearInput"
                           />
                           <Form.Control.Feedback type="invalid">
                             Please provide the year this course was taught.
@@ -435,8 +414,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                             id="date_term"
                             placeholder=""
                             onChange={handleInstitutionChange}
-                            value={institutionData.date_term}
-                            data-cy="instutionTermInput"
+                            data-cy="institutionTermInput"
                           />
                           <Form.Control.Feedback type="invalid">
                             Please provide the academic term during which this
@@ -447,7 +425,9 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                     </div>
                   </div>
 
-                  <Form.Group className="mb-3">
+
+                  {/* COURSE INPUT TEMPORARY OMITTED BEFORE EDGE IMPLEMENTATION */}
+                  {/* <Form.Group className="mb-3">
                     <Form.Label htmlFor="courseCode">Course Number</Form.Label>
                     <div className="col-4">
                       <Form.Control
@@ -458,7 +438,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                         data-cy="courseCodeInput"
                       />
                     </div>
-                  </Form.Group>
+                  </Form.Group> */}
 
                   <AddAcademicFieldsForm
                     setAcadFieldsData={setAcadFieldsData}

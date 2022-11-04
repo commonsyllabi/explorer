@@ -30,15 +30,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   const url = new URL(`users/${userId}`, apiUrl);
 
-  // console.log(`USER ID: ${userId}`);
-  // console.log(`API URL: ${apiUrl}`);
-  // console.log(`FETCH URL: ${url}`);
-
   const res = await fetch(url);
   if (res.ok) {
     const userInfo = await res.json();
 
-    if(userInfo.syllabi === null)
+    if (userInfo.syllabi === null)
       return {
         props: userInfo
       }
@@ -177,8 +173,9 @@ const About: NextPage<IUser> = (props) => {
                 defaultActiveKey={activeTab as string}
                 id="user-syllabi-collections-tabs"
                 className="mb-3 gap-2"
+                data-cy="userTabs"
               >
-                <Tab eventKey="syllabi" title="Syllabi">
+                <Tab eventKey="syllabi" title="Syllabi" data-cy="syllabiTab">
                   <div className="d-flex justify-content-between align-items-baseline py-2">
                     {checkIfAdmin() ? (
                       <h2 className="inline h5">Syllabi by you</h2>
@@ -202,7 +199,7 @@ const About: NextPage<IUser> = (props) => {
                       {/* Only allow new syllabus to be created if one is one their own page */}
                       {checkIfAdmin() ? (
                         <Link href="/NewSyllabus">
-                          <Button variant="primary" aria-label="New Syllabus">
+                          <Button variant="primary" aria-label="New Syllabus" data-cy="newSyllabusLink">
                             + New Syllabus
                           </Button>
                         </Link>
@@ -228,7 +225,7 @@ const About: NextPage<IUser> = (props) => {
                     )?.elements : "You do not have any syllabi yet."}
                   </div>
                 </Tab>
-                <Tab eventKey="collections" title="Collections">
+                <Tab eventKey="collections" title="Collections" data-cy="collectionsTab">
                   <div className="d-flex justify-content-between align-items-baseline py-2">
                     {checkIfAdmin() ? (
                       <h2 className="inline h5">Your Collections</h2>
@@ -247,9 +244,13 @@ const About: NextPage<IUser> = (props) => {
                           onChange={handleFilterChange}
                         />
                       </Form>
-                      <Button variant="primary" aria-label="New Collection">
-                        + New
-                      </Button>
+                      {checkIfAdmin() ? (
+                        <Button variant="primary" aria-label="New Collection">
+                          + New
+                        </Button>
+                      ) : (
+                        <></>
+                      )}
                     </div>
                   </div>
                   <div id="collections">

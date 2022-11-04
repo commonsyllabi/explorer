@@ -46,7 +46,6 @@ const UserProfileSidebar: React.FunctionComponent<IUserProfileSidebarProps> = ({
       <div id="user-profile" className="py-4">
         <div id="user-description" className="border-bottom pb-4">
           <h2>{props.name}</h2>
-          <p className="text-muted small">UUID: {props.uuid}</p>
           <UserBio userBio={props.bio} />
           <UserLinks links={props.urls} />
         </div>

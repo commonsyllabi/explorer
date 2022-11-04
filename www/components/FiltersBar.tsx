@@ -53,6 +53,7 @@ const FiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => {
           <Form.Select
             id="academic_level"
             value={filters.academic_level}
+            data-cy="filtersAcademicLevel"
             onChange={handleChange}>
             <option value="">All</option>
             {getLevelsFilters(props.meta.academic_levels)}
@@ -67,6 +68,7 @@ const FiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => {
           <Form.Select
             id="academic_year"
             value={filters.academic_year}
+            data-cy="filtersAcademicYear"
             onChange={handleChange}>
             <option value="">All</option>
             {getYearsFilters(props.meta.academic_years)}
@@ -81,6 +83,7 @@ const FiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => {
           <Form.Select
             id="academic_field"
             value={filters.academic_field}
+            data-cy="filtersAcademicField"
             onChange={handleChange}>
             <option value="">All</option>
             {getFieldsFilters(props.meta.academic_fields)}
@@ -95,6 +98,7 @@ const FiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => {
           <Form.Select
             id="language"
             value={filters.language}
+            data-cy="filtersLanguage"
             onChange={handleChange}>
             <option value="">All</option>
             {getLanguagesFilters(props.meta.languages)}
@@ -119,6 +123,7 @@ const FiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => {
                   aria-labelledby="search-includes-tags"
                   id="tags_include"
                   value={filters.tags_include}
+                  data-cy="filtersTagsInclude"
                   onChange={handleChange}
                 />
               </InputGroup>
@@ -135,6 +140,7 @@ const FiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => {
                   aria-labelledby="search-excludes-tags"
                   id="tags_exclude"
                   value={filters.tags_exclude}
+                  data-cy="filtersTagsExclude"
                   onChange={handleChange}
                 />
               </InputGroup>
@@ -142,7 +148,7 @@ const FiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => {
           </div>
 
           <div>
-            <Button onClick={handleReset} className="mt-4 w-100" variant="light">Reset filters</Button>
+            <Button onClick={handleReset} className="mt-4 w-100" variant="light" data-cy="filtersReset">Reset filters</Button>
           </div>
         </div>
       </div>

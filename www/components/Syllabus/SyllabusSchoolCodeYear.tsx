@@ -11,7 +11,7 @@ interface ISyllabusSchoolCodeYearProps {
 
 const SyllabusSchoolCodeYear: React.FunctionComponent<
   ISyllabusSchoolCodeYearProps
-> = ({ institution, courseNumber, academicLevel, term, year }) => {
+> = ({ institution, courseNumber, academicLevel, term, year }) => {  
   return (
     <div className="d-flex gap-3">
       {institution ? (
@@ -30,13 +30,13 @@ const SyllabusSchoolCodeYear: React.FunctionComponent<
         </p>
       )}
 
-      {courseNumber ? (
+      {/* {courseNumber ? (
         <p className="small">{courseNumber}</p>
       ) : (
         <p className="small text-muted">
           <em>no course code</em>
         </p>
-      )}
+      )} */}
 
       <div className="d-flex gap-1">
         {term ? (

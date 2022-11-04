@@ -43,11 +43,12 @@ const GlobalNav: React.FunctionComponent = () => {
                 id="userNavDropdown"
                 className=" text-end align-self-center"
                 align="end"
-                data-cy="Logged user"
+                data-cy="loggedUser"
               >
                 <NavDropdown.Item
                   href={`/user/${session.user._id}`}
                   className="py-2 text-end"
+                  data-cy="accountLink"
                 >
                   My Account
                 </NavDropdown.Item>
@@ -57,6 +58,7 @@ const GlobalNav: React.FunctionComponent = () => {
                 <NavDropdown.Item
                   href="#"
                   className="py-2 text-end"
+                  data-cy="signOut"
                   onClick={() =>
                     signOut({ redirect: false }).then((result) => {
                       Router.push("/");

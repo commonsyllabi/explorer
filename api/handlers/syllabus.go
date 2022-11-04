@@ -22,7 +22,6 @@ var (
 )
 
 func GetSyllabi(c echo.Context) error {
-	// authenticating to return unlisted but owned syllabi
 	user_uuid := mustGetUser(c)
 
 	params, err := parseSearchParams(c)
@@ -78,7 +77,6 @@ func CreateSyllabus(c echo.Context) error {
 }
 
 func GetSyllabus(c echo.Context) error {
-	// authenticating to return unlisted but owned syllabi
 	user_uuid := mustGetUser(c)
 
 	id := c.Param("id")
@@ -168,7 +166,6 @@ func GetSyllabusAttachments(c echo.Context) error {
 }
 
 func GetSyllabusAttachment(c echo.Context) error {
-	// authenticating to return unlisted but owned syllabi
 	user_uuid := mustGetUser(c)
 
 	uid := parseUUIDParam(c, "id")
