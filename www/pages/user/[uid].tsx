@@ -86,16 +86,9 @@ const About: NextPage<IUser> = (props) => {
 
   const checkIfAdmin = () => {
     if (session != null && session.user != null) {
-      const loggedInId = session.user._id;
-      if (loggedInId === props.uuid) {
-        // console.log(`THIS IS YOUR OWN PROFILE PAGE.`);
-        return true;
-      } else {
-        // console.log(`THIS IS NOT YOUR PROFILE PAGE, VIEWING AS GUEST.`);
-        return false;
-      }
+      return session.user._id === props.uuid;
     }
-    return false;
+    return false
   };
 
   const focusedTab = router.query["tab"];
