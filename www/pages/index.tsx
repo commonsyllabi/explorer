@@ -21,9 +21,13 @@ const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 const PAGINATION_LIMIT = 15
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-
-  const page = query.page ? query.page : 1;
-  const url = new URL(`syllabi/?page=${page}`, apiUrl);
+  const url = new URL(`syllabi/`, apiUrl);
+  const page = query.page ? query.page as string : "1";
+  const keywords = query.keywords ? query.keywords as string : ""
+  if (query.page !== "1")
+    url.searchParams.append("page", page)
+  if (keywords !== "")
+    url.searchParams.append("keywords", keywords)
 
   const res = (await fetch(url).catch((err) => {
     console.log(`error fetching backend: ${err}`);
@@ -67,7 +71,7 @@ interface IHomeProps {
 const Home: NextPage<IHomeProps> = ({ meta, total, syllabiListings }) => {
   const router = useRouter();
   const [currentPath, setCurrentPath] = useState("")
-  const [currentQuery, setCurrentQuery] = useState({})
+  const [currentQuery, setCurrentQuery] = useState(router.query)
   const [syllabi, setSyllabi] = useState(syllabiListings)
   const [syllabiCount, setSyllabiCount] = useState(syllabi.length)
   const [totalPages, setTotalPages] = useState(total)
@@ -81,19 +85,54 @@ const Home: NextPage<IHomeProps> = ({ meta, total, syllabiListings }) => {
     tags_exclude: [],
   });
 
+  //-- parses query params into filters
+  //-- should be done only once at the beginning
   useEffect(() => {
-    //-- this useEffect() listens for changes from the search bar or the filters bar
-    //-- it resets the activePage to 1, then updates the cards, totals and pages
+    if (router.query.fields) {
+      setFilters({ ...filters, academic_field: router.query.fields[0] })
+    }
 
-    paginationHandler(1)
+    if (router.query.levels) {
+      setFilters({ ...filters, academic_level: router.query.levels[0] })
+    }
+
+    if (router.query.languages) {
+      setFilters({ ...filters, language: router.query.languages[0] })
+    }
+
+    if (router.query.tags) {
+      setFilters({ ...filters, tags_include: router.query.tags as string[] })
+    }
+  }, [])
+
+  const updateRouterQueryParams = (filters: ISyllabiFilters) => {
+    if (filters.academic_field != "")
+      setCurrentQuery({ ...currentQuery, fields: filters.academic_field })
+
+    if (filters.academic_level != "")
+      setCurrentQuery({ ...currentQuery, levels: filters.academic_level })
+
+    if (filters.language != "")
+      setCurrentQuery({ ...currentQuery, languages: filters.language })
+
+    if (filters.tags_include.length != 0)
+      setCurrentQuery({ ...currentQuery, tags: filters.tags_include })
+  }
+
+  //-- this useEffect() listens for changes from the search bar or the filters bar
+  //-- it resets the activePage to 1, then updates the cards, totals and pages
+  useEffect(() => {
+    // paginationHandler(1)
     const s = getSyllabusCards(syllabi, filters, 1)
     if (s === undefined)
       return
 
+    updateRouterQueryParams(filters)
     setTotalPages(Math.ceil(s.total / PAGINATION_LIMIT))
     setSyllabiCount(s.total)
   }, [syllabi, filters])
 
+  //-- listens for path and query changes and updates the URL
   useEffect(() => {
     router.push({
       pathname: currentPath as string,
@@ -102,7 +141,7 @@ const Home: NextPage<IHomeProps> = ({ meta, total, syllabiListings }) => {
   }, [currentPath, currentQuery])
 
   const paginationHandler = (page: number) => {
-    setCurrentQuery({...currentQuery, page: page});
+    setCurrentQuery({ ...currentQuery, page: page.toString() });
     setActivePage(page);
   };
 
@@ -149,8 +188,8 @@ const Home: NextPage<IHomeProps> = ({ meta, total, syllabiListings }) => {
         setSyllabiCount(data.syllabi.length)
         setTotalPages(Math.ceil(data.syllabi.length / PAGINATION_LIMIT))
 
-        setCurrentPath(router.query.pathname as string);
-        setCurrentQuery({...router.query, keywords: searchTerms})
+        setCurrentPath(router.query.pathname as string)
+        setCurrentQuery({ ...router.query, keywords: searchTerms })
       })
       .catch(err => {
         console.error("Problem with search", err)
@@ -162,9 +201,16 @@ const Home: NextPage<IHomeProps> = ({ meta, total, syllabiListings }) => {
     if (st != null) st.value = ""
     setSearchTerms("")
     setSyllabi(syllabiListings)
+    setCurrentQuery({})
+    paginationHandler(1)
   }
 
   const handleFilterChange = (filters: ISyllabiFilters) => {
+    if (!Object.values(filters).some(v => v.length !== 0)) //-- if filters are being reset
+      setCurrentQuery({})
+    else
+      paginationHandler(1)
+
     setFilters(filters);
   };
 
