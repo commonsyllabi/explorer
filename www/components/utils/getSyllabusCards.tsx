@@ -73,7 +73,7 @@ export const getSyllabusCards = (
     <SyllabusCard
       key={item.uuid}
       userName={userName}
-      props={item}
+      data={item}
       isAdmin={isAdmin ? isAdmin : false}
     />
   )) as JSX.Element[];

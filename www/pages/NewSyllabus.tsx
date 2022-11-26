@@ -124,7 +124,6 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     event.stopPropagation();
     if (form.checkValidity() === false) {
       setValidated(true)
-      // return
     }
 
 

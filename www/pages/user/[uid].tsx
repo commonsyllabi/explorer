@@ -171,7 +171,7 @@ const About: NextPage<IUser> = (props) => {
                 <Tab eventKey="syllabi" title="Syllabi" data-cy="syllabiTab">
                   <div className="d-flex justify-content-between align-items-baseline py-2">
                     {checkIfAdmin() ? (
-                      <h2 className="inline h5">Syllabi by you</h2>
+                      <h2 className="inline h5">Your syllabi</h2>
                     ) : (
                       <h2 className="inline h5">Syllabi by {props.name}</h2>
                     )}
