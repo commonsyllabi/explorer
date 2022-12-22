@@ -24,10 +24,13 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const url = new URL(`syllabi/`, apiUrl);
   const page = query.page ? query.page as string : "1";
   const keywords = query.keywords ? query.keywords as string : ""
+  const tags = query.tags ? query.tags as string : ""
   if (query.page !== "1")
     url.searchParams.append("page", page)
   if (keywords !== "")
     url.searchParams.append("keywords", keywords)
+  if (tags !== "")
+    url.searchParams.append("tags", tags)
 
   const res = (await fetch(url).catch((err) => {
     console.log(`error fetching backend: ${err}`);
@@ -72,8 +75,8 @@ const Home: NextPage<IHomeProps> = ({ meta, total, syllabiListings }) => {
   const router = useRouter();
   const [currentPath, setCurrentPath] = useState("")
   const [currentQuery, setCurrentQuery] = useState(router.query)
-  const [syllabi, setSyllabi] = useState(syllabiListings)
-  const [syllabiCount, setSyllabiCount] = useState(syllabi.length)
+  const [syllabi, setSyllabi] = useState<ISyllabus[]>()
+  const [syllabiCount, setSyllabiCount] = useState(syllabiListings.length)
   const [totalPages, setTotalPages] = useState(total)
   const [searchTerms, setSearchTerms] = useState("")
   const [filters, setFilters] = useState<ISyllabiFilters>({
@@ -85,9 +88,17 @@ const Home: NextPage<IHomeProps> = ({ meta, total, syllabiListings }) => {
     tags_exclude: [],
   });
 
+  useEffect(() => {
+    setSyllabi(syllabiListings)
+  }, [syllabiListings])
+
   //-- parses query params into filters
   //-- should be done only once at the beginning
   useEffect(() => {
+    if (router.query.year) {
+      setFilters({ ...filters, academic_year: router.query.year[0] })
+    }
+
     if (router.query.fields) {
       setFilters({ ...filters, academic_field: router.query.fields[0] })
     }
@@ -106,6 +117,9 @@ const Home: NextPage<IHomeProps> = ({ meta, total, syllabiListings }) => {
   }, [])
 
   const updateRouterQueryParams = (filters: ISyllabiFilters) => {
+    if (filters.academic_year != "")
+      setCurrentQuery({ ...currentQuery, year: filters.academic_year })
+
     if (filters.academic_field != "")
       setCurrentQuery({ ...currentQuery, fields: filters.academic_field })
 
@@ -127,10 +141,13 @@ const Home: NextPage<IHomeProps> = ({ meta, total, syllabiListings }) => {
     if (s === undefined)
       return
 
-    updateRouterQueryParams(filters)
     setTotalPages(Math.ceil(s.total / PAGINATION_LIMIT))
     setSyllabiCount(s.total)
   }, [syllabi, filters])
+
+  useEffect(() => {
+    updateRouterQueryParams(filters)
+  }, [filters])
 
   //-- listens for path and query changes and updates the URL
   useEffect(() => {
