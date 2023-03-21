@@ -26,7 +26,7 @@ const About: NextPage = () => {
             browse syllabi.
           </h2>
           <p>
-            This project aims at providing infrastructure for open-access of syllabi and curricula. By and large, knowledge is an activity which thrives on open sharing and collaborative progress; to foster knowledge exchange in higher-education, we need a place where we can meaningfully search, archive and reference syllabi.
+            This project aims at providing infrastructure for open-access of syllabi and curricula; it is a place where we can meaningfully search, archive, distribute and reference syllabi.
           </p>
           <p>
             Cosyll is first and foremost for educators, by educators. Whether to have a convenient place to publish your classes, to see how a similar class is being taught at another university, in another country, or to find inspiration in your peers&apos; works, Cosyll focuses on exchange between teachers. In this spirit, we encourage the sharing of documents one does not always easily find online: schedules, assignments descriptions, works cited and referenced, class wikis, etc.
@@ -56,12 +56,6 @@ const About: NextPage = () => {
             We are a group of educators, designers and developers who firmly believe that open-access and information archival is essential to improve pedagogical practices. <a href="http://pierredepaz.net" target="_blank" rel="noopener noreferrer">Pierre Depaz</a> is the project lead; he teaches in various universities across France, Germany and the U.S. <a href="http://patshiu.com" target="_blank" rel="noopener noreferrer">Pat Shiu</a> is the lead designer and frontend developer, with an extensive background in web archival. <a href="http://github.com/grobie" target="_blank" rel="noopener noreferrer">Tobias Schmidt</a> is a software engineer with a decade of experience in building and maintaining robust infrastructures.
           </p>
           <p>We are open to collaborations and cooperations, do not hesitate to <a href="mailto:team@common-syllabi.org">get in touch</a>!</p>
-
-          <p>
-            We&apos;re open to collaborations and cooperations, don&apos;t
-            hesitate to{" "}
-            <a href="mailto:team@common-syllabi.org">get in touch</a>!
-          </p>
 
           <div className="d-flex flex-column justify-content-center mb-5 mt-5">
             <h4 className="mb-3">Support</h4>
