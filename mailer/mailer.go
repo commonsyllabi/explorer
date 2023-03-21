@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"time"
 
@@ -13,6 +14,11 @@ import (
 )
 
 const DOMAIN = "mail.common-syllabi.org"
+
+var (
+	_, b, _, _ = runtime.Caller(0)
+	Basepath   = filepath.Dir(b)
+)
 
 type Payload interface {
 	Check() error
@@ -54,7 +60,7 @@ func (c DeletionPayload) Data() interface{} {
 }
 
 func loadTemplate(_name string, _data interface{}) (string, error) {
-	p := filepath.Join("./api/templates", fmt.Sprintf("%s.tmpl", _name))
+	p := filepath.Join(Basepath, "../api/templates", fmt.Sprintf("%s.tmpl", _name))
 	t, err := template.ParseFiles(p)
 
 	if err != nil {

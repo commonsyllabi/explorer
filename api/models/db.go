@@ -82,7 +82,14 @@ func runFixtures(shouldTruncateTables bool) error {
 		}
 	}
 
-	bytes, err := os.ReadFile(filepath.Join(Basepath, "fixtures", "full.yml"))
+	var fixtures_path = ""
+	if os.Getenv("API_MODE") == "test" {
+		fixtures_path = "test.yml"
+	} else {
+		fixtures_path = "full.yml"
+	}
+
+	bytes, err := os.ReadFile(filepath.Join(Basepath, "fixtures", fixtures_path))
 	if err != nil {
 		return err
 	}

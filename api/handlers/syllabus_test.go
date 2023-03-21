@@ -77,6 +77,18 @@ func setup(t *testing.T) func(t *testing.T) {
 	}
 }
 
+type SyllabusResponse struct {
+	Meta struct {
+		AcademicFields []string `json:"academic_fields"`
+		AcademicLevels []string `json:"academic_levels"`
+		AacademicYears []string `json:"academic_years"`
+		Languages      []string `json:"langauges"`
+		TotalPages     int      `json:"total_pages"`
+		TotalSyllabi   int      `json:"total_syllabi"`
+	}
+	Syllabi []models.Syllabus
+}
+
 func TestSyllabusHandler(t *testing.T) {
 	teardown := setup(t)
 	defer teardown(t)
@@ -88,11 +100,10 @@ func TestSyllabusHandler(t *testing.T) {
 		c.SetPath("/syllabi")
 		handlers.GetSyllabi(c)
 		assert.Equal(t, http.StatusOK, res.Code)
-
-		sylls := make([]models.Syllabus, 0)
-		err := json.Unmarshal(res.Body.Bytes(), &sylls)
+		var resp SyllabusResponse
+		err := json.Unmarshal(res.Body.Bytes(), &resp)
 		require.Nil(t, err)
-		assert.Equal(t, 3, len(sylls))
+		assert.Equal(t, 3, len(resp.Syllabi))
 	})
 
 	t.Run("Test get all syllabi in academic fields", func(t *testing.T) {
@@ -106,10 +117,10 @@ func TestSyllabusHandler(t *testing.T) {
 		handlers.GetSyllabi(c)
 		assert.Equal(t, http.StatusOK, res.Code)
 
-		sylls := make([]models.Syllabus, 0)
-		err := json.Unmarshal(res.Body.Bytes(), &sylls)
+		var resp SyllabusResponse
+		err := json.Unmarshal(res.Body.Bytes(), &resp)
 		require.Nil(t, err)
-		assert.Equal(t, 2, len(sylls))
+		assert.Equal(t, 2, len(resp.Syllabi))
 	})
 
 	t.Run("Test get all syllabi in wrong academic fields", func(t *testing.T) {
@@ -146,10 +157,10 @@ func TestSyllabusHandler(t *testing.T) {
 		handlers.GetSyllabi(c)
 		assert.Equal(t, http.StatusOK, res.Code)
 
-		sylls := make([]models.Syllabus, 0)
-		err := json.Unmarshal(res.Body.Bytes(), &sylls)
+		var resp SyllabusResponse
+		err := json.Unmarshal(res.Body.Bytes(), &resp)
 		require.Nil(t, err)
-		assert.Equal(t, 1, len(sylls))
+		assert.Equal(t, 1, len(resp.Syllabi))
 	})
 
 	t.Run("Test get all syllabi in a given language", func(t *testing.T) {
@@ -162,10 +173,10 @@ func TestSyllabusHandler(t *testing.T) {
 		handlers.GetSyllabi(c)
 		assert.Equal(t, http.StatusOK, res.Code)
 
-		sylls := make([]models.Syllabus, 0)
-		err := json.Unmarshal(res.Body.Bytes(), &sylls)
+		var resp SyllabusResponse
+		err := json.Unmarshal(res.Body.Bytes(), &resp)
 		require.Nil(t, err)
-		assert.Equal(t, 2, len(sylls))
+		assert.Equal(t, 2, len(resp.Syllabi))
 	})
 
 	t.Run("Test get all syllabi in a wrong language", func(t *testing.T) {
@@ -190,10 +201,10 @@ func TestSyllabusHandler(t *testing.T) {
 		handlers.GetSyllabi(c)
 		assert.Equal(t, http.StatusOK, res.Code)
 
-		sylls := make([]models.Syllabus, 0)
-		err := json.Unmarshal(res.Body.Bytes(), &sylls)
+		var resp SyllabusResponse
+		err := json.Unmarshal(res.Body.Bytes(), &resp)
 		require.Nil(t, err)
-		assert.Equal(t, 1, len(sylls))
+		assert.Equal(t, 1, len(resp.Syllabi))
 	})
 
 	t.Run("Test get all syllabi in a wrong academic_level", func(t *testing.T) {
@@ -231,10 +242,10 @@ func TestSyllabusHandler(t *testing.T) {
 		handlers.GetSyllabi(c)
 		assert.Equal(t, http.StatusOK, res.Code)
 
-		sylls := make([]models.Syllabus, 0)
-		err := json.Unmarshal(res.Body.Bytes(), &sylls)
+		var resp SyllabusResponse
+		err := json.Unmarshal(res.Body.Bytes(), &resp)
 		require.Nil(t, err)
-		assert.Equal(t, 1, len(sylls))
+		assert.Equal(t, 1, len(resp.Syllabi))
 	})
 
 	t.Run("Test get all syllabi with combined filters", func(t *testing.T) {
@@ -249,10 +260,10 @@ func TestSyllabusHandler(t *testing.T) {
 		handlers.GetSyllabi(c)
 		assert.Equal(t, http.StatusOK, res.Code)
 
-		sylls := make([]models.Syllabus, 0)
-		err := json.Unmarshal(res.Body.Bytes(), &sylls)
+		var resp SyllabusResponse
+		err := json.Unmarshal(res.Body.Bytes(), &resp)
 		require.Nil(t, err)
-		assert.Equal(t, 1, len(sylls))
+		assert.Equal(t, 1, len(resp.Syllabi))
 	})
 
 	t.Run("Test create syllabus", func(t *testing.T) {

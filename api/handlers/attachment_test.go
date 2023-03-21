@@ -37,7 +37,7 @@ func TestAttachmentHandler(t *testing.T) {
 		atts := make([]models.Attachment, 0)
 		err := json.Unmarshal(res.Body.Bytes(), &atts)
 		require.Nil(t, err)
-		assert.Equal(t, 7, len(atts))
+		assert.Equal(t, 6, len(atts))
 	})
 
 	t.Run("Test create attachment with file", func(t *testing.T) {

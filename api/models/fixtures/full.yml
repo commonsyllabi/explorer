@@ -41,7 +41,7 @@
       academic_level: 2
       duration: 14
       attachments:
-        - uuid: 'c55f0baf-12b8-4bdb-b5e6-2280bee8ab21'
+        - uuid: 'c55f0baf-12b8-4bdb-b5e6-2280bee8ab19'
           name: "Course website"
           url: "https://www.dg.architektur.tu-darmstadt.de/studium/semesterprogramm_aktuell/semesterprogramm_ws20___21.de.jsp"
       tags:
@@ -72,7 +72,7 @@
       language: fr
       academic_level: 1
       attachments:
-        - uuid: 'c55f0baf-12b8-4adb-b5e6-2280bee8ab21'
+        - uuid: 'c55f0baf-12b8-4adb-b5e6-2280bee8ab20'
           name: "Course notes"
           url: "https://periode.github.io/digital-culture/"
       tags:
@@ -127,9 +127,9 @@
       description: "While our relationships between ourselves, our environment, and other people are inherently political, computer technologies and technology companies consistently claim to remain “neutral”.\nThis course will assume the opposite—software is political—, and focus on how software applications share commonalities with political systems, how they affect their users as political actors and how we can build alternatives or improvements to those systems."
       duration: 14
       attachments:
-        - uuid: 'c55f0baf-12b8-4bdb-b5e6-6660bff8ab21'
+        - uuid: 'c55f0baf-12b8-4bdb-b5e6-6660bff8ab18'
           name: "Class website"
-          url: "https://githb.com/periode/politics-of-code"
+          url: "https://github.com/periode/politics-of-code"
       tags:
         - "politics"
         - "code"
@@ -150,7 +150,7 @@
       academic_level: 2
       duration: 14
       attachments:
-        - uuid: 'c6660bef-12b8-4bdb-b5e6-2280bee8ab21'
+        - uuid: 'c6660bef-12b8-4bdb-b5e6-2280bee8ab22'
           name: "Course website"
           url: "https://github.com/periode/augmenting-gallery"
       tags:
@@ -173,7 +173,7 @@
       academic_level: 1
       duration: 14
       attachments:
-        - uuid: 'c6660baf-12b8-4bdb-b5e6-2280bee8ab21'
+        - uuid: 'c6660baf-12b8-4bdb-b5e6-2280bee8ab23'
           name: "University website"
           url: "https://nyuad.nyu.edu"
       academic_fields:
@@ -210,7 +210,7 @@
       academic_fields:
         - 211
       attachments:
-        - uuid: 'c6660baf-12b8-4bdb-b5e6-3680bee8ab21'
+        - uuid: 'c6660baf-12b8-4bdb-b5e6-3680bee8ab24'
           name: "University website"
           url: "https://nyuad.nyu.edu"
       tags:
@@ -247,7 +247,7 @@
         - 211
       duration: 14
       attachments:
-        - uuid: 'c6660baf-12b8-4bdb-b5e6-3780bee8ab21'
+        - uuid: 'c6660baf-12b8-4bdb-b5e6-3780bee8ab25'
           name: "University website"
           url: "https://nyuad.nyu.edu"
       tags:
@@ -281,7 +281,7 @@
         - 222
       duration: 14
       attachments:
-        - uuid: 'c6660baf-12b8-4bdb-b5e6-3880bee8ab21'
+        - uuid: 'c6660baf-12b8-4bdb-b5e6-3880bee8ab26'
           name: "University website"
           url: "https://nyuad.nyu.edu"
       tags:
@@ -316,7 +316,7 @@
        - 222
       duration: 14
       attachments:
-        - uuid: 'c6660baf-12b8-4bdb-b5e6-3980bee8ab21'
+        - uuid: 'c6660baf-12b8-4bdb-b5e6-3980bee8ab27'
           name: "University website"
           url: "https://nyuad.nyu.edu"
       tags:
@@ -355,7 +355,7 @@
         - 421
       duration: 14
       attachments:
-        - uuid: 'c6660baf-12b8-4bdb-b5e6-4080bee8ab21'
+        - uuid: 'c6660baf-12b8-4bdb-b5e6-4080bee8ab28'
           name: "University website"
           url: "https://nyuad.nyu.edu"
       tags:
@@ -390,7 +390,7 @@
       academic_level: 2
       duration: 14
       attachments:
-        - uuid: 'c6660baf-12b8-4bdb-b5e6-4180bee8ab21'
+        - uuid: 'c6660baf-12b8-4bdb-b5e6-4180bee8ab29'
           name: "University website"
           url: "https://nyuad.nyu.edu"
       tags:
@@ -426,7 +426,7 @@
         - 215
       duration: 14
       attachments:
-        - uuid: 'c6660baf-12b8-4bdb-b5e6-4280bee8ab21'
+        - uuid: 'c6660baf-12b8-4bdb-b5e6-4280bee8ab30'
           name: "University website"
           url: "https://nyuad.nyu.edu"
       tags:
@@ -466,7 +466,7 @@
         - 211
       duration: 14
       attachments:
-        - uuid: 'c6660baf-12b8-4bdb-b5e6-4380bee8ab21'
+        - uuid: 'c6660baf-12b8-4bdb-b5e6-4380bee8ab31'
           name: "University website"
           url: "https://nyuad.nyu.edu"
       tags:
@@ -503,7 +503,7 @@
       academic_level: 1
       duration: 14
       attachments:
-        - uuid: 'c6660baf-12b8-4bdb-b5e6-4480bee8ab21'
+        - uuid: 'c6660baf-12b8-4bdb-b5e6-4480bee8ab32'
           name: "University website"
           url: "https://nyuad.nyu.edu"
       tags:
@@ -537,7 +537,7 @@
       academic_level: 2
       duration: 14
       attachments:
-        - uuid: 'c6660baf-12b8-4bdb-b5e6-4580bee8ab21'
+        - uuid: 'c6660baf-12b8-4bdb-b5e6-4580bee8ab33'
           name: "Course website"
           url: "https://github.com/craigprotzel/Mashups"
       tags:
@@ -575,7 +575,7 @@
       academic_level: 1
       duration: 14
       attachments:
-        - uuid: 'c6660baf-12b8-4bdb-b5e6-4680bee8ab21'
+        - uuid: 'c6660baf-12b8-4bdb-b5e6-4680bee8ab34'
           name: "University website"
           url: "https://nyuad.nyu.edu"
       tags:
@@ -612,7 +612,7 @@
         - 314
       duration: 14
       attachments:
-        - uuid: 'c6660baf-12b8-4bdb-b5e6-4780bee8ab21'
+        - uuid: 'c6660baf-12b8-4bdb-b5e6-4780bee8ab35'
           name: "University website"
           url: "https://nyuad.nyu.edu"
       tags:
@@ -648,7 +648,7 @@
         - 215
       duration: 14
       attachments:
-        - uuid: 'c6660baf-12b8-4bdb-b5e6-4880bee8ab21'
+        - uuid: 'c6660baf-12b8-4bdb-b5e6-4880bee8ab36'
           name: "University website"
           url: "https://nyuad.nyu.edu"
       tags:
@@ -688,7 +688,7 @@
         - 211
       duration: 14
       attachments:
-        - uuid: 'c6660baf-12b8-4bdb-b5e6-4980bee8ab21'
+        - uuid: 'c6660baf-12b8-4bdb-b5e6-4980bee8ab37'
           name: "University website"
           url: "https://nyuad.nyu.edu"
       tags:
@@ -730,7 +730,7 @@
       academic_level: 1
       duration: 14
       attachments:
-        - uuid: 'c6660baf-12b8-4bdb-b5e6-5080bee8ab21'
+        - uuid: 'c6660baf-12b8-4bdb-b5e6-5080bee8ab38'
           name: "University website"
           url: "https://nyuad.nyu.edu"
       tags:
@@ -759,28 +759,3 @@
           date:
             year: 2019
             term: "spring"
-
-    # - uuid: '46de6a2b-666b-4c24-b1e1-5895821f8469'
-    #   title: ""
-    #   status: "listed"
-    #   description: ""
-    #   language: en
-    #   academic_level: 2
-    #   duration: 14
-    #   attachments:
-    #     - uuid: 'c6660baf-12b8-4bdb-b5e6-5880bee8ab21'
-    #       name: "University website"
-    #       url: "https://nyuad.nyu.edu"
-    #   tags:
-    #     - ""
-    #     - ""
-    #     - ""
-    #   learning_outcomes:
-    #     - ""
-    #     - ""
-    #   topic_outlines:
-    #     - ""
-    #     - ""
-    #   assignments:
-    #     - ""
-    #     - ""
