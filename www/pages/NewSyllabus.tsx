@@ -314,14 +314,22 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
           <Row className="pt-3 pb-3">
             <Col className="col-8 offset-2">
               <h1 className="h3">New Syllabus</h1>
+              <p className="small text-muted mb-3">
+                Signed in as {session.user.name} ({session.user.email}).
+              </p>
             </Col>
           </Row>
           <Row className="gap-3 pb-5">
             <Col className="col-8 offset-2">
+              <h4>
+                Upload a syllabus and autofill{"  "}
+                <Badge pill bg="secondary">
+                  New
+                </Badge>
+              </h4>
               <DragAndDropSyllabus onSyllabusUpload={() => {}} />
-              <p className="small text-muted mb-3">
-                Signed in as {session.user.name} ({session.user.email}).
-              </p>
+            </Col>
+            <Col className="col-8 offset-2">
               <Form noValidate validated={validated} onSubmit={handleSubmit}>
                 <fieldset>
                   <Form.Group className="mb-3">
