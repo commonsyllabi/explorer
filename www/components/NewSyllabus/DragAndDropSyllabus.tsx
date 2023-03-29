@@ -1,13 +1,14 @@
 import React, { useMemo, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { Row, Col, Spinner, Alert } from "react-bootstrap";
+import { FiCheckCircle, FiFile, FiXCircle } from "react-icons/fi";
+import { Session } from "next-auth";
 
 // import global styles
 
 const baseStyle: React.CSSProperties = {
   flex: 1,
   display: "flex",
-  flexDirection: "column",
   alignItems: "center",
   justifyItems: "center",
   padding: "16px",
@@ -41,38 +42,86 @@ const rejectStyleFormat = {
   color: "#ff1744",
 };
 
-type DragAndDropSyllabusProps = {
+export type DragAndDropSyllabusProps = {
   onSyllabusUpload: (data: any) => void;
+  session: Session | null;
 };
 
-function DragAndDropSyllabus(props: DragAndDropSyllabusProps) {
-  const { onSyllabusUpload } = props;
+function DragAndDropSyllabus({
+  onSyllabusUpload,
+  session,
+}: DragAndDropSyllabusProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const [showAlert, setShowAlert] = useState(false);
+  const [showError, setShowError] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [File, setFile] = useState<File | null>(null);
 
-  const handleDrop = (files: File[]) => {
-    const reader = new FileReader();
-    reader.onload = async () => {
-      const fileContent = reader.result as string;
-      await sendFileToAPI(fileContent);
-    };
-    reader.readAsBinaryString(files[0]);
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  const handleDrop = async (acceptedFiles: File[]) => {
+    setIsLoading(true);
+    setShowError(false);
+    setShowSuccess(false);
+    setErrorMessage("");
+
+    // check if user is logged in
+    if (session == null || session.user == null) {
+      setIsLoading(false);
+      setShowError(true);
+      setErrorMessage(
+        `It seems you have been logged out. Please log in and try again.`
+      );
+      if (session == null) console.warn("No session found!");
+      else console.warn("No user found in session!");
+      return;
+    }
+
+    // Creating http request
+    const postHeader = new Headers();
+    postHeader.append("Authorization", `Bearer ${session.user.token}`);
+    const endpoint = new URL(`syllabi/parse`, apiUrl);
+    const body = new FormData();
+    body.append("file", acceptedFiles[0]);
+    try {
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: postHeader,
+        body: body,
+      });
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+      const data = await res.json();
+      onSyllabusUpload(data);
+      setShowSuccess(true);
+    } catch (error) {
+      console.error(error);
+      setErrorMessage(
+        "There was an error uploading the syllabus file. Please try again later."
+      );
+      setShowError(true);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const { getRootProps, getInputProps, isFocused, isDragAccept, isDragReject } =
-    useDropzone({
-      onDrop: handleDrop,
-      multiple: false,
-      accept: {
-        "application/msword": [".doc", ".docx"],
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
-          [".doc", ".docx"],
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.template":
-          [".doc", ".docx"],
-        "application/pdf": [".pdf"],
-      },
-    });
+  const {
+    acceptedFiles,
+    getRootProps,
+    getInputProps,
+    isFocused,
+    isDragAccept,
+    isDragReject,
+  } = useDropzone({
+    onDrop: handleDrop,
+    multiple: false,
+    accept: {
+      "application/msword": [".doc", ".docx"],
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+        [".doc", ".docx"],
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.template":
+        [".doc", ".docx"],
+      "application/pdf": [".pdf"],
+    },
+  });
 
   const style = useMemo(
     () => ({
@@ -92,77 +141,41 @@ function DragAndDropSyllabus(props: DragAndDropSyllabusProps) {
     [isDragReject]
   );
 
-  const sendFileToAPI = async (fileContent: string) => {
-    setIsLoading(true);
-    setShowAlert(false);
-    setShowSuccess(false);
-
-    const url = process.env.OPENSYLLABUS_PARSER_API_URL || "No URL Found";
-    const token = process.env.OPENSYLLABUS_PARSER_API_TOKEN;
-    const headers = { Authorization: `Token ${token}` };
-
-    try {
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          ...headers,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ fileContent }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      onSyllabusUpload(data);
-      setShowSuccess(true);
-    } catch (error) {
-      console.error(error);
-      setShowAlert(true);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   return (
-    <div {...getRootProps({ style })}>
+    <Row {...getRootProps({ style })}>
       <input {...getInputProps()} />
-
-      {isLoading ? (
-        <Spinner animation="border" />
-      ) : (
-        <div>
-          <p className="m-0">
-            Drag and drop a syllabus file here, or click to select a file.
-          </p>
-          <p className="m-0 small">
-            Accepted file types:{" "}
-            <span style={styleAcceptedFormats}>DOC, DOCX, PDF.</span>
-          </p>
-        </div>
-      )}
-      {showAlert && (
-        <Alert variant="danger" onClose={() => setShowAlert(false)} dismissible>
+      <Col className="col-1" style={{ fontSize: "32px" }}>
+        {isLoading ? (
+          <Spinner animation="border" />
+        ) : showSuccess ? (
+          // show checkmark
+          <FiCheckCircle />
+        ) : showError ? (
+          <FiXCircle />
+        ) : (
+          <FiFile />
+        )}
+      </Col>
+      <Col className="">
+        <p className="m-0">
+          Drag and drop a syllabus file here, or click to select a file.
+        </p>
+        <p className="m-0 small">
+          Accepted file types:{" "}
+          <span style={styleAcceptedFormats}>DOC, DOCX, PDF.</span>
+        </p>
+        {showError && <p className="m-0 small">{errorMessage}</p>}
+      </Col>
+      {/* {showError && (
+        <Alert variant="danger" onClose={() => setShowError(false)} dismissible>
           <Alert.Heading>Error!</Alert.Heading>
           <p>
             There was an error uploading the syllabus file. Please try again
             later.
           </p>
         </Alert>
-      )}
-      {showSuccess && (
-        <Alert
-          variant="success"
-          onClose={() => setShowSuccess(false)}
-          dismissible
-        >
-          <Alert.Heading>Success!</Alert.Heading>
-          <p>The syllabus file was uploaded successfully.</p>
-        </Alert>
-      )}
-    </div>
+      )} */}
+    </Row>
   );
 }
 

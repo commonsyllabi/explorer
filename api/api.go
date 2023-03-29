@@ -95,6 +95,8 @@ func SetupRouter() *echo.Echo {
 
 		syllabi.POST("/:id/attachments", handlers.AddSyllabusAttachment)
 		syllabi.DELETE("/:id/attachments/:att_id", handlers.RemoveSyllabusAttachment)
+
+		syllabi.POST("/parse", handlers.ParseSyllabusFile)
 	}
 
 	users := r.Group("/users")

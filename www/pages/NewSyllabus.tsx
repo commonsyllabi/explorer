@@ -327,7 +327,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                   New
                 </Badge>
               </h4>
-              <DragAndDropSyllabus onSyllabusUpload={() => {}} />
+              <DragAndDropSyllabus session={session} onSyllabusUpload={() => {}} />
             </Col>
             <Col className="col-8 offset-2">
               <Form noValidate validated={validated} onSubmit={handleSubmit}>

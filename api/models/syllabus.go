@@ -45,6 +45,7 @@ type Syllabus struct {
 
 // the BeforeCreate GORM hook is used to set defaults for academic fields and tags
 // and to generate the slug based on the title
+
 func (s *Syllabus) BeforeCreate(tx *gorm.DB) (err error) {
 	if len(s.AcademicFields) == 0 {
 		s.AcademicFields = []int32{000}
