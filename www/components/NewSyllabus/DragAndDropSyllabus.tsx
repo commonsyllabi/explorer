@@ -3,6 +3,7 @@ import { useDropzone } from "react-dropzone";
 import { Row, Col, Spinner, Alert } from "react-bootstrap";
 import { FiCheckCircle, FiFile, FiXCircle } from "react-icons/fi";
 import { Session } from "next-auth";
+import { IParsedData } from "types";
 
 // import global styles
 
@@ -43,7 +44,9 @@ const rejectStyleFormat = {
 };
 
 export type DragAndDropSyllabusProps = {
-  onSyllabusUpload: (data: any) => void;
+  onSyllabusUpload: React.Dispatch<
+    React.SetStateAction<IParsedData | undefined>
+  >;
   session: Session | null;
 };
 
@@ -54,21 +57,24 @@ function DragAndDropSyllabus({
   const [isLoading, setIsLoading] = useState(false);
   const [showError, setShowError] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [message, setMessage] = useState("");
   const [File, setFile] = useState<File | null>(null);
 
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
   const handleDrop = async (acceptedFiles: File[]) => {
     setIsLoading(true);
+    setMessage("");
     setShowError(false);
     setShowSuccess(false);
-    setErrorMessage("");
+
+    // Make sure the document is a PDF or a Word document
 
     // check if user is logged in
     if (session == null || session.user == null) {
       setIsLoading(false);
       setShowError(true);
-      setErrorMessage(
+      setMessage(
         `It seems you have been logged out. Please log in and try again.`
       );
       if (session == null) console.warn("No session found!");
@@ -88,14 +94,20 @@ function DragAndDropSyllabus({
         headers: postHeader,
         body: body,
       });
-      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-      const data = await res.json();
-      onSyllabusUpload(data);
+      if (!res.ok) {
+        const errorResponse = await res.text();
+        throw new Error(errorResponse);
+      }
+      const data: JSON = await res.json();
+
+      // onSyllabusUpload({data, acceptedFiles[0]});
+      console.log(data);
       setShowSuccess(true);
-    } catch (error) {
+      setMessage("Syllabus file uploaded successfully!");
+    } catch (error: any) {
       console.error(error);
-      setErrorMessage(
-        "There was an error uploading the syllabus file. Please try again later."
+      setMessage(
+        error.message || error.toString() || "An unknown error occurred."
       );
       setShowError(true);
     } finally {
@@ -142,40 +154,35 @@ function DragAndDropSyllabus({
   );
 
   return (
-    <Row {...getRootProps({ style })}>
-      <input {...getInputProps()} />
-      <Col className="col-1" style={{ fontSize: "32px" }}>
-        {isLoading ? (
-          <Spinner animation="border" />
-        ) : showSuccess ? (
-          // show checkmark
-          <FiCheckCircle />
-        ) : showError ? (
-          <FiXCircle />
-        ) : (
-          <FiFile />
-        )}
-      </Col>
-      <Col className="">
-        <p className="m-0">
-          Drag and drop a syllabus file here, or click to select a file.
-        </p>
-        <p className="m-0 small">
-          Accepted file types:{" "}
-          <span style={styleAcceptedFormats}>DOC, DOCX, PDF.</span>
-        </p>
-        {showError && <p className="m-0 small">{errorMessage}</p>}
-      </Col>
-      {/* {showError && (
-        <Alert variant="danger" onClose={() => setShowError(false)} dismissible>
-          <Alert.Heading>Error!</Alert.Heading>
-          <p>
-            There was an error uploading the syllabus file. Please try again
-            later.
+    <>
+      <Row {...getRootProps({ style })}>
+        <input {...getInputProps()} />
+        <div style={{ fontSize: "32px", width: "32px", marginRight: "16px" }}>
+          {isLoading ? (
+            <Spinner animation="border" />
+          ) : showSuccess ? (
+            // show checkmark
+            <FiCheckCircle />
+          ) : showError ? (
+            <FiXCircle />
+          ) : (
+            <FiFile />
+          )}
+        </div>
+        <Col>
+          <p className="m-0">
+            Drag and drop a syllabus file here, or click to select a file.
           </p>
-        </Alert>
-      )} */}
-    </Row>
+          <p className="m-0 small">
+            Accepted file types:{" "}
+            <span style={styleAcceptedFormats}>DOC, DOCX, PDF.</span>
+          </p>
+        </Col>
+      </Row>
+      <p className={`small p-2 ${showError ? "text-danger" : "text-success"}`}>
+        {message}
+      </p>
+    </>
   );
 }
 

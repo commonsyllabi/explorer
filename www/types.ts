@@ -57,6 +57,10 @@ export interface ISyllabus {
   attachments?: IResources[];
 }
 
+export interface IParsedData { 
+  data: IFormData;
+  attachment: File;
+}
 export interface IFormData {
   institutions: IInstitution[];
   title: string;
@@ -76,6 +80,10 @@ export interface IFormData {
   academic_level: number;
   duration: number;
 }
+
+// Makes all fields optional and allows for partial updates
+interface IFormDataOptional extends Partial<IFormData> {}
+
 
 export interface IResources {
   uuid: string;

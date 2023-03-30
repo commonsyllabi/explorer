@@ -11,6 +11,7 @@ import {
   IUploadAttachment,
   IInstitution,
   IFormInstitution,
+  IParsedData,
 } from "types";
 
 //Bootstrap
@@ -68,6 +69,10 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
   const [institutionCreated, setInstitutionCreated] = useState("pending");
   const [attachmentsCreated, setAttachmentsCreated] = useState("pending");
   const [syllabusUUID, setSyllabusUUID] = useState("");
+  const [parsedData, setParsedData] = useState<IParsedData>();
+  
+  useEffect(() => {
+  }, [parsedData]);
 
   //Form data and submission handling
   //---------------------------------------
@@ -327,7 +332,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                   New
                 </Badge>
               </h4>
-              <DragAndDropSyllabus session={session} onSyllabusUpload={() => {}} />
+              <DragAndDropSyllabus session={session} onSyllabusUpload={setParsedData} />
             </Col>
             <Col className="col-8 offset-2">
               <Form noValidate validated={validated} onSubmit={handleSubmit}>

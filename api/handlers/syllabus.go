@@ -1,10 +1,7 @@
 package handlers
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
 	"os"
 	"strconv"
@@ -23,70 +20,6 @@ var (
 	maxSyllabusTitleLength       = 150
 	minSyllabusDescriptionLength = 15
 )
-
-// Function that fetches the URL (env var: OPENSYLLABUS_PARSER_API_URL) with the token (env: OPENSYLLABUS_PARSER_API_TOKEN) and appends the file to its body.
-// and returns then returns the parsed syllabus as a json object and handles errors
-func ParseSyllabusFile(c echo.Context) error {
-	// Make sure the user is authenticated
-	userUuid := mustGetUser(c)
-	if userUuid == uuid.Nil {
-		return c.String(http.StatusUnauthorized, "Unauthorized")
-	}
-
-	// Get the file from the request
-	file, err := c.FormFile("file")
-	if err != nil {
-		return c.String(http.StatusBadRequest, "Missing file parameter")
-	}
-
-	// Open the file
-	fileContent, err := file.Open()
-	if err != nil {
-		return c.String(http.StatusInternalServerError, "Error opening file")
-	}
-	defer fileContent.Close()
-
-	// Read the file contents into a byte slice
-	fileBytes, err := io.ReadAll(fileContent)
-	if err != nil {
-		return c.String(http.StatusInternalServerError, "Error reading file")
-	}
-
-	// Send the file to the external API
-	apiUrl := os.Getenv("OPENSYLLABUS_PARSER_API_URL")
-	token := os.Getenv("OPENSYLLABUS_PARSER_API_TOKEN")
-	req, err := http.NewRequest("POST", apiUrl, bytes.NewReader(fileBytes))
-	if err != nil {
-		return c.String(http.StatusInternalServerError, "Error creating request")
-	}
-	req.Header.Set("Authorization", fmt.Sprintf("Token %s", token))
-	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		return c.String(http.StatusInternalServerError, "Error sending request")
-	}
-	defer resp.Body.Close()
-
-	// Check if the API response was successful
-	if resp.StatusCode != http.StatusOK {
-		return c.String(http.StatusInternalServerError, "Error processing file")
-	}
-
-	// Read the response body
-	responseBody, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return c.String(http.StatusInternalServerError, "Error reading response body")
-	}
-
-	// Parse the response body into a JSON object
-	var jsonResponse interface{}
-	err = json.Unmarshal(responseBody, &jsonResponse)
-	if err != nil {
-		return c.String(http.StatusInternalServerError, "Error parsing response body as JSON")
-	}
-
-	// Return a success message
-	return c.JSON(http.StatusOK, jsonResponse)
-}
 
 func GetSyllabi(c echo.Context) error {
 	user_uuid := mustGetUser(c)
