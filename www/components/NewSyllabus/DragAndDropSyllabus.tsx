@@ -3,7 +3,7 @@ import { useDropzone } from "react-dropzone";
 import { Row, Col, Spinner, Alert } from "react-bootstrap";
 import { FiCheckCircle, FiFile, FiXCircle } from "react-icons/fi";
 import { Session } from "next-auth";
-import { IParsedData } from "types";
+import { IFormDataOptional, IParsedData } from "types";
 
 // import global styles
 
@@ -98,7 +98,7 @@ function DragAndDropSyllabus({
         const errorResponse = await res.text();
         throw new Error(errorResponse);
       }
-      const data: JSON = await res.json();
+      const data: IFormDataOptional = await res.json();
 
       // onSyllabusUpload({data, acceptedFiles[0]});
       console.log(data);

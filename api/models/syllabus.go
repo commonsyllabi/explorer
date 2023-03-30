@@ -43,6 +43,26 @@ type Syllabus struct {
 	TopicOutlines    pq.StringArray `gorm:"type:text[]" json:"topic_outlines" form:"topic_outlines[]"`
 }
 
+type IFormData struct {
+	Institutions     []Institution `json:"institutions"`
+	Title            string        `json:"title"`
+	CourseNumber     string        `json:"course_number"`
+	Description      string        `json:"description"`
+	Attachments      []Attachment  `json:"attachments"`
+	Tags             []string      `json:"tags"`
+	Language         string        `json:"language"`
+	LearningOutcomes []string      `json:"learning_outcomes"`
+	TopicOutlines    []string      `json:"topic_outlines"`
+	Readings         []string      `json:"readings"`
+	GradingRubric    string        `json:"grading_rubric"`
+	Assignments      []string      `json:"assignments"`
+	Other            string        `json:"other"`
+	Status           string        `json:"status"`
+	AcademicFields   []string      `json:"academic_fields"`
+	AcademicLevel    int           `json:"academic_level"`
+	Duration         int           `json:"duration"`
+}
+
 // the BeforeCreate GORM hook is used to set defaults for academic fields and tags
 // and to generate the slug based on the title
 

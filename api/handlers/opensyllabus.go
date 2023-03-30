@@ -9,13 +9,12 @@ import (
 	"net/http"
 	"os"
 
-	"../models"
 	"github.com/commonsyllabi/explorer/api/models"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
 
-func getTitle(os OpenSyllabus) string {
+func getTitle(os models.OpenSyllabus) string {
 	var title string
 	var maxProbability float64
 
@@ -119,10 +118,10 @@ func ParseSyllabusFile(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, "Error parsing response body as JSON")
 	}
 
-	formData := IFormData{
-		Title: OpenSyllabus.Data.ExtractedSections.Title[0].Text,
+	formData := models.IFormData{
+		Title: getTitle(OpenSyllabus),
 	}
 
 	// Return a success message
-	return c.JSON(http.StatusOK, jsonResponse)
+	return c.JSON(http.StatusOK, formData)
 }

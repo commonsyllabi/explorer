@@ -70,8 +70,9 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
   const [attachmentsCreated, setAttachmentsCreated] = useState("pending");
   const [syllabusUUID, setSyllabusUUID] = useState("");
   const [parsedData, setParsedData] = useState<IParsedData>();
-  
+
   useEffect(() => {
+
   }, [parsedData]);
 
   //Form data and submission handling
@@ -346,6 +347,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                       onChange={handleChange}
                       value={formData.title}
                       data-cy="courseTitleInput"
+                      defaultValue={parsedData?.data?.title || ""} 
                     />
                     <Form.Control.Feedback type="invalid">
                       Please provide a valid course title.
