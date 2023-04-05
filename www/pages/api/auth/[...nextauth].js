@@ -1,5 +1,6 @@
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
+import { URLSearchParams } from "url";
 
 export default NextAuth({
     secret: "double poney",
@@ -12,9 +13,6 @@ export default NextAuth({
                 password: { label: "Password", type: "password" }
             },
             async authorize(credentials, req) {
-                // Add logic here to look up the user from the credentials supplied
-                var h = new Headers();
-                h.append("Content-Type", "application/form-data");
 
                 var b = new URLSearchParams();
                 b.append("email", credentials.username);
@@ -22,7 +20,6 @@ export default NextAuth({
 
                 var options = {
                     method: 'POST',
-                    headers: h,
                     body: b,
                     redirect: 'follow'
                 };
@@ -66,10 +63,4 @@ export default NextAuth({
         verifyRequest: '/auth/verify-request', // (used for check email message)
         newUser: '/auth/new-user' // New users will be directed here on first sign in (leave the property out if not of interest)
     },
-    callbacks: {
-        async session({session, user, token}){
-            console.log('user', JSON.stringify(user))
-            console.log('token', JSON.stringify(token))
-        }
-    }
 })
