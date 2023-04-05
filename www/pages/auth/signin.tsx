@@ -1,7 +1,6 @@
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import GlobalNav from "components/GlobalNav";
-import Link from "next/link";
 
 import {
   Alert,
@@ -19,6 +18,7 @@ import React, { useState } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import Router from "next/router";
 import Favicons from "components/head/favicons";
+import Link from "next/link";
 
 export const getStaticProps: GetStaticProps = async () => {
   const states = ["Login", "Sign up"];
@@ -61,15 +61,14 @@ const SignIn: NextPage<IAuthProps> = (props) => {
     signIn("credentials", {
       username: loginUsername,
       password: loginPassword,
-      redirect: false,
-    }).then((result) => {
-      if (!result || result.error)
-        setError(
-          "There was an error logging you in. Please check your credentials"
-        );
-      else Router.push("/");
-    });
-  };
+      redirect: false
+    }).
+    then(res => {
+      if(!res || res.error) setError("There was an error during login. Please check your email and password.")
+      else
+        if(res.ok) Router.push("/")
+    })
+  }
 
   const handleSignup = (e: React.BaseSyntheticEvent) => {
     e.preventDefault();
