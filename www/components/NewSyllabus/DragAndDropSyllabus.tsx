@@ -3,7 +3,7 @@ import { useDropzone } from "react-dropzone";
 import { Row, Col, Spinner, Alert } from "react-bootstrap";
 import { FiCheckCircle, FiFile, FiXCircle } from "react-icons/fi";
 import { Session } from "next-auth";
-import { IFormDataOptional, IParsedData } from "types";
+import { IFormDataOptional } from "types";
 
 // import global styles
 
@@ -44,14 +44,16 @@ const rejectStyleFormat = {
 };
 
 export type DragAndDropSyllabusProps = {
-  onSyllabusUpload: React.Dispatch<
-    React.SetStateAction<IParsedData | undefined>
+  setParsedData: React.Dispatch<
+    React.SetStateAction<IFormDataOptional | undefined>
   >;
+  setParsedFile: React.Dispatch<React.SetStateAction<File | undefined>>;
   session: Session | null;
 };
 
 function DragAndDropSyllabus({
-  onSyllabusUpload,
+  setParsedData,
+  setParsedFile,
   session,
 }: DragAndDropSyllabusProps) {
   const [isLoading, setIsLoading] = useState(false);
@@ -99,9 +101,8 @@ function DragAndDropSyllabus({
         throw new Error(errorResponse);
       }
       const data: IFormDataOptional = await res.json();
-
-      // onSyllabusUpload({data, acceptedFiles[0]});
-      console.log(data);
+      setParsedData(data);
+      setParsedFile(acceptedFiles[0]);
       setShowSuccess(true);
       setMessage("Syllabus file uploaded successfully!");
     } catch (error: any) {

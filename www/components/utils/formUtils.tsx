@@ -1,5 +1,5 @@
 import Form from "react-bootstrap/Form";
-import { IUploadAttachment, IFormData, IFormInstitution } from "types"
+import { IUploadAttachment, IFormData, IFormInstitution } from "types";
 
 import models from "models.json"; //import academic field codes
 import modelsIsced from "models-isced.json"; //import tiered academic field codes
@@ -56,7 +56,7 @@ const setUpLanguages = () => {
 export const generateLanguageOptions = () => {
   const languages = setUpLanguages();
   const elements = Object.keys(languages).map((langCode) => (
-    <option key={`${langCode}}`} value={langCode.toUpperCase()}>
+    <option key={`${langCode}}`} value={langCode}>
       {langCode.toUpperCase()} – {languages[langCode]}
     </option>
   ));
@@ -88,12 +88,16 @@ export const generateAcadFieldsBroad = () => {
 };
 
 //Return <option> elements for ACADEMIC_FIELDS_NARROW
-export const generateAcadFieldsNarrow = (broadFieldCode: keyof typeof modelsIsced['NARROW_FIELDS']) => {
+export const generateAcadFieldsNarrow = (
+  broadFieldCode: keyof typeof modelsIsced["NARROW_FIELDS"]
+) => {
   return generateAcademicFields(modelsIsced.NARROW_FIELDS[broadFieldCode]);
 };
 
 //Return <option> elements for ACADEMIC_FIELDS_DETAILED
-export const generateAcadFieldsDetailed = (narrowFieldCode: keyof typeof modelsIsced['DETAILED_FIELDS']) => {
+export const generateAcadFieldsDetailed = (
+  narrowFieldCode: keyof typeof modelsIsced["DETAILED_FIELDS"]
+) => {
   return generateAcademicFields(modelsIsced.DETAILED_FIELDS[narrowFieldCode]);
 };
 
@@ -120,29 +124,39 @@ export const generateAcademicFieldsCheckboxes = (
   return <>{acadFieldsCheckboxes}</>;
 };
 
-
-export const isValidForm = (form: IFormData, attachments: IUploadAttachment[], institution: IFormInstitution) => {
-  const messages: string[] = []
+export const isValidForm = (
+  form: IFormData,
+  attachments: IUploadAttachment[],
+  institution: IFormInstitution
+) => {
+  const messages: string[] = [];
 
   // requirements
   // title > 3 && title < 150
   if (form.title.length < 3 || form.title.length > 150) {
-    messages.push(`The title should be between 3 and 150 characters (currently ${form.title.length})`)
+    messages.push(
+      `The title should be between 3 and 150 characters (currently ${form.title.length})`
+    );
   }
 
   // check description as well
 
   // language must comply
   if (form.language.length < 2) {
-    messages.push(`The language should be BCP-47 compliant! (currently '${form.language.length > 0 ? form.language : "none"}')`)
+    messages.push(
+      `The language should be BCP-47 compliant! (currently '${
+        form.language.length > 0 ? form.language : "none"
+      }')`
+    );
   }
 
   // academic_level (come to think of it, this sounds abitrary, compared to not requiring academic_field)
-  const ac_levels = ["0", "1", "2", "3"]
+  const ac_levels = ["0", "1", "2", "3"];
   if (!ac_levels.includes(form.academic_level.toString())) {
-    messages.push(`Please choose an academic level: '${form.academic_level}'.)`)
+    messages.push(
+      `Please choose an academic level: '${form.academic_level}'.)`
+    );
   }
-
 
   // check that attachments are not null
   if (attachments.length > 0) {
@@ -150,52 +164,59 @@ export const isValidForm = (form: IFormData, attachments: IUploadAttachment[], i
 
     for (const att of attachments) {
       if (att.name.length < 3)
-        messages.push(`Check attachments name: '${att.name}' (should be longer than 3 characters)`)
+        messages.push(
+          `Check attachments name: '${att.name}' (should be longer than 3 characters)`
+        );
       if (att.url != "") {
-        let u
+        let u;
         try {
-          u = new URL(att.url as string)
+          u = new URL(att.url as string);
 
           if (att.file !== undefined)
-            messages.push(`Can't have both URL and file attachment. Please create a separate attachment if you wish to upload both.`)
+            messages.push(
+              `Can't have both URL and file attachment. Please create a separate attachment if you wish to upload both.`
+            );
         } catch {
-          messages.push(`Check that the attachment URL is valid: '${att.url}'`)
+          messages.push(`Check that the attachment URL is valid: '${att.url}'`);
         }
       }
 
-      if (att.file && att.file?.size > 16777216) // 16mb
-        messages.push(`Check the size of '${att.file.name}' size: '${att.file.size}B' (Max: 16MB)`)
+      if (att.file && att.file?.size > 16777216)
+        // 16mb
+        messages.push(
+          `Check the size of '${att.file.name}' size: '${att.file.size}B' (Max: 16MB)`
+        );
     }
-
   }
 
   if (institution.name === "")
-    messages.push(`Please add the name of the institution.`)
+    messages.push(`Please add the name of the institution.`);
 
   if (institution.country === "")
-    messages.push(`Please add the country of the institution.`)
+    messages.push(`Please add the country of the institution.`);
 
   if (institution.date_year === "")
-    messages.push(`Please add the year of the institution.`)
+    messages.push(`Please add the year of the institution.`);
 
+  return { errors: messages };
+};
 
-  return { errors: messages }
-}
-
-export const submitForm = async (form: IFormData, endpoint: string, h: Headers): Promise<Response> => {
-
+export const submitForm = async (
+  form: IFormData,
+  endpoint: string,
+  h: Headers
+): Promise<Response> => {
   let body = new FormData();
   for (let [key, value] of Object.entries(form)) {
     if (key == "tags")
       for (const t of value) {
-        body.append("tags[]", t as string)
+        body.append("tags[]", t as string);
       }
-    else if(key == "academic_fields")
+    else if (key == "academic_fields")
       for (const t of value) {
-        body.append("academic_fields[]", t as string)
+        body.append("academic_fields[]", t as string);
       }
-    else
-      body.append(key, value as string);    
+    else body.append(key, value as string);
   }
 
   // todo: have a 'pending' status
@@ -204,13 +225,16 @@ export const submitForm = async (form: IFormData, endpoint: string, h: Headers):
     method: "POST",
     headers: h,
     body: body,
-  })
+  });
 
-  return res
-}
+  return res;
+};
 
-export const submitInstitution = (institution: IFormInstitution, endpoint: URL, h: Headers): Promise<Response> => {
-
+export const submitInstitution = (
+  institution: IFormInstitution,
+  endpoint: URL,
+  h: Headers
+): Promise<Response> => {
   const i = new FormData();
   i.append("name", institution.name);
   i.append("url", institution.url);
@@ -222,12 +246,16 @@ export const submitInstitution = (institution: IFormInstitution, endpoint: URL, 
     method: "POST",
     headers: h,
     body: i,
-  })
+  });
 
-  return res
-}
+  return res;
+};
 
-export const submitAttachments = (att: IUploadAttachment, endpoint: URL, h: Headers): Promise<Response> => {
+export const submitAttachments = (
+  att: IUploadAttachment,
+  endpoint: URL,
+  h: Headers
+): Promise<Response> => {
   const a = new FormData();
   a.append("name", att.name);
   a.append("description", att.description ? att.description : "");
@@ -238,7 +266,7 @@ export const submitAttachments = (att: IUploadAttachment, endpoint: URL, h: Head
     method: "POST",
     headers: h,
     body: a,
-  })
+  });
 
-  return res
-} 
+  return res;
+};

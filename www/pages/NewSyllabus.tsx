@@ -11,7 +11,7 @@ import {
   IUploadAttachment,
   IInstitution,
   IFormInstitution,
-  IParsedData,
+  IFormDataOptional,
 } from "types";
 
 //Bootstrap
@@ -69,34 +69,26 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
   const [institutionCreated, setInstitutionCreated] = useState("pending");
   const [attachmentsCreated, setAttachmentsCreated] = useState("pending");
   const [syllabusUUID, setSyllabusUUID] = useState("");
-  const [parsedData, setParsedData] = useState<IParsedData>();
+  const [parsedData, setParsedData] = useState<IFormDataOptional>();
+  const [parsedFile, setParsedFile] = useState<File>();
 
   useEffect(() => {
+  if (parsedData) {
+    console.log(parsedData);
 
-  }, [parsedData]);
+    setFormData((prevFormData) => {
+      const newData = { ...prevFormData };
+      for (const key in parsedData) {
+        if (Object.prototype.hasOwnProperty.call(parsedData, key) && key in newData) {
+          newData[key] = parsedData[key];
+        }
+      }
+      return newData;
+    });
+  }
+}, [parsedData]);
 
-  //Form data and submission handling
-  //---------------------------------------
-  //Store form data
-  // const [formData, setFormData] = useState<IFormData>({
-  //   institutions: [],
-  //   title: "",
-  //   course_number: "",
-  //   description: "",
-  //   attachments: [],
-  //   tags: [],
-  //   language: "",
-  //   learning_outcomes: [],
-  //   topic_outlines: [],
-  //   readings: [],
-  //   grading_rubric: "",
-  //   assignments: [],
-  //   other: "",
-  //   status: "unlisted",
-  //   academic_fields: [],
-  //   academic_level: 0,
-  //   duration: 0,
-  // });
+  useEffect(() => { console.log("file changed")}, [parsedFile]);
 
   const [formData, setFormData] = useState<IFormData>({
     institutions: [],
@@ -333,7 +325,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                   New
                 </Badge>
               </h4>
-              <DragAndDropSyllabus session={session} onSyllabusUpload={setParsedData} />
+              <DragAndDropSyllabus session={session} setParsedData={setParsedData} setParsedFile={setParsedFile} />
             </Col>
             <Col className="col-8 offset-2">
               <Form noValidate validated={validated} onSubmit={handleSubmit}>
@@ -347,7 +339,6 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                       onChange={handleChange}
                       value={formData.title}
                       data-cy="courseTitleInput"
-                      defaultValue={parsedData?.data?.title || ""} 
                     />
                     <Form.Control.Feedback type="invalid">
                       Please provide a valid course title.
@@ -503,6 +494,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                     <Form.Select
                       id="language"
                       onChange={handleChange}
+                      value={formData.language}
                       data-cy="courseLanguageInput"
                     >
                       <option value="">—</option>

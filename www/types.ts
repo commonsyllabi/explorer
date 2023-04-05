@@ -77,11 +77,6 @@ export interface IFormData {
   duration: number;
 }
 
-export interface IParsedData { 
-  data: IFormDataOptional;
-  attachment: File;
-}
-
 // Makes all fields optional and allows for partial updates
 export interface IFormDataOptional extends Partial<IFormData> {}
 
