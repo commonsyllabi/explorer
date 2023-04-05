@@ -31,6 +31,14 @@ const GlobalNav: React.FunctionComponent = () => {
           <Navbar.Collapse id="global-nav" className="flex-row-reverse">
             <Nav className="float-end">
               <Nav.Link
+                href="/NewSyllabus"
+                className="py-3"
+                data-cy="newSyllabusLink"
+              >
+                <u>+ New Syllabus</u>
+              </Nav.Link>
+
+              <Nav.Link
                 href="/about"
                 className="py-3 text-end"
                 data-cy="aboutlink"
@@ -68,14 +76,6 @@ const GlobalNav: React.FunctionComponent = () => {
                   Sign Out
                 </NavDropdown.Item>
               </NavDropdown>
-
-              <Nav.Link
-                href="/NewSyllabus"
-                className="py-3 text-end"
-                data-cy="newSyllabusLink"
-              >
-                + New Syllabus
-              </Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Container>
@@ -105,7 +105,7 @@ const GlobalNav: React.FunctionComponent = () => {
                 className="py-3 text-end"
                 data-cy="newSyllabusLink"
               >
-                + New Syllabus
+                <u>+ New Syllabus</u>
               </Nav.Link>
               <Nav.Link href="/about" className="py-3 text-end">
                 About
