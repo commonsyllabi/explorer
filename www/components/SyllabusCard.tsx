@@ -3,7 +3,7 @@ import Link from "next/link";
 import type { GetStaticProps } from "next";
 
 import Card from "react-bootstrap/Card";
-import SyllabusSchoolCodeYear from "components/Syllabus/SyllabusSchoolCodeYear";
+import SyllabusHeader from "components/Syllabus/SyllabusHeader";
 import Tags from "./Tags";
 import PubBadge from "./PubBadge";
 import { getServerSideProps } from "pages";
@@ -104,12 +104,13 @@ const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = ({
 
         : <></>}
       <Card.Body>
-        <SyllabusSchoolCodeYear
+        <SyllabusHeader
           institution={getInstitutionName(data.institutions)}
           courseNumber={data.course_number ? data.course_number : null}
           term={getInstitutionTermInfo(data.institutions)}
           year={getInstitutionYearInfo(data.institutions)}
-          academicLevel={data.academic_level}
+          level={data.academic_level}
+          fields={data.academic_fields}
         />
         <Card.Title>
           <div className="d-flex justify-content-between w-100 align-items-center">

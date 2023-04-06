@@ -11,8 +11,6 @@ import Col from "react-bootstrap/Col";
 import Favicons from "components/head/favicons";
 import GlobalNav from "components/GlobalNav";
 import BreadcrumbsBar from "components/BreadcrumbsBar";
-import SyllabusBreadcrumbs from "components/SyllabusBreadcrumbs";
-import SyllabusSchoolCodeYear from "components/Syllabus/SyllabusSchoolCodeYear";
 import SyllabusResources from "components/Syllabus/SyllabusResources";
 import SyllabusFooter from "components/Syllabus/SyllabusFooter";
 import Tags from "components/Tags";
@@ -24,15 +22,12 @@ import {
   getInstitutionTermInfo,
   getInstitutionYearInfo,
 } from "components/utils/getInstitutionInfo";
+import SyllabusHeader from "components/Syllabus/SyllabusHeader";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const syllabusId = context.params!.sid;
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   const url = new URL(`syllabi/${syllabusId}`, apiUrl);
-
-  // console.log(`SYLLABUS ID: ${syllabusId}`);
-  // console.log(`API URL: ${apiUrl}`);
-  // console.log(`FETCH URL: ${url}`);
 
   const res = await fetch(url);
   if (res.ok) {
@@ -85,19 +80,19 @@ const Syllabus: NextPage<ISyllabus> = (props) => {
       <Container>
         <Row className="d-flex justify-content-center">
           <Col className="pt-3 pb-5 d-flex flex-column gap-3" lg={10}>
-            <SyllabusSchoolCodeYear
+            <SyllabusHeader
               institution={getInstitutionName(props.institutions)}
               courseNumber={props.course_number}
-              academicLevel={props.academic_level}
+              level={props.academic_level}
+              fields={props.academic_fields}
               year={getInstitutionYearInfo(props.institutions)}
               term={getInstitutionTermInfo(props.institutions)}
             />
             <h1 className="p-0 m-0">
               {props.title ? props.title : "Course Title"}
             </h1>
-            <p className="small text-muted mb-0">ID: {sid}</p>
             <p className="course-instructors p-0 m-0">
-              <Link href={`/user/${props.user.uuid}`}>
+              by <Link href={`/user/${props.user.uuid}`}>
                 {props.user ? props.user.name : "Course Author / Instructor"}
               </Link>
             </p>
