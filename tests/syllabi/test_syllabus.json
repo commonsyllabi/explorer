@@ -1,0 +1,2453 @@
+{
+  "model_version": "1.1.0",
+  "model_rev": "291db4095368eac91434998ad6a7e062a1b98798",
+  "took": 155,
+  "data": {
+    "md5": "185cba2949613255ca569e499bb16c8b",
+    "doc_type": "html",
+    "text": "\n \n \n9.520/6.860: Statistical Learning Theory and Applications, Fall 2019\n \n \n\n \n\n \n \n\n   \n     \n       \n         Units: \n         3-0-9 H,G \n       \n       \n         Class Times: \n         Tuesday and Thursday:  11:00 am - 12:30 pm \n       \n       \n         Location: \n           46-3002  (Singleton Auditorium) \n       \n       \n         Instructors: \n         \n         \n           Tomaso Poggio (TP) , \n           Lorenzo Rosasco (LR) ,\n           Alexander Rakhlin (AR) ,\n\t\t   Andrzej Banburski (AB) \n         \n         \n         \n         \n         TAs: \n         \n             \n             \n             \n            Michael Lee,         \n             \n         \n         \n       \n         Office Hours: \n           \n         Friday 1:00 pm - 2:00 pm, 46-5156 (Poggio lab lounge) and/or 46-5165 (MIBR Reading Room) \n       \n       \n         Email Contact: \n         9.520@mit.edu \n       \n       \n         Previous Class: \n         FALL 2018 ,  2018 lecture videos \n       \n       \n         \n        \n       \n         Registration: \n         Please register to 9.520/6.860 by filing this  registration form  and on Stellar below \n       \n        \n         Mailing list: \n         Registered students will be added in the course mailing list (9520students) \n       \n       \n         Stellar page:                  \n           http://stellar.mit.edu/S/course/9/fa19/9.520/ \n       \n\n     \n   \n    \n     \n         Announcements \n         Course Description \n         Prerequisites \n         Grading \n         Problem Sets \n         Projects \n         Syllabus \n         Reading List \n           \n\n     Course description \n    \n     The course covers foundations and recent advances of machine learning from the point of view of statistical learning and regularization theory.\n      \nUnderstanding intelligence and how to replicate it in machines is\narguably one of the greatest problems in science. Learning, its\nprinciples and computational implementations, is at the very core of\nintelligence. During the last decade, for the first time, we have been\nable to develop artificial intelligence systems that begin to solve\ncomplex tasks, until recently the exclusive domain of biological\norganisms, such as computer vision, speech recognition or natural\nlanguage understanding: cameras recognize faces, smart phones\nunderstand voice commands, smart speakers/assistants answer questions\nand cars can see and avoid obstacles. The machine learning algorithms\nthat are at the roots of these success stories are trained with\nexamples rather than programmed to solve a task.     \n\nThe content is roughly divided into three parts. In the first part,\nkey algorithmic ideas are introduced, with an emphasis on the\ninterplay between modeling and optimization aspects. Algorithms that\nwill be discussed include classical regularization (regularized least\nsquares, SVM, logistic regression, square and exponential loss),\nstochastic gradient methods, implicit regularization and minimum norm\nsolutions.    \nIn the second part, key ideas in statistical learning theory will be\ndeveloped to analyze the properties of the algorithms previously\nintroduced. Classical concepts like generalization, uniform\nconvergence and Rademacher complexities will be developed, together\nwith topics such as surrogate loss functions for classification,\nbounds based on margin, stability, and privacy.  \n\nThe third part of the course focuses on deep learning networks. It\nwill introduce theoretical frameworks addressing three key puzzles in\ndeep learning: approximation theory -- which functions can be\nrepresented more efficiently by deep networks than shallow networks\n-- optimization theory -- why can stochastic gradient descent easily\nfind global minima -- and machine learning -- how generalization in\ndeep networks used for classification can be explained in terms of\ncomplexity control implicit in gradient descent. It will also discuss\nconnections with the architecture of the brain, which was the original\ninspiration of the layered local connectivity of modern networks and\nmay provide ideas for future developments and revolutions in networks\nfor learning.   \n\nThe goal of the course is to provide students with the theoretical\nknowledge and the basic intuitions needed to use and develop effective\nmachine learning solutions to challenging problems.\n \n\n     Prerequisites \n    We will make extensive use of basic notions of calculus, linear algebra and probability. The essentials are covered in class and in the  math camp  material. We will introduce a few concepts in functional/convex analysis and optimization. Note that this is an advanced graduate course and some exposure on  introductory Machine Learning  concepts or courses is expected. Students are also expected to have basic familiarity with MATLAB/Octave.\n\n    \n     Grading  \n     Requirements for grading are attending lectures/participation (10%), four problems sets (60%) and a final project (30%).  \n     Grading policies,  pset and project tentative dates :  (slides) \n          \n    \n     Problem Sets       \n         \n     Problem Set 1 , out: Sep. 19, due: Wed., Sep. 25 (Class 07).       \n     \n     Problem Set 2 , out: Oct. 03, due: Wed., Oct. 09 (Class 10).\n       \n     Problem Set 3 ,  out: Oct. 31, due: Wed., Nov. 06 (Class 18).  \n     \n     Problem Set 4 ,  out: Nov. 18, due: Wed., Nov. 27 (Class 21). \n\t\n     Submission instructions:  Follow the instructions included with the problem set. Use the  latex template  for the report (there is a maximum page limit). Submit your report online through stellar.mit by the due date/time and a printout in the first class after the due date. \n    \n     Projects \n    \n     \n     Guidelines  and key dates.  Online form  for project proposal (complete by Nov. 01). \n     \n    \n     Reports are expected to be within 5 pages, with extended abstracts using  NIPS style files \n    \n     Projects archive     \n     List  of Wikipedia entries, created or edited as part of projects during previous course offerings.      \n    \n\n   \n \n   Syllabus \n\n   Follow the link for each class to find a detailed description, suggested readings, and class slides. Some of the later classes may be subject to reordering or rescheduling. \n\n   \n     \n       \n         Class \n         Date \n         Title \n         Instructor(s) \n       \n     \n\n     \n      \n      \n     \n   \n\n   \n  \n\n   Reading List \n    Notes covering the classes will be provided in the form of independent chapters of a book currently in draft format. Additional information will be given through the slides associated with classes (where applicable). The books/papers listed below are useful general reference reading, especially from the theoretical viewpoint. A list of additional suggested readings will also be provided separately for each class. \n    \n    Book (draft) \n     \n         L. Rosasco and T. Poggio,  Machine Learning: a Regularization Approach, MIT-9.520 Lectures Notes , Manuscript, Dec. 2017  (provided) . \n           \n\n   Primary References \n   \n     S. Shalev-Shwartz and S. Ben-David.  Understanding Machine Learning: From Theory to Algorithms.  Cambridge University Press, 2014. \n      T. Hastie, R. Tibshirani and J. Friedman.  The Elements of Statistical Learning . 2nd Ed., Springer, 2009. \n     I. Steinwart and A. Christmann.  Support Vector Machines.  Springer, 2008. \n     O. Bousquet, S. Boucheron and G. Lugosi.  Introduction to Statistical Learning Theory . Advanced Lectures on Machine Learning, LNCS 3176, pp. 169-207. (Eds.) Bousquet, O., U. von Luxburg and G. Ratsch, Springer, 2004. \n     \n     N. Cristianini and J. Shawe-Taylor.  An Introduction to Support Vector Machines and Other Kernel-based Learning Methods.  Cambridge University Press, 2000.  \n     F. Cucker and S. Smale.  On The Mathematical Foundations of Learning . Bulletin of the American\n      Mathematical Society, 2002.   \n     F. Cucker and D-X. Zhou.  Learning theory: an approximation theory viewpoint.   Cambridge Monographs on Applied and Computational\n      Mathematics. Cambridge University Press, 2007.  \n     L. Devroye, L. Gyorfi, and G. Lugosi.  A Probabilistic Theory of Pattern Recognition.  Springer, 1997.  \n     T. Evgeniou, M. Pontil and T. Poggio.  Regularization Networks and Support Vector Machines.  Advances in Computational Mathematics, 2000.  \n     T. Poggio and S. Smale.  The\n      Mathematics of Learning: Dealing with Data.  Notices of the AMS, 2003.  \n     V. N. Vapnik.  Statistical Learning Theory.  Wiley, 1998.  \n     V. N. Vapnik.  The Nature of Statistical Learning Theory.  Springer, 2000.  \n     S. Villa, L. Rosasco, T. Poggio.  On Learnability, Complexity and Stability . Empirical Inference: Festschrift in Honor of Vladimir N. Vapnik, Chapter 7, pp. 59-70, Springer-Verlag, 2013. \n     T. Poggio and F. Anselmi.  Visual Cortex and Deep Networks: Learning Invariant Representations , Computational Neuroscience Series, MIT Press, 2016. \n     T. Poggio, H. Mhaskar, L. Rosasco, B. Miranda, and Q. Liao.  Why and When can Deep-but not Shallow-Networks Avoid the Curse of Dimensionality: A Review . International Journal of Automation and Computing, 1-17, 2017. \n     T. Poggio and Q. Liao.  Theory II: Landscape of the Empirical Risk in Deep Learning . CBMM Memo 66, 2017. \n \n\n Resources and links \n     \n       Machine Learning 2017-2018 . University of Genoa, graduate ML course. \n       L. Rosasco,  Introductory Machine Learning Notes , University of Genoa, ML 2016/2017 lectures notes, Oct. 2016. \n     \n        \n            \n \n\n   \n\n\n\n     \n    \n Announcements \n    \n \n     \n \n    \n \n\n \n \n\n\n\n\n \n \n\n\n\n \n\n\n\n ",
+    "syllabus_probability": 0.9994611144065857,
+    "field": {
+      "_id": 15,
+      "cip_codes": [
+        "11"
+      ],
+      "name": "Computer Science"
+    },
+    "language": "en",
+    "institution": {
+      "_id": 143,
+      "grid_id": "grid.5606.5",
+      "wikidata_id": "Q593321",
+      "unitid": null,
+      "city": "Genoa",
+      "name": "University of Genoa",
+      "lat": 44.402919,
+      "lng": 8.958889,
+      "url": "http://www.unige.it/",
+      "country_code": "IT",
+      "country": "Italy",
+      "state_code": "IT-42",
+      "state": "Liguria",
+      "enrollment": 36728,
+      "two_year": null,
+      "four_year": null,
+      "graduate": null,
+      "research": null,
+      "wikipedia_url": "http://en.wikipedia.org/wiki/University_of_Genoa",
+      "description": "The University of Genoa, known also with the acronym UniGe (Italian: Università di Genova), is one of the largest universities in Italy. It is located in the city of Genoa and regional Metropolitan City of Genoa, on the Italian Riviera in the Liguria region of northwestern Italy. The original university was founded in 1481.\nAccording to Microsoft Academic Search 2016 rankings, the University of Genoa has high-ranking positions among the European universities in multiple computer science fields: \n\nin machine learning and pattern recognition the University of Genoa is the best scientific institution in Italy and is ranked 36th in Europe;\nin computer vision the University of Genoa is the best scientific institution in Italy and is ranked 34th in Europe;\nin computer graphics the University of Genoa is ranked 2nd institution in Italy and 35th in Europe.The University of Genoa has a strong collaboration with the Italian Institute of Technology (IIT), since its foundation in 2005.\nThe University of Genoa is currently setting up a big project for a new Faculty of Engineering within the Erzelli Great Campus science technology park, in the Western side of Genoa. The contracts were signed in October 2018, the final project should be released in 2019, the construction works should start in 2020, and the new faculty should open in 2023.The university of Genoa since its foundation has delivered 46 Gold medals to the italian students, and 2 gold medals to the International students, specifically to the Israeli student Khor hoksari in 1993, and to the Albanian student Agasi Bledar in 2021, It has delivered 122 honoris titles to its alumni, and has been part of a continuous public opening in the last 20 years.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/en/4/4f/University_of_Genoa_logo.jpg"
+    },
+    "date": {
+      "term": "fall",
+      "year": 2019
+    },
+    "urls": [
+      "http://cbcl.mit.edu/people/poggio/poggio-new.htm",
+      "http://web.mit.edu/lrosasco/www/",
+      "http://www.mit.edu/~rakhlin/",
+      "https://cbmm.mit.edu/about/people/banburski",
+      "https://www.youtube.com/watch?v=EXhOuehvPAw",
+      "https://forms.gle/LmZpvKZbjUrmRcF87",
+      "http://stellar.mit.edu/S/course/9/fa19/9.520/",
+      "http://lcsl.mit.edu/courses/ml/1617/MLNotes.pdf",
+      "https://forms.gle/Eyi4SnTtD5MJyR77A",
+      "http://www.cs.huji.ac.il/~shais/UnderstandingMachineLearning/index.html",
+      "http://statweb.stanford.edu/~tibs/ElemStatLearn/",
+      "http://www.staff.uni-bayreuth.de/~bt230781/svm.html",
+      "http://www.kyb.mpg.de/publications/pdfs/pdf2819.pdf",
+      "http://cbcl.mit.edu/projects/cbcl/publications/ps/evgeniou-reviewall.pdf",
+      "http://cbcl.mit.edu/projects/cbcl/publications/ps/notices-ams2003refs.pdf",
+      "http://arxiv.org/pdf/1303.5976v1.pdf",
+      "https://mitpress.mit.edu/books/visual-cortex-and-deep-networks",
+      "https://cbmm.mit.edu/publications/why-and-when-can-deep-not-shallow-networks-avoid-curse-dimensionality-review-0",
+      "https://cbmm.mit.edu/publications/theory-ii-landscape-empirical-risk-deep-learning",
+      "http://lcsl.mit.edu/courses/ml/1718/index.html",
+      "http://lcsl.mit.edu/courses/ml/1718/MLNotes.pdf"
+    ],
+    "extracted_sections": {
+      "title": [
+        {
+          "text": "Statistical Learning Theory and Applications",
+          "mean_proba": 0.9981049299240112,
+          "ci1": 18,
+          "ci2": 61,
+          "ti1": 9,
+          "ti2": 13
+        }
+      ],
+      "code": [
+        {
+          "text": "9.520",
+          "mean_proba": 0.672091543674469,
+          "ci1": 5,
+          "ci2": 9,
+          "ti1": 0,
+          "ti2": 2
+        }
+      ],
+      "section": [],
+      "date": [
+        {
+          "text": "Fall 2019",
+          "mean_proba": 0.997357189655304,
+          "ci1": 64,
+          "ci2": 72,
+          "ti1": 15,
+          "ti2": 16
+        }
+      ],
+      "class_days": [
+        {
+          "text": "Tuesday and Thursday",
+          "mean_proba": 0.9428296089172363,
+          "ci1": 190,
+          "ci2": 209,
+          "ti1": 30,
+          "ti2": 32
+        }
+      ],
+      "class_time": [
+        {
+          "text": "11:00 am - 12:30 pm",
+          "mean_proba": 0.9949702024459839,
+          "ci1": 213,
+          "ci2": 231,
+          "ti1": 34,
+          "ti2": 42
+        }
+      ],
+      "class_location": [
+        {
+          "text": "46-3002  (Singleton Auditorium)",
+          "mean_proba": 0.9811960458755493,
+          "ci1": 281,
+          "ci2": 311,
+          "ti1": 45,
+          "ti2": 52
+        }
+      ],
+      "instructor": [
+        {
+          "text": "Tomaso Poggio",
+          "mean_proba": 0.9887520670890808,
+          "ci1": 384,
+          "ci2": 396,
+          "ti1": 55,
+          "ti2": 58
+        },
+        {
+          "text": "Lorenzo Rosasco",
+          "mean_proba": 0.9569902420043945,
+          "ci1": 417,
+          "ci2": 431,
+          "ti1": 64,
+          "ti2": 66
+        },
+        {
+          "text": "Alexander Rakhlin",
+          "mean_proba": 0.7622445225715637,
+          "ci1": 451,
+          "ci2": 467,
+          "ti1": 72,
+          "ti2": 75
+        },
+        {
+          "text": "Andrzej Banburski",
+          "mean_proba": 0.9399049878120422,
+          "ci1": 481,
+          "ci2": 497,
+          "ti1": 80,
+          "ti2": 86
+        }
+      ],
+      "instructor_phone": [
+        {
+          "text": "46-5165",
+          "mean_proba": 0.8016457557678223,
+          "ci1": 794,
+          "ci2": 800,
+          "ti1": 123,
+          "ti2": 126
+        }
+      ],
+      "office_hours_days": [
+        {
+          "text": "Friday",
+          "mean_proba": 0.9247250556945801,
+          "ci1": 733,
+          "ci2": 738,
+          "ti1": 99,
+          "ti2": 99
+        }
+      ],
+      "office_location": [],
+      "office_hours_times": [
+        {
+          "text": "1:00 pm - 2:00 pm",
+          "mean_proba": 0.9335657954216003,
+          "ci1": 740,
+          "ci2": 756,
+          "ti1": 100,
+          "ti2": 108
+        }
+      ],
+      "credits": [],
+      "description": [
+        {
+          "text": "The course covers foundations and recent advances of machine learning from the point of view of statistical learning and regularization theory.\n      \nUnderstanding intelligence and how to replicate it in machines is\narguably one of the greatest problems in science. Learning, its\nprinciples and computational implementations, is at the very core of\nintelligence. During the last decade, for the first time, we have been\nable to develop artificial intelligence systems that begin to solve\ncomplex tasks, until recently the exclusive domain of biological\norganisms, such as computer vision, speech recognition or natural\nlanguage understanding: cameras recognize faces, smart phones\nunderstand voice commands, smart speakers/assistants answer questions\nand cars can see and avoid obstacles. The machine learning algorithms\nthat are at the roots of these success stories are trained with\nexamples rather than programmed to solve a task.     \n\nThe content is roughly divided into three parts. In the first part,\nkey algorithmic ideas are introduced, with an emphasis on the\ninterplay between modeling and optimization aspects. Algorithms that\nwill be discussed include classical regularization (regularized least\nsquares, SVM, logistic regression, square and exponential loss),\nstochastic gradient methods, implicit regularization and minimum norm\nsolutions.    \nIn the second part, key ideas in statistical learning theory will be\ndeveloped to analyze the properties of the algorithms previously\nintroduced. Classical concepts like generalization, uniform\nconvergence and Rademacher complexities will be developed, together\nwith topics such as surrogate loss functions for classification,\nbounds based on margin, stability, and privacy.  \n\nThe third part of the course focuses on deep learning networks. It\nwill introduce theoretical frameworks addressing three key puzzles in\ndeep learning: approximation theory -- which functions can be\nrepresented more efficiently by deep networks than shallow networks\n-- optimization theory -- why can stochastic gradient descent easily\nfind global minima -- and machine learning -- how generalization in\ndeep networks used for classification can be explained in terms of\ncomplexity control implicit in gradient descent. It will also discuss\nconnections with the architecture of the brain, which was the original\ninspiration of the layered local connectivity of modern networks and\nmay provide ideas for future developments and revolutions in networks\nfor learning.   \n\nThe goal of the course is to provide students with the theoretical\nknowledge and the basic intuitions needed to use and develop effective\nmachine learning solutions to challenging problems.",
+          "mean_proba": 0.9332535862922668,
+          "ci1": 1636,
+          "ci2": 4331,
+          "ti1": 242,
+          "ti2": 696
+        }
+      ],
+      "learning_outcomes": [],
+      "citations": [
+        {
+          "text": "L. Rosasco and T. Poggio,  Machine Learning: a Regularization Approach, MIT-9.520 Lectures Notes , Manuscript, Dec. 2017",
+          "mean_proba": 0.7838107347488403,
+          "ci1": 6850,
+          "ci2": 6969,
+          "ti1": 1151,
+          "ti2": 1181
+        },
+        {
+          "text": "S. Shalev-Shwartz and S. Ben-David.  Understanding Machine Learning: From Theory to Algorithms.  Cambridge University Press, 2014.",
+          "mean_proba": 0.9954820871353149,
+          "ci1": 7031,
+          "ci2": 7160,
+          "ti1": 1188,
+          "ti2": 1217
+        },
+        {
+          "text": "T. Hastie, R. Tibshirani and J. Friedman.  The Elements of Statistical Learning . 2nd Ed., Springer, 2009.",
+          "mean_proba": 0.995120644569397,
+          "ci1": 7169,
+          "ci2": 7274,
+          "ti1": 1218,
+          "ti2": 1247
+        },
+        {
+          "text": "I. Steinwart and A. Christmann.  Support Vector Machines.  Springer, 2008.",
+          "mean_proba": 0.9962269067764282,
+          "ci1": 7282,
+          "ci2": 7355,
+          "ti1": 1248,
+          "ti2": 1265
+        },
+        {
+          "text": "O. Bousquet, S. Boucheron and G. Lugosi.  Introduction to Statistical Learning Theory . Advanced Lectures on Machine Learning, LNCS 3176, pp. 169-207. (Eds.) Bousquet, O., U. von Luxburg and G. Ratsch, Springer, 2004.",
+          "mean_proba": 0.9969840049743652,
+          "ci1": 7363,
+          "ci2": 7579,
+          "ti1": 1266,
+          "ti2": 1333
+        },
+        {
+          "text": "N. Cristianini and J. Shawe-Taylor.  An Introduction to Support Vector Machines and Other Kernel-based Learning Methods.  Cambridge University Press, 2000.",
+          "mean_proba": 0.996931791305542,
+          "ci1": 7593,
+          "ci2": 7747,
+          "ti1": 1334,
+          "ti2": 1367
+        },
+        {
+          "text": "F. Cucker and S. Smale.  On The Mathematical Foundations of Learning . Bulletin of the American\n      Mathematical Society, 2002.",
+          "mean_proba": 0.9968856573104858,
+          "ci1": 7756,
+          "ci2": 7884,
+          "ti1": 1368,
+          "ti2": 1393
+        },
+        {
+          "text": "F. Cucker and D-X. Zhou.  Learning theory: an approximation theory viewpoint.   Cambridge Monographs on Applied and Computational\n      Mathematics. Cambridge University Press, 2007.",
+          "mean_proba": 0.996790885925293,
+          "ci1": 7894,
+          "ci2": 8075,
+          "ti1": 1394,
+          "ti2": 1427
+        },
+        {
+          "text": "L. Devroye, L. Gyorfi, and G. Lugosi.  A Probabilistic Theory of Pattern Recognition.  Springer, 1997.",
+          "mean_proba": 0.9969696998596191,
+          "ci1": 8084,
+          "ci2": 8185,
+          "ti1": 1428,
+          "ti2": 1461
+        },
+        {
+          "text": "T. Evgeniou, M. Pontil and T. Poggio.  Regularization Networks and Support Vector Machines.  Advances in Computational Mathematics, 2000.",
+          "mean_proba": 0.9968681335449219,
+          "ci1": 8194,
+          "ci2": 8330,
+          "ti1": 1462,
+          "ti2": 1493
+        },
+        {
+          "text": "T. Poggio and S. Smale.  The\n      Mathematics of Learning: Dealing with Data.  Notices of the AMS, 2003.",
+          "mean_proba": 0.9967292547225952,
+          "ci1": 8339,
+          "ci2": 8443,
+          "ti1": 1494,
+          "ti2": 1520
+        },
+        {
+          "text": "V. N. Vapnik.  Statistical Learning Theory.  Wiley, 1998.",
+          "mean_proba": 0.9964209794998169,
+          "ci1": 8452,
+          "ci2": 8508,
+          "ti1": 1521,
+          "ti2": 1536
+        },
+        {
+          "text": "V. N. Vapnik.  The Nature of Statistical Learning Theory.  Springer, 2000.",
+          "mean_proba": 0.9961175322532654,
+          "ci1": 8517,
+          "ci2": 8590,
+          "ti1": 1537,
+          "ti2": 1555
+        },
+        {
+          "text": "S. Villa, L. Rosasco, T. Poggio.  On Learnability, Complexity and Stability . Empirical Inference: Festschrift in Honor of Vladimir N. Vapnik, Chapter 7, pp. 59-70, Springer-Verlag, 2013.",
+          "mean_proba": 0.9965958595275879,
+          "ci1": 8599,
+          "ci2": 8785,
+          "ti1": 1556,
+          "ti2": 1608
+        },
+        {
+          "text": "T. Poggio and F. Anselmi.  Visual Cortex and Deep Networks: Learning Invariant Representations , Computational Neuroscience Series, MIT Press, 2016.",
+          "mean_proba": 0.995834469795227,
+          "ci1": 8793,
+          "ci2": 8940,
+          "ti1": 1609,
+          "ti2": 1638
+        },
+        {
+          "text": "T. Poggio, H. Mhaskar, L. Rosasco, B. Miranda, and Q. Liao.  Why and When can Deep-but not Shallow-Networks Avoid the Curse of Dimensionality: A Review . International Journal of Automation and Computing, 1-17, 2017.",
+          "mean_proba": 0.9728838205337524,
+          "ci1": 8948,
+          "ci2": 9163,
+          "ti1": 1639,
+          "ti2": 1698
+        },
+        {
+          "text": "T. Poggio and Q. Liao.  Theory II: Landscape of the Empirical Risk in Deep Learning . CBMM Memo 66, 2017.",
+          "mean_proba": 0.8652970790863037,
+          "ci1": 9171,
+          "ci2": 9275,
+          "ti1": 1699,
+          "ti2": 1727
+        }
+      ],
+      "required_reading": [],
+      "grading_rubric": [],
+      "assessment_strategy": [
+        {
+          "text": "attending lectures/participation (10%), four problems sets (60%) and a final project (30%).",
+          "mean_proba": 0.6071668267250061,
+          "ci1": 4859,
+          "ci2": 4949,
+          "ti1": 785,
+          "ti2": 809
+        }
+      ],
+      "topic_outline": [],
+      "assignment_schedule": [],
+      "school_name": [
+        {
+          "text": "University of Genoa",
+          "mean_proba": 0.9237841367721558,
+          "ci1": 9345,
+          "ci2": 9363,
+          "ti1": 1737,
+          "ti2": 1739
+        },
+        {
+          "text": "University of Genoa",
+          "mean_proba": 0.7859484553337097,
+          "ci1": 9445,
+          "ci2": 9463,
+          "ti1": 1755,
+          "ti2": 1757
+        }
+      ]
+    },
+    "citations": [
+      {
+        "doc_span": {
+          "text": "L. Rosasco and T. Poggio,  Machine Learning: a Regularization Approach, MIT-9.520 Lectures Notes , Manuscript, Dec. 2017",
+          "mean_proba": 0.7838107347488403,
+          "ci1": 6850,
+          "ci2": 6969,
+          "ti1": 1151,
+          "ti2": 1181
+        },
+        "parsed_citation": {
+          "title": [
+            {
+              "text": "Machine Learning",
+              "mean_proba": 0.9936497807502747,
+              "ci1": 27,
+              "ci2": 42,
+              "ti1": 10,
+              "ti2": 11
+            }
+          ],
+          "subtitle": [
+            {
+              "text": "a Regularization Approach",
+              "mean_proba": 0.9874124526977539,
+              "ci1": 45,
+              "ci2": 69,
+              "ti1": 13,
+              "ti2": 16
+            }
+          ],
+          "author": [
+            {
+              "text": "L. Rosasco",
+              "mean_proba": 0.9945250749588013,
+              "ci1": 0,
+              "ci2": 9,
+              "ti1": 0,
+              "ti2": 3
+            },
+            {
+              "text": "T. Poggio",
+              "mean_proba": 0.9945354461669922,
+              "ci1": 15,
+              "ci2": 23,
+              "ti1": 5,
+              "ti2": 8
+            }
+          ],
+          "editor": [],
+          "publisher": [
+            {
+              "text": "MIT",
+              "mean_proba": 0.5077151656150818,
+              "ci1": 72,
+              "ci2": 74,
+              "ti1": 18,
+              "ti2": 18
+            }
+          ],
+          "isbn": []
+        },
+        "catalog_key": {
+          "clean_title": "Machine Learning",
+          "clean_author": {
+            "forenames": "L.",
+            "keyname": "Rosasco"
+          },
+          "title_key": "machine learning",
+          "author_key": "rosasco"
+        },
+        "catalog_record": null
+      },
+      {
+        "doc_span": {
+          "text": "S. Shalev-Shwartz and S. Ben-David.  Understanding Machine Learning: From Theory to Algorithms.  Cambridge University Press, 2014.",
+          "mean_proba": 0.9954820871353149,
+          "ci1": 7031,
+          "ci2": 7160,
+          "ti1": 1188,
+          "ti2": 1217
+        },
+        "parsed_citation": {
+          "title": [
+            {
+              "text": "Understanding Machine Learning",
+              "mean_proba": 0.9934748411178589,
+              "ci1": 37,
+              "ci2": 66,
+              "ti1": 15,
+              "ti2": 17
+            }
+          ],
+          "subtitle": [
+            {
+              "text": "From Theory to Algorithms",
+              "mean_proba": 0.9820786714553833,
+              "ci1": 69,
+              "ci2": 93,
+              "ti1": 19,
+              "ti2": 22
+            }
+          ],
+          "author": [
+            {
+              "text": "S. Shalev-Shwartz",
+              "mean_proba": 0.9938604235649109,
+              "ci1": 0,
+              "ci2": 16,
+              "ti1": 0,
+              "ti2": 7
+            },
+            {
+              "text": "S. Ben-David",
+              "mean_proba": 0.9943385124206543,
+              "ci1": 22,
+              "ci2": 33,
+              "ti1": 9,
+              "ti2": 13
+            }
+          ],
+          "editor": [],
+          "publisher": [
+            {
+              "text": "Cambridge University Press",
+              "mean_proba": 0.9778751134872437,
+              "ci1": 97,
+              "ci2": 122,
+              "ti1": 24,
+              "ti2": 26
+            }
+          ],
+          "isbn": []
+        },
+        "catalog_key": {
+          "clean_title": "Understanding Machine Learning",
+          "clean_author": {
+            "forenames": "S.",
+            "keyname": "Shalev-Shwartz"
+          },
+          "title_key": "understanding machine learning",
+          "author_key": "shalev shwartz"
+        },
+        "catalog_record": {
+          "_id": 128849036869,
+          "work_cluster_size": 12,
+          "sources": {
+            "loc": [
+              "2014001779"
+            ],
+            "openalex": [
+              "https://openalex.org/W316562523",
+              "https://openalex.org/W2305342135",
+              "https://openalex.org/W2507182417",
+              "https://openalex.org/W2477586147",
+              "https://openalex.org/W2517351953",
+              "https://openalex.org/W2496381527",
+              "https://openalex.org/W2182562640",
+              "https://openalex.org/W2511203809",
+              "https://openalex.org/W607505555",
+              "https://openalex.org/W4236362309"
+            ],
+            "ol": [
+              "/works/OL17801808W"
+            ]
+          },
+          "title": "Understanding Machine Learning",
+          "subtitle": null,
+          "authors": [
+            {
+              "forenames": "Shai",
+              "keyname": "Shalev-Shwartz"
+            },
+            {
+              "forenames": "Shai",
+              "keyname": "Ben-David"
+            }
+          ],
+          "publisher": "Cambridge University Press",
+          "year": 2014,
+          "description": null,
+          "image_urls": [
+            "https://covers.openlibrary.org/b/id/8086287-M.jpg?default=false"
+          ],
+          "dois": [
+            "10.1017/cbo9781107298019.036",
+            "10.1017/cbo9781107298019.025",
+            "10.1017/cbo9781107298019.034",
+            "10.1017/cbo9781107298019.007",
+            "10.1017/cbo9781107298019.006",
+            "10.1017/cbo9781107298019.013",
+            "10.1017/cbo9781107298019.003",
+            "10.1017/cbo9781107298019.001",
+            "10.1017/cbo9781107298019"
+          ],
+          "isbns": [
+            "1107057132",
+            "9781107057135"
+          ],
+          "issns": null,
+          "urls": [
+            "https://doi.org/10.1017/cbo9781107298019.036",
+            "https://doi.org/10.1017/cbo9781107298019.025",
+            "https://doi.org/10.1017/cbo9781107298019.034",
+            "https://doi.org/10.1017/cbo9781107298019.007",
+            "https://doi.org/10.1017/cbo9781107298019.006",
+            "https://doi.org/10.1017/cbo9781107298019.013",
+            "https://doi.org/10.1017/cbo9781107298019.003",
+            "https://doi.org/10.1017/cbo9781107298019.001",
+            "https://www.cs.huji.ac.il/~shais/UnderstandingMachineLearning/understanding-machine-learning-theory-algorithms.pdf",
+            "https://doi.org/10.1017/cbo9781107298019",
+            "https://openlibrary.org/works/OL17801808W"
+          ],
+          "publication_type": "book-chapter",
+          "open_access": null,
+          "article": {
+            "venue": null,
+            "volume": null,
+            "issue": null,
+            "page_start": "43",
+            "page_end": "57",
+            "abstract": null
+          }
+        }
+      },
+      {
+        "doc_span": {
+          "text": "T. Hastie, R. Tibshirani and J. Friedman.  The Elements of Statistical Learning . 2nd Ed., Springer, 2009.",
+          "mean_proba": 0.995120644569397,
+          "ci1": 7169,
+          "ci2": 7274,
+          "ti1": 1218,
+          "ti2": 1247
+        },
+        "parsed_citation": {
+          "title": [
+            {
+              "text": "The Elements of Statistical Learning",
+              "mean_proba": 0.9957236051559448,
+              "ci1": 43,
+              "ci2": 78,
+              "ti1": 16,
+              "ti2": 20
+            }
+          ],
+          "subtitle": [],
+          "author": [
+            {
+              "text": "T. Hastie",
+              "mean_proba": 0.9933227300643921,
+              "ci1": 0,
+              "ci2": 8,
+              "ti1": 0,
+              "ti2": 3
+            },
+            {
+              "text": "R. Tibshirani",
+              "mean_proba": 0.992890477180481,
+              "ci1": 11,
+              "ci2": 23,
+              "ti1": 5,
+              "ti2": 10
+            },
+            {
+              "text": "J. Friedman",
+              "mean_proba": 0.992595911026001,
+              "ci1": 29,
+              "ci2": 39,
+              "ti1": 12,
+              "ti2": 14
+            }
+          ],
+          "editor": [],
+          "publisher": [
+            {
+              "text": "Springer",
+              "mean_proba": 0.9324803352355957,
+              "ci1": 91,
+              "ci2": 98,
+              "ti1": 26,
+              "ti2": 26
+            }
+          ],
+          "isbn": []
+        },
+        "catalog_key": {
+          "clean_title": "The Elements of Statistical Learning",
+          "clean_author": {
+            "forenames": "T.",
+            "keyname": "Hastie"
+          },
+          "title_key": "elements of statistical learning",
+          "author_key": "hastie"
+        },
+        "catalog_record": {
+          "_id": 833223776699,
+          "work_cluster_size": 7,
+          "sources": {
+            "loc": [
+              "2008941148",
+              "2001031433"
+            ],
+            "openalex": [
+              "https://openalex.org/W2787894218",
+              "https://openalex.org/W3020570927",
+              "https://openalex.org/W1480376833",
+              "https://openalex.org/W1554944419"
+            ],
+            "wiki": [
+              "http://www.wikidata.org/entity/Q22670878"
+            ]
+          },
+          "title": "The Elements of Statistical Learning",
+          "subtitle": null,
+          "authors": [
+            {
+              "forenames": "Trevor",
+              "keyname": "Hastie"
+            },
+            {
+              "forenames": "Robert",
+              "keyname": "Tibshirani"
+            },
+            {
+              "forenames": "Jerome H.",
+              "keyname": "Friedman"
+            }
+          ],
+          "publisher": "Springer Publishing",
+          "year": 2001,
+          "description": null,
+          "image_urls": null,
+          "dois": [
+            "10.1007/978-0-387-84858-7",
+            "10.1007/978-0-387-21606-5"
+          ],
+          "isbns": [
+            "9780387848570",
+            "0387952845"
+          ],
+          "issns": [
+            "01727397"
+          ],
+          "urls": [
+            "https://doi.org/10.1007/978-0-387-84858-7",
+            "https://openlibrary.telkomuniversity.ac.id/home/catalog/id/158849/slug/the-elements-of-statistical-learning-data-mining-inference-and-prediction-2nd-edition.html",
+            "https://doi.org/10.1007/978-0-387-21606-5",
+            "http://catalog.lib.kyushu-u.ac.jp/ja/recordID/1416361"
+          ],
+          "publication_type": "book",
+          "open_access": true,
+          "article": {
+            "venue": "Springer series in statistics",
+            "volume": null,
+            "issue": null,
+            "page_start": null,
+            "page_end": null,
+            "abstract": null
+          }
+        }
+      },
+      {
+        "doc_span": {
+          "text": "I. Steinwart and A. Christmann.  Support Vector Machines.  Springer, 2008.",
+          "mean_proba": 0.9962269067764282,
+          "ci1": 7282,
+          "ci2": 7355,
+          "ti1": 1248,
+          "ti2": 1265
+        },
+        "parsed_citation": {
+          "title": [
+            {
+              "text": "Support Vector Machines",
+              "mean_proba": 0.9951798915863037,
+              "ci1": 33,
+              "ci2": 55,
+              "ti1": 10,
+              "ti2": 12
+            }
+          ],
+          "subtitle": [],
+          "author": [
+            {
+              "text": "I. Steinwart",
+              "mean_proba": 0.9933584332466125,
+              "ci1": 0,
+              "ci2": 11,
+              "ti1": 0,
+              "ti2": 3
+            },
+            {
+              "text": "A. Christmann",
+              "mean_proba": 0.9934436678886414,
+              "ci1": 17,
+              "ci2": 29,
+              "ti1": 5,
+              "ti2": 8
+            }
+          ],
+          "editor": [],
+          "publisher": [
+            {
+              "text": "Springer",
+              "mean_proba": 0.9368997812271118,
+              "ci1": 59,
+              "ci2": 66,
+              "ti1": 14,
+              "ti2": 14
+            }
+          ],
+          "isbn": []
+        },
+        "catalog_key": {
+          "clean_title": "Support Vector Machines",
+          "clean_author": {
+            "forenames": "I.",
+            "keyname": "Steinwart"
+          },
+          "title_key": "support vector machines",
+          "author_key": "steinwart"
+        },
+        "catalog_record": {
+          "_id": 2233383182116,
+          "work_cluster_size": 2,
+          "sources": {
+            "loc": [
+              "2008932159"
+            ],
+            "openalex": [
+              "https://openalex.org/W1698155719"
+            ]
+          },
+          "title": "Support Vector Machines",
+          "subtitle": null,
+          "authors": [
+            {
+              "forenames": "Ingo",
+              "keyname": "Steinwart"
+            }
+          ],
+          "publisher": "Springer Publishing",
+          "year": 2020,
+          "description": null,
+          "image_urls": null,
+          "dois": [
+            "10.1017/9781108564175.026"
+          ],
+          "isbns": [
+            "9780387772417"
+          ],
+          "issns": [
+            "16139011"
+          ],
+          "urls": [
+            "https://doi.org/10.1017/9781108564175.026"
+          ],
+          "publication_type": "book-chapter",
+          "open_access": null,
+          "article": {
+            "venue": "Information science and statistics",
+            "volume": null,
+            "issue": null,
+            "page_start": "517",
+            "page_end": "545",
+            "abstract": null
+          }
+        }
+      },
+      {
+        "doc_span": {
+          "text": "O. Bousquet, S. Boucheron and G. Lugosi.  Introduction to Statistical Learning Theory . Advanced Lectures on Machine Learning, LNCS 3176, pp. 169-207. (Eds.) Bousquet, O., U. von Luxburg and G. Ratsch, Springer, 2004.",
+          "mean_proba": 0.9969840049743652,
+          "ci1": 7363,
+          "ci2": 7579,
+          "ti1": 1266,
+          "ti2": 1333
+        },
+        "parsed_citation": {
+          "title": [
+            {
+              "text": "Introduction to Statistical Learning Theory",
+              "mean_proba": 0.9886066913604736,
+              "ci1": 42,
+              "ci2": 84,
+              "ti1": 18,
+              "ti2": 22
+            }
+          ],
+          "subtitle": [
+            {
+              "text": "Advanced Lectures on Machine Learning",
+              "mean_proba": 0.789487361907959,
+              "ci1": 88,
+              "ci2": 124,
+              "ti1": 24,
+              "ti2": 28
+            }
+          ],
+          "author": [
+            {
+              "text": "O. Bousquet",
+              "mean_proba": 0.8458160161972046,
+              "ci1": 0,
+              "ci2": 10,
+              "ti1": 0,
+              "ti2": 4
+            },
+            {
+              "text": "S. Boucheron",
+              "mean_proba": 0.9752453565597534,
+              "ci1": 13,
+              "ci2": 24,
+              "ti1": 6,
+              "ti2": 10
+            },
+            {
+              "text": "G. Lugosi",
+              "mean_proba": 0.9870467185974121,
+              "ci1": 30,
+              "ci2": 38,
+              "ti1": 12,
+              "ti2": 16
+            }
+          ],
+          "editor": [
+            {
+              "text": "Bousquet, O.",
+              "mean_proba": 0.8903322219848633,
+              "ci1": 158,
+              "ci2": 169,
+              "ti1": 46,
+              "ti2": 51
+            },
+            {
+              "text": "U. von Luxburg",
+              "mean_proba": 0.8989344835281372,
+              "ci1": 172,
+              "ci2": 185,
+              "ti1": 53,
+              "ti2": 57
+            },
+            {
+              "text": "G. Ratsch",
+              "mean_proba": 0.9296310544013977,
+              "ci1": 191,
+              "ci2": 199,
+              "ti1": 59,
+              "ti2": 62
+            }
+          ],
+          "publisher": [
+            {
+              "text": "Springer",
+              "mean_proba": 0.9016950726509094,
+              "ci1": 202,
+              "ci2": 209,
+              "ti1": 64,
+              "ti2": 64
+            }
+          ],
+          "isbn": []
+        },
+        "catalog_key": {
+          "clean_title": "Introduction to Statistical Learning Theory",
+          "clean_author": {
+            "forenames": "O.",
+            "keyname": "Bousquet"
+          },
+          "title_key": "introduction to statistical learning theory",
+          "author_key": "bousquet"
+        },
+        "catalog_record": {
+          "_id": 4277787603967,
+          "work_cluster_size": 1,
+          "sources": {
+            "openalex": [
+              "https://openalex.org/W2111296615"
+            ]
+          },
+          "title": "Introduction to Statistical Learning Theory",
+          "subtitle": null,
+          "authors": [
+            {
+              "forenames": "Olivier",
+              "keyname": "Bousquet"
+            },
+            {
+              "forenames": "Stéphane",
+              "keyname": "Boucheron"
+            },
+            {
+              "forenames": "G.ábor",
+              "keyname": "Lugosi"
+            }
+          ],
+          "publisher": null,
+          "year": 2004,
+          "description": null,
+          "image_urls": null,
+          "dois": [
+            "10.1007/978-3-540-28650-9_8"
+          ],
+          "isbns": null,
+          "issns": [
+            "03029743"
+          ],
+          "urls": [
+            "https://doi.org/10.1007/978-3-540-28650-9_8"
+          ],
+          "publication_type": "book-chapter",
+          "open_access": null,
+          "article": {
+            "venue": "Lecture Notes in Computer Science",
+            "volume": null,
+            "issue": null,
+            "page_start": "169",
+            "page_end": "207",
+            "abstract": null
+          }
+        }
+      },
+      {
+        "doc_span": {
+          "text": "N. Cristianini and J. Shawe-Taylor.  An Introduction to Support Vector Machines and Other Kernel-based Learning Methods.  Cambridge University Press, 2000.",
+          "mean_proba": 0.996931791305542,
+          "ci1": 7593,
+          "ci2": 7747,
+          "ti1": 1334,
+          "ti2": 1367
+        },
+        "parsed_citation": {
+          "title": [
+            {
+              "text": "An Introduction to Support Vector Machines and Other Kernel-based Learning Methods",
+              "mean_proba": 0.9912269115447998,
+              "ci1": 37,
+              "ci2": 118,
+              "ti1": 14,
+              "ti2": 26
+            }
+          ],
+          "subtitle": [],
+          "author": [
+            {
+              "text": "N. Cristianini",
+              "mean_proba": 0.9937318563461304,
+              "ci1": 0,
+              "ci2": 13,
+              "ti1": 0,
+              "ti2": 5
+            },
+            {
+              "text": "J. Shawe-Taylor",
+              "mean_proba": 0.9911190271377563,
+              "ci1": 19,
+              "ci2": 33,
+              "ti1": 7,
+              "ti2": 12
+            }
+          ],
+          "editor": [],
+          "publisher": [
+            {
+              "text": "Cambridge University Press",
+              "mean_proba": 0.9750097990036011,
+              "ci1": 122,
+              "ci2": 147,
+              "ti1": 28,
+              "ti2": 30
+            }
+          ],
+          "isbn": []
+        },
+        "catalog_key": {
+          "clean_title": "An Introduction to Support Vector Machines and Other Kernel-Based Learning Methods",
+          "clean_author": {
+            "forenames": "N.",
+            "keyname": "Cristianini"
+          },
+          "title_key": "introduction to support vector machines and other kernel based learning methods",
+          "author_key": "cristianini"
+        },
+        "catalog_record": {
+          "_id": 300647802941,
+          "work_cluster_size": 10,
+          "sources": {
+            "loc": [
+              "99054716"
+            ],
+            "openalex": [
+              "https://openalex.org/W2483848309",
+              "https://openalex.org/W2461896840",
+              "https://openalex.org/W1601740268",
+              "https://openalex.org/W2221081601",
+              "https://openalex.org/W2475456454",
+              "https://openalex.org/W1563088657",
+              "https://openalex.org/W618501538",
+              "https://openalex.org/W1611903889",
+              "https://openalex.org/W1675887912"
+            ]
+          },
+          "title": "An Introduction to Support Vector Machines",
+          "subtitle": "And Other Kernel-Based Learning Methods",
+          "authors": [
+            {
+              "forenames": "Nello",
+              "keyname": "Cristianini"
+            },
+            {
+              "forenames": "John",
+              "keyname": "Shawe-Taylor"
+            }
+          ],
+          "publisher": "Cambridge University Press",
+          "year": 2000,
+          "description": null,
+          "image_urls": null,
+          "dois": [
+            "10.1017/cbo9780511801389.009",
+            "10.1017/cbo9780511801389.005",
+            "10.1017/cbo9780511801389.010",
+            "10.1017/cbo9780511801389.011",
+            "10.1017/cbo9780511801389",
+            "10.1017/cbo9780511801389.013",
+            "10.1017/cbo9780511801389.006",
+            "10.1017/cbo9780511801389.012"
+          ],
+          "isbns": [
+            "0521780195"
+          ],
+          "issns": null,
+          "urls": [
+            "https://doi.org/10.1017/cbo9780511801389.009",
+            "https://doi.org/10.1017/cbo9780511801389.005",
+            "http://www.gbv.de/dms/goettingen/512565724.pdf",
+            "https://doi.org/10.1017/cbo9780511801389.010",
+            "https://doi.org/10.1017/cbo9780511801389.011",
+            "https://doi.org/10.1017/cbo9780511801389",
+            "https://doi.org/10.1017/cbo9780511801389.013",
+            "https://doi.org/10.1017/cbo9780511801389.006",
+            "https://doi.org/10.1017/cbo9780511801389.012"
+          ],
+          "publication_type": "book-chapter",
+          "open_access": true,
+          "article": {
+            "venue": "Cambridge University Press (2000)",
+            "volume": null,
+            "issue": null,
+            "page_start": "26",
+            "page_end": "51",
+            "abstract": null
+          }
+        }
+      },
+      {
+        "doc_span": {
+          "text": "F. Cucker and S. Smale.  On The Mathematical Foundations of Learning . Bulletin of the American\n      Mathematical Society, 2002.",
+          "mean_proba": 0.9968856573104858,
+          "ci1": 7756,
+          "ci2": 7884,
+          "ti1": 1368,
+          "ti2": 1393
+        },
+        "parsed_citation": {
+          "title": [
+            {
+              "text": "On The Mathematical Foundations of Learning",
+              "mean_proba": 0.9946924448013306,
+              "ci1": 25,
+              "ci2": 67,
+              "ti1": 10,
+              "ti2": 15
+            }
+          ],
+          "subtitle": [],
+          "author": [
+            {
+              "text": "F. Cucker",
+              "mean_proba": 0.9942322969436646,
+              "ci1": 0,
+              "ci2": 8,
+              "ti1": 0,
+              "ti2": 3
+            },
+            {
+              "text": "S. Smale",
+              "mean_proba": 0.9945150017738342,
+              "ci1": 14,
+              "ci2": 21,
+              "ti1": 5,
+              "ti2": 8
+            }
+          ],
+          "editor": [],
+          "publisher": [
+            {
+              "text": "Bulletin of the American\n      Mathematical Society",
+              "mean_proba": 0.8904920816421509,
+              "ci1": 71,
+              "ci2": 121,
+              "ti1": 17,
+              "ti2": 22
+            }
+          ],
+          "isbn": []
+        },
+        "catalog_key": {
+          "clean_title": "On the Mathematical Foundations of Learning",
+          "clean_author": {
+            "forenames": "F.",
+            "keyname": "Cucker"
+          },
+          "title_key": "on mathematical foundations of learning",
+          "author_key": "cucker"
+        },
+        "catalog_record": {
+          "_id": 2508261058212,
+          "work_cluster_size": 1,
+          "sources": {
+            "openalex": [
+              "https://openalex.org/W2047278710"
+            ]
+          },
+          "title": "On the Mathematical Foundations of Learning",
+          "subtitle": null,
+          "authors": [
+            {
+              "forenames": "Felipe",
+              "keyname": "Cucker"
+            },
+            {
+              "forenames": "Steve",
+              "keyname": "Smale"
+            }
+          ],
+          "publisher": "American Mathematical Society",
+          "year": 2001,
+          "description": null,
+          "image_urls": null,
+          "dois": [
+            "10.1090/s0273-0979-01-00923-5"
+          ],
+          "isbns": null,
+          "issns": [
+            "02730979"
+          ],
+          "urls": [
+            "https://doi.org/10.1090/s0273-0979-01-00923-5"
+          ],
+          "publication_type": "article",
+          "open_access": true,
+          "article": {
+            "venue": "Bulletin of the American Mathematical Society",
+            "volume": "39",
+            "issue": "1",
+            "page_start": "1",
+            "page_end": "49",
+            "abstract": null
+          }
+        }
+      },
+      {
+        "doc_span": {
+          "text": "F. Cucker and D-X. Zhou.  Learning theory: an approximation theory viewpoint.   Cambridge Monographs on Applied and Computational\n      Mathematics. Cambridge University Press, 2007.",
+          "mean_proba": 0.996790885925293,
+          "ci1": 7894,
+          "ci2": 8075,
+          "ti1": 1394,
+          "ti2": 1427
+        },
+        "parsed_citation": {
+          "title": [
+            {
+              "text": "Learning theory",
+              "mean_proba": 0.9916988611221313,
+              "ci1": 26,
+              "ci2": 40,
+              "ti1": 11,
+              "ti2": 12
+            }
+          ],
+          "subtitle": [
+            {
+              "text": "an approximation theory viewpoint",
+              "mean_proba": 0.9774645566940308,
+              "ci1": 43,
+              "ci2": 75,
+              "ti1": 14,
+              "ti2": 17
+            }
+          ],
+          "author": [
+            {
+              "text": "F. Cucker",
+              "mean_proba": 0.9940645694732666,
+              "ci1": 0,
+              "ci2": 8,
+              "ti1": 0,
+              "ti2": 3
+            },
+            {
+              "text": "D-X. Zhou",
+              "mean_proba": 0.9933459758758545,
+              "ci1": 14,
+              "ci2": 22,
+              "ti1": 5,
+              "ti2": 9
+            }
+          ],
+          "editor": [],
+          "publisher": [
+            {
+              "text": "Cambridge University Press",
+              "mean_proba": 0.9667983651161194,
+              "ci1": 149,
+              "ci2": 174,
+              "ti1": 28,
+              "ti2": 30
+            }
+          ],
+          "isbn": []
+        },
+        "catalog_key": {
+          "clean_title": "Learning Theory",
+          "clean_author": {
+            "forenames": "F.",
+            "keyname": "Cucker"
+          },
+          "title_key": "learning theory",
+          "author_key": "cucker"
+        },
+        "catalog_record": {
+          "_id": 34359948211,
+          "work_cluster_size": 15,
+          "sources": {
+            "loc": [
+              "2006037012"
+            ],
+            "openalex": [
+              "https://openalex.org/W2159919579",
+              "https://openalex.org/W1566168354",
+              "https://openalex.org/W1504161409",
+              "https://openalex.org/W1449402485",
+              "https://openalex.org/W1588447150",
+              "https://openalex.org/W2146715324",
+              "https://openalex.org/W597932189",
+              "https://openalex.org/W1195704184",
+              "https://openalex.org/W1575765268",
+              "https://openalex.org/W4245558064",
+              "https://openalex.org/W93885277",
+              "https://openalex.org/W2282382701",
+              "https://openalex.org/W1479777606"
+            ],
+            "ol": [
+              "/works/OL13671411W"
+            ]
+          },
+          "title": "Learning Theory: An Approximation Theory Viewpoint",
+          "subtitle": "An Approximation Theory Viewpoint",
+          "authors": [
+            {
+              "forenames": "Felipe",
+              "keyname": "Cucker"
+            },
+            {
+              "forenames": "Ding-Xuan",
+              "keyname": "Zhou"
+            }
+          ],
+          "publisher": "Cambridge University Press",
+          "year": 2007,
+          "description": null,
+          "image_urls": [
+            "https://covers.openlibrary.org/b/id/8686169-M.jpg?default=false"
+          ],
+          "dois": [
+            "10.1017/cbo9780511618796.006",
+            "10.1017/cbo9780511618796.005",
+            "10.1017/cbo9780511618796.010",
+            "10.1017/cbo9780511618796.009",
+            "10.1017/cbo9780511618796.012",
+            "10.1017/cbo9780511618796.011",
+            "10.1017/cbo9780511618796.007",
+            "10.1017/cbo9780511618796.002",
+            "10.1017/cbo9780511618796",
+            "10.1017/cbo9780511618796.004",
+            "10.1017/cbo9780511618796.003"
+          ],
+          "isbns": [
+            "052186559X",
+            "9780521865593"
+          ],
+          "issns": null,
+          "urls": [
+            "https://doi.org/10.1017/cbo9780511618796.006",
+            "https://doi.org/10.1017/cbo9780511618796.005",
+            "https://doi.org/10.1017/cbo9780511618796.010",
+            "https://doi.org/10.1017/cbo9780511618796.009",
+            "https://openlibrary.org/works/OL13671411W",
+            "https://doi.org/10.1017/cbo9780511618796.012",
+            "https://doi.org/10.1017/cbo9780511618796.011",
+            "https://assets.cambridge.org/97805218/65593/frontmatter/9780521865593_frontmatter.pdf",
+            "https://doi.org/10.1017/cbo9780511618796.007",
+            "https://doi.org/10.1017/cbo9780511618796.002",
+            "https://doi.org/10.1017/cbo9780511618796",
+            "https://dl.acm.org/citation.cfm?id=1214096",
+            "https://doi.org/10.1017/cbo9780511618796.004",
+            "https://doi.org/10.1017/cbo9780511618796.003"
+          ],
+          "publication_type": "book-chapter",
+          "open_access": null,
+          "article": {
+            "venue": null,
+            "volume": null,
+            "issue": null,
+            "page_start": "17",
+            "page_end": "36",
+            "abstract": null
+          }
+        }
+      },
+      {
+        "doc_span": {
+          "text": "L. Devroye, L. Gyorfi, and G. Lugosi.  A Probabilistic Theory of Pattern Recognition.  Springer, 1997.",
+          "mean_proba": 0.9969696998596191,
+          "ci1": 8084,
+          "ci2": 8185,
+          "ti1": 1428,
+          "ti2": 1461
+        },
+        "parsed_citation": {
+          "title": [
+            {
+              "text": "A Probabilistic Theory of Pattern Recognition",
+              "mean_proba": 0.9928918480873108,
+              "ci1": 39,
+              "ci2": 83,
+              "ti1": 20,
+              "ti2": 28
+            }
+          ],
+          "subtitle": [],
+          "author": [
+            {
+              "text": "L. Devroye",
+              "mean_proba": 0.9938802719116211,
+              "ci1": 0,
+              "ci2": 9,
+              "ti1": 0,
+              "ti2": 4
+            },
+            {
+              "text": "L. Gyorfi",
+              "mean_proba": 0.9919129610061646,
+              "ci1": 12,
+              "ci2": 20,
+              "ti1": 6,
+              "ti2": 11
+            },
+            {
+              "text": "G. Lugosi",
+              "mean_proba": 0.9917842149734497,
+              "ci1": 27,
+              "ci2": 35,
+              "ti1": 14,
+              "ti2": 18
+            }
+          ],
+          "editor": [],
+          "publisher": [
+            {
+              "text": "Springer",
+              "mean_proba": 0.9328485727310181,
+              "ci1": 87,
+              "ci2": 94,
+              "ti1": 30,
+              "ti2": 30
+            }
+          ],
+          "isbn": []
+        },
+        "catalog_key": {
+          "clean_title": "A Probabilistic Theory of Pattern Recognition",
+          "clean_author": {
+            "forenames": "L.",
+            "keyname": "Devroye"
+          },
+          "title_key": "probabilistic theory of pattern recognition",
+          "author_key": "devroye"
+        },
+        "catalog_record": {
+          "_id": 6717329021514,
+          "work_cluster_size": 2,
+          "sources": {
+            "loc": [
+              "95044633"
+            ],
+            "openalex": [
+              "https://openalex.org/W1564947197"
+            ]
+          },
+          "title": "A Probabilistic Theory of Pattern Recognition",
+          "subtitle": null,
+          "authors": [
+            {
+              "forenames": "Luc",
+              "keyname": "Devroye"
+            }
+          ],
+          "publisher": "Springer Publishing",
+          "year": 1996,
+          "description": null,
+          "image_urls": null,
+          "dois": [
+            "10.1007/978-1-4612-0711-5"
+          ],
+          "isbns": [
+            "0387946187"
+          ],
+          "issns": [
+            "01724568"
+          ],
+          "urls": [
+            "https://doi.org/10.1007/978-1-4612-0711-5"
+          ],
+          "publication_type": "book",
+          "open_access": null,
+          "article": {
+            "venue": "Applications of mathematics",
+            "volume": null,
+            "issue": null,
+            "page_start": null,
+            "page_end": null,
+            "abstract": null
+          }
+        }
+      },
+      {
+        "doc_span": {
+          "text": "T. Evgeniou, M. Pontil and T. Poggio.  Regularization Networks and Support Vector Machines.  Advances in Computational Mathematics, 2000.",
+          "mean_proba": 0.9968681335449219,
+          "ci1": 8194,
+          "ci2": 8330,
+          "ti1": 1462,
+          "ti2": 1493
+        },
+        "parsed_citation": {
+          "title": [
+            {
+              "text": "Regularization Networks and Support Vector Machines",
+              "mean_proba": 0.9917229413986206,
+              "ci1": 39,
+              "ci2": 89,
+              "ti1": 17,
+              "ti2": 23
+            }
+          ],
+          "subtitle": [],
+          "author": [
+            {
+              "text": "T. Evgeniou",
+              "mean_proba": 0.9897626638412476,
+              "ci1": 0,
+              "ci2": 10,
+              "ti1": 0,
+              "ti2": 5
+            },
+            {
+              "text": "M. Pontil",
+              "mean_proba": 0.9920453429222107,
+              "ci1": 13,
+              "ci2": 21,
+              "ti1": 7,
+              "ti2": 10
+            },
+            {
+              "text": "T. Poggio",
+              "mean_proba": 0.9930387139320374,
+              "ci1": 27,
+              "ci2": 35,
+              "ti1": 12,
+              "ti2": 15
+            }
+          ],
+          "editor": [],
+          "publisher": [
+            {
+              "text": "Advances in Computational Mathematics",
+              "mean_proba": 0.8331965208053589,
+              "ci1": 93,
+              "ci2": 129,
+              "ti1": 25,
+              "ti2": 28
+            }
+          ],
+          "isbn": []
+        },
+        "catalog_key": {
+          "clean_title": "Regularization Networks and Support Vector Machines",
+          "clean_author": {
+            "forenames": "T.",
+            "keyname": "Evgeniou"
+          },
+          "title_key": "regularization networks and support vector machines",
+          "author_key": "evgeniou"
+        },
+        "catalog_record": null
+      },
+      {
+        "doc_span": {
+          "text": "T. Poggio and S. Smale.  The\n      Mathematics of Learning: Dealing with Data.  Notices of the AMS, 2003.",
+          "mean_proba": 0.9967292547225952,
+          "ci1": 8339,
+          "ci2": 8443,
+          "ti1": 1494,
+          "ti2": 1520
+        },
+        "parsed_citation": {
+          "title": [
+            {
+              "text": "The\n      Mathematics of Learning",
+              "mean_proba": 0.9949437379837036,
+              "ci1": 25,
+              "ci2": 57,
+              "ti1": 10,
+              "ti2": 13
+            }
+          ],
+          "subtitle": [
+            {
+              "text": "Dealing with Data",
+              "mean_proba": 0.9873034358024597,
+              "ci1": 60,
+              "ci2": 76,
+              "ti1": 15,
+              "ti2": 17
+            }
+          ],
+          "author": [
+            {
+              "text": "T. Poggio",
+              "mean_proba": 0.9940412640571594,
+              "ci1": 0,
+              "ci2": 8,
+              "ti1": 0,
+              "ti2": 3
+            },
+            {
+              "text": "S. Smale",
+              "mean_proba": 0.994670033454895,
+              "ci1": 14,
+              "ci2": 21,
+              "ti1": 5,
+              "ti2": 8
+            }
+          ],
+          "editor": [],
+          "publisher": [
+            {
+              "text": "Notices of the AMS",
+              "mean_proba": 0.8763478994369507,
+              "ci1": 80,
+              "ci2": 97,
+              "ti1": 19,
+              "ti2": 23
+            }
+          ],
+          "isbn": []
+        },
+        "catalog_key": {
+          "clean_title": "The Mathematics of Learning",
+          "clean_author": {
+            "forenames": "T.",
+            "keyname": "Poggio"
+          },
+          "title_key": "mathematics of learning",
+          "author_key": "poggio"
+        },
+        "catalog_record": {
+          "_id": 6227702783893,
+          "work_cluster_size": 4,
+          "sources": {
+            "openalex": [
+              "https://openalex.org/W2535756153",
+              "https://openalex.org/W4233034972",
+              "https://openalex.org/W4240986158",
+              "https://openalex.org/W3150049578"
+            ]
+          },
+          "title": "The Mathematics of Learning: Dealing With Data",
+          "subtitle": null,
+          "authors": [
+            {
+              "forenames": "Tomaso",
+              "keyname": "Poggio"
+            },
+            {
+              "forenames": "Steve",
+              "keyname": "Smale"
+            }
+          ],
+          "publisher": "IEEE Press",
+          "year": 2006,
+          "description": null,
+          "image_urls": null,
+          "dois": [
+            "10.1109/icnnb.2005.1614860",
+            "10.1007/11362197_1",
+            "10.1109/icnnb.2005.1614546",
+            "10.1109/icnnb.2005.1614533"
+          ],
+          "isbns": null,
+          "issns": [
+            "14349922"
+          ],
+          "urls": [
+            "https://doi.org/10.1109/icnnb.2005.1614860",
+            "https://doi.org/10.1007/11362197_1",
+            "https://doi.org/10.1109/icnnb.2005.1614546",
+            "https://doi.org/10.1109/icnnb.2005.1614533"
+          ],
+          "publication_type": "article",
+          "open_access": true,
+          "article": {
+            "venue": null,
+            "volume": "3",
+            "issue": null,
+            "page_start": "1",
+            "page_end": "19",
+            "abstract": null
+          }
+        }
+      },
+      {
+        "doc_span": {
+          "text": "V. N. Vapnik.  Statistical Learning Theory.  Wiley, 1998.",
+          "mean_proba": 0.9964209794998169,
+          "ci1": 8452,
+          "ci2": 8508,
+          "ti1": 1521,
+          "ti2": 1536
+        },
+        "parsed_citation": {
+          "title": [
+            {
+              "text": "Statistical Learning Theory",
+              "mean_proba": 0.9942365884780884,
+              "ci1": 15,
+              "ci2": 41,
+              "ti1": 8,
+              "ti2": 10
+            }
+          ],
+          "subtitle": [],
+          "author": [
+            {
+              "text": "V. N. Vapnik",
+              "mean_proba": 0.9940745234489441,
+              "ci1": 0,
+              "ci2": 11,
+              "ti1": 0,
+              "ti2": 6
+            }
+          ],
+          "editor": [],
+          "publisher": [
+            {
+              "text": "Wiley",
+              "mean_proba": 0.9369564652442932,
+              "ci1": 45,
+              "ci2": 49,
+              "ti1": 12,
+              "ti2": 12
+            }
+          ],
+          "isbn": []
+        },
+        "catalog_key": {
+          "clean_title": "Statistical Learning Theory",
+          "clean_author": {
+            "forenames": "V. N.",
+            "keyname": "Vapnik"
+          },
+          "title_key": "statistical learning theory",
+          "author_key": "vapnik"
+        },
+        "catalog_record": {
+          "_id": 764504247789,
+          "work_cluster_size": 5,
+          "sources": {
+            "loc": [
+              "97037075"
+            ],
+            "openalex": [
+              "https://openalex.org/W4254721730",
+              "https://openalex.org/W2148603752"
+            ],
+            "ol": [
+              "/works/OL2720037W"
+            ],
+            "viaf": [
+              "XR|VIAFWORK1014377423"
+            ]
+          },
+          "title": "Statistical Learning Theory",
+          "subtitle": null,
+          "authors": [
+            {
+              "forenames": "Vladimir Naumovich",
+              "keyname": "Vapnik"
+            }
+          ],
+          "publisher": null,
+          "year": 1998,
+          "description": null,
+          "image_urls": [
+            "https://covers.openlibrary.org/b/id/300413-M.jpg?default=false"
+          ],
+          "dois": [
+            "10.1080/00401706.1999.10485951",
+            "10.2307/1271368"
+          ],
+          "isbns": [
+            "0471030031"
+          ],
+          "issns": [
+            "00401706"
+          ],
+          "urls": [
+            "https://openlibrary.org/works/OL2720037W",
+            "https://doi.org/10.1080/00401706.1999.10485951",
+            "https://doi.org/10.2307/1271368"
+          ],
+          "publication_type": "article",
+          "open_access": null,
+          "article": {
+            "venue": "Technometrics",
+            "volume": "41",
+            "issue": "4",
+            "page_start": "377",
+            "page_end": "378",
+            "abstract": null
+          }
+        }
+      },
+      {
+        "doc_span": {
+          "text": "V. N. Vapnik.  The Nature of Statistical Learning Theory.  Springer, 2000.",
+          "mean_proba": 0.9961175322532654,
+          "ci1": 8517,
+          "ci2": 8590,
+          "ti1": 1537,
+          "ti2": 1555
+        },
+        "parsed_citation": {
+          "title": [
+            {
+              "text": "The Nature of Statistical Learning Theory",
+              "mean_proba": 0.9945653676986694,
+              "ci1": 15,
+              "ci2": 55,
+              "ti1": 8,
+              "ti2": 13
+            }
+          ],
+          "subtitle": [],
+          "author": [
+            {
+              "text": "V. N. Vapnik",
+              "mean_proba": 0.9942634105682373,
+              "ci1": 0,
+              "ci2": 11,
+              "ti1": 0,
+              "ti2": 6
+            }
+          ],
+          "editor": [],
+          "publisher": [
+            {
+              "text": "Springer",
+              "mean_proba": 0.9342904686927795,
+              "ci1": 59,
+              "ci2": 66,
+              "ti1": 15,
+              "ti2": 15
+            }
+          ],
+          "isbn": []
+        },
+        "catalog_key": {
+          "clean_title": "The Nature of Statistical Learning Theory",
+          "clean_author": {
+            "forenames": "V. N.",
+            "keyname": "Vapnik"
+          },
+          "title_key": "nature of statistical learning theory",
+          "author_key": "vapnik"
+        },
+        "catalog_record": {
+          "_id": 1709396995229,
+          "work_cluster_size": 9,
+          "sources": {
+            "loc": [
+              "99039803",
+              "95024205"
+            ],
+            "openalex": [
+              "https://openalex.org/W4230674625",
+              "https://openalex.org/W2156909104"
+            ],
+            "ol": [
+              "/works/OL20694685W",
+              "/works/OL8058691W",
+              "/works/OL16975337W",
+              "/works/OL19890128W"
+            ],
+            "viaf": [
+              "XR|VIAFWORK1027917433"
+            ]
+          },
+          "title": "The Nature of Statistical Learning Theory",
+          "subtitle": null,
+          "authors": [
+            {
+              "forenames": "Vladimir Naumovich",
+              "keyname": "Vapnik"
+            }
+          ],
+          "publisher": "Springer Publishing",
+          "year": 2000,
+          "description": "The aim of this book is to discuss the fundamental ideas which lie behind the statistical theory of learning and generalization. It considers learning as a general problem of function estimation based on empirical data. This second edition contains three new chapters devoted to further development of the learning theory and SVM techniques.",
+          "image_urls": [
+            "https://covers.openlibrary.org/b/id/9369733-M.jpg?default=false",
+            "https://covers.openlibrary.org/b/id/8662985-M.jpg?default=false",
+            "https://covers.openlibrary.org/b/id/8698599-M.jpg?default=false",
+            "https://covers.openlibrary.org/b/id/8698600-M.jpg?default=false"
+          ],
+          "dois": [
+            "10.1007/978-1-4757-3264-1",
+            "10.1007/978-1-4757-2440-0"
+          ],
+          "isbns": [
+            "0387987800",
+            "0387945598"
+          ],
+          "issns": null,
+          "urls": [
+            "https://openlibrary.org/works/OL20694685W",
+            "https://doi.org/10.1007/978-1-4757-3264-1",
+            "https://doi.org/10.1007/978-1-4757-2440-0",
+            "https://openlibrary.org/works/OL8058691W",
+            "https://openlibrary.org/works/OL16975337W",
+            "https://openlibrary.org/works/OL19890128W"
+          ],
+          "publication_type": "book",
+          "open_access": null,
+          "article": {
+            "venue": null,
+            "volume": null,
+            "issue": null,
+            "page_start": null,
+            "page_end": null,
+            "abstract": null
+          }
+        }
+      },
+      {
+        "doc_span": {
+          "text": "S. Villa, L. Rosasco, T. Poggio.  On Learnability, Complexity and Stability . Empirical Inference: Festschrift in Honor of Vladimir N. Vapnik, Chapter 7, pp. 59-70, Springer-Verlag, 2013.",
+          "mean_proba": 0.9965958595275879,
+          "ci1": 8599,
+          "ci2": 8785,
+          "ti1": 1556,
+          "ti2": 1608
+        },
+        "parsed_citation": {
+          "title": [
+            {
+              "text": "On Learnability, Complexity and Stability",
+              "mean_proba": 0.9593222141265869,
+              "ci1": 34,
+              "ci2": 74,
+              "ti1": 14,
+              "ti2": 20
+            }
+          ],
+          "subtitle": [],
+          "author": [
+            {
+              "text": "S. Villa",
+              "mean_proba": 0.9862754940986633,
+              "ci1": 0,
+              "ci2": 7,
+              "ti1": 0,
+              "ti2": 2
+            },
+            {
+              "text": "L. Rosasco",
+              "mean_proba": 0.983481764793396,
+              "ci1": 10,
+              "ci2": 19,
+              "ti1": 4,
+              "ti2": 7
+            },
+            {
+              "text": "T. Poggio",
+              "mean_proba": 0.9926353693008423,
+              "ci1": 22,
+              "ci2": 30,
+              "ti1": 9,
+              "ti2": 12
+            }
+          ],
+          "editor": [],
+          "publisher": [
+            {
+              "text": "Springer-Verlag",
+              "mean_proba": 0.9045679569244385,
+              "ci1": 165,
+              "ci2": 179,
+              "ti1": 47,
+              "ti2": 49
+            }
+          ],
+          "isbn": []
+        },
+        "catalog_key": {
+          "clean_title": "On Learnability, Complexity and Stability",
+          "clean_author": {
+            "forenames": "S.",
+            "keyname": "Villa"
+          },
+          "title_key": "on learnability complexity and stability",
+          "author_key": "villa"
+        },
+        "catalog_record": {
+          "_id": 4191888084739,
+          "work_cluster_size": 2,
+          "sources": {
+            "openalex": [
+              "https://openalex.org/W2124927118",
+              "https://openalex.org/W2951285859"
+            ]
+          },
+          "title": "On Learnability, Complexity and Stability",
+          "subtitle": null,
+          "authors": [
+            {
+              "forenames": "Silvia",
+              "keyname": "Villa"
+            },
+            {
+              "forenames": "Lorenzo",
+              "keyname": "Rosasco"
+            },
+            {
+              "forenames": "Tomaso",
+              "keyname": "Poggio"
+            }
+          ],
+          "publisher": "Springer Publishing",
+          "year": 2013,
+          "description": null,
+          "image_urls": null,
+          "dois": [
+            "10.1007/978-3-642-41136-6_7"
+          ],
+          "isbns": null,
+          "issns": null,
+          "urls": [
+            "https://doi.org/10.1007/978-3-642-41136-6_7",
+            "https://arxiv.org/pdf/1303.5976.pdf"
+          ],
+          "publication_type": "book-chapter",
+          "open_access": true,
+          "article": {
+            "venue": null,
+            "volume": null,
+            "issue": null,
+            "page_start": "59",
+            "page_end": "69",
+            "abstract": null
+          }
+        }
+      },
+      {
+        "doc_span": {
+          "text": "T. Poggio and F. Anselmi.  Visual Cortex and Deep Networks: Learning Invariant Representations , Computational Neuroscience Series, MIT Press, 2016.",
+          "mean_proba": 0.995834469795227,
+          "ci1": 8793,
+          "ci2": 8940,
+          "ti1": 1609,
+          "ti2": 1638
+        },
+        "parsed_citation": {
+          "title": [
+            {
+              "text": "Visual Cortex and Deep Networks",
+              "mean_proba": 0.9951372146606445,
+              "ci1": 27,
+              "ci2": 57,
+              "ti1": 11,
+              "ti2": 15
+            }
+          ],
+          "subtitle": [
+            {
+              "text": "Learning Invariant Representations",
+              "mean_proba": 0.8689827919006348,
+              "ci1": 60,
+              "ci2": 93,
+              "ti1": 17,
+              "ti2": 19
+            }
+          ],
+          "author": [
+            {
+              "text": "T. Poggio",
+              "mean_proba": 0.9941437244415283,
+              "ci1": 0,
+              "ci2": 8,
+              "ti1": 0,
+              "ti2": 3
+            },
+            {
+              "text": "F. Anselmi",
+              "mean_proba": 0.9937676191329956,
+              "ci1": 14,
+              "ci2": 23,
+              "ti1": 5,
+              "ti2": 9
+            }
+          ],
+          "editor": [],
+          "publisher": [
+            {
+              "text": "MIT Press",
+              "mean_proba": 0.9562356472015381,
+              "ci1": 132,
+              "ci2": 140,
+              "ti1": 25,
+              "ti2": 26
+            }
+          ],
+          "isbn": []
+        },
+        "catalog_key": {
+          "clean_title": "Visual Cortex and Deep Networks",
+          "clean_author": {
+            "forenames": "T.",
+            "keyname": "Poggio"
+          },
+          "title_key": "visual cortex and deep networks",
+          "author_key": "poggio"
+        },
+        "catalog_record": {
+          "_id": 936303082346,
+          "work_cluster_size": 3,
+          "sources": {
+            "openalex": [
+              "https://openalex.org/W2925348834",
+              "https://openalex.org/W4244723818"
+            ],
+            "ol": [
+              "/works/OL21833062W"
+            ]
+          },
+          "title": "Visual Cortex and Deep Networks",
+          "subtitle": null,
+          "authors": [
+            {
+              "forenames": "Tomaso A.",
+              "keyname": "Poggio"
+            },
+            {
+              "forenames": "Fabio",
+              "keyname": "Anselmi"
+            }
+          ],
+          "publisher": null,
+          "year": 2016,
+          "description": null,
+          "image_urls": null,
+          "dois": [
+            "10.7551/mitpress/10177.001.0001"
+          ],
+          "isbns": null,
+          "issns": null,
+          "urls": [
+            "https://openlibrary.org/works/OL21833062W",
+            "https://direct.mit.edu/books/book/4088/Visual-Cortex-and-Deep-NetworksLearning-Invariant",
+            "https://doi.org/10.7551/mitpress/10177.001.0001"
+          ],
+          "publication_type": "book",
+          "open_access": null,
+          "article": {
+            "venue": null,
+            "volume": null,
+            "issue": null,
+            "page_start": null,
+            "page_end": null,
+            "abstract": null
+          }
+        }
+      },
+      {
+        "doc_span": {
+          "text": "T. Poggio, H. Mhaskar, L. Rosasco, B. Miranda, and Q. Liao.  Why and When can Deep-but not Shallow-Networks Avoid the Curse of Dimensionality: A Review . International Journal of Automation and Computing, 1-17, 2017.",
+          "mean_proba": 0.9728838205337524,
+          "ci1": 8948,
+          "ci2": 9163,
+          "ti1": 1639,
+          "ti2": 1698
+        },
+        "parsed_citation": {
+          "title": [
+            {
+              "text": "Why and When can Deep-but not Shallow-Networks Avoid the Curse of Dimensionality",
+              "mean_proba": 0.9849884510040283,
+              "ci1": 61,
+              "ci2": 140,
+              "ti1": 26,
+              "ti2": 42
+            }
+          ],
+          "subtitle": [
+            {
+              "text": "A Review",
+              "mean_proba": 0.8850879669189453,
+              "ci1": 143,
+              "ci2": 150,
+              "ti1": 44,
+              "ti2": 45
+            }
+          ],
+          "author": [
+            {
+              "text": "T. Poggio",
+              "mean_proba": 0.9936815500259399,
+              "ci1": 0,
+              "ci2": 8,
+              "ti1": 0,
+              "ti2": 3
+            },
+            {
+              "text": "H. Mhaskar",
+              "mean_proba": 0.9933196306228638,
+              "ci1": 11,
+              "ci2": 20,
+              "ti1": 5,
+              "ti2": 9
+            },
+            {
+              "text": "L. Rosasco",
+              "mean_proba": 0.9924653768539429,
+              "ci1": 23,
+              "ci2": 32,
+              "ti1": 11,
+              "ti2": 14
+            },
+            {
+              "text": "B. Miranda",
+              "mean_proba": 0.9934712648391724,
+              "ci1": 35,
+              "ci2": 44,
+              "ti1": 16,
+              "ti2": 18
+            },
+            {
+              "text": "Q. Liao",
+              "mean_proba": 0.9933924674987793,
+              "ci1": 51,
+              "ci2": 57,
+              "ti1": 21,
+              "ti2": 24
+            }
+          ],
+          "editor": [],
+          "publisher": [
+            {
+              "text": "International Journal of Automation and Computing",
+              "mean_proba": 0.8584926128387451,
+              "ci1": 154,
+              "ci2": 202,
+              "ti1": 47,
+              "ti2": 52
+            }
+          ],
+          "isbn": []
+        },
+        "catalog_key": {
+          "clean_title": "Why and When Can Deep-but Not Shallow-Networks Avoid the Curse of Dimensionality",
+          "clean_author": {
+            "forenames": "T.",
+            "keyname": "Poggio"
+          },
+          "title_key": "why and when can deep but not shallow networks avoid curse of dimensionality",
+          "author_key": "poggio"
+        },
+        "catalog_record": {
+          "_id": 197568546297,
+          "work_cluster_size": 4,
+          "sources": {
+            "openalex": [
+              "https://openalex.org/W2608372357",
+              "https://openalex.org/W2952301100",
+              "https://openalex.org/W2550848904",
+              "https://openalex.org/W2546686227"
+            ]
+          },
+          "title": "Why and When Can Deep-but Not Shallow-Networks Avoid the Curse of Dimensionality: A Review",
+          "subtitle": null,
+          "authors": [
+            {
+              "forenames": "Tomaso",
+              "keyname": "Poggio"
+            },
+            {
+              "forenames": "Hrushikesh N.",
+              "keyname": "Mhaskar"
+            },
+            {
+              "forenames": "Lorenzo",
+              "keyname": "Rosasco"
+            },
+            {
+              "forenames": "Brando",
+              "keyname": "Miranda"
+            },
+            {
+              "forenames": "Qianli",
+              "keyname": "Liao"
+            }
+          ],
+          "publisher": null,
+          "year": 2017,
+          "description": null,
+          "image_urls": null,
+          "dois": [
+            "10.1007/s11633-017-1054-2"
+          ],
+          "isbns": null,
+          "issns": [
+            "14768186"
+          ],
+          "urls": [
+            "https://dspace.mit.edu/openaccess-disseminate/1721.1/107679",
+            "https://arxiv.org/pdf/1611.00740.pdf",
+            "https://doi.org/10.1007/s11633-017-1054-2",
+            "https://arxiv.org/abs/1611.00740v1"
+          ],
+          "publication_type": "article",
+          "open_access": true,
+          "article": {
+            "venue": null,
+            "volume": "14",
+            "issue": "5",
+            "page_start": "503",
+            "page_end": "519",
+            "abstract": null
+          }
+        }
+      },
+      {
+        "doc_span": {
+          "text": "T. Poggio and Q. Liao.  Theory II: Landscape of the Empirical Risk in Deep Learning . CBMM Memo 66, 2017.",
+          "mean_proba": 0.8652970790863037,
+          "ci1": 9171,
+          "ci2": 9275,
+          "ti1": 1699,
+          "ti2": 1727
+        },
+        "parsed_citation": {
+          "title": [
+            {
+              "text": "Theory II",
+              "mean_proba": 0.9851553440093994,
+              "ci1": 24,
+              "ci2": 32,
+              "ti1": 10,
+              "ti2": 11
+            }
+          ],
+          "subtitle": [
+            {
+              "text": "Landscape of the Empirical Risk in Deep Learning",
+              "mean_proba": 0.9854263067245483,
+              "ci1": 35,
+              "ci2": 82,
+              "ti1": 13,
+              "ti2": 20
+            }
+          ],
+          "author": [
+            {
+              "text": "T. Poggio",
+              "mean_proba": 0.9947373867034912,
+              "ci1": 0,
+              "ci2": 8,
+              "ti1": 0,
+              "ti2": 3
+            },
+            {
+              "text": "Q. Liao",
+              "mean_proba": 0.994575023651123,
+              "ci1": 14,
+              "ci2": 20,
+              "ti1": 5,
+              "ti2": 8
+            }
+          ],
+          "editor": [],
+          "publisher": [],
+          "isbn": []
+        },
+        "catalog_key": {
+          "clean_title": "Theory II",
+          "clean_author": {
+            "forenames": "T.",
+            "keyname": "Poggio"
+          },
+          "title_key": "theory ii",
+          "author_key": "poggio"
+        },
+        "catalog_record": {
+          "_id": 2886218141915,
+          "work_cluster_size": 2,
+          "sources": {
+            "openalex": [
+              "https://openalex.org/W2951027003",
+              "https://openalex.org/W2603221039"
+            ]
+          },
+          "title": "Theory II: Deep Learning and Optimization",
+          "subtitle": null,
+          "authors": [
+            {
+              "forenames": "Tomaso",
+              "keyname": "Poggio"
+            },
+            {
+              "forenames": "Qianli",
+              "keyname": "Liao"
+            }
+          ],
+          "publisher": null,
+          "year": 2018,
+          "description": null,
+          "image_urls": null,
+          "dois": [
+            "10.24425/bpas.2018.125925"
+          ],
+          "isbns": null,
+          "issns": [
+            "02397528"
+          ],
+          "urls": [
+            "http://yadda.icm.edu.pl/yadda/element/bwmeta1.element.baztech-f872f6ec-ac32-4aae-88f6-c6b56bd3ceac/c/03_775-788_00920_Bpast.No.66-6_31.12.18_K2.pdf",
+            "http://export.arxiv.org/pdf/1703.09833"
+          ],
+          "publication_type": "article",
+          "open_access": null,
+          "article": {
+            "venue": null,
+            "volume": "66",
+            "issue": null,
+            "page_start": "775",
+            "page_end": "787",
+            "abstract": null
+          }
+        }
+      }
+    ]
+  }
+}

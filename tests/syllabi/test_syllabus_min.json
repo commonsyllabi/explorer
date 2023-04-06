@@ -1,0 +1,110 @@
+{
+    "model_version": "1.1.0",
+    "model_rev": "291db4095368eac91434998ad6a7e062a1b98798",
+    "took": 135,
+    "data": {
+        "md5": "981e6b6f8a20047d85596a3a094106f8",
+        "doc_type": "docx",
+        "text": "REALLY LONG TEXT",
+        "syllabus_probability": 0.9941343665122986,
+        "field": {
+            "_id": 25,
+            "cip_codes": [
+                "13"
+            ],
+            "name": "Education"
+        },
+        "language": "en",
+        "institution": {
+            "_id": 17581,
+            "grid_id": "grid.254920.8",
+            "wikidata_id": "Q1179603",
+            "unitid": 144740,
+            "city": "Chicago",
+            "name": "DePaul University",
+            "lat": 41.9236,
+            "lng": -87.6535,
+            "url": "https://www.depaul.edu/Pages/default.aspx",
+            "country_code": "US",
+            "country": "United States",
+            "state_code": "US-IL",
+            "state": "Illinois",
+            "enrollment": 25614,
+            "two_year": false,
+            "four_year": true,
+            "graduate": true,
+            "research": true,
+            "wikipedia_url": "http://en.wikipedia.org/wiki/DePaul_University",
+            "description": "DePaul University is a private, Catholic research university in Chicago, Illinois. ",
+            "image_url": "https://upload.wikimedia.org/wikipedia/en/thumb/6/60/DePaul_U_Seal.svg/359px-DePaul_U_Seal.svg.png"
+        },
+        "date": null,
+        "urls": [
+            "https://education.depaul.edu/student-resources/policies-and-forms/Pages/ipts-indicators.aspx",
+            "https://offices.depaul.edu/academic-affairs/faculty-resources/teaching/academic-integrity/Pages/default.aspx",
+            "https://education.depaul.edu/student-resources/policies-and-forms/Pages/program-standards.aspx",
+            "http://education.depaul.edu/CurrentStudents/Policies_Handbooks/Dispositions.asp",
+            "http://condor.depaul.edu/writing/locations-and-hours.html",
+            "https://www.depaul.edu/university-catalog/course-descriptions/Pages/default.aspx",
+            "https://offices.depaul.edu/student-affairs/support-services/academic/Pages/absence-notification.aspx",
+            "http://education.depaul.edu/html/resources/program_standards.asp",
+            "https://education.depaul.edu/student-resources/field-experiences/Pages/default.aspx",
+            "http://d2l.depaul.edu/",
+            "https://depaul.digication.com/edtpa_/Home/",
+            "https://campusconnect.depaul.edu/",
+            "http://www.itd.depaul.edu/website/Students/trainingmaterials.asp",
+            "http://www.itd.depaul.edu/website/students/onlinetraining.asp"
+        ],
+        "extracted_sections": {
+            "title": [],
+            "code": [],
+            "section": [],
+            "date": [],
+            "class_days": [],
+            "class_time": [],
+            "class_location": [],
+            "instructor": [],
+            "instructor_phone": [],
+            "office_hours_days": [],
+            "office_location": [],
+            "office_hours_times": [],
+            "credits": [],
+            "description": [],
+            "learning_outcomes": [],
+            "citations": [],
+            "required_reading": [],
+            "grading_rubric": [
+                {
+                    "text": "Grading",
+                    "mean_proba": 0.9472635984420776,
+                    "ci1": 12812,
+                    "ci2": 13010,
+                    "ti1": 2448,
+                    "ti2": 2518
+                }
+            ],
+            "assessment_strategy": [],
+            "topic_outline": [],
+            "assignment_schedule": [],
+            "school_name": [
+                {
+                    "text": "DePaul University",
+                    "mean_proba": 0.9649549126625061,
+                    "ci1": 151,
+                    "ci2": 167,
+                    "ti1": 5,
+                    "ti2": 8
+                },
+                {
+                    "text": "DePaul University",
+                    "mean_proba": 0.7238912582397461,
+                    "ci1": 728,
+                    "ci2": 744,
+                    "ti1": 110,
+                    "ti2": 113
+                }
+            ]
+        },
+        "citations": []
+    }
+}

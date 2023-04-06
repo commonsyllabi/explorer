@@ -1,0 +1,2727 @@
+{
+    "model_version": "1.1.0",
+    "model_rev": "291db4095368eac91434998ad6a7e062a1b98798",
+    "took": 241,
+    "data": {
+        "md5": "7de505bffb75c69c6d80948eac5a5e2f",
+        "doc_type": "docx",
+        "text": "\n                                       \n                                   Syllabus\n                                       \n                                 Electronics I\n                                       \n                                Fall 2014 Class\n\nTuesdays, Wednesdays, and Thursdays; 3-6pm; UDC Fort Totten, Room TBD; September 9 to December 18, 2014.\n\n                                   Textbook\n\nPrimary: \nElectricity; Principles and Applications,7th Edition; Fowler; ISBN 978-0073106991; Glencoe/McGraw Hill, 2008.\n\nSupplementary (other books recommended by ETA): \nThe Associate CET Study Guide, 6th Edition; ETA International; ISBN 1-891749-07-2; 2012.\nElectronics; Principles and Applications,7th Edition; Schuler; ISBN 978-0073316512; Glencoe/McGraw Hill, Career Education; 2002.  \nIntroduction to Electricity, Electronics, and Electromagnetics, 5th Edition; Boylestad, Nashelsky; ISBN 978-0130105738; Prentice Hall; 2001.\nMastering Technical Mathematics, 3rd Edition; Gibilisco, Crowhurst; ISBN 978-0071494489; McGraw-Hill / TAB Electronics; 2007.\nElectronics Principles, 7th Edition; Malvino, Bates; ISBN 978-0073222776; McGraw-Hill Higher Education; 2007.\nIntroductory DC / AC Electronics, 6th Edition; Cook; ISBN 978-0131139848; Prentice Hall; 2004.\nElectronic Communications, 6th Edition; Shrader; ISBN 978-0070571570; McGraw-Hill Co; 1990.\nHow to Test Almost Everything Electronic; Horn; ISBN 978-0830641277; McGraw-Hill/TAB Elec. 1993.\nBasic Electronics Theory With Projects & Experiments, 4th Edition; Horn; ISBN 978-0830642007; McGraw-Hill/TAB Elec. 1993.\nThe Soldering Handbook, 3rd E; Vianco; ISBN 978-0871716187; American Welding Society; 2000.\nIntroduction to Electronics; Crozier; ISBN 978-0534012434; Breton Pub.; 1983.\nThere Are No Electrons: Electronics for Earthlings; Amdahl; ISBN 978-0962781599; Clearwater Pub.; 1991.\nBecoming An Electronics Technician, 4th E; Reis; ISBN 978-0130932198; Prentice Hall; 2001.\n\nOf interest (other books recommended by me):\nMake: Electronics (Learning by Discovery), 1st E; Platt; ISBN 978-0596153748; Make; 2009. \nElectronics All-In-One For Dummies, UK E; Ross and Lowe; ISBN 978-1118589731; For Dummies; 2013. \n\nOnline resources:\nNavy Electrical Engineering Training Series (NEETS): www.tpub.com/neets/index.htm\n\n\n                                   Software\n\nCircuitLab \twww.circuitlab.com\nDoCircuits\t\twww.docircuits.com\n\n\n                              Course Description\n                                       \nThis course will give students a good grounding in elementary electronics and prepare them to take the SET (Student Electronic Technician) exam of the Electronic Technicians Association.   \n\n\n                                Related Courses\n                                       \nThis class has no prerequisites.  There will be some arithmetic, and simple algebra, but no difficult mathematics. \n\n                               Teaching Methods\n                                       \nThe class will be primarily in traditional lecture format for the first two hours on each class day (with appropriate breaks!).  In the third hour we will either have special activities (work with simulations, guest presentations, etc.) or the time will be available for one-on-one discussion (office hours).\n\n\n\n\n\n\n\n\n                              Learning Objectives\n                                       \nStudents will understand basic electronic theory.\n\nIn addition they will be able to: \n(1.0\tElectrical Theory)\n1.1(1)\t\tDescribe atomic structure, the components of the atom, their charges and importance to electronics technology\n1.2(2)\t\tList ten uses for magnetism in electronics technology\n1.3(3)\t\tExplain basic uses for electricity \n1.4(4)\t\tDescribe the basic methods of using electricity to operate a motor and how mechanical motion\ncauses a generator to produce electrical current \n1.5(5)\t\tExplain the differences between current, voltage and resistance \n1.6(6)\t\tList different types of resistive materials and how resistors are used in electronics \n1.7(7)\t\tDescribe the purposes of capacitors. List common types and construction designs \n1.8(8)\t\tExplain how inductance relates to magnetism and describe coil construction, cores and usages\n1.9(9)\t\tShow a comparison between reactance and resistance and describe current/voltage\nrelationships \n1.10(10)\t\tCompare impedance with reactance and resistance and explain the causes and effects of\nimpedance \n1.11(11)\t\tList voltage sources, AC and DC, batteries and natural generation \n1.12(12)\t\tList Ohms law formulas for current, voltage, resistance and power. Solve math problems utilizing each \n1.13(13)\t\tCalculate power consumption and requirements\n(2.0\tElectronic Components)\n2.1(14)\t\tIdentify resistor values from color code or other marks and list composition and reasons for different usages\n2.2(15)\t\tIdentify capacitor types; list common usages; methods of varying capacitance and explain the terms charge and coulomb\n2.3(16)\t\tIdentify inductor types and reasons for various core materials; how diameter and wire size affects the values\n2.4(17)\t\tIdentify common types of transformers and list uses for each; explain step up/down voltage methods; explain why laminations are used\n2.5(18)\t\tIdentify transistors as to type and usage, such as unijunction, FETs and MOSFETS; explain beta and alpha and provide common DC and bias voltage ranges; list common usage\n2.6(19)\t\tIdentify other semiconductors and explain their uses: Darlington pairs; unijunction transistors and Gunn diodes\n2.7(20)\t\tCompare thyristors with other semiconductors; Identify diacs, triacs and SCRs and explain their operation.\n2.8(21)\t\tExplain zeners diode ratings; describe usage in regulator circuits \n2.9(22)\t\tList common optical devices (LEDs, LCDs, etc.) and describe how photovoltaic cells are activated. Draw symbols for photo resistors, photodiodes and phototransistors; list materials\nfrom which these devices are made \n2.10(23)\t\tDescribe MOS, CMOS, FET applications\n(3.0 \tSoldering-Desoldering and Tools)\n3.1(24)\t\tDescribe solder safety as it pertains to burns and potential fires or damage to facilities or customer products\n3.2(25)\t\tExplain the cause of solder fumes and the effects of lead poisoning \n3.3(26)\t\tList causes and precautions to prevent or reduce solder splatter\n3.4(27)\t\tExplain the reasons for flux usage and describe types \n3.5(28)\t\tList types of solder and reasons for choosing each\n3.6(29)\t\tExplain heat shunts, why and how they are used \n3.7(30)\t\tIdentify cold solder joints and explain causes\n3.8(31)\t\tDescribe the differences between good and bad mechanical and electrical solder connections \n3.9(32)\t\tDemonstrate proper care of solder-desolder equipment and aids \n3.10(33)\t\tExplain desoldering principles \t\n3.11(34)\t\tDescribe various types of desoldering equipment and how it is used\n3.12(35)\t\tDemonstrate the use of braid-wick solder removers\n(4.0 Block Diagrams -- Schematics-Wiring Diagrams)\n4.1(36)\t\tDraw common electrical/electronic symbols \n4.2(37)\t\tExplain how block diagrams are used for troubleshooting and maintenance of electronics\nproducts \n4.3(38)\t\tExplain the differences between wiring prints, schematics and block diagrams \n4.4(39)\t\tDescribe the purpose and use of test points. Indicate their likely placement on schematics \n4.5(40)\t\tExplain how schematics are used to locate component and wiring failures in electronics products \n4.6(41)\t\tExplain the methods of using flow diagrams/charts\n(5.0 Cabling)\n5.1(42)\t\tList wire types and construction \n5.2(43)\t\tList American wire gauges used for various purposes \n5.3(44)\t\tExplain construction of coaxial cable and the impedance characteristics\n5.4(45)\t\tList common identifications for copper cables, such as #18 and #24, and UTP telephone cable \n5.5(46)\t\tExplain major differences between copper, coaxial and fiber optic cables \n5.6(47)\t\tDescribe impedance and its causes; explain reasons for maintaining a cable's characteristics \n5.7(48)\t\tExplain the effects of proper and improper termination \n5.8(49)\t\tExplain the purposes of grounding and common conventions used in electrical and electronics \n5.9(50)\t\tDemonstrate splicing knowledge and ability for coaxial and copper cable; explain two types of fiber splices \n5.10(51)\t\tDemonstrate testing methods for all three types of cables and compare dB loss measurements and techniques \n5.11(52)\t\tCompare the fittings and connectors used in cabling and list potential defects a technician may encounter \n5.12(53)\t\tDescribe proper crimping of communications wiring connectors \n5.13(54)\t\tExplain how cable prep tools are used and demonstrate proper and improper crimping\n(6.0 Power Supplies)\n6.1(55)\t\tExplain shock hazards when servicing power supplies in electronic equipment \n6.2(56)\t\tDescribe the differences between transformer powered supplies and line connected supplies \n6.3(57)\t\tDescribe battery supplies and list common usages; also explain recharging principles \n6.4(58)\t\tExplain the reasons for filtering, describe hum, identify common filter types (pi, t, l, etc.) \n6.5(59)\t\tExplain the reasons for power supply regulation and list common components used in regulated\nsupplies \n6.6(60)\t\tExplain where fuses and circuit breakers are commonly and electrically located in circuits; approximate sizes for common circuits; house service box common fuses and circuit breaker configuration and precautions for replacement\n(7.0 Test Equipment and Measurements)\n7.1(61)\t\tDescribe how volt-ohm-current meters operate \n7.2(62)\t\tIdentify meter protection, safety and usage \n7.3(63)\t\tExplain care of equipment and test leads \n7.4(64)\t\tList the purposes and types of signal generators \n7.5(65)\t\tDescribe meter loading and precautions\n7.6(66)\t\tExplain what R-C-L substitution equipment is and its purposes; explain ESR Capacitance- measurement equipment\n7.7(67)\t\tList the uses and precautions for logic test probes \n7.8(68)\t\tExplain how logic pulsers are used \n7.9(69)\t\tDescribe oscilloscope usage; explain the purposes of each front panel control \n7.10(70)\t\tList the uses for pattern generators \n7.11(71)\t\tDefine dummy load; show where and why used\n7.12(72)\t\tExplain reasons for using rheostats, isolation transformers and variacs and why size matters\n(8.0\tSafety Precautions)\n8.1(73)\t\tDescribe the physiological reactions electrical shock causes; list various degrees of current the human body can tolerate\n8.2(74)\t\tExplain the concept of First Aid and its particular importance to workers in electric and electronics fields; explain precautions for untrained people\n8.3(75)\t\tExplain what the National Electrical Code (NEC(R)) is and describe various rules technicians must abide by\n8.4(76)\t\tExplain NFPA(R) rules and describe how technicians comply and may violate them \t\n8.5(77)\t\tDescribe fusing and circuit breaker rules and reasons for different types of fuses \n8.6(78)\t\tExplain static causes and CMOS damage prevention straps, mats and grounding \t\n8.7(79)\t\tList tools hazards that are associated with technician activities in the workplace and in the field. \t\n8.8(80)\t\tDescribe lockout and tagging rules for potentially unsafe electrical or mechanical hazards\n8.9(81)\t\tExplain eye and ear protection needed by technicians \n8.10(82)\t\tList ladder handling and usage and OSHA(R) heights safety rules \n8.11(83)\t\tList service vehicle safety concerns such as ladder or transporting security and flying objects, driver screens inside the vehicle \n8.12(84)\t\tDescribe the types and usage of fire extinguishers\n(9.0\tMathematics and Formulas)\n9.1(85)\t\tQuote Ohms law power, voltage, current and resistance formulas and solve for circuit values \n9.2(86)\t\tList other common basic electronic formulas\n(10.0 Electronic Circuits: Series and Parallel)\n10.1(87)\t\tIdentify and describe the operation of common DC circuits \n10.2(88)\t\tIdentify and describe the operation of common AC circuits \n10.3(89)\t\tExplain how series circuits, R, L, C are used in electronics equipment \n10.4(90)\t\tExplain the purpose of oscillators \n10.5(91)\t\tShow how oscillators and multivibrators are similar and how they differ \n10.6(92)\t\tDescribe filter circuits, why and how they are used\n(11.0 Amplifiers)\n11.1(93)\t\tList common amplifier devices \n11.2(94)\t\tDescribe the purpose of each component in an amplifier circuit \n11.3(95)\t\tList the usages and classes of amplifiers \n11.4(96)\t\tDescribe biasing and gain characteristics \n11.5(97)\t\tExplain frequency response of an amplifier circuit and why it is important \n11.6(98)\t\tExplain the uses of operational amplifiers and how they differ from other amplifiers \n11.7(99)\t\tShow causes of distortion in amplifiers and list ways to reduce or eliminate it \n11.8(100)\t\tExplain how inaccurate measurements can be experienced due to meter or scope loading. List ways to overcome loading problems\n(12.0 Interfacing of Electronics Products)\n12.1(101)\t\tList input circuit signal levels that may be expected for various common electronics products or test equipment\n12.2(102)\t\tList anticipated signal or voltage levels for output circuits in audio and video equipment \n12.3(103)\t\tExplain the importance of impedance matching; list causes of mismatches \n12.4(104)\t\tExplain the purposes of plugs and connectors and why it is necessary to use the proper ones \n12.5(105)\t\tExplain grounding, proper and improper methods, and the results of power source mismatch\n(13.0 Digital Concepts and Circuitry)\n13.1(106)\t\tDescribe ASCII code \n13.2(107)\t\tIdentify each basic digital gate \n13.3(108)\t\tConstruct truth tables for common gates \n13.4(109)\t\tExplain how counters operate \n13.5(110)\t\tExplain the purpose of flip-flops and list common types\n13.6(111)\t\tExplain the purpose of a digital bus and show how it is connected to various sections of a product\n13.7(112)\t\tList types of display circuitry and describe how numbers and letters are activated digitally \n13.8(113)\t\tExplain the purpose of computer clocks \n13.9(114)\t\tShow how pulsers are used for digital signal tracing and how logic probes are used to verify states in digital equipment \n13.10(115)\t\tDescribe digital clock usage and circuitry \n13.11(116)\t\tDescribe how microprocessors function and identify the basic components and pinouts\n(14.0 Computer Electronics)\n14.1(117)\t\tDescribe the major sections of a computer \t\t\n14.2(118)\t\tDemonstrate how the computer block diagram and flow charts are utilized \n14.3(119)\t\tDescribe different types of computer memory and how storage is accomplished \n14.4(120)\t\tDefine the word peripheral and list various types\n(15.0 Computer Applications)\n15.1(121)\t\tDemonstrate knowledge of basic computer operation \n15.2(122)\t\tList ways to backup data and the importance of doing so \t\n15.3(123)\t\tExplain the causes of line surges and viruses and protection procedures against each \n15.4(124)\t\tExplain major components of the Internet, how it is accessed and common applications \n15.5(125)\t\tDemonstrate how to download a service or application, data or programs \n15.6(126)\t\tExplain how to use the Internet to locate parts and service literature \n(16.0 Audio and Video Systems)\n16.1(127)\t\tExplain major components of the most common home entertainment products \n16.2(128)\t\tDescribe microphone technology and usage \n16.3(129)\t\tExplain speaker construction and precautions \n16.4(130)\t\tDescribe the differences between good quality and distorted sound and electronic/acoustical reasons for each \n16.5(131)\t\tExplain how signals may conflict and the symptoms the conflict may produce \n16.6(132)\t\tExplain how to isolate troubles between discrete equipment units\n(17.0 Optical Electronics)\n17.1(133)\t\tList common electronics display devices \n17.2(134)\t\tExplain the operation of a kinescope \n17.3(135)\t\tExplain how LCD displays operate, their advantages and disadvantages \n17.4(136)\t\tDescribe how LED remote hand units work \n17.5(137)\t\tExplain why and list some locations or circuits in which opto isolators are used \n17.6(138)\t\tList uses for light activated controls and how photo devices are incorporated\n(18.0 Telecommunications Basics)\n18.1(139)\t\tDescribe major types of two-way radio communications (avionics, land mobile and maritime, etc.)\n(19.0 Technician Work Procedures)\n19.1(140)\t\tExplain major invoice and billing concepts for service businesses \n19.2(141)\t\tDescribe ways to procure service literature \n19.3(142)\t\tDemonstrate location/cross referencing of parts and product in catalogs \n19.4(143)\t\tExplain the purposes and requirements for proper record keeping \n19.5(144)\t\tExplain estimate concepts for service work \n19.6(145)\t\tDescribe field technician work procedures that may differ from in-shop routines\n                                       \n                                       \n                               Grading Criteria\n                                       \nThere will be two exams as indicated on the schedule below, worth 80% of the class score.  There will also be at least four quizzes, worth 10% of the class score.  There will be homework assignments every week, for the remaining 10%.  After rounding your score down (i.e. truncating it, by deleting the fractional part) it will translate to a letter grade on this scheme: 0-59=F, 60-62=D-, 63-66=D, 67-69=D+, ... 90-92=A-, 93up=A.\n\n\n                               Attendance Policy\n                                       \nStudents will be expected to attend class.  Examination questions may be set on any material either in the textbook or covered in class.  \n \n\n                         Methods of Achieving Success\n                                       \nThe material in this class is often not easy.  It is vital that you do the assigned reading, try to attend and actively participate in every class, and complete all in-class activities and homework assignments.  Don't get overwhelmed or discouraged.  I will help you as much as I can.  Please help your classmates too.\n\n\n                                   Feedback\n                                       \nAlways feel free to make comments, criticisms and suggestions. In addition to email, a suggestion box will be available to permit anonymous communication.  If you have any difficulties, let me know immediately, and I will do all I can to help you.\n\nElectronics I\nFall 2014\nSchedule\n                                       \n\nweek.day.hour\t\t\tactivities\n\n[mostly using Fowler, Ch1]\n1.1.1 \t\tSep 9\t\tSyllabus, objectives, expectations, introductions\n1.1.2\t\t\t\tFowler 1.1,2\n1.1.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n1.2.1\t\tSep 10\t\tFowler 1.3,4,5\n1.2.2\t\t\t\tFowler 1.6,7\n1.2.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n1.3.1\t\tSep 11\t\tFowler 1.8,9,10\n1.3.2\t\t\t\tFowler 1.11,12\n1.3.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n\n[mostly using Fowler, Ch2]\n2.1.1 \t\tSep 16\t\tFowler 2.1,2,3,4,5\n2.1.2\t\t\t\tFowler 2.6,7,8,9\n2.1.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n2.2.1\t\tSep 17\t\tFowler 2.10,11,12,13\n2.2.2\t\t\t\tFowler 2.14,15,16,17\n2.2.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n2.3.1\t\tSep 18\t\tFowler 2.18,19,20,21\n2.3.2\t\t\t\tFowler 2.22,23,24,25\n2.3.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n\n[mostly using Fowler, Ch3]\n3.1.1 \t\tSep 23\t\tFowler 3.1\n3.1.2\t\t\t\tFowler 3.2\n3.1.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n3.2.1\t\tSep 24\t\tFowler 3.3\n3.2.2\t\t\t\tcont.\n3.2.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n3.3.1\t\tSep 25\t\tFowler 3.4\n3.3.2\t\t\t\tcont.\n3.3.3\n\n[mostly using Fowler, Ch4]\n4.1.1 \t\tSep 30\t\tFowler 4.1,2,3\n4.1.2\t\t\t\tFowler 4.4,5\n4.1.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n4.2.1\t\tOct 1\t\tFowler 4.6,7,8\n4.2.2\t\t\t\tFowler 4.9,10\n4.2.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n4.3.1\t\tOct 2\t\tFowler 4.11,12,13\n4.3.2\t\t\t\tFowler 4.14,15\n4.3.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n\n[mostly using Fowler, Ch5]\n5.1.1 \t\tOct 7\t\tFowler 5.1,2\t\n5.1.2\t\t\t\tFowler 5.3\n5.1.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n5.2.1\t\tOct 8\t\tFowler 5.4,5\n5.2.2\t\t\t\tFowler 5.6\n5.2.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n5.3.1\t\tOct 9\t\tFowler 5.7,8\n5.3.2\t\t\t\tFowler 5.8\n5.3.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n\n[mostly using Fowler, Ch6]\n6.1.1 \t\tOct 14\t\tExam 1\n6.1.2\t\t\t\tcont.\n6.1.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n6.2.1\t\tOct 15\t\tReview of Exam1\n6.2.2\t\t\t\tcont.\n6.2.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n.3.1\t\tOct 16\t\tFowler 6\n6.3.2\t\t\t\tcont.\n6.3.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n\n[mostly using Fowler, Chs7-12]\n7.1.1 \t\tOct 21\t\tFowler 7\n7.1.2\t\t\t\tFowler 8\n7.1.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n7.2.1\t\tOct 22\t\tFowler 9\n7.2.2\t\t\t\tFowler 10\n7.2.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n7.3.1\t\tOct 23\t\tFowler 11\n7.3.2\t\t\t\tFowler 12\n7.3.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n\n[mostly using Fowler, Chs13-end]\n8.1.1 \t\tOct 28\t\tFowler 13\n8.1.2\t\t\t\tFowler 14\n8.1.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n8.2.1\t\tOct 29\t\tFowler 15\n8.2.2\t\t\t\tFowler 16\n8.2.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n8.3.1\t\tOct 30\t\tFowler Appendices\n8.3.2\t\t\t\tFowler review\n8.3.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n\n[other other sources]\n9.1.1 \t\tNov 4\t\tTBD\n9.1.2\t\t\t\tTBD\n9.1.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n9.2.1\t\tNov 5\t\tTBD\n9.2.2\t\t\t\tTBD\n9.2.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n9.3.1\t\tNov 6\t\tTBD\n9.3.2\t\t\t\tTBD\n9.3.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n\n[using other sources]\n10.1.1 \t\tNov 11\t\tTBD\n10.1.2\t\t\t\tTBD\n10.1.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n10.2.1\t\tNov 12\t\tTBD\n10.2.2\t\t\t\tTBD\n10.2.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n10.3.1\t\tNov 13\t\tExam 2\n10.3.2\t\t\t\tcont.\n10.3.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n\n[SET certification competencies]\n11.1.1 \t\tNov 18\t\tExam 2\n11.1.2\t\t\t\tcont.\n11.1.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n11.2.1\t\tNov 19\t\tReview of Exam2\n11.2.2\t\t\t\tcont.\n11.2.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n11.3.1\t\tNov 20\t\tcompetencies 1-10\n11.3.2\t\t\t\tcompetencies 11-20\n11.3.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n\n[SET certification competencies]\n12.1.1 \t\tNov 25\t\tcompetencies 21-30\n12.1.2\t\t\t\tcompetencies 31-40\n12.1.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n12.2.1\t\tNov 26\t\tcompetencies 41-50\n12.2.2\t\t\t\tcompetencies 51-60\n12.2.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n12.3.1\t\tNov 27\t\tThanksgiving (NO CLASS)\n12.3.2\t\t\t\tThanksgiving (NO CLASS)\n12.3.3\t\t\t\tThanksgiving (NO CLASS)\n\n[SET certification competencies]\n13.1.1 \t\tDec 2\t\tcompetencies 61-70\n13.1.2\t\t\t\tcompetencies 71-80\n13.1.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n13.2.1\t\tDec 3\t\tcompetencies 81-90\n13.2.2\t\t\t\tcompetencies 91-100\n13.2.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n13.3.1\t\tDec 4\t\tcompetencies 101-110\t\n13.3.2\t\t\t\tcompetencies 111-120\n13.3.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n\n[SET certification competencies]\n14.1.1 \t\tDec 9\t\tcompetencies 121-130\n14.1.2\t\t\t\tcompetencies 131-140\n14.1.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n14.2.1\t\tDec 10\t\tcompetencies 141-145\n14.2.2\t\t\t\tcompetencies review\n14.2.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n14.3.1\t\tDec 11\t\tSET practice test\n14.3.2\t\t\t\tcont.\n14.3.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n\n[remedial]\n15.1.1 \t\tDec 16\t\tRemedial work \n15.1.2\t\t\t\tRemedial work \n15.1.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n15.2.1\t\tDec 17\t\tRemedial work \n15.2.2\t\t\t\tRemedial work \n15.2.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n15.3.1\t\tDec 18\t\tRemedial work and farewells\n15.3.2\t\t\t\tRemedial work and farewells\n15.3.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n\n",
+        "syllabus_probability": 0.9907359480857849,
+        "field": {
+            "_id": 27,
+            "cip_codes": [
+                "15"
+            ],
+            "name": "Engineering Technician"
+        },
+        "language": "en",
+        "institution": null,
+        "date": {
+            "term": "fall",
+            "year": 2014
+        },
+        "urls": [
+            "http://www.udc.edu/",
+            "http://www.docircuits.com/",
+            "http://www.circuitlab.com/"
+        ],
+        "extracted_sections": {
+            "title": [
+                {
+                    "text": "Electronics I",
+                    "mean_proba": 0.9738101959228516,
+                    "ci1": 158,
+                    "ci2": 170,
+                    "ti1": 3,
+                    "ti2": 4
+                }
+            ],
+            "code": [],
+            "section": [],
+            "date": [
+                {
+                    "text": "Fall 2014",
+                    "mean_proba": 0.9970459938049316,
+                    "ci1": 244,
+                    "ci2": 252,
+                    "ti1": 5,
+                    "ti2": 6
+                }
+            ],
+            "class_days": [
+                {
+                    "text": "Tuesdays, Wednesdays, and Thursdays",
+                    "mean_proba": 0.9719223976135254,
+                    "ci1": 261,
+                    "ci2": 295,
+                    "ti1": 8,
+                    "ti2": 16
+                }
+            ],
+            "class_time": [
+                {
+                    "text": "3-6pm",
+                    "mean_proba": 0.993476152420044,
+                    "ci1": 298,
+                    "ci2": 302,
+                    "ti1": 18,
+                    "ti2": 21
+                }
+            ],
+            "class_location": [
+                {
+                    "text": "UDC Fort Totten, Room TBD",
+                    "mean_proba": 0.9762721061706543,
+                    "ci1": 305,
+                    "ci2": 329,
+                    "ti1": 23,
+                    "ti2": 31
+                }
+            ],
+            "instructor": [],
+            "instructor_phone": [],
+            "office_hours_days": [],
+            "office_location": [],
+            "office_hours_times": [],
+            "credits": [],
+            "description": [
+                {
+                    "text": "This course will give students a good grounding in elementary electronics and prepare them to take the SET (Student Electronic Technician) exam of the Electronic Technicians Association.",
+                    "mean_proba": 0.8882074356079102,
+                    "ci1": 2486,
+                    "ci2": 2671,
+                    "ti1": 587,
+                    "ti2": 617
+                }
+            ],
+            "learning_outcomes": [
+                {
+                    "text": "Describe atomic structure, the components of the atom, their charges and importance to electronics technology",
+                    "mean_proba": 0.9914075136184692,
+                    "ci1": 3496,
+                    "ci2": 3604,
+                    "ti1": 740,
+                    "ti2": 756
+                },
+                {
+                    "text": "List ten uses for magnetism in electronics technology",
+                    "mean_proba": 0.9936467409133911,
+                    "ci1": 3614,
+                    "ci2": 3666,
+                    "ti1": 763,
+                    "ti2": 771
+                },
+                {
+                    "text": "Explain basic uses for electricity",
+                    "mean_proba": 0.9902139902114868,
+                    "ci1": 3676,
+                    "ci2": 3709,
+                    "ti1": 778,
+                    "ti2": 782
+                },
+                {
+                    "text": "Describe the basic methods of using electricity to operate a motor and how mechanical motion\ncauses a generator to produce electrical current",
+                    "mean_proba": 0.995046079158783,
+                    "ci1": 3720,
+                    "ci2": 3860,
+                    "ti1": 789,
+                    "ti2": 810
+                },
+                {
+                    "text": "Explain the differences between current, voltage and resistance",
+                    "mean_proba": 0.9936287999153137,
+                    "ci1": 3871,
+                    "ci2": 3933,
+                    "ti1": 817,
+                    "ti2": 825
+                },
+                {
+                    "text": "List different types of resistive materials and how resistors are used in electronics",
+                    "mean_proba": 0.9935979247093201,
+                    "ci1": 3944,
+                    "ci2": 4028,
+                    "ti1": 832,
+                    "ti2": 846
+                },
+                {
+                    "text": "Describe the purposes of capacitors.",
+                    "mean_proba": 0.9938656091690063,
+                    "ci1": 4039,
+                    "ci2": 4074,
+                    "ti1": 853,
+                    "ti2": 860
+                },
+                {
+                    "text": "List common types and construction designs",
+                    "mean_proba": 0.9629530310630798,
+                    "ci1": 4076,
+                    "ci2": 4117,
+                    "ti1": 861,
+                    "ti2": 866
+                },
+                {
+                    "text": "Explain how inductance relates to magnetism and describe coil construction, cores and usages",
+                    "mean_proba": 0.9864583015441895,
+                    "ci1": 4128,
+                    "ci2": 4219,
+                    "ti1": 873,
+                    "ti2": 890
+                },
+                {
+                    "text": "Show a comparison between reactance and resistance and describe current/voltage\nrelationships",
+                    "mean_proba": 0.9861615896224976,
+                    "ci1": 4229,
+                    "ci2": 4321,
+                    "ti1": 897,
+                    "ti2": 910
+                },
+                {
+                    "text": "Compare impedance with reactance and resistance and explain the causes and effects of\nimpedance",
+                    "mean_proba": 0.9876031875610352,
+                    "ci1": 4334,
+                    "ci2": 4428,
+                    "ti1": 917,
+                    "ti2": 933
+                },
+                {
+                    "text": "List voltage sources, AC and DC, batteries and natural generation",
+                    "mean_proba": 0.9904752969741821,
+                    "ci1": 4441,
+                    "ci2": 4505,
+                    "ti1": 940,
+                    "ti2": 951
+                },
+                {
+                    "text": "List Ohms law formulas for current, voltage, resistance and power.",
+                    "mean_proba": 0.9836934208869934,
+                    "ci1": 4518,
+                    "ci2": 4583,
+                    "ti1": 958,
+                    "ti2": 971
+                },
+                {
+                    "text": "Solve math problems utilizing each",
+                    "mean_proba": 0.908521294593811,
+                    "ci1": 4585,
+                    "ci2": 4618,
+                    "ti1": 972,
+                    "ti2": 976
+                },
+                {
+                    "text": "Calculate power consumption and requirements",
+                    "mean_proba": 0.9389548301696777,
+                    "ci1": 4631,
+                    "ci2": 4674,
+                    "ti1": 983,
+                    "ti2": 987
+                },
+                {
+                    "text": "Identify resistor values from color code or other marks and list composition and reasons for different usages",
+                    "mean_proba": 0.9804736971855164,
+                    "ci1": 4713,
+                    "ci2": 4821,
+                    "ti1": 1001,
+                    "ti2": 1019
+                },
+                {
+                    "text": "list common usages; methods of varying capacitance and explain the terms charge and coulomb",
+                    "mean_proba": 0.7477704286575317,
+                    "ci1": 4858,
+                    "ci2": 4948,
+                    "ti1": 1032,
+                    "ti2": 1052
+                },
+                {
+                    "text": "Identify inductor types and reasons for various core materials; how diameter and wire size affects the values",
+                    "mean_proba": 0.980201244354248,
+                    "ci1": 4959,
+                    "ci2": 5067,
+                    "ti1": 1059,
+                    "ti2": 1078
+                },
+                {
+                    "text": "explain step up/down voltage methods; explain why laminations are used",
+                    "mean_proba": 0.7845934629440308,
+                    "ci1": 5140,
+                    "ci2": 5209,
+                    "ti1": 1096,
+                    "ti2": 1109
+                },
+                {
+                    "text": "Identify transistors as to type and usage, such as unijunction, FETs and MOSFETS;",
+                    "mean_proba": 0.7837865352630615,
+                    "ci1": 5220,
+                    "ci2": 5300,
+                    "ti1": 1116,
+                    "ti2": 1139
+                },
+                {
+                    "text": "explain beta and alpha and provide common DC and bias voltage ranges;",
+                    "mean_proba": 0.7701985836029053,
+                    "ci1": 5302,
+                    "ci2": 5370,
+                    "ti1": 1140,
+                    "ti2": 1152
+                },
+                {
+                    "text": "list common usage",
+                    "mean_proba": 0.9554775953292847,
+                    "ci1": 5372,
+                    "ci2": 5388,
+                    "ti1": 1153,
+                    "ti2": 1155
+                },
+                {
+                    "text": "Identify other semiconductors and explain their uses: Darlington pairs; unijunction transistors and Gunn diodes",
+                    "mean_proba": 0.9873586893081665,
+                    "ci1": 5399,
+                    "ci2": 5509,
+                    "ti1": 1162,
+                    "ti2": 1184
+                },
+                {
+                    "text": "Compare thyristors with other semiconductors;",
+                    "mean_proba": 0.7502562999725342,
+                    "ci1": 5520,
+                    "ci2": 5564,
+                    "ti1": 1191,
+                    "ti2": 1199
+                },
+                {
+                    "text": "Identify diacs, triacs and SCRs and explain their operation.",
+                    "mean_proba": 0.916050910949707,
+                    "ci1": 5566,
+                    "ci2": 5625,
+                    "ti1": 1200,
+                    "ti2": 1214
+                },
+                {
+                    "text": "describe usage in regulator circuits",
+                    "mean_proba": 0.9381170868873596,
+                    "ci1": 5666,
+                    "ci2": 5701,
+                    "ti1": 1228,
+                    "ti2": 1232
+                },
+                {
+                    "text": "List common optical devices (LEDs, LCDs, etc.) and describe how photovoltaic cells are activated.",
+                    "mean_proba": 0.985893726348877,
+                    "ci1": 5713,
+                    "ci2": 5809,
+                    "ti1": 1239,
+                    "ti2": 1263
+                },
+                {
+                    "text": "Draw symbols for photo resistors, photodiodes and phototransistors;",
+                    "mean_proba": 0.7215170860290527,
+                    "ci1": 5811,
+                    "ci2": 5877,
+                    "ti1": 1264,
+                    "ti2": 1279
+                },
+                {
+                    "text": "Describe MOS, CMOS, FET applications",
+                    "mean_proba": 0.7748779654502869,
+                    "ci1": 5939,
+                    "ci2": 5974,
+                    "ti1": 1294,
+                    "ti2": 1303
+                },
+                {
+                    "text": "Describe solder safety as it pertains to burns and potential fires or damage to facilities or customer products",
+                    "mean_proba": 0.9884637594223022,
+                    "ci1": 6024,
+                    "ci2": 6134,
+                    "ti1": 1323,
+                    "ti2": 1343
+                },
+                {
+                    "text": "Explain the cause of solder fumes and the effects of lead poisoning",
+                    "mean_proba": 0.9867120981216431,
+                    "ci1": 6145,
+                    "ci2": 6211,
+                    "ti1": 1350,
+                    "ti2": 1363
+                },
+                {
+                    "text": "List causes and precautions to prevent or reduce solder splatter",
+                    "mean_proba": 0.9823824167251587,
+                    "ci1": 6223,
+                    "ci2": 6286,
+                    "ti1": 1370,
+                    "ti2": 1382
+                },
+                {
+                    "text": "Explain the reasons for flux usage and describe types",
+                    "mean_proba": 0.9844872951507568,
+                    "ci1": 6297,
+                    "ci2": 6349,
+                    "ti1": 1389,
+                    "ti2": 1397
+                },
+                {
+                    "text": "List types of solder and reasons for choosing each",
+                    "mean_proba": 0.982935905456543,
+                    "ci1": 6361,
+                    "ci2": 6410,
+                    "ti1": 1404,
+                    "ti2": 1413
+                },
+                {
+                    "text": "Explain heat shunts, why and how they are used",
+                    "mean_proba": 0.9829813241958618,
+                    "ci1": 6421,
+                    "ci2": 6466,
+                    "ti1": 1420,
+                    "ti2": 1430
+                },
+                {
+                    "text": "Identify cold solder joints and explain causes",
+                    "mean_proba": 0.9855873584747314,
+                    "ci1": 6478,
+                    "ci2": 6523,
+                    "ti1": 1437,
+                    "ti2": 1444
+                },
+                {
+                    "text": "Describe the differences between good and bad mechanical and electrical solder connections",
+                    "mean_proba": 0.9812126159667969,
+                    "ci1": 6534,
+                    "ci2": 6623,
+                    "ti1": 1451,
+                    "ti2": 1463
+                },
+                {
+                    "text": "Demonstrate proper care of solder-desolder equipment and aids",
+                    "mean_proba": 0.9899490475654602,
+                    "ci1": 6635,
+                    "ci2": 6695,
+                    "ti1": 1470,
+                    "ti2": 1482
+                },
+                {
+                    "text": "Explain desoldering principles",
+                    "mean_proba": 0.9861886501312256,
+                    "ci1": 6708,
+                    "ci2": 6737,
+                    "ti1": 1489,
+                    "ti2": 1493
+                },
+                {
+                    "text": "Describe various types of desoldering equipment and how it is used",
+                    "mean_proba": 0.9862874746322632,
+                    "ci1": 6751,
+                    "ci2": 6816,
+                    "ti1": 1500,
+                    "ti2": 1512
+                },
+                {
+                    "text": "Demonstrate the use of braid-wick solder removers",
+                    "mean_proba": 0.9793213605880737,
+                    "ci1": 6828,
+                    "ci2": 6876,
+                    "ti1": 1519,
+                    "ti2": 1530
+                },
+                {
+                    "text": "Draw common electrical/electronic symbols",
+                    "mean_proba": 0.9815481901168823,
+                    "ci1": 6938,
+                    "ci2": 6978,
+                    "ti1": 1552,
+                    "ti2": 1557
+                },
+                {
+                    "text": "Explain how block diagrams are used for troubleshooting and maintenance of electronics\nproducts",
+                    "mean_proba": 0.9873391389846802,
+                    "ci1": 6990,
+                    "ci2": 7084,
+                    "ti1": 1564,
+                    "ti2": 1578
+                },
+                {
+                    "text": "Explain the differences between wiring prints, schematics and block diagrams",
+                    "mean_proba": 0.9781416654586792,
+                    "ci1": 7096,
+                    "ci2": 7171,
+                    "ti1": 1585,
+                    "ti2": 1597
+                },
+                {
+                    "text": "Describe the purpose and use of test points.",
+                    "mean_proba": 0.8320125341415405,
+                    "ci1": 7183,
+                    "ci2": 7226,
+                    "ti1": 1604,
+                    "ti2": 1612
+                },
+                {
+                    "text": "Indicate their likely placement on schematics",
+                    "mean_proba": 0.807305097579956,
+                    "ci1": 7228,
+                    "ci2": 7272,
+                    "ti1": 1613,
+                    "ti2": 1620
+                },
+                {
+                    "text": "Explain how schematics are used to locate component and wiring failures in electronics products",
+                    "mean_proba": 0.9833447933197021,
+                    "ci1": 7284,
+                    "ci2": 7378,
+                    "ti1": 1627,
+                    "ti2": 1642
+                },
+                {
+                    "text": "Explain the methods of using flow diagrams/charts",
+                    "mean_proba": 0.8872997760772705,
+                    "ci1": 7390,
+                    "ci2": 7438,
+                    "ti1": 1649,
+                    "ti2": 1657
+                },
+                {
+                    "text": "List wire types and construction",
+                    "mean_proba": 0.9821630716323853,
+                    "ci1": 7463,
+                    "ci2": 7494,
+                    "ti1": 1671,
+                    "ti2": 1675
+                },
+                {
+                    "text": "List American wire gauges used for various purposes",
+                    "mean_proba": 0.9882998466491699,
+                    "ci1": 7506,
+                    "ci2": 7556,
+                    "ti1": 1682,
+                    "ti2": 1690
+                },
+                {
+                    "text": "Explain construction of coaxial cable and the impedance characteristics",
+                    "mean_proba": 0.9913303256034851,
+                    "ci1": 7568,
+                    "ci2": 7638,
+                    "ti1": 1697,
+                    "ti2": 1708
+                },
+                {
+                    "text": "List common identifications for copper cables, such as #18 and #24, and UTP telephone cable",
+                    "mean_proba": 0.9906979203224182,
+                    "ci1": 7649,
+                    "ci2": 7739,
+                    "ti1": 1715,
+                    "ti2": 1735
+                },
+                {
+                    "text": "Explain major differences between copper, coaxial and fiber optic cables",
+                    "mean_proba": 0.9903333187103271,
+                    "ci1": 7751,
+                    "ci2": 7822,
+                    "ti1": 1742,
+                    "ti2": 1754
+                },
+                {
+                    "text": "Describe impedance and its causes; explain reasons for maintaining a cable's characteristics",
+                    "mean_proba": 0.9910497665405273,
+                    "ci1": 7834,
+                    "ci2": 7925,
+                    "ti1": 1761,
+                    "ti2": 1776
+                },
+                {
+                    "text": "Explain the effects of proper and improper termination",
+                    "mean_proba": 0.9900994300842285,
+                    "ci1": 7937,
+                    "ci2": 7990,
+                    "ti1": 1783,
+                    "ti2": 1790
+                },
+                {
+                    "text": "Explain the purposes of grounding and common conventions used in electrical and electronics",
+                    "mean_proba": 0.9880623817443848,
+                    "ci1": 8002,
+                    "ci2": 8092,
+                    "ti1": 1797,
+                    "ti2": 1810
+                },
+                {
+                    "text": "Demonstrate splicing knowledge and ability for coaxial and copper cable; explain two types of fiber splices",
+                    "mean_proba": 0.9911869764328003,
+                    "ci1": 8104,
+                    "ci2": 8210,
+                    "ti1": 1817,
+                    "ti2": 1838
+                },
+                {
+                    "text": "Demonstrate testing methods for all three types of cables",
+                    "mean_proba": 0.7753263711929321,
+                    "ci1": 8223,
+                    "ci2": 8279,
+                    "ti1": 1845,
+                    "ti2": 1853
+                },
+                {
+                    "text": "Compare the fittings and connectors used in cabling",
+                    "mean_proba": 0.7724965810775757,
+                    "ci1": 8340,
+                    "ci2": 8390,
+                    "ti1": 1867,
+                    "ti2": 1877
+                },
+                {
+                    "text": "Describe proper crimping of communications wiring connectors",
+                    "mean_proba": 0.9905508756637573,
+                    "ci1": 8457,
+                    "ci2": 8516,
+                    "ti1": 1892,
+                    "ti2": 1901
+                },
+                {
+                    "text": "Explain how cable prep tools are used and demonstrate proper and improper crimping",
+                    "mean_proba": 0.9900966882705688,
+                    "ci1": 8529,
+                    "ci2": 8610,
+                    "ti1": 1908,
+                    "ti2": 1922
+                },
+                {
+                    "text": "Explain shock hazards when servicing power supplies in electronic equipment",
+                    "mean_proba": 0.9911909103393555,
+                    "ci1": 8642,
+                    "ci2": 8716,
+                    "ti1": 1936,
+                    "ti2": 1945
+                },
+                {
+                    "text": "Describe the differences between transformer powered supplies and line connected supplies",
+                    "mean_proba": 0.9906411170959473,
+                    "ci1": 8728,
+                    "ci2": 8816,
+                    "ti1": 1952,
+                    "ti2": 1963
+                },
+                {
+                    "text": "Describe battery supplies and list common usages; also explain recharging principles",
+                    "mean_proba": 0.9911201000213623,
+                    "ci1": 8828,
+                    "ci2": 8911,
+                    "ti1": 1970,
+                    "ti2": 1984
+                },
+                {
+                    "text": "Explain the reasons for filtering, describe hum, identify common filter types (pi, t, l, etc.)",
+                    "mean_proba": 0.9862034320831299,
+                    "ci1": 8923,
+                    "ci2": 9016,
+                    "ti1": 1991,
+                    "ti2": 2013
+                },
+                {
+                    "text": "Explain the reasons for power supply regulation",
+                    "mean_proba": 0.7848633527755737,
+                    "ci1": 9028,
+                    "ci2": 9074,
+                    "ti1": 2020,
+                    "ti2": 2026
+                },
+                {
+                    "text": "house service box common fuses and circuit breaker configuration and precautions for replacement",
+                    "mean_proba": 0.7651258707046509,
+                    "ci1": 9271,
+                    "ci2": 9366,
+                    "ti1": 2062,
+                    "ti2": 2075
+                },
+                {
+                    "text": "Describe how volt-ohm-current meters operate",
+                    "mean_proba": 0.9407622218132019,
+                    "ci1": 9415,
+                    "ci2": 9458,
+                    "ti1": 2091,
+                    "ti2": 2101
+                },
+                {
+                    "text": "Identify meter protection, safety and usage",
+                    "mean_proba": 0.9709880352020264,
+                    "ci1": 9470,
+                    "ci2": 9512,
+                    "ti1": 2108,
+                    "ti2": 2114
+                },
+                {
+                    "text": "Explain care of equipment and test leads",
+                    "mean_proba": 0.9722825884819031,
+                    "ci1": 9524,
+                    "ci2": 9563,
+                    "ti1": 2121,
+                    "ti2": 2127
+                },
+                {
+                    "text": "List the purposes and types of signal generators",
+                    "mean_proba": 0.9734266400337219,
+                    "ci1": 9575,
+                    "ci2": 9622,
+                    "ti1": 2134,
+                    "ti2": 2141
+                },
+                {
+                    "text": "Describe meter loading and precautions",
+                    "mean_proba": 0.9800928831100464,
+                    "ci1": 9634,
+                    "ci2": 9671,
+                    "ti1": 2148,
+                    "ti2": 2152
+                },
+                {
+                    "text": "explain ESR Capacitance- measurement equipment",
+                    "mean_proba": 0.9147618412971497,
+                    "ci1": 9745,
+                    "ci2": 9790,
+                    "ti1": 2173,
+                    "ti2": 2182
+                },
+                {
+                    "text": "List the uses and precautions for logic test probes",
+                    "mean_proba": 0.9761540293693542,
+                    "ci1": 9801,
+                    "ci2": 9851,
+                    "ti1": 2189,
+                    "ti2": 2198
+                },
+                {
+                    "text": "Explain how logic pulsers are used",
+                    "mean_proba": 0.9661269187927246,
+                    "ci1": 9863,
+                    "ci2": 9896,
+                    "ti1": 2205,
+                    "ti2": 2211
+                },
+                {
+                    "text": "explain the purposes of each front panel control",
+                    "mean_proba": 0.8122544884681702,
+                    "ci1": 9937,
+                    "ci2": 9984,
+                    "ti1": 2225,
+                    "ti2": 2232
+                },
+                {
+                    "text": "List the uses for pattern generators",
+                    "mean_proba": 0.9711419939994812,
+                    "ci1": 9997,
+                    "ci2": 10032,
+                    "ti1": 2239,
+                    "ti2": 2244
+                },
+                {
+                    "text": "Define dummy load; show where and why used",
+                    "mean_proba": 0.9744042754173279,
+                    "ci1": 10045,
+                    "ci2": 10086,
+                    "ti1": 2251,
+                    "ti2": 2259
+                },
+                {
+                    "text": "Explain reasons for using rheostats, isolation transformers and variacs and why size matters",
+                    "mean_proba": 0.9737808704376221,
+                    "ci1": 10098,
+                    "ci2": 10189,
+                    "ti1": 2266,
+                    "ti2": 2284
+                },
+                {
+                    "text": "list various degrees of current the human body can tolerate",
+                    "mean_proba": 0.7075790166854858,
+                    "ci1": 10287,
+                    "ci2": 10345,
+                    "ti1": 2306,
+                    "ti2": 2315
+                },
+                {
+                    "text": "explain precautions for untrained people",
+                    "mean_proba": 0.8438448905944824,
+                    "ci1": 10466,
+                    "ci2": 10505,
+                    "ti1": 2340,
+                    "ti2": 2346
+                },
+                {
+                    "text": "Explain NFPA(R) rules and describe how technicians comply and may violate them",
+                    "mean_proba": 0.9528771042823792,
+                    "ci1": 10632,
+                    "ci2": 10709,
+                    "ti1": 2381,
+                    "ti2": 2397
+                },
+                {
+                    "text": "Describe fusing and circuit breaker rules and reasons for different types of fuses",
+                    "mean_proba": 0.9797759652137756,
+                    "ci1": 10722,
+                    "ci2": 10803,
+                    "ti1": 2404,
+                    "ti2": 2418
+                },
+                {
+                    "text": "Explain static causes and CMOS damage prevention straps, mats and grounding",
+                    "mean_proba": 0.9735230803489685,
+                    "ci1": 10815,
+                    "ci2": 10889,
+                    "ti1": 2425,
+                    "ti2": 2438
+                },
+                {
+                    "text": "List tools hazards that are associated with technician activities in the workplace and in the field.",
+                    "mean_proba": 0.9709284901618958,
+                    "ci1": 10902,
+                    "ci2": 11001,
+                    "ti1": 2445,
+                    "ti2": 2461
+                },
+                {
+                    "text": "Describe lockout and tagging rules for potentially unsafe electrical or mechanical hazards",
+                    "mean_proba": 0.9473811388015747,
+                    "ci1": 11014,
+                    "ci2": 11103,
+                    "ti1": 2468,
+                    "ti2": 2481
+                },
+                {
+                    "text": "Explain eye and ear protection needed by technicians",
+                    "mean_proba": 0.9738578796386719,
+                    "ci1": 11114,
+                    "ci2": 11165,
+                    "ti1": 2488,
+                    "ti2": 2495
+                },
+                {
+                    "text": "List ladder handling and usage and OSHA(R) heights safety rules",
+                    "mean_proba": 0.7909791469573975,
+                    "ci1": 11178,
+                    "ci2": 11240,
+                    "ti1": 2502,
+                    "ti2": 2515
+                },
+                {
+                    "text": "List service vehicle safety concerns such as ladder or transporting security and flying objects, driver screens inside the vehicle",
+                    "mean_proba": 0.839138388633728,
+                    "ci1": 11253,
+                    "ci2": 11382,
+                    "ti1": 2522,
+                    "ti2": 2541
+                },
+                {
+                    "text": "Describe the types and usage of fire extinguishers",
+                    "mean_proba": 0.8352921605110168,
+                    "ci1": 11395,
+                    "ci2": 11444,
+                    "ti1": 2548,
+                    "ti2": 2558
+                },
+                {
+                    "text": "Quote Ohms law power, voltage, current and resistance formulas and solve for circuit values",
+                    "mean_proba": 0.8037933707237244,
+                    "ci1": 11486,
+                    "ci2": 11576,
+                    "ti1": 2573,
+                    "ti2": 2589
+                },
+                {
+                    "text": "List other common basic electronic formulas",
+                    "mean_proba": 0.8538197875022888,
+                    "ci1": 11588,
+                    "ci2": 11630,
+                    "ti1": 2596,
+                    "ti2": 2601
+                },
+                {
+                    "text": "Identify and describe the operation of common DC circuits",
+                    "mean_proba": 0.8965580463409424,
+                    "ci1": 11690,
+                    "ci2": 11746,
+                    "ti1": 2619,
+                    "ti2": 2627
+                },
+                {
+                    "text": "Identify and describe the operation of common AC circuits",
+                    "mean_proba": 0.9010253548622131,
+                    "ci1": 11759,
+                    "ci2": 11815,
+                    "ti1": 2634,
+                    "ti2": 2642
+                },
+                {
+                    "text": "Explain how series circuits, R, L, C are used in electronics equipment",
+                    "mean_proba": 0.8798786401748657,
+                    "ci1": 11828,
+                    "ci2": 11897,
+                    "ti1": 2649,
+                    "ti2": 2663
+                },
+                {
+                    "text": "Explain the purpose of oscillators",
+                    "mean_proba": 0.8327441215515137,
+                    "ci1": 11910,
+                    "ci2": 11943,
+                    "ti1": 2670,
+                    "ti2": 2677
+                },
+                {
+                    "text": "Show how oscillators and multivibrators are similar and how they differ",
+                    "mean_proba": 0.8194762468338013,
+                    "ci1": 11956,
+                    "ci2": 12026,
+                    "ti1": 2684,
+                    "ti2": 2700
+                },
+                {
+                    "text": "List common amplifier devices",
+                    "mean_proba": 0.9065625667572021,
+                    "ci1": 12119,
+                    "ci2": 12147,
+                    "ti1": 2729,
+                    "ti2": 2732
+                },
+                {
+                    "text": "Describe the purpose of each component in an amplifier circuit",
+                    "mean_proba": 0.931840717792511,
+                    "ci1": 12160,
+                    "ci2": 12221,
+                    "ti1": 2739,
+                    "ti2": 2748
+                },
+                {
+                    "text": "List the usages and classes of amplifiers",
+                    "mean_proba": 0.9176167249679565,
+                    "ci1": 12234,
+                    "ci2": 12274,
+                    "ti1": 2755,
+                    "ti2": 2762
+                },
+                {
+                    "text": "Describe biasing and gain characteristics",
+                    "mean_proba": 0.8700774908065796,
+                    "ci1": 12287,
+                    "ci2": 12327,
+                    "ti1": 2769,
+                    "ti2": 2774
+                },
+                {
+                    "text": "Explain frequency response of an amplifier circuit and why it is important",
+                    "mean_proba": 0.9063541293144226,
+                    "ci1": 12340,
+                    "ci2": 12413,
+                    "ti1": 2781,
+                    "ti2": 2792
+                },
+                {
+                    "text": "Explain the uses of operational amplifiers and how they differ from other amplifiers",
+                    "mean_proba": 0.8679433465003967,
+                    "ci1": 12426,
+                    "ci2": 12509,
+                    "ti1": 2799,
+                    "ti2": 2811
+                },
+                {
+                    "text": "Show causes of distortion in amplifiers and list ways to reduce or eliminate it",
+                    "mean_proba": 0.9007939100265503,
+                    "ci1": 12522,
+                    "ci2": 12600,
+                    "ti1": 2818,
+                    "ti2": 2831
+                },
+                {
+                    "text": "Explain how inaccurate measurements can be experienced due to meter or scope loading.",
+                    "mean_proba": 0.7777647972106934,
+                    "ci1": 12614,
+                    "ci2": 12698,
+                    "ti1": 2838,
+                    "ti2": 2851
+                },
+                {
+                    "text": "List ways to overcome loading problems",
+                    "mean_proba": 0.6543023586273193,
+                    "ci1": 12700,
+                    "ci2": 12737,
+                    "ti1": 2852,
+                    "ti2": 2857
+                },
+                {
+                    "text": "List input circuit signal levels that may be expected for various common electronics products or test equipment",
+                    "mean_proba": 0.9201284646987915,
+                    "ci1": 12793,
+                    "ci2": 12903,
+                    "ti1": 2875,
+                    "ti2": 2891
+                },
+                {
+                    "text": "List anticipated signal or voltage levels for output circuits in audio and video equipment",
+                    "mean_proba": 0.9085859060287476,
+                    "ci1": 12916,
+                    "ci2": 13005,
+                    "ti1": 2898,
+                    "ti2": 2911
+                },
+                {
+                    "text": "Explain the importance of impedance matching; list causes of mismatches",
+                    "mean_proba": 0.9560582637786865,
+                    "ci1": 13019,
+                    "ci2": 13089,
+                    "ti1": 2918,
+                    "ti2": 2931
+                },
+                {
+                    "text": "Explain the purposes of plugs and connectors and why it is necessary to use the proper ones",
+                    "mean_proba": 0.9882321357727051,
+                    "ci1": 13103,
+                    "ci2": 13193,
+                    "ti1": 2938,
+                    "ti2": 2956
+                },
+                {
+                    "text": "Explain grounding, proper and improper methods, and the results of power source mismatch",
+                    "mean_proba": 0.9795165061950684,
+                    "ci1": 13207,
+                    "ci2": 13294,
+                    "ti1": 2963,
+                    "ti2": 2980
+                },
+                {
+                    "text": "Describe ASCII code",
+                    "mean_proba": 0.9618033170700073,
+                    "ci1": 13345,
+                    "ci2": 13363,
+                    "ti1": 2997,
+                    "ti2": 3001
+                },
+                {
+                    "text": "Identify each basic digital gate",
+                    "mean_proba": 0.975753664970398,
+                    "ci1": 13377,
+                    "ci2": 13408,
+                    "ti1": 3008,
+                    "ti2": 3012
+                },
+                {
+                    "text": "Construct truth tables for common gates",
+                    "mean_proba": 0.9812445640563965,
+                    "ci1": 13422,
+                    "ci2": 13460,
+                    "ti1": 3019,
+                    "ti2": 3024
+                },
+                {
+                    "text": "Explain how counters operate",
+                    "mean_proba": 0.9783633351325989,
+                    "ci1": 13474,
+                    "ci2": 13501,
+                    "ti1": 3031,
+                    "ti2": 3034
+                },
+                {
+                    "text": "Explain the purpose of flip-flops and list common types",
+                    "mean_proba": 0.98680579662323,
+                    "ci1": 13515,
+                    "ci2": 13569,
+                    "ti1": 3041,
+                    "ti2": 3052
+                },
+                {
+                    "text": "Explain the purpose of a digital bus and show how it is connected to various sections of a product",
+                    "mean_proba": 0.9867224097251892,
+                    "ci1": 13582,
+                    "ci2": 13679,
+                    "ti1": 3059,
+                    "ti2": 3077
+                },
+                {
+                    "text": "List types of display circuitry and describe how numbers and letters are activated digitally",
+                    "mean_proba": 0.985540509223938,
+                    "ci1": 13692,
+                    "ci2": 13783,
+                    "ti1": 3084,
+                    "ti2": 3098
+                },
+                {
+                    "text": "Explain the purpose of computer clocks",
+                    "mean_proba": 0.97886061668396,
+                    "ci1": 13797,
+                    "ci2": 13834,
+                    "ti1": 3105,
+                    "ti2": 3110
+                },
+                {
+                    "text": "Show how pulsers are used for digital signal tracing and how logic probes are used to verify states in digital equipment",
+                    "mean_proba": 0.9873088598251343,
+                    "ci1": 13848,
+                    "ci2": 13967,
+                    "ti1": 3117,
+                    "ti2": 3139
+                },
+                {
+                    "text": "Describe digital clock usage and circuitry",
+                    "mean_proba": 0.982630729675293,
+                    "ci1": 13982,
+                    "ci2": 14023,
+                    "ti1": 3146,
+                    "ti2": 3152
+                },
+                {
+                    "text": "Describe how microprocessors function and identify the basic components and pinouts",
+                    "mean_proba": 0.9879343509674072,
+                    "ci1": 14038,
+                    "ci2": 14120,
+                    "ti1": 3159,
+                    "ti2": 3174
+                },
+                {
+                    "text": "Describe the major sections of a computer",
+                    "mean_proba": 0.9851304888725281,
+                    "ci1": 14161,
+                    "ci2": 14201,
+                    "ti1": 3188,
+                    "ti2": 3194
+                },
+                {
+                    "text": "Demonstrate how the computer block diagram and flow charts are utilized",
+                    "mean_proba": 0.98076331615448,
+                    "ci1": 14217,
+                    "ci2": 14287,
+                    "ti1": 3201,
+                    "ti2": 3211
+                },
+                {
+                    "text": "Describe different types of computer memory and how storage is accomplished",
+                    "mean_proba": 0.9868875741958618,
+                    "ci1": 14301,
+                    "ci2": 14375,
+                    "ti1": 3218,
+                    "ti2": 3228
+                },
+                {
+                    "text": "Define the word peripheral and list various types",
+                    "mean_proba": 0.9876705408096313,
+                    "ci1": 14389,
+                    "ci2": 14437,
+                    "ti1": 3235,
+                    "ti2": 3242
+                },
+                {
+                    "text": "Demonstrate knowledge of basic computer operation",
+                    "mean_proba": 0.9749159812927246,
+                    "ci1": 14479,
+                    "ci2": 14527,
+                    "ti1": 3256,
+                    "ti2": 3261
+                },
+                {
+                    "text": "List ways to backup data and the importance of doing so",
+                    "mean_proba": 0.9865517616271973,
+                    "ci1": 14541,
+                    "ci2": 14595,
+                    "ti1": 3268,
+                    "ti2": 3278
+                },
+                {
+                    "text": "Explain the causes of line surges and viruses and protection procedures against each",
+                    "mean_proba": 0.9842587113380432,
+                    "ci1": 14610,
+                    "ci2": 14693,
+                    "ti1": 3285,
+                    "ti2": 3298
+                },
+                {
+                    "text": "Explain major components of the Internet, how it is accessed and common applications",
+                    "mean_proba": 0.975684404373169,
+                    "ci1": 14707,
+                    "ci2": 14790,
+                    "ti1": 3305,
+                    "ti2": 3318
+                },
+                {
+                    "text": "Demonstrate how to download a service or application, data or programs",
+                    "mean_proba": 0.9772683382034302,
+                    "ci1": 14804,
+                    "ci2": 14873,
+                    "ti1": 3325,
+                    "ti2": 3336
+                },
+                {
+                    "text": "Explain how to use the Internet to locate parts and service literature",
+                    "mean_proba": 0.9903485774993896,
+                    "ci1": 14887,
+                    "ci2": 14956,
+                    "ti1": 3343,
+                    "ti2": 3354
+                },
+                {
+                    "text": "Explain major components of the most common home entertainment products",
+                    "mean_proba": 0.9914120435714722,
+                    "ci1": 15001,
+                    "ci2": 15071,
+                    "ti1": 3370,
+                    "ti2": 3379
+                },
+                {
+                    "text": "Describe microphone technology and usage",
+                    "mean_proba": 0.987622082233429,
+                    "ci1": 15085,
+                    "ci2": 15124,
+                    "ti1": 3386,
+                    "ti2": 3390
+                },
+                {
+                    "text": "Explain speaker construction and precautions",
+                    "mean_proba": 0.9892354011535645,
+                    "ci1": 15138,
+                    "ci2": 15181,
+                    "ti1": 3397,
+                    "ti2": 3401
+                },
+                {
+                    "text": "Describe the differences between good quality and distorted sound and electronic/acoustical reasons for each",
+                    "mean_proba": 0.9887480139732361,
+                    "ci1": 15195,
+                    "ci2": 15302,
+                    "ti1": 3408,
+                    "ti2": 3424
+                },
+                {
+                    "text": "Explain how signals may conflict and the symptoms the conflict may produce",
+                    "mean_proba": 0.9834917783737183,
+                    "ci1": 15316,
+                    "ci2": 15389,
+                    "ti1": 3431,
+                    "ti2": 3442
+                },
+                {
+                    "text": "Explain how to isolate troubles between discrete equipment units",
+                    "mean_proba": 0.9875967502593994,
+                    "ci1": 15403,
+                    "ci2": 15466,
+                    "ti1": 3449,
+                    "ti2": 3457
+                },
+                {
+                    "text": "List common electronics display devices",
+                    "mean_proba": 0.9844386577606201,
+                    "ci1": 15506,
+                    "ci2": 15544,
+                    "ti1": 3471,
+                    "ti2": 3475
+                },
+                {
+                    "text": "Explain the operation of a kinescope",
+                    "mean_proba": 0.978185772895813,
+                    "ci1": 15558,
+                    "ci2": 15593,
+                    "ti1": 3482,
+                    "ti2": 3489
+                },
+                {
+                    "text": "Explain how LCD displays operate, their advantages and disadvantages",
+                    "mean_proba": 0.984298586845398,
+                    "ci1": 15607,
+                    "ci2": 15674,
+                    "ti1": 3496,
+                    "ti2": 3506
+                },
+                {
+                    "text": "Describe how LED remote hand units work",
+                    "mean_proba": 0.9641686677932739,
+                    "ci1": 15688,
+                    "ci2": 15726,
+                    "ti1": 3513,
+                    "ti2": 3519
+                },
+                {
+                    "text": "Explain why and list some locations or circuits in which opto isolators are used",
+                    "mean_proba": 0.9827234148979187,
+                    "ci1": 15740,
+                    "ci2": 15819,
+                    "ti1": 3526,
+                    "ti2": 3542
+                },
+                {
+                    "text": "List uses for light activated controls and how photo devices are incorporated",
+                    "mean_proba": 0.9874118566513062,
+                    "ci1": 15833,
+                    "ci2": 15909,
+                    "ti1": 3549,
+                    "ti2": 3560
+                },
+                {
+                    "text": "Describe major types of two-way radio communications (avionics, land mobile and maritime, etc.)",
+                    "mean_proba": 0.9831531643867493,
+                    "ci1": 15955,
+                    "ci2": 16049,
+                    "ti1": 3574,
+                    "ti2": 3595
+                },
+                {
+                    "text": "Explain major invoice and billing concepts for service businesses",
+                    "mean_proba": 0.988196074962616,
+                    "ci1": 16096,
+                    "ci2": 16160,
+                    "ti1": 3610,
+                    "ti2": 3620
+                },
+                {
+                    "text": "Describe ways to procure service literature",
+                    "mean_proba": 0.9867433309555054,
+                    "ci1": 16174,
+                    "ci2": 16216,
+                    "ti1": 3627,
+                    "ti2": 3633
+                },
+                {
+                    "text": "Demonstrate location/cross referencing of parts and product in catalogs",
+                    "mean_proba": 0.987067461013794,
+                    "ci1": 16230,
+                    "ci2": 16300,
+                    "ti1": 3640,
+                    "ti2": 3651
+                },
+                {
+                    "text": "Explain the purposes and requirements for proper record keeping",
+                    "mean_proba": 0.9879652261734009,
+                    "ci1": 16314,
+                    "ci2": 16376,
+                    "ti1": 3658,
+                    "ti2": 3666
+                },
+                {
+                    "text": "Explain estimate concepts for service work",
+                    "mean_proba": 0.9875645041465759,
+                    "ci1": 16390,
+                    "ci2": 16431,
+                    "ti1": 3673,
+                    "ti2": 3678
+                },
+                {
+                    "text": "Describe field technician work procedures that may differ from in-shop routines",
+                    "mean_proba": 0.9769818186759949,
+                    "ci1": 16445,
+                    "ci2": 16523,
+                    "ti1": 3685,
+                    "ti2": 3697
+                }
+            ],
+            "citations": [
+                {
+                    "text": "Electricity; Principles and Applications,7th Edition; Fowler; ISBN 978-0073106991; Glencoe/McGraw Hill, 2008.",
+                    "mean_proba": 0.8184252381324768,
+                    "ci1": 422,
+                    "ci2": 530,
+                    "ti1": 44,
+                    "ti2": 74
+                },
+                {
+                    "text": "Electronics; Principles and Applications,7th Edition; Schuler; ISBN 978-0073316512; Glencoe/McGraw Hill, Career Education; 2002.",
+                    "mean_proba": 0.7785173058509827,
+                    "ci1": 671,
+                    "ci2": 798,
+                    "ti1": 110,
+                    "ti2": 143
+                },
+                {
+                    "text": "Introduction to Electricity, Electronics, and Electromagnetics, 5th Edition; Boylestad, Nashelsky; ISBN 978-0130105738; Prentice Hall; 2001.",
+                    "mean_proba": 0.8898919820785522,
+                    "ci1": 802,
+                    "ci2": 941,
+                    "ti1": 144,
+                    "ti2": 177
+                },
+                {
+                    "text": "Mastering Technical Mathematics, 3rd Edition; Gibilisco, Crowhurst; ISBN 978-0071494489; McGraw-Hill / TAB Electronics; 2007.",
+                    "mean_proba": 0.8982373476028442,
+                    "ci1": 943,
+                    "ci2": 1067,
+                    "ti1": 178,
+                    "ti2": 211
+                },
+                {
+                    "text": "Electronics Principles, 7th Edition; Malvino, Bates; ISBN 978-0073222776; McGraw-Hill Higher Education; 2007",
+                    "mean_proba": 0.7530078887939453,
+                    "ci1": 1069,
+                    "ci2": 1176,
+                    "ti1": 212,
+                    "ti2": 240
+                },
+                {
+                    "text": "Introductory DC / AC Electronics, 6th Edition; Cook; ISBN 978-0131139848; Prentice Hall; 2004.",
+                    "mean_proba": 0.8007347583770752,
+                    "ci1": 1179,
+                    "ci2": 1272,
+                    "ti1": 242,
+                    "ti2": 267
+                },
+                {
+                    "text": "Electronic Communications, 6th Edition; Shrader; ISBN 978-0070571570; McGraw-Hill Co; 1990.",
+                    "mean_proba": 0.8876127004623413,
+                    "ci1": 1274,
+                    "ci2": 1364,
+                    "ti1": 268,
+                    "ti2": 293
+                },
+                {
+                    "text": "How to Test Almost Everything Electronic; Horn; ISBN 978-0830641277; McGraw-Hill/TAB Elec. 1993.",
+                    "mean_proba": 0.8775366544723511,
+                    "ci1": 1366,
+                    "ci2": 1461,
+                    "ti1": 294,
+                    "ti2": 322
+                },
+                {
+                    "text": "Basic Electronics Theory With Projects & Experiments, 4th Edition; Horn; ISBN 978-0830642007; McGraw-Hill/TAB Elec. 1993.",
+                    "mean_proba": 0.7769253253936768,
+                    "ci1": 1463,
+                    "ci2": 1583,
+                    "ti1": 323,
+                    "ti2": 354
+                },
+                {
+                    "text": "The Soldering Handbook, 3rd E; Vianco; ISBN 978-0871716187; American Welding Society; 2000.",
+                    "mean_proba": 0.6778947114944458,
+                    "ci1": 1585,
+                    "ci2": 1675,
+                    "ti1": 355,
+                    "ti2": 381
+                },
+                {
+                    "text": "Introduction to Electronics; Crozier; ISBN 978-0534012434; Breton Pub.; 1983.",
+                    "mean_proba": 0.8620284795761108,
+                    "ci1": 1677,
+                    "ci2": 1753,
+                    "ti1": 382,
+                    "ti2": 404
+                },
+                {
+                    "text": "There Are No Electrons: Electronics for Earthlings; Amdahl; ISBN 978-0962781599; Clearwater Pub.; 1991.",
+                    "mean_proba": 0.7749671339988708,
+                    "ci1": 1755,
+                    "ci2": 1857,
+                    "ti1": 405,
+                    "ti2": 436
+                },
+                {
+                    "text": "Becoming An Electronics Technician, 4th E; Reis; ISBN 978-0130932198; Prentice Hall; 2001",
+                    "mean_proba": 0.7577065229415894,
+                    "ci1": 1859,
+                    "ci2": 1947,
+                    "ti1": 437,
+                    "ti2": 461
+                }
+            ],
+            "required_reading": [],
+            "grading_rubric": [
+                {
+                    "text": "0-59=F, 60-62=D-, 63-66=D, 67-69=D+, ... 90-92=A-, 93up=A.",
+                    "mean_proba": 0.918102502822876,
+                    "ci1": 17065,
+                    "ci2": 17122,
+                    "ti1": 3787,
+                    "ti2": 3827
+                }
+            ],
+            "assessment_strategy": [],
+            "topic_outline": [],
+            "assignment_schedule": [
+                {
+                    "text": "week.day.hour\t\t\tactivities\n\n[mostly using Fowler, Ch1]\n1.1.1 \t\tSep 9\t\tSyllabus, objectives, expectations, introductions\n1.1.2\t\t\t\tFowler 1.1,2\n1.1.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n1.2.1\t\tSep 10\t\tFowler 1.3,4,5\n1.2.2\t\t\t\tFowler 1.6,7\n1.2.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n1.3.1\t\tSep 11\t\tFowler 1.8,9,10\n1.3.2\t\t\t\tFowler 1.11,12\n1.3.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n\n[mostly using Fowler, Ch2]\n2.1.1 \t\tSep 16\t\tFowler 2.1,2,3,4,5\n2.1.2\t\t\t\tFowler 2.6,7,8,9\n2.1.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n2.2.1\t\tSep 17\t\tFowler 2.10,11,12,13\n2.2.2\t\t\t\tFowler 2.14,15,16,17\n2.2.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n2.3.1\t\tSep 18\t\tFowler 2.18,19,20,21\n2.3.2\t\t\t\tFowler 2.22,23,24,25\n2.3.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n\n[mostly using Fowler, Ch3]\n3.1.1 \t\tSep 23\t\tFowler 3.1\n3.1.2\t\t\t\tFowler 3.2\n3.1.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n3.2.1\t\tSep 24\t\tFowler 3.3\n3.2.2\t\t\t\tcont.\n3.2.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n3.3.1\t\tSep 25\t\tFowler 3.4\n3.3.2\t\t\t\tcont.\n3.3.3\n\n[mostly using Fowler, Ch4]\n4.1.1 \t\tSep 30\t\tFowler 4.1,2,3\n4.1.2\t\t\t\tFowler 4.4,5\n4.1.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n4.2.1\t\tOct 1\t\tFowler 4.6,7,8\n4.2.2\t\t\t\tFowler 4.9,10\n4.2.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n4.3.1\t\tOct 2\t\tFowler 4.11,12,13\n4.3.2\t\t\t\tFowler 4.14,15\n4.3.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n\n[mostly using Fowler, Ch5]\n5.1.1 \t\tOct 7\t\tFowler 5.1,2\t\n5.1.2\t\t\t\tFowler 5.3\n5.1.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n5.2.1\t\tOct 8\t\tFowler 5.4,5\n5.2.2\t\t\t\tFowler 5.6\n5.2.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n5.3.1\t\tOct 9\t\tFowler 5.7,8\n5.3.2\t\t\t\tFowler 5.8\n5.3.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n\n[mostly using Fowler, Ch6]\n6.1.1 \t\tOct 14\t\tExam 1\n6.1.2\t\t\t\tcont.\n6.1.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n6.2.1\t\tOct 15\t\tReview of Exam1\n6.2.2\t\t\t\tcont.\n6.2.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n.3.1\t\tOct 16\t\tFowler 6\n6.3.2\t\t\t\tcont.\n6.3.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n\n[mostly using Fowler, Chs7-12]\n7.1.1 \t\tOct 21\t\tFowler 7\n7.1.2\t\t\t\tFowler 8\n7.1.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n7.2.1\t\tOct 22\t\tFowler 9\n7.2.2\t\t\t\tFowler 10\n7.2.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n7.3.1\t\tOct 23\t\tFowler 11\n7.3.2\t\t\t\tFowler 12\n7.3.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n\n[mostly using Fowler, Chs13-end]\n8.1.1 \t\tOct 28\t\tFowler 13\n8.1.2\t\t\t\tFowler 14\n8.1.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n8.2.1\t\tOct 29\t\tFowler 15\n8.2.2\t\t\t\tFowler 16\n8.2.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n8.3.1\t\tOct 30\t\tFowler Appendices\n8.3.2\t\t\t\tFowler review\n8.3.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n\n[other other sources]\n9.1.1 \t\tNov 4\t\tTBD\n9.1.2\t\t\t\tTBD\n9.1.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n9.2.1\t\tNov 5\t\tTBD\n9.2.2\t\t\t\tTBD\n9.2.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n9.3.1\t\tNov 6\t\tTBD\n9.3.2\t\t\t\tTBD\n9.3.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n\n[using other sources]\n10.1.1 \t\tNov 11\t\tTBD\n10.1.2\t\t\t\tTBD\n10.1.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n10.2.1\t\tNov 12\t\tTBD\n10.2.2\t\t\t\tTBD\n10.2.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n10.3.1\t\tNov 13\t\tExam 2\n10.3.2\t\t\t\tcont.\n10.3.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n\n[SET certification competencies]\n11.1.1 \t\tNov 18\t\tExam 2\n11.1.2\t\t\t\tcont.\n11.1.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n11.2.1\t\tNov 19\t\tReview of Exam2\n11.2.2\t\t\t\tcont.\n11.2.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n11.3.1\t\tNov 20\t\tcompetencies 1-10\n11.3.2\t\t\t\tcompetencies 11-20\n11.3.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n\n[SET certification competencies]\n12.1.1 \t\tNov 25\t\tcompetencies 21-30\n12.1.2\t\t\t\tcompetencies 31-40\n12.1.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n12.2.1\t\tNov 26\t\tcompetencies 41-50\n12.2.2\t\t\t\tcompetencies 51-60\n12.2.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n12.3.1\t\tNov 27\t\tThanksgiving (NO CLASS)\n12.3.2\t\t\t\tThanksgiving (NO CLASS)\n12.3.3\t\t\t\tThanksgiving (NO CLASS)\n\n[SET certification competencies]\n13.1.1 \t\tDec 2\t\tcompetencies 61-70\n13.1.2\t\t\t\tcompetencies 71-80\n13.1.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n13.2.1\t\tDec 3\t\tcompetencies 81-90\n13.2.2\t\t\t\tcompetencies 91-100\n13.2.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n13.3.1\t\tDec 4\t\tcompetencies 101-110\t\n13.3.2\t\t\t\tcompetencies 111-120\n13.3.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n\n[SET certification competencies]\n14.1.1 \t\tDec 9\t\tcompetencies 121-130\n14.1.2\t\t\t\tcompetencies 131-140\n14.1.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n14.2.1\t\tDec 10\t\tcompetencies 141-145\n14.2.2\t\t\t\tcompetencies review\n14.2.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n14.3.1\t\tDec 11\t\tSET practice test\n14.3.2\t\t\t\tcont.\n14.3.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n\n[remedial]\n15.1.1 \t\tDec 16\t\tRemedial work \n15.1.2\t\t\t\tRemedial work \n15.1.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n15.2.1\t\tDec 17\t\tRemedial work \n15.2.2\t\t\t\tRemedial work \n15.2.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.\n15.3.1\t\tDec 18\t\tRemedial work and farewells\n15.3.2\t\t\t\tRemedial work and farewells\n15.3.3\t\t\t\toffice hours, lab work, simulations, guest presentations, etc.",
+                    "mean_proba": 0.5908653736114502,
+                    "ci1": 18179,
+                    "ci2": 24134,
+                    "ti1": 3979,
+                    "ti2": 5824
+                }
+            ],
+            "school_name": []
+        },
+        "citations": [
+            {
+                "doc_span": {
+                    "text": "Electricity; Principles and Applications,7th Edition; Fowler; ISBN 978-0073106991; Glencoe/McGraw Hill, 2008.",
+                    "mean_proba": 0.8184252381324768,
+                    "ci1": 422,
+                    "ci2": 530,
+                    "ti1": 44,
+                    "ti2": 74
+                },
+                "parsed_citation": {
+                    "title": [
+                        {
+                            "text": "Electricity",
+                            "mean_proba": 0.881272554397583,
+                            "ci1": 0,
+                            "ci2": 10,
+                            "ti1": 0,
+                            "ti2": 0
+                        }
+                    ],
+                    "subtitle": [
+                        {
+                            "text": "Principles and Applications",
+                            "mean_proba": 0.95716392993927,
+                            "ci1": 13,
+                            "ci2": 39,
+                            "ti1": 2,
+                            "ti2": 4
+                        }
+                    ],
+                    "author": [
+                        {
+                            "text": "Fowler",
+                            "mean_proba": 0.8878774046897888,
+                            "ci1": 54,
+                            "ci2": 59,
+                            "ti1": 9,
+                            "ti2": 9
+                        }
+                    ],
+                    "editor": [],
+                    "publisher": [],
+                    "isbn": [
+                        {
+                            "text": "978-0073106991",
+                            "mean_proba": 0.9784351587295532,
+                            "ci1": 67,
+                            "ci2": 80,
+                            "ti1": 12,
+                            "ti2": 21
+                        }
+                    ]
+                },
+                "catalog_key": {
+                    "clean_title": "Electricity",
+                    "clean_author": {
+                        "forenames": null,
+                        "keyname": "Fowler"
+                    },
+                    "title_key": "electricity",
+                    "author_key": "fowler"
+                },
+                "catalog_record": {
+                    "_id": 730144468730,
+                    "work_cluster_size": 12,
+                    "sources": {
+                        "loc": [
+                            "2006035518",
+                            "88026692",
+                            "93002134",
+                            "2002029532",
+                            "98035422",
+                            "02014571",
+                            "84000856",
+                            "2011020111",
+                            "78026824"
+                        ],
+                        "openalex": [
+                            "https://openalex.org/W1507163421"
+                        ],
+                        "ol": [
+                            "/works/OL6477194W",
+                            "/works/OL22124429W"
+                        ]
+                    },
+                    "title": "Electricity",
+                    "subtitle": "Principles and Applications",
+                    "authors": [
+                        {
+                            "forenames": "Richard J.",
+                            "keyname": "Fowler"
+                        }
+                    ],
+                    "publisher": null,
+                    "year": 1979,
+                    "description": null,
+                    "image_urls": null,
+                    "dois": null,
+                    "isbns": [
+                        "0073106992",
+                        "0070217106",
+                        "002801832X",
+                        "0078288800",
+                        "0028048474",
+                        "0070217076",
+                        "0073373761",
+                        "0070217041",
+                        "9780073106991",
+                        "9780073373768"
+                    ],
+                    "issns": null,
+                    "urls": [
+                        "https://openlibrary.org/works/OL6477194W",
+                        "https://openlibrary.org/works/OL22124429W",
+                        "http://ci.nii.ac.jp/ncid/BA09909698"
+                    ],
+                    "publication_type": "book",
+                    "open_access": null,
+                    "article": {
+                        "venue": null,
+                        "volume": null,
+                        "issue": null,
+                        "page_start": null,
+                        "page_end": null,
+                        "abstract": null
+                    }
+                }
+            },
+            {
+                "doc_span": {
+                    "text": "Electronics; Principles and Applications,7th Edition; Schuler; ISBN 978-0073316512; Glencoe/McGraw Hill, Career Education; 2002.",
+                    "mean_proba": 0.7785173058509827,
+                    "ci1": 671,
+                    "ci2": 798,
+                    "ti1": 110,
+                    "ti2": 143
+                },
+                "parsed_citation": {
+                    "title": [
+                        {
+                            "text": "Electronics",
+                            "mean_proba": 0.8937015533447266,
+                            "ci1": 0,
+                            "ci2": 10,
+                            "ti1": 0,
+                            "ti2": 0
+                        }
+                    ],
+                    "subtitle": [
+                        {
+                            "text": "Principles and Applications",
+                            "mean_proba": 0.9109141826629639,
+                            "ci1": 13,
+                            "ci2": 39,
+                            "ti1": 2,
+                            "ti2": 4
+                        }
+                    ],
+                    "author": [
+                        {
+                            "text": "Schuler",
+                            "mean_proba": 0.94003826379776,
+                            "ci1": 54,
+                            "ci2": 60,
+                            "ti1": 9,
+                            "ti2": 11
+                        }
+                    ],
+                    "editor": [],
+                    "publisher": [
+                        {
+                            "text": "Glencoe/McGraw Hill",
+                            "mean_proba": 0.7176293134689331,
+                            "ci1": 84,
+                            "ci2": 102,
+                            "ti1": 23,
+                            "ti2": 27
+                        }
+                    ],
+                    "isbn": [
+                        {
+                            "text": "978-0073316512",
+                            "mean_proba": 0.9783623218536377,
+                            "ci1": 68,
+                            "ci2": 81,
+                            "ti1": 14,
+                            "ti2": 21
+                        }
+                    ]
+                },
+                "catalog_key": {
+                    "clean_title": "Electronics",
+                    "clean_author": {
+                        "forenames": null,
+                        "keyname": "Schuler"
+                    },
+                    "title_key": "electronics",
+                    "author_key": "schuler"
+                },
+                "catalog_record": {
+                    "_id": 85899464370,
+                    "work_cluster_size": 14,
+                    "sources": {
+                        "loc": [
+                            "2006052159",
+                            "83019900",
+                            "78027296",
+                            "98025185",
+                            "2002029997",
+                            "93002133",
+                            "2011944163",
+                            "88009162"
+                        ],
+                        "openalex": [
+                            "https://openalex.org/W3199329867",
+                            "https://openalex.org/W2337776512",
+                            "https://openalex.org/W1595184738",
+                            "https://openalex.org/W2225404404",
+                            "https://openalex.org/W3201929285"
+                        ],
+                        "ol": [
+                            "/works/OL17441792W"
+                        ]
+                    },
+                    "title": "Electronics, Principles and Applications",
+                    "subtitle": "Principles and Applications",
+                    "authors": [
+                        {
+                            "forenames": "Charles A.",
+                            "keyname": "Schuler"
+                        }
+                    ],
+                    "publisher": null,
+                    "year": 1984,
+                    "description": null,
+                    "image_urls": [
+                        "https://covers.openlibrary.org/b/id/7585872-M.jpg?default=false"
+                    ],
+                    "dois": null,
+                    "isbns": [
+                        "0073106941",
+                        "0070555877",
+                        "0070555729",
+                        "0028042441",
+                        "0078288932",
+                        "0028018451",
+                        "0073373796",
+                        "0070555923",
+                        "9780073373799"
+                    ],
+                    "issns": null,
+                    "urls": [
+                        "https://e-library.ittelkom-jkt.ac.id/index.php?p=show_detail&id=1184",
+                        "https://dl.acm.org/citation.cfm?id=1593905",
+                        "https://openlibrary.org/works/OL17441792W",
+                        "http://ci.nii.ac.jp/ncid/BA00444041",
+                        "https://www.amazon.com/Electronics-Charles-Schuler-author/dp/1260084795",
+                        "https://elibrary.istn.ac.id/index.php?p=show_detail&id=1208"
+                    ],
+                    "publication_type": "book",
+                    "open_access": null,
+                    "article": {
+                        "venue": null,
+                        "volume": null,
+                        "issue": null,
+                        "page_start": null,
+                        "page_end": null,
+                        "abstract": null
+                    }
+                }
+            },
+            {
+                "doc_span": {
+                    "text": "Introduction to Electricity, Electronics, and Electromagnetics, 5th Edition; Boylestad, Nashelsky; ISBN 978-0130105738; Prentice Hall; 2001.",
+                    "mean_proba": 0.8898919820785522,
+                    "ci1": 802,
+                    "ci2": 941,
+                    "ti1": 144,
+                    "ti2": 177
+                },
+                "parsed_citation": {
+                    "title": [
+                        {
+                            "text": "Introduction to Electricity, Electronics, and Electromagnetics",
+                            "mean_proba": 0.9857189655303955,
+                            "ci1": 0,
+                            "ci2": 61,
+                            "ti1": 0,
+                            "ti2": 8
+                        }
+                    ],
+                    "subtitle": [],
+                    "author": [
+                        {
+                            "text": "Nashelsky",
+                            "mean_proba": 0.7527816295623779,
+                            "ci1": 88,
+                            "ci2": 96,
+                            "ti1": 16,
+                            "ti2": 18
+                        }
+                    ],
+                    "editor": [],
+                    "publisher": [
+                        {
+                            "text": "Prentice Hall",
+                            "mean_proba": 0.9559321403503418,
+                            "ci1": 120,
+                            "ci2": 132,
+                            "ti1": 29,
+                            "ti2": 30
+                        }
+                    ],
+                    "isbn": [
+                        {
+                            "text": "978-0130105738",
+                            "mean_proba": 0.97943115234375,
+                            "ci1": 104,
+                            "ci2": 117,
+                            "ti1": 21,
+                            "ti2": 27
+                        }
+                    ]
+                },
+                "catalog_key": {
+                    "clean_title": "Introduction to Electricity, Electronics, and Electromagnetics",
+                    "clean_author": {
+                        "forenames": null,
+                        "keyname": "Nashelsky"
+                    },
+                    "title_key": "introduction to electricity electronics and electromagnetics",
+                    "author_key": "nashelsky"
+                },
+                "catalog_record": null
+            },
+            {
+                "doc_span": {
+                    "text": "Mastering Technical Mathematics, 3rd Edition; Gibilisco, Crowhurst; ISBN 978-0071494489; McGraw-Hill / TAB Electronics; 2007.",
+                    "mean_proba": 0.8982373476028442,
+                    "ci1": 943,
+                    "ci2": 1067,
+                    "ti1": 178,
+                    "ti2": 211
+                },
+                "parsed_citation": {
+                    "title": [
+                        {
+                            "text": "Mastering Technical Mathematics",
+                            "mean_proba": 0.9936004877090454,
+                            "ci1": 0,
+                            "ci2": 30,
+                            "ti1": 0,
+                            "ti2": 2
+                        }
+                    ],
+                    "subtitle": [],
+                    "author": [
+                        {
+                            "text": "Gibilisco",
+                            "mean_proba": 0.7608863711357117,
+                            "ci1": 46,
+                            "ci2": 54,
+                            "ti1": 7,
+                            "ti2": 9
+                        },
+                        {
+                            "text": "Crowhurst",
+                            "mean_proba": 0.7165200710296631,
+                            "ci1": 57,
+                            "ci2": 65,
+                            "ti1": 11,
+                            "ti2": 12
+                        }
+                    ],
+                    "editor": [],
+                    "publisher": [
+                        {
+                            "text": "McGraw-Hill / TAB Electronics",
+                            "mean_proba": 0.9167656898498535,
+                            "ci1": 89,
+                            "ci2": 117,
+                            "ti1": 25,
+                            "ti2": 30
+                        }
+                    ],
+                    "isbn": [
+                        {
+                            "text": "978-0071494489",
+                            "mean_proba": 0.9779936671257019,
+                            "ci1": 73,
+                            "ci2": 86,
+                            "ti1": 15,
+                            "ti2": 23
+                        }
+                    ]
+                },
+                "catalog_key": {
+                    "clean_title": "Mastering Technical Mathematics",
+                    "clean_author": {
+                        "forenames": null,
+                        "keyname": "Gibilisco"
+                    },
+                    "title_key": "mastering technical mathematics",
+                    "author_key": "gibilisco"
+                },
+                "catalog_record": {
+                    "_id": 1915555465030,
+                    "work_cluster_size": 2,
+                    "sources": {
+                        "loc": [
+                            "99018444",
+                            "2007034256"
+                        ]
+                    },
+                    "title": "Mastering Technical Mathematics",
+                    "subtitle": null,
+                    "authors": [
+                        {
+                            "forenames": "Stan",
+                            "keyname": "Gibilisco"
+                        }
+                    ],
+                    "publisher": "McGraw-Hill",
+                    "year": 1999,
+                    "description": null,
+                    "image_urls": null,
+                    "dois": null,
+                    "isbns": [
+                        "0070248281",
+                        "0071494480",
+                        "9780071494489"
+                    ],
+                    "issns": null,
+                    "urls": null,
+                    "publication_type": null,
+                    "open_access": null,
+                    "article": {
+                        "venue": null,
+                        "volume": null,
+                        "issue": null,
+                        "page_start": null,
+                        "page_end": null,
+                        "abstract": null
+                    }
+                }
+            },
+            {
+                "doc_span": {
+                    "text": "Electronics Principles, 7th Edition; Malvino, Bates; ISBN 978-0073222776; McGraw-Hill Higher Education; 2007",
+                    "mean_proba": 0.7530078887939453,
+                    "ci1": 1069,
+                    "ci2": 1176,
+                    "ti1": 212,
+                    "ti2": 240
+                },
+                "parsed_citation": {
+                    "title": [
+                        {
+                            "text": "Electronics Principles",
+                            "mean_proba": 0.993708610534668,
+                            "ci1": 0,
+                            "ci2": 21,
+                            "ti1": 0,
+                            "ti2": 1
+                        }
+                    ],
+                    "subtitle": [],
+                    "author": [
+                        {
+                            "text": "Bates",
+                            "mean_proba": 0.7654061913490295,
+                            "ci1": 46,
+                            "ci2": 50,
+                            "ti1": 9,
+                            "ti2": 9
+                        }
+                    ],
+                    "editor": [],
+                    "publisher": [
+                        {
+                            "text": "McGraw-Hill Higher Education",
+                            "mean_proba": 0.9473886489868164,
+                            "ci1": 74,
+                            "ci2": 101,
+                            "ti1": 22,
+                            "ti2": 26
+                        }
+                    ],
+                    "isbn": [
+                        {
+                            "text": "978-0073222776",
+                            "mean_proba": 0.9788609743118286,
+                            "ci1": 58,
+                            "ci2": 71,
+                            "ti1": 12,
+                            "ti2": 20
+                        }
+                    ]
+                },
+                "catalog_key": {
+                    "clean_title": "Electronics Principles",
+                    "clean_author": {
+                        "forenames": null,
+                        "keyname": "Bates"
+                    },
+                    "title_key": "electronics principles",
+                    "author_key": "bates"
+                },
+                "catalog_record": null
+            },
+            {
+                "doc_span": {
+                    "text": "Introductory DC / AC Electronics, 6th Edition; Cook; ISBN 978-0131139848; Prentice Hall; 2004.",
+                    "mean_proba": 0.8007347583770752,
+                    "ci1": 1179,
+                    "ci2": 1272,
+                    "ti1": 242,
+                    "ti2": 267
+                },
+                "parsed_citation": {
+                    "title": [
+                        {
+                            "text": "Introductory DC / AC Electronics",
+                            "mean_proba": 0.9740278720855713,
+                            "ci1": 0,
+                            "ci2": 31,
+                            "ti1": 0,
+                            "ti2": 4
+                        }
+                    ],
+                    "subtitle": [],
+                    "author": [
+                        {
+                            "text": "Cook",
+                            "mean_proba": 0.919238269329071,
+                            "ci1": 47,
+                            "ci2": 50,
+                            "ti1": 9,
+                            "ti2": 9
+                        }
+                    ],
+                    "editor": [],
+                    "publisher": [
+                        {
+                            "text": "Prentice Hall",
+                            "mean_proba": 0.9505917429924011,
+                            "ci1": 74,
+                            "ci2": 86,
+                            "ti1": 21,
+                            "ti2": 22
+                        }
+                    ],
+                    "isbn": [
+                        {
+                            "text": "978-0131139848",
+                            "mean_proba": 0.9791134595870972,
+                            "ci1": 58,
+                            "ci2": 71,
+                            "ti1": 12,
+                            "ti2": 19
+                        }
+                    ]
+                },
+                "catalog_key": {
+                    "clean_title": "Introductory DC / AC Electronics",
+                    "clean_author": {
+                        "forenames": null,
+                        "keyname": "Cook"
+                    },
+                    "title_key": "introductory dc ac electronics",
+                    "author_key": "cook"
+                },
+                "catalog_record": {
+                    "_id": 3710851867373,
+                    "work_cluster_size": 7,
+                    "sources": {
+                        "loc": [
+                            "98014637",
+                            "00053746",
+                            "95015889",
+                            "88032191",
+                            "92018141",
+                            "2008530902"
+                        ],
+                        "openalex": [
+                            "https://openalex.org/W1485849066"
+                        ]
+                    },
+                    "title": "Introductory DC/AC Electronics",
+                    "subtitle": null,
+                    "authors": [
+                        {
+                            "forenames": "Nigel P.",
+                            "keyname": "Cook"
+                        }
+                    ],
+                    "publisher": "Pearson / Prentice Hall",
+                    "year": 1989,
+                    "description": null,
+                    "image_urls": null,
+                    "dois": null,
+                    "isbns": [
+                        "0138960445",
+                        "0130310859",
+                        "0132135477",
+                        "0135000262",
+                        "0134783220",
+                        "0131139843",
+                        "9780131139848"
+                    ],
+                    "issns": null,
+                    "urls": [
+                        "http://ci.nii.ac.jp/ncid/BA2663797X"
+                    ],
+                    "publication_type": "book",
+                    "open_access": null,
+                    "article": {
+                        "venue": null,
+                        "volume": null,
+                        "issue": null,
+                        "page_start": null,
+                        "page_end": null,
+                        "abstract": null
+                    }
+                }
+            },
+            {
+                "doc_span": {
+                    "text": "Electronic Communications, 6th Edition; Shrader; ISBN 978-0070571570; McGraw-Hill Co; 1990.",
+                    "mean_proba": 0.8876127004623413,
+                    "ci1": 1274,
+                    "ci2": 1364,
+                    "ti1": 268,
+                    "ti2": 293
+                },
+                "parsed_citation": {
+                    "title": [
+                        {
+                            "text": "Electronic Communications",
+                            "mean_proba": 0.9837249517440796,
+                            "ci1": 0,
+                            "ci2": 24,
+                            "ti1": 0,
+                            "ti2": 1
+                        }
+                    ],
+                    "subtitle": [],
+                    "author": [
+                        {
+                            "text": "Shrader",
+                            "mean_proba": 0.989496648311615,
+                            "ci1": 40,
+                            "ci2": 46,
+                            "ti1": 6,
+                            "ti2": 8
+                        }
+                    ],
+                    "editor": [],
+                    "publisher": [
+                        {
+                            "text": "McGraw-Hill Co",
+                            "mean_proba": 0.8771482706069946,
+                            "ci1": 70,
+                            "ci2": 83,
+                            "ti1": 19,
+                            "ti2": 22
+                        }
+                    ],
+                    "isbn": [
+                        {
+                            "text": "978-0070571570",
+                            "mean_proba": 0.9758602380752563,
+                            "ci1": 54,
+                            "ci2": 67,
+                            "ti1": 11,
+                            "ti2": 17
+                        }
+                    ]
+                },
+                "catalog_key": {
+                    "clean_title": "Electronic Communications",
+                    "clean_author": {
+                        "forenames": null,
+                        "keyname": "Shrader"
+                    },
+                    "title_key": "electronic communications",
+                    "author_key": "shrader"
+                },
+                "catalog_record": {
+                    "_id": 1975685049046,
+                    "work_cluster_size": 1,
+                    "sources": {
+                        "viaf": [
+                            "XR|VIAFWORK10374727"
+                        ]
+                    },
+                    "title": "Electronic Communications",
+                    "subtitle": null,
+                    "authors": [
+                        {
+                            "forenames": "Robert L.",
+                            "keyname": "Shrader"
+                        }
+                    ],
+                    "publisher": null,
+                    "year": null,
+                    "description": null,
+                    "image_urls": null,
+                    "dois": null,
+                    "isbns": null,
+                    "issns": null,
+                    "urls": null,
+                    "publication_type": null,
+                    "open_access": null,
+                    "article": {
+                        "venue": null,
+                        "volume": null,
+                        "issue": null,
+                        "page_start": null,
+                        "page_end": null,
+                        "abstract": null
+                    }
+                }
+            },
+            {
+                "doc_span": {
+                    "text": "How to Test Almost Everything Electronic; Horn; ISBN 978-0830641277; McGraw-Hill/TAB Elec. 1993.",
+                    "mean_proba": 0.8775366544723511,
+                    "ci1": 1366,
+                    "ci2": 1461,
+                    "ti1": 294,
+                    "ti2": 322
+                },
+                "parsed_citation": {
+                    "title": [
+                        {
+                            "text": "How to Test Almost Everything Electronic",
+                            "mean_proba": 0.9541119337081909,
+                            "ci1": 0,
+                            "ci2": 39,
+                            "ti1": 0,
+                            "ti2": 5
+                        }
+                    ],
+                    "subtitle": [],
+                    "author": [
+                        {
+                            "text": "Horn",
+                            "mean_proba": 0.845405101776123,
+                            "ci1": 42,
+                            "ci2": 45,
+                            "ti1": 7,
+                            "ti2": 7
+                        }
+                    ],
+                    "editor": [],
+                    "publisher": [],
+                    "isbn": [
+                        {
+                            "text": "978-0830641277",
+                            "mean_proba": 0.9748510122299194,
+                            "ci1": 53,
+                            "ci2": 66,
+                            "ti1": 10,
+                            "ti2": 17
+                        }
+                    ]
+                },
+                "catalog_key": {
+                    "clean_title": "How to Test Almost Everything Electronic",
+                    "clean_author": {
+                        "forenames": null,
+                        "keyname": "Horn"
+                    },
+                    "title_key": "how to test almost everything electronic",
+                    "author_key": "horn"
+                },
+                "catalog_record": {
+                    "_id": 979252687131,
+                    "work_cluster_size": 2,
+                    "sources": {
+                        "loc": [
+                            "93012800"
+                        ],
+                        "openalex": [
+                            "https://openalex.org/W366281733"
+                        ]
+                    },
+                    "title": "How to Test Almost Everything Electronic",
+                    "subtitle": null,
+                    "authors": [
+                        {
+                            "forenames": "Delton T.",
+                            "keyname": "Horn"
+                        },
+                        {
+                            "forenames": "Jack",
+                            "keyname": "Darr"
+                        }
+                    ],
+                    "publisher": null,
+                    "year": 1993,
+                    "description": null,
+                    "image_urls": null,
+                    "dois": null,
+                    "isbns": [
+                        "0830641289"
+                    ],
+                    "issns": null,
+                    "urls": [
+                        "http://ci.nii.ac.jp/ncid/BA21600065"
+                    ],
+                    "publication_type": "book",
+                    "open_access": null,
+                    "article": {
+                        "venue": null,
+                        "volume": null,
+                        "issue": null,
+                        "page_start": null,
+                        "page_end": null,
+                        "abstract": null
+                    }
+                }
+            },
+            {
+                "doc_span": {
+                    "text": "Basic Electronics Theory With Projects & Experiments, 4th Edition; Horn; ISBN 978-0830642007; McGraw-Hill/TAB Elec. 1993.",
+                    "mean_proba": 0.7769253253936768,
+                    "ci1": 1463,
+                    "ci2": 1583,
+                    "ti1": 323,
+                    "ti2": 354
+                },
+                "parsed_citation": {
+                    "title": [
+                        {
+                            "text": "Basic Electronics Theory With Projects & Experiments",
+                            "mean_proba": 0.9633675813674927,
+                            "ci1": 0,
+                            "ci2": 51,
+                            "ti1": 0,
+                            "ti2": 6
+                        }
+                    ],
+                    "subtitle": [],
+                    "author": [
+                        {
+                            "text": "Horn",
+                            "mean_proba": 0.870386004447937,
+                            "ci1": 67,
+                            "ci2": 70,
+                            "ti1": 11,
+                            "ti2": 11
+                        }
+                    ],
+                    "editor": [],
+                    "publisher": [
+                        {
+                            "text": "McGraw-Hill/TAB Elec",
+                            "mean_proba": 0.7194957733154297,
+                            "ci1": 94,
+                            "ci2": 113,
+                            "ti1": 22,
+                            "ti2": 28
+                        }
+                    ],
+                    "isbn": [
+                        {
+                            "text": "978-0830642007",
+                            "mean_proba": 0.9731663465499878,
+                            "ci1": 78,
+                            "ci2": 91,
+                            "ti1": 14,
+                            "ti2": 20
+                        }
+                    ]
+                },
+                "catalog_key": {
+                    "clean_title": "Basic Electronics Theory With Projects and Experiments",
+                    "clean_author": {
+                        "forenames": null,
+                        "keyname": "Horn"
+                    },
+                    "title_key": "basic electronics theory with projects and experiments",
+                    "author_key": "horn"
+                },
+                "catalog_record": {
+                    "_id": 3178275800635,
+                    "work_cluster_size": 3,
+                    "sources": {
+                        "loc": [
+                            "85022240",
+                            "81009207",
+                            "88032312"
+                        ]
+                    },
+                    "title": "Basic Electronics Theory--With Projects and Experiments",
+                    "subtitle": null,
+                    "authors": [
+                        {
+                            "forenames": "Delton T.",
+                            "keyname": "Horn"
+                        }
+                    ],
+                    "publisher": null,
+                    "year": 1985,
+                    "description": null,
+                    "image_urls": null,
+                    "dois": null,
+                    "isbns": [
+                        "0830607757",
+                        "0830600205",
+                        "0830603956"
+                    ],
+                    "issns": null,
+                    "urls": null,
+                    "publication_type": null,
+                    "open_access": null,
+                    "article": {
+                        "venue": null,
+                        "volume": null,
+                        "issue": null,
+                        "page_start": null,
+                        "page_end": null,
+                        "abstract": null
+                    }
+                }
+            },
+            {
+                "doc_span": {
+                    "text": "The Soldering Handbook, 3rd E; Vianco; ISBN 978-0871716187; American Welding Society; 2000.",
+                    "mean_proba": 0.6778947114944458,
+                    "ci1": 1585,
+                    "ci2": 1675,
+                    "ti1": 355,
+                    "ti2": 381
+                },
+                "parsed_citation": {
+                    "title": [
+                        {
+                            "text": "The Soldering Handbook",
+                            "mean_proba": 0.986436128616333,
+                            "ci1": 0,
+                            "ci2": 21,
+                            "ti1": 0,
+                            "ti2": 3
+                        }
+                    ],
+                    "subtitle": [],
+                    "author": [],
+                    "editor": [],
+                    "publisher": [
+                        {
+                            "text": "American Welding Society",
+                            "mean_proba": 0.6506035327911377,
+                            "ci1": 60,
+                            "ci2": 83,
+                            "ti1": 21,
+                            "ti2": 23
+                        }
+                    ],
+                    "isbn": [
+                        {
+                            "text": "978-0871716187",
+                            "mean_proba": 0.9749188423156738,
+                            "ci1": 44,
+                            "ci2": 57,
+                            "ti1": 12,
+                            "ti2": 19
+                        }
+                    ]
+                },
+                "catalog_key": {
+                    "clean_title": "The Soldering Handbook",
+                    "clean_author": null,
+                    "title_key": "soldering handbook",
+                    "author_key": null
+                },
+                "catalog_record": null
+            },
+            {
+                "doc_span": {
+                    "text": "Introduction to Electronics; Crozier; ISBN 978-0534012434; Breton Pub.; 1983.",
+                    "mean_proba": 0.8620284795761108,
+                    "ci1": 1677,
+                    "ci2": 1753,
+                    "ti1": 382,
+                    "ti2": 404
+                },
+                "parsed_citation": {
+                    "title": [
+                        {
+                            "text": "Introduction to Electronics",
+                            "mean_proba": 0.9911046028137207,
+                            "ci1": 0,
+                            "ci2": 26,
+                            "ti1": 0,
+                            "ti2": 2
+                        }
+                    ],
+                    "subtitle": [],
+                    "author": [
+                        {
+                            "text": "Crozier",
+                            "mean_proba": 0.9869357347488403,
+                            "ci1": 29,
+                            "ci2": 35,
+                            "ti1": 4,
+                            "ti2": 6
+                        }
+                    ],
+                    "editor": [],
+                    "publisher": [],
+                    "isbn": [
+                        {
+                            "text": "978-0534012434",
+                            "mean_proba": 0.9781045913696289,
+                            "ci1": 43,
+                            "ci2": 56,
+                            "ti1": 9,
+                            "ti2": 15
+                        }
+                    ]
+                },
+                "catalog_key": {
+                    "clean_title": "Introduction to Electronics",
+                    "clean_author": {
+                        "forenames": null,
+                        "keyname": "Crozier"
+                    },
+                    "title_key": "introduction to electronics",
+                    "author_key": "crozier"
+                },
+                "catalog_record": {
+                    "_id": 3066606729167,
+                    "work_cluster_size": 4,
+                    "sources": {
+                        "loc": [
+                            "86025522",
+                            "82004527"
+                        ],
+                        "openalex": [
+                            "https://openalex.org/W2971150805"
+                        ],
+                        "ol": [
+                            "/works/OL13584170W"
+                        ]
+                    },
+                    "title": "Introduction to Electronics",
+                    "subtitle": null,
+                    "authors": [
+                        {
+                            "forenames": "Patrick",
+                            "keyname": "Crozier"
+                        }
+                    ],
+                    "publisher": null,
+                    "year": 1987,
+                    "description": null,
+                    "image_urls": null,
+                    "dois": null,
+                    "isbns": [
+                        "0534076440",
+                        "0534012434"
+                    ],
+                    "issns": null,
+                    "urls": [
+                        "https://openlibrary.org/works/OL13584170W",
+                        "https://openlibrary.org/books/OL3485015M/Introduction_to_electronics"
+                    ],
+                    "publication_type": "book",
+                    "open_access": null,
+                    "article": {
+                        "venue": null,
+                        "volume": null,
+                        "issue": null,
+                        "page_start": null,
+                        "page_end": null,
+                        "abstract": null
+                    }
+                }
+            },
+            {
+                "doc_span": {
+                    "text": "There Are No Electrons: Electronics for Earthlings; Amdahl; ISBN 978-0962781599; Clearwater Pub.; 1991.",
+                    "mean_proba": 0.7749671339988708,
+                    "ci1": 1755,
+                    "ci2": 1857,
+                    "ti1": 405,
+                    "ti2": 436
+                },
+                "parsed_citation": {
+                    "title": [
+                        {
+                            "text": "There Are No Electrons",
+                            "mean_proba": 0.9897018671035767,
+                            "ci1": 0,
+                            "ci2": 21,
+                            "ti1": 0,
+                            "ti2": 3
+                        }
+                    ],
+                    "subtitle": [
+                        {
+                            "text": "Electronics for Earthlings",
+                            "mean_proba": 0.9849036931991577,
+                            "ci1": 24,
+                            "ci2": 49,
+                            "ti1": 5,
+                            "ti2": 8
+                        }
+                    ],
+                    "author": [
+                        {
+                            "text": "Amdahl",
+                            "mean_proba": 0.8517653942108154,
+                            "ci1": 52,
+                            "ci2": 57,
+                            "ti1": 10,
+                            "ti2": 12
+                        }
+                    ],
+                    "editor": [],
+                    "publisher": [],
+                    "isbn": [
+                        {
+                            "text": "978-0962781599",
+                            "mean_proba": 0.9771134257316589,
+                            "ci1": 65,
+                            "ci2": 78,
+                            "ti1": 15,
+                            "ti2": 23
+                        }
+                    ]
+                },
+                "catalog_key": {
+                    "clean_title": "There Are No Electrons",
+                    "clean_author": {
+                        "forenames": null,
+                        "keyname": "Amdahl"
+                    },
+                    "title_key": "there are no electrons",
+                    "author_key": "amdahl"
+                },
+                "catalog_record": {
+                    "_id": 7791070682647,
+                    "work_cluster_size": 1,
+                    "sources": {
+                        "loc": [
+                            "91203772"
+                        ]
+                    },
+                    "title": "There Are No Electrons",
+                    "subtitle": null,
+                    "authors": [
+                        {
+                            "forenames": "Kenn",
+                            "keyname": "Amdahl"
+                        }
+                    ],
+                    "publisher": null,
+                    "year": 1991,
+                    "description": null,
+                    "image_urls": null,
+                    "dois": null,
+                    "isbns": [
+                        "0962781592"
+                    ],
+                    "issns": null,
+                    "urls": null,
+                    "publication_type": null,
+                    "open_access": null,
+                    "article": {
+                        "venue": null,
+                        "volume": null,
+                        "issue": null,
+                        "page_start": null,
+                        "page_end": null,
+                        "abstract": null
+                    }
+                }
+            },
+            {
+                "doc_span": {
+                    "text": "Becoming An Electronics Technician, 4th E; Reis; ISBN 978-0130932198; Prentice Hall; 2001",
+                    "mean_proba": 0.7577065229415894,
+                    "ci1": 1859,
+                    "ci2": 1947,
+                    "ti1": 437,
+                    "ti2": 461
+                },
+                "parsed_citation": {
+                    "title": [
+                        {
+                            "text": "Becoming An Electronics Technician",
+                            "mean_proba": 0.9877626299858093,
+                            "ci1": 0,
+                            "ci2": 33,
+                            "ti1": 0,
+                            "ti2": 3
+                        }
+                    ],
+                    "subtitle": [],
+                    "author": [
+                        {
+                            "text": "Reis",
+                            "mean_proba": 0.7013428211212158,
+                            "ci1": 43,
+                            "ci2": 46,
+                            "ti1": 8,
+                            "ti2": 9
+                        }
+                    ],
+                    "editor": [],
+                    "publisher": [
+                        {
+                            "text": "Prentice Hall",
+                            "mean_proba": 0.9343929290771484,
+                            "ci1": 70,
+                            "ci2": 82,
+                            "ti1": 21,
+                            "ti2": 22
+                        }
+                    ],
+                    "isbn": [
+                        {
+                            "text": "978-0130932198",
+                            "mean_proba": 0.9780729413032532,
+                            "ci1": 54,
+                            "ci2": 67,
+                            "ti1": 12,
+                            "ti2": 19
+                        }
+                    ]
+                },
+                "catalog_key": {
+                    "clean_title": "Becoming an Electronics Technician",
+                    "clean_author": {
+                        "forenames": null,
+                        "keyname": "Reis"
+                    },
+                    "title_key": "becoming electronics technician",
+                    "author_key": "reis"
+                },
+                "catalog_record": {
+                    "_id": 77309602125,
+                    "work_cluster_size": 3,
+                    "sources": {
+                        "loc": [
+                            "2001026710",
+                            "99024233",
+                            "96044752"
+                        ]
+                    },
+                    "title": "Becoming an Electronics Technician",
+                    "subtitle": "Securing Your High-Tech Future",
+                    "authors": [
+                        {
+                            "forenames": "Ronald A.",
+                            "keyname": "Reis"
+                        }
+                    ],
+                    "publisher": "Pearson / Prentice Hall",
+                    "year": 2002,
+                    "description": null,
+                    "image_urls": null,
+                    "dois": null,
+                    "isbns": [
+                        "0130932191",
+                        "0130826510",
+                        "0135889979"
+                    ],
+                    "issns": null,
+                    "urls": null,
+                    "publication_type": null,
+                    "open_access": null,
+                    "article": {
+                        "venue": null,
+                        "volume": null,
+                        "issue": null,
+                        "page_start": null,
+                        "page_end": null,
+                        "abstract": null
+                    }
+                }
+            }
+        ]
+    }
+}

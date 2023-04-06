@@ -14,9 +14,32 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+func getInstution(os models.OpenSyllabus) []models.OpenSyllabusParsedInstitution {
+	// Initialize the institution
+	var institutions []models.OpenSyllabusParsedInstitution
+
+	institution := models.OpenSyllabusParsedInstitution{
+		Name: os.Data.ExtractedSections.Institution.Name,
+		// Country: os.Data.ExtractedSections.Institution.Country,
+		URL: os.Data.ExtractedSections.Institution.URL,
+	}
+
+	// add the institution to the institutions array
+	institutions = append(institutions, institution)
+
+	return institutions
+}
+
+func getAcademicField(os models.OpenSyllabus) []string {
+	// initialize the academic field array
+	var academicFields []string
+
+	return academicFields
+}
+
 func getTitle(os models.OpenSyllabus) string {
 	var title string
-	var maxProbability float64
+	var maxProbability float64 = 0
 
 	for _, t := range os.Data.ExtractedSections.Title {
 		if t.MeanProbability > maxProbability {
@@ -100,7 +123,7 @@ func ParseSyllabusFile(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, "Error parsing response body as JSON")
 	}
 
-	/// Make sure that the document was a syllabus indeed
+	// Make sure that the document was a syllabus indeed
 	const tresholdSyllabusProbability = 0.5
 
 	syllabusProbability, err := getProbability(jsonResponse)
@@ -111,15 +134,27 @@ func ParseSyllabusFile(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "The provided document does not look like a syllabus!")
 	}
 
-	// parse the syllabus into a OpenSyllabus struct
-	var OpenSyllabus models.OpenSyllabus
-	err = json.Unmarshal(responseBody, &OpenSyllabus)
+	// parse the jsonResponse into a OpenSyllabus struct
+	var openSyllabus models.OpenSyllabus
+	err = json.Unmarshal(responseBody, &openSyllabus)
+	if err != nil {
+		fmt.Println(openSyllabus)
+		return c.String(http.StatusInternalServerError, "There was a probleming parsing the response body")
+	}
+	fmt.Println(openSyllabus)
+
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "Error parsing response body as JSON")
 	}
 
-	formData := models.IFormData{
-		Title: getTitle(OpenSyllabus),
+	formData := models.OpenSyllabusParsed{
+		Title:          getTitle(openSyllabus),
+		Institutions:   getInstution(openSyllabus),
+		Language:       openSyllabus.Data.Language,
+		AcademicFields: getAcademicField(openSyllabus),
+		// Readings:       getReadings(openSyllabus),
+		// GradingRubric:  openSyllabus.Data.ExtractedSections.GradingRubric,
+		// Assignments:    getAssignments(openSyllabus),
 	}
 
 	// Return a success message
