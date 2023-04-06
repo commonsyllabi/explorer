@@ -36,7 +36,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     if (userInfo.syllabi === null)
       return {
-        props: userInfo
+        props: {
+          userInfo: userInfo,
+          apiUrl: url.href
+        }
       }
 
     let full_syllabi = []
@@ -52,7 +55,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     userInfo.syllabi = full_syllabi
 
     return {
-      props: userInfo,
+      props: {
+        userInfo: userInfo,
+        apiUrl: url.href
+      }
     };
   } else {
     return {
@@ -62,14 +68,19 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 };
 
-const About: NextPage<IUser> = (props) => {
+interface IUserPageProps {
+  userInfo: IUser;
+  apiUrl: string,
+}
+
+const UserPage: NextPage<IUserPageProps> = ({ userInfo, apiUrl }) => {
   const router = useRouter();
   const { data: session, status } = useSession();
   const [isAdmin, setIsAdmin] = useState(false);
   const [syllFilter, setSyllFilter] = useState("");
   const [collFilter, setCollFilter] = useState("");
 
-  if (Object.keys(props).length === 0) {
+  if (!userInfo) {
     return (
       <NotFound />
     )
@@ -86,7 +97,7 @@ const About: NextPage<IUser> = (props) => {
 
   const checkIfAdmin = () => {
     if (session != null && session.user != null) {
-      return session.user._id === props.uuid;
+      return session.user._id === userInfo.uuid;
     }
     return false
   };
@@ -107,11 +118,11 @@ const About: NextPage<IUser> = (props) => {
   };
 
   const filteredSyllabi = () => {
-    if (props.syllabi === undefined) {
+    if (userInfo.syllabi === undefined) {
       return undefined;
     }
     if (syllFilter.length > 0) {
-      const results = props.syllabi.filter((item) => {
+      const results = userInfo.syllabi.filter((item) => {
         return (
           item.title.toLowerCase().includes(syllFilter.toLowerCase()) ||
           item.description.toLowerCase().includes(syllFilter.toLowerCase())
@@ -119,15 +130,15 @@ const About: NextPage<IUser> = (props) => {
       });
       return results;
     }
-    return props.syllabi;
+    return userInfo.syllabi;
   };
 
   const filteredCollections = () => {
-    if (props.collections === undefined) {
+    if (userInfo.collections === undefined) {
       return undefined;
     }
     if (collFilter.length > 0) {
-      const results = props.collections.filter((item) => {
+      const results = userInfo.collections.filter((item) => {
         if (item.name.toLowerCase().includes(collFilter.toLowerCase())) {
           return true;
         }
@@ -140,16 +151,16 @@ const About: NextPage<IUser> = (props) => {
       });
       return results;
     }
-    return props.collections;
+    return userInfo.collections;
   };
 
   return (
     <>
       <Head>
-        <title>{props.name}</title>
+        <title>{userInfo.name}</title>
         <meta
           name="description"
-          content={`${props.name} shares and collects syllabi on Cosyll.`}
+          content={`${userInfo.name} shares and collects syllabi on Cosyll.`}
         />
         <Favicons />
       </Head>
@@ -159,7 +170,7 @@ const About: NextPage<IUser> = (props) => {
       </Container>
       <Container>
         <Row>
-          <UserProfileSidebar props={props} isAdmin={checkIfAdmin()} />
+          <UserProfileSidebar props={userInfo} apiUrl={apiUrl} isAdmin={checkIfAdmin()} />
           <Col>
             <div className="py-4">
               <Tabs
@@ -173,7 +184,7 @@ const About: NextPage<IUser> = (props) => {
                     {checkIfAdmin() ? (
                       <h2 className="inline h5">Your syllabi</h2>
                     ) : (
-                      <h2 className="inline h5">Syllabi by {props.name}</h2>
+                      <h2 className="inline h5">Syllabi by {userInfo.name}</h2>
                     )}
 
                     <div className="d-flex gap-2">
@@ -207,13 +218,13 @@ const About: NextPage<IUser> = (props) => {
                       filteredSyllabi(),
                       default_filters,
                       undefined,
-                      props.name,
+                      userInfo.name,
                       checkIfAdmin()
                     )?.elements ? getSyllabusCards(
                       filteredSyllabi(),
                       default_filters,
                       undefined,
-                      props.name,
+                      userInfo.name,
                       checkIfAdmin()
                     )?.elements : "You do not have any syllabi yet."}
                   </div>
@@ -223,7 +234,7 @@ const About: NextPage<IUser> = (props) => {
                     {checkIfAdmin() ? (
                       <h2 className="inline h5">Your Collections</h2>
                     ) : (
-                      <h2 className="inline h5">Collections by {props.name}</h2>
+                      <h2 className="inline h5">Collections by {userInfo.name}</h2>
                     )}
                     <div className="d-flex gap-2">
                       <Form>
@@ -249,11 +260,11 @@ const About: NextPage<IUser> = (props) => {
                   <div id="collections">
                     {getCollectionCards(
                       filteredCollections(),
-                      props.name,
+                      userInfo.name,
                       checkIfAdmin()
                     ) ? getCollectionCards(
                       filteredCollections(),
-                      props.name,
+                      userInfo.name,
                       checkIfAdmin()
                     ) : "You do not have any collections yet."}
                   </div>
@@ -267,4 +278,4 @@ const About: NextPage<IUser> = (props) => {
   );
 };
 
-export default About;
+export default UserPage;

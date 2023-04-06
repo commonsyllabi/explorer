@@ -34,11 +34,13 @@ const getinstitutionNames = (
 
 interface IUserProfileSidebarProps {
   props: IUser;
+  apiUrl: string;
   isAdmin: boolean;
 }
 
 const UserProfileSidebar: React.FunctionComponent<IUserProfileSidebarProps> = ({
   props,
+  apiUrl,
   isAdmin,
 }) => {
   return (
@@ -46,7 +48,7 @@ const UserProfileSidebar: React.FunctionComponent<IUserProfileSidebarProps> = ({
       <div id="user-profile" className="py-4">
         <div id="user-description" className="border-bottom pb-4">
           <h2>{props.name}</h2>
-          <UserBio userBio={props.bio} />
+          <UserBio userBio={props.bio} isAdmin={isAdmin} apiUrl={apiUrl} />
           <UserLinks links={props.urls} />
         </div>
 

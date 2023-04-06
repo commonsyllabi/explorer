@@ -156,7 +156,7 @@ const SignIn: NextPage<IAuthProps> = (props) => {
     setSignupPasswordConf(v);
   };
 
-  //if already signed in, render usder info
+  //if already signed in, render user info
   if (status === "authenticated") {
     return (
       <>
@@ -207,7 +207,7 @@ const SignIn: NextPage<IAuthProps> = (props) => {
           <Col lg={{ span: 6, offset: 3 }} className="mt-5">
             {isCreated === false ? (
               <Container>
-                <Tabs defaultActiveKey={props.states[0]} id="tab">
+                <Tabs defaultActiveKey={"Login"} id="tab">
                   {/* LOGIN */}
                   <Tab eventKey="Login" title="Login">
                     <Form className="mt-2" onSubmit={handleLogin}>
@@ -348,7 +348,7 @@ const SignIn: NextPage<IAuthProps> = (props) => {
                 <h1 data-cy="Success" className="h2">
                   Your account was created!
                 </h1>
-                <p>Please check your email address to activate your account.</p>
+                <div>Please check your email address to activate your account.</div>
               </>
             )}
           </Col>
