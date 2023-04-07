@@ -13,16 +13,15 @@ const UserBio: React.FunctionComponent<IUserBioProps> = ({ userBio, isAdmin, api
   const [log, setLog] = useState('')
   const [isEditing, setIsEditing] = useState(false);
   const [bio, setBio] = useState(userBio ? userBio as string : '')
-  const [originalBio, setOriginalBio] = useState(bio)
+  const [tmp, setTmp] = useState(bio)
   const { data: session } = useSession();
 
   const handleChange = (e: React.BaseSyntheticEvent) => {
     e.preventDefault()
-    setBio(e.target.value)
+    setTmp(e.target.value)
   }
 
   const submitEdit = () => {
-
     const h = new Headers();
     h.append("Authorization", `Bearer ${session?.user.token}`);
 
@@ -35,10 +34,9 @@ const UserBio: React.FunctionComponent<IUserBioProps> = ({ userBio, isAdmin, api
       body: b
     })
     .then((res) => {
-      console.log(res);
       if(res.ok){
         setIsEditing(false)
-        setOriginalBio(bio)
+        setBio(tmp)
         setLog('')
       }else{
         return res.text()
@@ -53,8 +51,8 @@ const UserBio: React.FunctionComponent<IUserBioProps> = ({ userBio, isAdmin, api
     <div className="mt-5 d-flex flex-column">
       {isEditing ?
         <div>
-          <input type="text" value={bio} onChange={handleChange}></input>
-          <button onClick={() => { setIsEditing(false); setBio(originalBio) }}>cancel</button>
+          <input type="text" value={tmp} onChange={handleChange}></input>
+          <button onClick={() => { setIsEditing(false); }}>cancel</button>
           <button onClick={submitEdit}>save</button>
           <div>{log}</div>
         </div>

@@ -18,6 +18,7 @@ import {
   getPrivateSyllabiList,
   getPublicSyllabiList,
 } from "components/utils/getUserSyllabiList";
+import UserEducation from "./UserEducation";
 
 const getinstitutionNames = (
   institutionsArray: IInstitution[] | undefined
@@ -46,22 +47,16 @@ const UserProfileSidebar: React.FunctionComponent<IUserProfileSidebarProps> = ({
   return (
     <Col lg="4">
       <div id="user-profile" className="py-4">
-        <div id="user-description" className="border-bottom pb-4">
+        <div id="user-description" className="pb-4">
           <h2>{props.name}</h2>
           <UserBio userBio={props.bio} isAdmin={isAdmin} apiUrl={apiUrl} />
-          <UserLinks links={props.urls} />
+          <UserLinks links={props.urls} isAdmin={isAdmin} apiUrl={apiUrl} />
         </div>
-
-        <div id="user-teaches-at" className="py-4 border-bottom">
-          <h3 className="h6">Teaches At</h3>
-          <UserInstitutions
-            institutions={getinstitutionNames(props.institutions)}
-          />
-        </div>
-        <div id="user-education" className="py-4 border-bottom">
-          <h3 className="h6">Education</h3>
-          <UserInstitutions institutions={props.education} />
-        </div>
+        <UserInstitutions
+          institutions={getinstitutionNames(props.institutions)}
+          isAdmin={isAdmin} apiUrl={apiUrl}
+        />
+        <UserEducation userEducation={props.education as Array<string>} isAdmin={isAdmin} apiUrl={apiUrl}/>
       </div>
       <UserListingsSection
         isAdmin={isAdmin}

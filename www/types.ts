@@ -3,7 +3,7 @@ export interface IUser {
   name: string;
   bio?: string;
   urls?: string[];
-  education?: string | string[];
+  education?: string[];
   institutions?: IInstitution[];
   syllabi?: ISyllabus[];
   collections?: ICollection[];

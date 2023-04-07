@@ -80,6 +80,13 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo, apiUrl }) => {
   const [syllFilter, setSyllFilter] = useState("");
   const [collFilter, setCollFilter] = useState("");
 
+  const checkIfAdmin = () => {
+    if (session != null && session.user != null) {
+      return session.user._id === userInfo.uuid;
+    }
+    return false
+  };
+
   if (!userInfo) {
     return (
       <NotFound />
@@ -95,12 +102,6 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo, apiUrl }) => {
     tags_exclude: [],
   }
 
-  const checkIfAdmin = () => {
-    if (session != null && session.user != null) {
-      return session.user._id === userInfo.uuid;
-    }
-    return false
-  };
 
   const focusedTab = router.query["tab"];
   const activeTab = focusedTab ? focusedTab : "syllabi";
@@ -170,7 +171,7 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo, apiUrl }) => {
       </Container>
       <Container>
         <Row>
-          <UserProfileSidebar props={userInfo} apiUrl={apiUrl} isAdmin={checkIfAdmin()} />
+            <UserProfileSidebar props={userInfo} apiUrl={apiUrl} isAdmin={checkIfAdmin()} />
           <Col>
             <div className="py-4">
               <Tabs
