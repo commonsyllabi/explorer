@@ -38,7 +38,7 @@ const UserDelete: React.FunctionComponent<IUserDeleteProps> = ({ apiUrl }) => {
                 }
             })
             .then(body => {
-                setLog(`An error occured while saving: ${body}`)
+                setLog(`An error occured while deleting: ${body}`)
             })
     }
     return (<>

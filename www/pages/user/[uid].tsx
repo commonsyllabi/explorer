@@ -237,7 +237,7 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo, apiUrl }) => {
                       undefined,
                       userInfo.name,
                       checkIfAdmin()
-                    )?.elements : "You do not have any syllabi yet."}
+                    )?.elements : "No syllabi yet."}
                   </div>
                 </Tab>
                 <Tab eventKey="collections" title="Collections" data-cy="collectionsTab">
@@ -277,7 +277,7 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo, apiUrl }) => {
                       filteredCollections(),
                       userInfo.name,
                       checkIfAdmin()
-                    ) : "You do not have any collections yet."}
+                    ) : "No collections yet."}
                   </div>
                 </Tab>
               </Tabs>
