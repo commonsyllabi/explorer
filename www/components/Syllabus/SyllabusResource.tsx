@@ -23,16 +23,12 @@ const SyllabusResource: React.FunctionComponent<ISyllabusResourceProps> = ({
           <dt className="m-0 pe-2">url:</dt>
           <dd className="m-0">
             {resourceType === "file" ? (
-              <Link href={fileUrl}>
-                <a target="_blank" rel="noreferrer">
-                  {resourceUrl}
-                </a>
+              <Link href={fileUrl} target="_blank" rel="noreferrer">
+                {resourceUrl}
               </Link>
             ) : (
-              <Link href={resourceUrl}>
-                <a target="_blank" rel="noreferrer">
-                  {resourceUrl}
-                </a>
+              <Link href={resourceUrl} target="_blank" rel="noreferrer">
+                {resourceUrl}
               </Link>
             )}
           </dd>

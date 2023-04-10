@@ -17,8 +17,8 @@ const BreadcrumbsBar: React.FunctionComponent<IBreadcrumbsBarProps> = (
       return (
         <>
           /{" "}
-          <Link href={`/user/${props.userId}/?tab=collections`}>
-            <a className="text-muted">{props.category}</a>
+          <Link href={`/user/${props.userId}/?tab=collections`} className="text-muted">
+            {props.category}
           </Link>
         </>
       );
@@ -26,8 +26,8 @@ const BreadcrumbsBar: React.FunctionComponent<IBreadcrumbsBarProps> = (
     return (
       <>
         /{" "}
-        <Link href={`/user/${props.userId}`}>
-          <a className="text-muted">{props.category}</a>
+        <Link href={`/user/${props.userId}`} className="text-muted">
+          {props.category}
         </Link>
       </>
     );
@@ -37,8 +37,8 @@ const BreadcrumbsBar: React.FunctionComponent<IBreadcrumbsBarProps> = (
       <div className="pt-3 d-grid gap-2 d-flex justify-content-between align-items-baseline">
         <div className="breadcrumbs d-flex">
           <p className="small">
-            <Link href={`/user/${props.userId}`}>
-              <a className="text-muted">@{props.user}</a>
+            <Link href={`/user/${props.userId}`} className="text-muted">
+              @{props.user}
             </Link>
             &nbsp;
           </p>

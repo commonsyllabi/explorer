@@ -32,7 +32,7 @@ const UserLinks: React.FunctionComponent<IUserLinksProps> = ({ userLinks, isAdmi
       }
     })
 
-    if(malformedURL !== ''){
+    if (malformedURL !== '') {
       setLog(`${malformedURL} does not seem to be a URL!`)
       return
     }
@@ -112,13 +112,11 @@ const UserLinks: React.FunctionComponent<IUserLinksProps> = ({ userLinks, isAdmi
         :
         <div className="user-links-item mb-3">
           <ul className="list-unstyled">{links.map((link) => (
-                <li key={link}>
-                <Link href={link}>
-                  <a target="_blank" rel="noreferrer">
-                    {link}
-                  </a>
-                </Link>
-              </li>
+            <li key={link}>
+              <Link href={link} target="_blank" rel="noreferrer">
+                {link}
+              </Link>
+            </li>
           ))}</ul>
           {isAdmin ?
 

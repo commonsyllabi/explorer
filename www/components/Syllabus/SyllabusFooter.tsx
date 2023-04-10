@@ -22,8 +22,8 @@ const SyllabusFooter: React.FunctionComponent<ISyllabusFooterProps> = ({
       <Col lg={8}>
         <p className="small text-center">
           Uploaded by{" "}
-          <Link href={`/user/${encodeURIComponent(authorUUID)}`}>
-            <a className="text-muted">{author}</a>
+          <Link href={`/user/${encodeURIComponent(authorUUID)}`} className="text-muted">
+            {author}
           </Link>{" "}
           on {weekday} {month} {day} {year}
         </p>

@@ -27,7 +27,7 @@ const CollectionCard: React.FunctionComponent<ICollectionCardProps> = (
       <Card.Body>
         <Card.Title>
           <Link href={`/collections/${props.uuid}`}>
-            <a>{props.name}</a>
+            {props.name}
           </Link>
           {props.isAdmin ? (
             <PubBadge isPublic={getIsPublic(props.status)} />

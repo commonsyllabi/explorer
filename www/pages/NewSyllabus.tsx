@@ -266,7 +266,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                   <p>
                     View{" "}
                     <Link href={`/syllabus/${syllabusUUID}`}>
-                      <a>{formData.title} here</a>
+                      {formData.title} here
                     </Link>
                     .
                   </p>

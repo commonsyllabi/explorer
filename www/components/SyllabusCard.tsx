@@ -110,7 +110,7 @@ const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = ({
         <Card.Title>
           <div className="d-flex justify-content-between w-100 align-items-center">
             <Link href={getSyllabiUrl(data.uuid)}>
-              <a>{data.title}</a>
+              {data.title}
             </Link>
             {isAdmin ?
               <PubBadge isPublic={getVisbility(data.status)} />
