@@ -58,18 +58,6 @@ const UserProfileSidebar: React.FunctionComponent<IUserProfileSidebarProps> = ({
         />
         <UserEducation userEducation={props.education as Array<string>} isAdmin={isAdmin} apiUrl={apiUrl}/>
       </div>
-      <UserListingsSection
-        isAdmin={isAdmin}
-        sectionTitle="Syllabi"
-        sectionContents={getPublicSyllabiList(props.syllabi)}
-        sectionPrivateContents={getPrivateSyllabiList(props.syllabi)}
-      />
-      <UserListingsSection
-        isAdmin={isAdmin}
-        sectionTitle="Collections"
-        sectionContents={getPublicCollectionList(props.collections)}
-        sectionPrivateContents={getPrivateCollectionList(props.collections)}
-      />
     </Col>
   );
 };

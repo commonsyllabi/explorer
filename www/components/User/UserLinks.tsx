@@ -22,6 +22,22 @@ const UserLinks: React.FunctionComponent<IUserLinksProps> = ({ userLinks, isAdmi
     const h = new Headers();
     h.append("Authorization", `Bearer ${session?.user.token}`);
 
+    let malformedURL = '';
+    tmp.forEach(t => {
+      try {
+        new URL(t)
+      } catch (error) {
+        console.log(error);
+        malformedURL = t
+      }
+    })
+
+    if(malformedURL !== ''){
+      setLog(`${malformedURL} does not seem to be a URL!`)
+      return
+    }
+
+
     let b = new FormData()
     tmp.forEach(e => {
       b.append("urls[]", e)
