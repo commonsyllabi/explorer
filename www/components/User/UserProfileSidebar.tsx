@@ -36,7 +36,7 @@ const UserProfileSidebar: React.FunctionComponent<IUserProfileSidebarProps> = ({
   isAdmin,
 }) => {
   return (
-    <Col lg="4">
+    <Col lg={isAdmin ? "4" : "3"}>
       <div id="user-profile" className="py-4">
         <div id="user-description" className="pb-4">
           <UserName userName={props.name} isAdmin={isAdmin} apiUrl={apiUrl} />

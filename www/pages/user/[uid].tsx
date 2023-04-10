@@ -158,7 +158,7 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo, apiUrl }) => {
   return (
     <>
       <Head>
-        <title>{userInfo.name}</title>
+        <title>Cosyll | {userInfo.name}</title>
         <meta
           name="description"
           content={`${userInfo.name} shares and collects syllabi on Cosyll.`}
