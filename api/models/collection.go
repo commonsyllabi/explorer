@@ -134,9 +134,10 @@ func AddSyllabusToCollection(coll_uuid uuid.UUID, syll_uuid uuid.UUID, user_uuid
 	return updated, err
 }
 
-func RemoveSyllabusFromCollection(coll_uuid uuid.UUID, syll_uuid uuid.UUID, user_uuid uuid.UUID) (Collection, error) {
+// -- removes the assocation between syllabus and collection
+func RemoveCollectionSyllabus(coll_uuid uuid.UUID, syll_uuid uuid.UUID, user_uuid uuid.UUID) (Collection, error) {
 	var coll Collection
-	result := db.Where("uuid = ? ", coll_uuid).First(&coll)
+	result := db.Where("uuid = ? AND user_uuid = ?", coll_uuid, user_uuid).First(&coll)
 	if result.Error != nil {
 		return coll, result.Error
 	}

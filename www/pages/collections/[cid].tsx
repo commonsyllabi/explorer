@@ -15,7 +15,7 @@ import Col from "react-bootstrap/Col";
 import { getSyllabusCards } from "components/utils/getSyllabusCards";
 import NotFound from "components/NotFound";
 import { signOut, useSession } from "next-auth/react";
-import { useState } from "react";
+import React, { useState } from "react";
 import Router from "next/router";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -55,6 +55,7 @@ const Collection: NextPage<ICollectionProps> = (props) => {
   const [log, setLog] = useState('')
   const url = new URL(`/collections/${props.uuid}`, process.env.NEXT_PUBLIC_API_URL)
   const confirmMsg = `Do you really want to delete the collection ${name}? This action cannot be undone.`;
+  const confirmRemoveMsg = `Do you really want to remove this syllabus from ${name}? This action cannot be undone.`
 
   const default_filters = {
     academic_level: "",
@@ -116,9 +117,7 @@ const Collection: NextPage<ICollectionProps> = (props) => {
     })
       .then((res) => {
         if (res.ok) {
-          signOut({ redirect: false }).then((result) => {
-            Router.push("/");
-          })
+          Router.push("/");
         } else if (res.status == 401) {
           signOut({ redirect: false }).then((result) => {
             Router.push("/auth/signin");
@@ -136,6 +135,38 @@ const Collection: NextPage<ICollectionProps> = (props) => {
   const handleChange = (e: React.BaseSyntheticEvent) => {
     e.preventDefault()
     setTmp(e.target.value)
+  }
+
+  const handleRemove = (e: React.BaseSyntheticEvent) => {
+    e.preventDefault()
+    const t = e.target;
+    const removeUrl = new URL(`/collections/${props.uuid}/syllabi/${t.dataset.syllabusid}`, process.env.NEXT_PUBLIC_API_URL)
+
+    if (!window.confirm(confirmRemoveMsg))
+      return
+
+    const h = new Headers();
+    h.append("Authorization", `Bearer ${session?.user.token}`);
+
+    fetch(removeUrl, {
+      method: 'DELETE',
+      headers: h,
+    })
+      .then((res) => {
+        if (res.ok) {
+          Router.reload();
+        } else if (res.status == 401) {
+          signOut({ redirect: false }).then((result) => {
+            Router.push("/auth/signin");
+          })
+          return res.text()
+        } else {
+          return res.text()
+        }
+      })
+      .then(body => {
+        setLog(`An error occured while deleting: ${body}`)
+      })
   }
 
   if (Object.keys(props).length === 0) {
@@ -181,7 +212,18 @@ const Collection: NextPage<ICollectionProps> = (props) => {
           }
 
         </Row>
-        <Row className="gap-3 pb-5">{getSyllabusCards(props.syllabi, default_filters, undefined, props.user.name)?.elements}</Row>
+        <Row className="gap-3 pb-5">{
+          props.syllabi ?
+          props.syllabi.map(s => {
+            return <div key={s.uuid}>
+              {getSyllabusCards([s], default_filters, undefined, props.user.name)?.elements}
+              <button onClick={handleRemove} data-syllabusid={s.uuid}>remove</button>
+            </div>
+
+          })
+          : 
+          <>No syllabi yet.</>
+        }</Row>
       </Container>
     </>
   );
