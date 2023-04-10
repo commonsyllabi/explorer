@@ -89,19 +89,8 @@ const UserLinks: React.FunctionComponent<IUserLinksProps> = ({ userLinks, isAdmi
     return null;
   }
 
-  const userLinksEls = links.map((link) => (
-    <li key={link}>
-      <Link href={link}>
-        <a target="_blank" rel="noreferrer">
-          {link}
-        </a>
-      </Link>
-    </li>
-  ));
-
   return (
     <div id="user-links">
-      {/* <ul className="list-unstyled">{userLinksEls}</ul> */}
       {isEditing ?
         <div>
           <ul>

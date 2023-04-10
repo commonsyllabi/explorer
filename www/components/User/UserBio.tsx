@@ -27,7 +27,7 @@ const UserBio: React.FunctionComponent<IUserBioProps> = ({ userBio, isAdmin, api
     h.append("Authorization", `Bearer ${session?.user.token}`);
 
     let b = new FormData()
-    b.append("bio", bio)
+    b.append("bio", tmp)
 
     fetch(apiUrl, {
       method: 'PATCH',

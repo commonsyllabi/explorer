@@ -1,6 +1,7 @@
 export interface IUser {
   uuid: string;
   name: string;
+  email: string;
   bio?: string;
   urls?: string[];
   education?: string[];

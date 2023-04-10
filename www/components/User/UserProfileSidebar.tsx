@@ -2,23 +2,14 @@ import * as React from "react";
 
 import UserLinks from "components/User/UserLinks";
 import UserInstitutions from "components/User/UserInstitutions";
-import UserListingsSection from "components/User/UserListingsSection";
 
 import Col from "react-bootstrap/Col";
 
 import { IUser, ICollection, IInstitution, ISyllabus } from "types";
 import UserBio from "./UserBio";
-
-import {
-  getPrivateCollectionList,
-  getPublicCollectionList,
-} from "components/utils/getUserCollectionsList";
-
-import {
-  getPrivateSyllabiList,
-  getPublicSyllabiList,
-} from "components/utils/getUserSyllabiList";
 import UserEducation from "./UserEducation";
+import UserEmail from "./UserEmail";
+import UserName from "./UserName";
 
 const getinstitutionNames = (
   institutionsArray: IInstitution[] | undefined
@@ -48,7 +39,7 @@ const UserProfileSidebar: React.FunctionComponent<IUserProfileSidebarProps> = ({
     <Col lg="4">
       <div id="user-profile" className="py-4">
         <div id="user-description" className="pb-4">
-          <h2>{props.name}</h2>
+          <UserName userName={props.name} isAdmin={isAdmin} apiUrl={apiUrl} />
           <UserBio userBio={props.bio} isAdmin={isAdmin} apiUrl={apiUrl} />
           <UserLinks userLinks={props.urls as Array<string>} isAdmin={isAdmin} apiUrl={apiUrl} />
         </div>
@@ -56,7 +47,21 @@ const UserProfileSidebar: React.FunctionComponent<IUserProfileSidebarProps> = ({
           institutions={getinstitutionNames(props.institutions)}
           isAdmin={isAdmin} apiUrl={apiUrl}
         />
-        <UserEducation userEducation={props.education as Array<string>} isAdmin={isAdmin} apiUrl={apiUrl}/>
+        <UserEducation userEducation={props.education as Array<string>} isAdmin={isAdmin} apiUrl={apiUrl} />
+        {isAdmin ?
+          <div>
+            <h4>User details</h4>
+            <div>
+              <UserEmail userEmail={props.email} apiUrl={apiUrl} />
+              <h5>Password</h5>
+              <input></input>
+              <h5>Delete account</h5>
+              <input></input>
+            </div>
+          </div>
+          :
+          <></>}
+
       </div>
     </Col>
   );
