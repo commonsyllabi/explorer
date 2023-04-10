@@ -79,7 +79,11 @@ func Login(c echo.Context) error {
 
 	user, err := models.GetUserByEmail(email.Address, uuid.Nil)
 	if err != nil || user.Status == models.UserPending {
-		zero.Error(err.Error())
+		if err != nil {
+			zero.Error(err.Error())
+		} else {
+			zero.Error("User not found")
+		}
 		return c.String(http.StatusUnauthorized, "Authentication failed")
 	}
 
