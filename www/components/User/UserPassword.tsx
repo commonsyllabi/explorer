@@ -3,6 +3,10 @@ interface IUserPasswordProps {
   }
   
   //-- todo this should be the recover function
-  const UserLinks: React.FunctionComponent<IUserPasswordProps> = ({ apiUrl }) => {
-    return(<></>)
+  const UserPassword: React.FunctionComponent<IUserPasswordProps> = ({ apiUrl }) => {
+    return(<>
+    <button>Recover Password</button>
+    </>)
   }
+
+  export default UserPassword;

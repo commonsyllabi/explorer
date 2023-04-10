@@ -10,6 +10,8 @@ import UserBio from "./UserBio";
 import UserEducation from "./UserEducation";
 import UserEmail from "./UserEmail";
 import UserName from "./UserName";
+import UserPassword from "./UserPassword";
+import UserDelete from "./UserDelete";
 
 const getinstitutionNames = (
   institutionsArray: IInstitution[] | undefined
@@ -53,10 +55,8 @@ const UserProfileSidebar: React.FunctionComponent<IUserProfileSidebarProps> = ({
             <h4>User details</h4>
             <div>
               <UserEmail userEmail={props.email} apiUrl={apiUrl} />
-              <h5>Password</h5>
-              <input></input>
-              <h5>Delete account</h5>
-              <input></input>
+              <UserPassword apiUrl={apiUrl}/>
+              <UserDelete apiUrl={apiUrl}/>
             </div>
           </div>
           :
