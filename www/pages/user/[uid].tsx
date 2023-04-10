@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import type { GetServerSideProps, NextPage } from "next";
+import type { GetServerSideProps, NextApiRequest, NextApiResponse, NextPage } from "next";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import Link from "next/link";
-import { getSession, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 import { ISyllabus, IUser } from "types";
 
@@ -24,23 +24,18 @@ import { getCollectionCards } from "components/utils/getCollectionCards";
 import NotFound from "components/NotFound";
 import NewCollection from "components/Collection/NewCollection";
 import type { GetServerSidePropsContext } from "next"
-import getServerSession from "next-auth/next"
-import { authOptions } from "../api/auth/[...nextauth]"
 import { getToken } from "next-auth/jwt";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const userId = context.params!.uid;
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-
-  // TODO
-  console.warn("GET THE JWT IN ORDER TO DO AN AUTHENTICATED REQUEST FOR SYLLABI AND COLLECTIONS")
-  // const t = await getToken({ req: context.req })
-  // const session = await getSession()
-
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;  
+  const t = await getToken({req: context.req, secret: process.env.NEXTAUTH_SECRET})
+  const token = t ? (t.user as { _id: string, token: string }).token : '';
   const url = new URL(`users/${userId}`, apiUrl);
 
   const h = new Headers();
-  // h.append("Authorization", `Bearer ${session?.user.token}`);
+  h.append("Authorization", `Bearer ${token}`);
+
   const res = await fetch(url, { headers: h });
   if (res.ok) {
     const userInfo = await res.json();
@@ -55,7 +50,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
     let full_syllabi = []
     for (const syll of userInfo.syllabi) {
-      const r = await fetch(new URL(`syllabi/${syll.uuid}`, apiUrl))
+      const r = await fetch(new URL(`syllabi/${syll.uuid}`, apiUrl), {headers: h})
       if (r.ok) {
         const s = await r.json()
         full_syllabi.push(s)
