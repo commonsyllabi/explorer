@@ -3,14 +3,12 @@ import type { GetServerSideProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 
 import { ISyllabus, IUser } from "types";
 
 import Favicons from "components/head/favicons";
 import GlobalNav from "components/GlobalNav";
-import CollectionCard from "components/CollectionCard";
-import SyllabusCard from "components/SyllabusCard";
 
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -24,13 +22,26 @@ import { getSyllabusCards } from "components/utils/getSyllabusCards";
 import UserProfileSidebar from "components/User/UserProfileSidebar";
 import { getCollectionCards } from "components/utils/getCollectionCards";
 import NotFound from "components/NotFound";
+import NewCollection from "components/Collection/NewCollection";
+import type { GetServerSidePropsContext } from "next"
+import getServerSession from "next-auth/next"
+import { authOptions } from "../api/auth/[...nextauth]"
+import { getToken } from "next-auth/jwt";
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
   const userId = context.params!.uid;
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
+  // TODO
+  console.warn("GET THE JWT IN ORDER TO DO AN AUTHENTICATED REQUEST FOR SYLLABI AND COLLECTIONS")
+  // const t = await getToken({ req: context.req })
+  // const session = await getSession()
+
   const url = new URL(`users/${userId}`, apiUrl);
 
-  const res = await fetch(url);
+  const h = new Headers();
+  // h.append("Authorization", `Bearer ${session?.user.token}`);
+  const res = await fetch(url, { headers: h });
   if (res.ok) {
     const userInfo = await res.json();
 
@@ -38,7 +49,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       return {
         props: {
           userInfo: userInfo,
-          apiUrl: url.href
+          apiUrl: apiUrl
         }
       }
 
@@ -57,7 +68,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return {
       props: {
         userInfo: userInfo,
-        apiUrl: url.href
+        apiUrl: apiUrl
       }
     };
   } else {
@@ -79,6 +90,7 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo, apiUrl }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [syllFilter, setSyllFilter] = useState("");
   const [collFilter, setCollFilter] = useState("");
+  const [isCreatingCollection, setIsCreatingCollection] = useState(false)
 
   const checkIfAdmin = () => {
     if (session != null && session.user != null) {
@@ -102,7 +114,6 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo, apiUrl }) => {
     tags_exclude: [],
   }
 
-
   const focusedTab = router.query["tab"];
   const activeTab = focusedTab ? focusedTab : "syllabi";
 
@@ -114,7 +125,6 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo, apiUrl }) => {
     if (t.id === "syllFilter") {
       setSyllFilter(t.value);
     }
-    console.log(`syllFilter: ${syllFilter}; collFilter: ${collFilter}`);
     return;
   };
 
@@ -158,7 +168,7 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo, apiUrl }) => {
   return (
     <>
       <Head>
-        <title>Cosyll | {userInfo.name}</title>
+        <title>{`Cosyll | ${userInfo.name}`}</title>
         <meta
           name="description"
           content={`${userInfo.name} shares and collects syllabi on Cosyll.`}
@@ -171,7 +181,7 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo, apiUrl }) => {
       </Container>
       <Container>
         <Row>
-            <UserProfileSidebar props={userInfo} apiUrl={apiUrl} isAdmin={checkIfAdmin()} />
+          <UserProfileSidebar props={userInfo} apiUrl={`${apiUrl}/users/${userInfo.uuid}`} isAdmin={checkIfAdmin()} />
           <Col>
             <div className="py-4">
               <Tabs
@@ -250,8 +260,8 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo, apiUrl }) => {
                         />
                       </Form>
                       {checkIfAdmin() ? (
-                        <Button variant="primary" aria-label="New Collection">
-                          + New
+                        <Button variant="primary" aria-label="New Collection" onClick={() => { setIsCreatingCollection(true) }}>
+                          + New Collection
                         </Button>
                       ) : (
                         <></>
@@ -274,6 +284,12 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo, apiUrl }) => {
             </div>
           </Col>
         </Row>
+
+        {isCreatingCollection ?
+          <NewCollection apiUrl={apiUrl} syllabusUUID="" handleClose={() => setIsCreatingCollection(false)}/>
+          :
+          <></>
+        }
       </Container>
     </>
   );
