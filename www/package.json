@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "next lint",
     "cypress": "cypress open",
-    "cypress:headless": "cypress run"
+    "cypress:headless": "cypress run",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "dependencies": {
     "@cospired/i18n-iso-languages": "^4.0.0",
@@ -19,15 +21,28 @@
     "react": "18.2.0",
     "react-bootstrap": "^2.4.0",
     "react-dom": "18.2.0",
+    "react-dropzone": "^14.2.3",
+    "react-icons": "^4.8.0",
     "sass": "^1.54.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.21.3",
+    "@storybook/addon-actions": "^6.5.16",
+    "@storybook/addon-essentials": "^6.5.16",
+    "@storybook/addon-interactions": "^6.5.16",
+    "@storybook/addon-links": "^6.5.16",
+    "@storybook/builder-webpack5": "^6.5.16",
+    "@storybook/manager-webpack5": "^6.5.16",
+    "@storybook/react": "^6.5.16",
+    "@storybook/testing-library": "^0.0.13",
     "@types/node": "18.6.0",
     "@types/react": "18.0.15",
     "@types/react-dom": "18.0.6",
+    "babel-loader": "^8.3.0",
     "cypress": "^10.7.0",
     "eslint": "8.20.0",
     "eslint-config-next": "12.2.3",
+    "eslint-plugin-storybook": "^0.6.11",
     "typescript": "4.7.4"
   }
 }

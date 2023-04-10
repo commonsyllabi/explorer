@@ -5,7 +5,14 @@ import Head from "next/head";
 import Link from "next/link";
 
 //Interfaces
-import { IFormData, IAttachment, IUploadAttachment, IInstitution, IFormInstitution } from "types";
+import {
+  IFormData,
+  IAttachment,
+  IUploadAttachment,
+  IInstitution,
+  IFormInstitution,
+  IParsedData,
+} from "types";
 
 //Bootstrap
 import Container from "react-bootstrap/Container";
@@ -26,7 +33,6 @@ import AttachmentsCreationStatus from "components/NewSyllabus/AttachmentsCreatio
 import SyllabusCreationStatus from "components/NewSyllabus/SyllabusCreationStatus";
 import AttachmentItemFile from "components/NewSyllabus/AttachmentItemFile";
 
-
 import {
   //UI Utils
   getPublicPrivateLabel,
@@ -41,6 +47,7 @@ import {
 } from "components/utils/formUtils";
 
 import AddAcademicFieldsForm from "components/NewSyllabus/AddAcademicFieldsForm";
+import DragAndDropSyllabus from "components/NewSyllabus/DragAndDropSyllabus";
 
 export const getStaticProps: GetStaticProps = async () => {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -62,6 +69,11 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
   const [institutionCreated, setInstitutionCreated] = useState("pending");
   const [attachmentsCreated, setAttachmentsCreated] = useState("pending");
   const [syllabusUUID, setSyllabusUUID] = useState("");
+  const [parsedData, setParsedData] = useState<IParsedData>();
+
+  useEffect(() => {
+
+  }, [parsedData]);
 
   //Form data and submission handling
   //---------------------------------------
@@ -106,15 +118,13 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     duration: 0,
   });
 
-  const [institutionData, setInstitutionData] = useState<IFormInstitution>(
-    {
-      name: "",
-      country: "",
-      url: "",
-      date_year: "",
-      date_term: "",
-    },
-  );
+  const [institutionData, setInstitutionData] = useState<IFormInstitution>({
+    name: "",
+    country: "",
+    url: "",
+    date_year: "",
+    date_term: "",
+  });
 
   //Handle form submission
   const apiUrl = props.apiUrl;
@@ -123,65 +133,72 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     event.preventDefault();
     event.stopPropagation();
     if (form.checkValidity() === false) {
-      setValidated(true)
+      setValidated(true);
     }
-
 
     // check if user is logged in
     if (session == null || session.user == null) {
-      setErrors([`It seems you have been logged out. Please log in and try again.`])
+      setErrors([
+        `It seems you have been logged out. Please log in and try again.`,
+      ]);
       console.warn("No session found!");
       return;
     }
 
     // bootstrap also supports validation with form.checkValidity()
-    const validForm = isValidForm(formData, attachmentData, institutionData)
+    const validForm = isValidForm(formData, attachmentData, institutionData);
     if (validForm.errors.length > 0) {
-      setErrors(validForm.errors)
+      setErrors(validForm.errors);
       return;
     }
 
     const postHeader = new Headers();
     postHeader.append("Authorization", `Bearer ${session.user.token}`);
 
-    const res = await submitForm(formData, props.apiUrl, postHeader)
+    const res = await submitForm(formData, props.apiUrl, postHeader);
     setFormSubmitted(true);
     if (res.status !== 201) {
-      const err = await res.text()
+      const err = await res.text();
       setErrors([err]);
       setSyllabusCreated("failed");
-      return
+      return;
     }
 
     const body = await res.json();
     setSyllabusCreated("created");
     setSyllabusUUID(body.uuid);
 
-    const instit_endpoint = new URL(`/syllabi/${body.uuid}/institutions`, props.apiUrl);
-    submitInstitution(institutionData, instit_endpoint, postHeader)
-      .then(res => {
+    const instit_endpoint = new URL(
+      `/syllabi/${body.uuid}/institutions`,
+      props.apiUrl
+    );
+    submitInstitution(institutionData, instit_endpoint, postHeader).then(
+      (res) => {
         if (res.status === 200) {
           setInstitutionCreated("created");
         } else {
           setInstitutionCreated("failed");
         }
-      })
+      }
+    );
 
     if (attachmentData.length === 0) {
-      setAttachmentsCreated("created")
-      return
+      setAttachmentsCreated("created");
+      return;
     }
-    const attach_endpoint = new URL(`/attachments/?syllabus_id=${body.uuid}`, props.apiUrl);
+    const attach_endpoint = new URL(
+      `/attachments/?syllabus_id=${body.uuid}`,
+      props.apiUrl
+    );
     attachmentData.map((att) => {
-      submitAttachments(att, attach_endpoint, postHeader)
-        .then(res => {
-          if (res.status === 201) {
-            setAttachmentsCreated("created");
-          } else {
-            setAttachmentsCreated("failed");
-          }
-        })
-    })
+      submitAttachments(att, attach_endpoint, postHeader).then((res) => {
+        if (res.status === 201) {
+          setAttachmentsCreated("created");
+        } else {
+          setAttachmentsCreated("failed");
+        }
+      });
+    });
   };
 
   const handleChange = (event: React.SyntheticEvent) => {
@@ -190,8 +207,8 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
       const newStatus = formData.status === "unlisted" ? "listed" : "unlisted";
       setFormData({ ...formData, [t.id]: newStatus });
     } else if (t.id === "tags") {
-      const tags = t.value.split(',').map(tag => tag.trim())
-      setFormData({ ...formData, ["tags"]: [...tags] })
+      const tags = t.value.split(",").map((tag) => tag.trim());
+      setFormData({ ...formData, ["tags"]: [...tags] });
     } else {
       setFormData({ ...formData, [t.id]: t.value });
     }
@@ -199,8 +216,8 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
 
   const handleInstitutionChange = (event: React.SyntheticEvent) => {
     const t = event.target as HTMLInputElement;
-    const key = t.id as keyof IFormInstitution
-    institutionData[key] = t.value
+    const key = t.id as keyof IFormInstitution;
+    institutionData[key] = t.value;
     setInstitutionData(institutionData);
   };
 
@@ -208,7 +225,9 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     setFormData({ ...formData, ["academic_fields"]: acadFieldsArray });
   };
 
-  const [attachmentData, setAttachmentData] = useState(Array<IUploadAttachment>);
+  const [attachmentData, setAttachmentData] = useState(
+    Array<IUploadAttachment>
+  );
 
   //display elements for attachment
   const getUploadedAttachments = (attachmentData: IUploadAttachment[]) => {
@@ -239,7 +258,9 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
         <Container>
           <Row className="pt-3 pb-3">
             <Col className="col-8 offset-2">
-              {(syllabusCreated === "created" && attachmentsCreated === "created" && institutionCreated === "created") ? (
+              {syllabusCreated === "created" &&
+              attachmentsCreated === "created" &&
+              institutionCreated === "created" ? (
                 <>
                   <h2>Success!</h2>
                   <p>
@@ -250,31 +271,31 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                     .
                   </p>
                 </>
-              ) : (<>
-                <h1 className="h3">Creating new syllabus...</h1>
+              ) : (
+                <>
+                  <h1 className="h3">Creating new syllabus...</h1>
 
-                <ul>
-                  <SyllabusCreationStatus status={syllabusCreated} />
-                  <li>
-                    syllabusCreated:
-                    <pre>{syllabusCreated}</pre>
-                  </li>
+                  <ul>
+                    <SyllabusCreationStatus status={syllabusCreated} />
+                    <li>
+                      syllabusCreated:
+                      <pre>{syllabusCreated}</pre>
+                    </li>
 
-                  <InstitutionCreationStatus status={institutionCreated} />
-                  <li>
-                    institutionCreated:
-                    <pre>{institutionCreated}</pre>
-                  </li>
+                    <InstitutionCreationStatus status={institutionCreated} />
+                    <li>
+                      institutionCreated:
+                      <pre>{institutionCreated}</pre>
+                    </li>
 
-                  <AttachmentsCreationStatus status={attachmentsCreated} />
-                  <li>
-                    attachmentsCreated:
-                    <pre>{attachmentsCreated}</pre>
-                  </li>
-                </ul>
-              </>)}
-
-
+                    <AttachmentsCreationStatus status={attachmentsCreated} />
+                    <li>
+                      attachmentsCreated:
+                      <pre>{attachmentsCreated}</pre>
+                    </li>
+                  </ul>
+                </>
+              )}
             </Col>
           </Row>
         </Container>
@@ -299,13 +320,22 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
           <Row className="pt-3 pb-3">
             <Col className="col-8 offset-2">
               <h1 className="h3">New Syllabus</h1>
+              <p className="small text-muted mb-3">
+                Signed in as {session.user.name} ({session.user.email}).
+              </p>
             </Col>
           </Row>
           <Row className="gap-3 pb-5">
             <Col className="col-8 offset-2">
-              <p className="small text-muted mb-3">
-                Signed in as {session.user.name} ({session.user.email}).
-              </p>
+              <h4>
+                Upload a syllabus and autofill{"  "}
+                <Badge pill bg="secondary">
+                  New
+                </Badge>
+              </h4>
+              <DragAndDropSyllabus session={session} onSyllabusUpload={setParsedData} />
+            </Col>
+            <Col className="col-8 offset-2">
               <Form noValidate validated={validated} onSubmit={handleSubmit}>
                 <fieldset>
                   <Form.Group className="mb-3">
@@ -317,6 +347,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                       onChange={handleChange}
                       value={formData.title}
                       data-cy="courseTitleInput"
+                      defaultValue={parsedData?.data?.title || ""} 
                     />
                     <Form.Control.Feedback type="invalid">
                       Please provide a valid course title.
@@ -430,7 +461,6 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                     </div>
                   </div>
 
-
                   {/* COURSE INPUT TEMPORARY OMITTED BEFORE EDGE IMPLEMENTATION */}
                   {/* <Form.Group className="mb-3">
                     <Form.Label htmlFor="courseCode">Course Number</Form.Label>
@@ -482,7 +512,8 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                       The language this class is primarily taught in.
                     </Form.Text>
                     <Form.Control.Feedback type="invalid">
-                      Please provide the language in which this course was taught.
+                      Please provide the language in which this course was
+                      taught.
                     </Form.Control.Feedback>
                   </Form.Group>
 
@@ -616,18 +647,21 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                     Submit New Syllabus
                   </Button>
 
-                  {errors.length > 0 ?
+                  {errors.length > 0 ? (
                     errors.map((err, index) => {
                       return (
-                        <Alert variant="danger" className="mt-3" key={`error-${index}`}>
+                        <Alert
+                          variant="danger"
+                          className="mt-3"
+                          key={`error-${index}`}
+                        >
                           {err as string}
                         </Alert>
-                      )
+                      );
                     })
-
-                    : (
-                      <></>
-                    )}
+                  ) : (
+                    <></>
+                  )}
                 </fieldset>
               </Form>
             </Col>
@@ -665,7 +699,6 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
           </Col>
         </Row>
       </Container>
-
     </>
   );
 };
