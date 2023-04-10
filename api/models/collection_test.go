@@ -90,7 +90,7 @@ func TestCollectionModel(t *testing.T) {
 	})
 
 	t.Run("Test remove syllabus from collection", func(t *testing.T) {
-		updated, err := models.RemoveSyllabusFromCollection(collectionID, syllabusDeleteID, userID)
+		updated, err := models.RemoveCollectionSyllabus(collectionID, syllabusDeleteID, userID)
 		assert.Nil(t, err)
 		assert.Equal(t, 0, len(updated.Syllabi))
 	})
