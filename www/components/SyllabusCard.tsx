@@ -18,7 +18,8 @@ import {
 import { ISyllabus } from "types";
 import { Button } from "react-bootstrap";
 import { useState } from "react";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
+import Router from "next/router";
 
 interface ISyllabusCardProps {
   userName?: string;
@@ -69,25 +70,19 @@ const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = ({
       .then(res => {
         if (res.ok) {
           setModalMessage(`${data.title} was successfully deleted!`)
-        }
-        else {
-          setModalMessage(`There was an error deleting your syllabus (${res.statusText}). Please try again later.`)
+        } else if (res.status == 401) {
+          signOut({ redirect: false }).then((result) => {
+            Router.push("/auth/signin");
+          })
+          return res.text()
+        } else {
+          return res.text()
         }
       })
+      .then(body => {
+        setModalMessage(`There was an error deleting your syllabus (${body}). Please try again later.`)
+      })
 
-  }
-
-  const handleCloseModal = () => {
-    //-- check if we've already done an action (i.e. a modal message has been displayed)
-    if (modalMessage !== "")
-      window.location = window.location
-    else
-      setShowDeleteModal(false)
-  }
-
-  const handleOpenModal = () => {
-    if (!isAdmin) return
-    setShowDeleteModal(true)
   }
 
   return (
@@ -97,7 +92,7 @@ const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = ({
         <div>You are about to delete <b>{data.title}</b>.</div>
         <div>{modalMessage}</div>
         <div className="d-flex justify-content-between mt-3">
-          <Button variant="secondary" onClick={handleCloseModal}>close</Button>
+          <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>close</Button>
           <Button variant="danger" onClick={deleteSyllabus} disabled={modalMessage !== ""}>delete</Button>
         </div>
       </div>
@@ -140,7 +135,7 @@ const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = ({
           {data.tags && <Tags tags={data.tags} />}
         </div>
         {isAdmin ? <div className="controls mt-3 d-flex justify-content-end">
-          <Button variant="danger" onClick={handleOpenModal}>Delete</Button>
+          <Button variant="danger" onClick={() => setShowDeleteModal(true)}>Delete</Button>
         </div> : <></>}
       </Card.Body>
     </Card>
