@@ -1,4 +1,5 @@
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
+import Router from "next/router";
 import * as React from "react";
 import { useState } from "react";
 
@@ -33,18 +34,23 @@ const UserBio: React.FunctionComponent<IUserBioProps> = ({ userBio, isAdmin, api
       headers: h,
       body: b
     })
-    .then((res) => {
-      if(res.ok){
-        setIsEditing(false)
-        setBio(tmp)
-        setLog('')
-      }else{
-        return res.text()
-      }
-    })
-    .then(body => {
-      setLog(`An error occured while saving: ${body}`)
-    })
+      .then((res) => {
+        if (res.ok) {
+          setIsEditing(false)
+          setBio(tmp)
+          setLog('')
+        } else if (res.status == 401) {
+          signOut({ redirect: false }).then((result) => {
+            Router.push("/auth/signin");
+          })
+          return res.text()
+        } else {
+          return res.text()
+        }
+      })
+      .then(body => {
+        setLog(`An error occured while saving: ${body}`)
+      })
   }
 
   return (

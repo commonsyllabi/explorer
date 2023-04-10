@@ -1,4 +1,5 @@
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
+import Router from "next/router";
 import * as React from "react";
 import { useState } from "react";
 
@@ -33,18 +34,23 @@ const UserEducation: React.FunctionComponent<IUserEducationProps> = ({
       headers: h,
       body: b
     })
-    .then((res) => {
-      if(res.ok){
-        setIsEditing(false)
-        setEducation(tmp)
-        setLog('')
-      }else{
-        return res.text()
-      }
-    })
-    .then(body => {
-      setLog(`An error occured while saving: ${body}`)
-    })
+      .then((res) => {
+        if (res.ok) {
+          setIsEditing(false)
+          setEducation(tmp)
+          setLog('')
+        } else if (res.status == 401) {
+          signOut({ redirect: false }).then((result) => {
+            Router.push("/auth/signin");
+          })
+          return res.text()
+        } else {
+          return res.text()
+        }
+      })
+      .then(body => {
+        setLog(`An error occured while saving: ${body}`)
+      })
   }
 
   const handleChange = (e: React.BaseSyntheticEvent) => {
@@ -61,7 +67,7 @@ const UserEducation: React.FunctionComponent<IUserEducationProps> = ({
   const remove = (e: React.BaseSyntheticEvent) => {
     const i = e.target.dataset.index
     tmp.splice(i, 1)
-    
+
     setTmp([...tmp])
   }
 
@@ -78,6 +84,7 @@ const UserEducation: React.FunctionComponent<IUserEducationProps> = ({
   return (
     <div id="user-education" className="py-4">
       <h3 className="h6">Education</h3>
+
       {isEditing ?
         <div>
           <ul>
@@ -92,7 +99,7 @@ const UserEducation: React.FunctionComponent<IUserEducationProps> = ({
             </li>
           </ul>
 
-          <button onClick={() => { setIsEditing(false);}}>cancel</button>
+          <button onClick={() => { setIsEditing(false); }}>cancel</button>
           <button onClick={submitEdit}>save</button>
           <div>{log}</div>
         </div>
@@ -101,7 +108,10 @@ const UserEducation: React.FunctionComponent<IUserEducationProps> = ({
           <ul className="list-unstyled">{education.map((item) => (
             <li key={item}>{item}</li>
           ))}</ul>
-          <button onClick={() => setIsEditing(true)}>edit</button>
+          {isAdmin ?
+
+            <button onClick={() => setIsEditing(true)}>edit</button>
+            : <></>}
         </div>
       }
 
