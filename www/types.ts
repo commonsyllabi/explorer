@@ -56,6 +56,7 @@ export interface ISyllabus {
   description: string;
   learning_outcomes?: string;
   attachments?: IResources[];
+  collections?: ICollection[];
 }
 
 export interface IFormData {

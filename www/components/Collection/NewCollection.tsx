@@ -52,6 +52,7 @@ const NewCollection: React.FunctionComponent<INewCollectionProps> = ({ apiUrl, s
                     } else {
                         Router.reload()
                     }
+                    return
                 } else if (res.status == 401) {
                     signOut({ redirect: false }).then((result) => {
                         Router.push("/auth/signin");
