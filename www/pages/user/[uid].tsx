@@ -282,7 +282,7 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo, apiUrl }) => {
         </Row>
 
         {isCreatingCollection ?
-          <NewCollection apiUrl={apiUrl} syllabusUUID="" handleClose={() => setIsCreatingCollection(false)}/>
+          <NewCollection syllabusUUID="" handleClose={() => setIsCreatingCollection(false)}/>
           :
           <></>
         }

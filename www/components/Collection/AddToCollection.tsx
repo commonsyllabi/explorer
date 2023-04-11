@@ -2,6 +2,7 @@ import { signOut, useSession } from "next-auth/react";
 import Router from "next/router";
 import React, { useState } from "react";
 import { ICollection, ISyllabus } from "types";
+import NewCollection from "./NewCollection";
 
 interface IAddCollectionProps {
     collections: ICollection[],
@@ -13,6 +14,7 @@ const AddToCollection: React.FunctionComponent<IAddCollectionProps> = ({ collect
 
     const { data: session } = useSession()
     const [log, setLog] = useState('')
+    const [isCreatingCollection, setIsCreatingCollection] = useState(false)
 
     const checkIfSyllabusInCollection = (coll: ICollection, syll: ISyllabus) => {
         if (!syll.collections) return false
@@ -110,6 +112,14 @@ const AddToCollection: React.FunctionComponent<IAddCollectionProps> = ({ collect
                             <button onClick={addSyllabusToCollection} data-collectionid={c.uuid}>+</button>
                         </div>
                 })}
+                <button aria-label="New Collection" onClick={() => { setIsCreatingCollection(true) }}>
+                    + Add to new Collection
+                </button>
+                {isCreatingCollection ?
+                    <NewCollection syllabusUUID={syllabusInfo.uuid} handleClose={() => setIsCreatingCollection(false)} />
+                    :
+                    <></>
+                }
                 <div>{log}</div>
             </div>
             <button onClick={() => handleClose()}>close</button>

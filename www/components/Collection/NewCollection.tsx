@@ -1,22 +1,17 @@
 import { signOut, useSession } from "next-auth/react";
 import Router from "next/router";
 import React, { useState } from "react";
+import { ICollection } from "types";
 
 interface INewCollectionProps {
-    apiUrl: string,
     syllabusUUID: string,
     handleClose: Function,
 }
 
-// the new collection component is used in two cases
-//- on the user profile, an empty collection can be created
-//- on the syllabus page, a collection can be created from the `add to collection` dropdown
-//- if `syllabusUUID` is not empty, the UUID is added to the collection after its creation
-
-const NewCollection: React.FunctionComponent<INewCollectionProps> = ({ apiUrl, syllabusUUID, handleClose }) => {
+const NewCollection: React.FunctionComponent<INewCollectionProps> = ({ syllabusUUID, handleClose }) => {
     const [log, setLog] = useState('')
     const [name, setName] = useState('')
-    const { data: session } = useSession();      
+    const { data: session } = useSession();
     
     const handleCloseButton = (e: React.BaseSyntheticEvent) => {
         e.preventDefault()
@@ -28,6 +23,42 @@ const NewCollection: React.FunctionComponent<INewCollectionProps> = ({ apiUrl, s
         setName(e.target.value)
     }
 
+    const addSyllabusToCollection = (coll_uuid: string, syll_uuid: string) => {
+        const b = new FormData()
+        b.append("syllabus_id", syll_uuid)
+
+        const h = new Headers();
+        h.append("Authorization", `Bearer ${session?.user.token}`);
+
+        const url = new URL(`/collections/${coll_uuid}/syllabi`, process.env.NEXT_PUBLIC_API_URL)
+        fetch(url, {
+            method: 'POST',
+            headers: h,
+            body: b
+        })
+            .then(res => {
+                if (res.ok) {
+                    setLog('Success!')
+                    setTimeout(() => {
+                        setLog('')
+                    }, 2000)
+                    handleClose()
+                    return
+                } else if (res.status == 401) {
+                    signOut({ redirect: false }).then((result) => {
+                        Router.push("/auth/signin");
+                    })
+                } 
+                throw new Error(res.statusText)
+            })
+            .then(body => {
+                    
+            })
+            .catch(err => {
+                setLog(`There was an error adding the syllabus to the collection: ${err}`)
+            })
+    }
+
     const submitCreate = (e: React.BaseSyntheticEvent) => {
         e.preventDefault()
 
@@ -37,8 +68,7 @@ const NewCollection: React.FunctionComponent<INewCollectionProps> = ({ apiUrl, s
         let b = new FormData()
         b.append("name", name)
 
-        const url = new URL(`collections/`, apiUrl);
-
+        const url = new URL(`collections/`, process.env.NEXT_PUBLIC_API_URL);
         fetch(url, {
             method: 'POST',
             headers: h,
@@ -48,22 +78,23 @@ const NewCollection: React.FunctionComponent<INewCollectionProps> = ({ apiUrl, s
                 if (res.ok) {
                     setLog('')
                     if (syllabusUUID !== '') {
-                        console.log('add the syllabus to the newly created collection');
+                        return res.json()
                     } else {
                         Router.reload()
+                        return;
                     }
-                    return
                 } else if (res.status == 401) {
                     signOut({ redirect: false }).then((result) => {
                         Router.push("/auth/signin");
                     })
-                    return res.text()
-                } else {
-                    return res.text()
                 }
+                throw new Error(res.statusText)
             })
-            .then(body => {
-                setLog(`An error occured while creating: ${body}`)
+            .then((data : ICollection) => {
+                addSyllabusToCollection(data.uuid, syllabusUUID)
+            })
+            .catch(err => {
+                setLog(`An error occured while creating: ${err}`)
             })
     }
 
