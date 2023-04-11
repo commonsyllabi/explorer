@@ -239,7 +239,7 @@ func DeleteUser(c echo.Context) error {
 
 func sanitizeUserCreate(c echo.Context) error {
 	pw := fmt.Sprintf("%v", c.FormValue("password"))
-	if len(pw) < 8 || len(pw) > 20 {
+	if len(pw) < 8 {
 		zero.Error("the password should be between 8 and 20 characters")
 		return fmt.Errorf("the password should be between 8 and 20 characters")
 	}

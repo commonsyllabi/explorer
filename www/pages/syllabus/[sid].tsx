@@ -99,7 +99,7 @@ const Syllabus: NextPage<ISyllabusPageProps> = ({syllabusInfo, userCollections})
   return (
     <>
       <Head>
-        <title>{syllabusInfo.title}</title>
+        <title>{`Cosyll | ${syllabusInfo.title}`}</title>
         <meta
           name="description"
           content={`${syllabusInfo.title} by ${syllabusInfo.user.name} on Cosyll| ${syllabusInfo.description}`}

@@ -12,6 +12,7 @@ import UserEmail from "./UserEmail";
 import UserName from "./UserName";
 import UserPassword from "./UserPassword";
 import UserDelete from "./UserDelete";
+import { useState } from "react";
 
 const getinstitutionNames = (
   institutionsArray: IInstitution[] | undefined
@@ -37,6 +38,8 @@ const UserProfileSidebar: React.FunctionComponent<IUserProfileSidebarProps> = ({
   apiUrl,
   isAdmin,
 }) => {
+
+  const [isShowingPasswordRecovery, setShowPasswordRecovery] = useState(false)
   return (
     <Col lg={isAdmin ? "4" : "3"}>
       <div id="user-profile" className="py-4">
@@ -55,8 +58,14 @@ const UserProfileSidebar: React.FunctionComponent<IUserProfileSidebarProps> = ({
             <h4>User details</h4>
             <div>
               <UserEmail userEmail={props.email} apiUrl={apiUrl} />
-              <UserPassword apiUrl={apiUrl}/>
-              <UserDelete apiUrl={apiUrl}/>
+
+              {isShowingPasswordRecovery ?
+
+                <UserPassword userEmail={props.email} handleClose={() => setShowPasswordRecovery(false)} />
+                :
+                <button onClick={() => setShowPasswordRecovery(true)}>Reset password</button>
+              }
+              <UserDelete apiUrl={apiUrl} />
             </div>
           </div>
           :
