@@ -34,7 +34,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const url = new URL(`users/${userId}`, apiUrl);
 
   const h = new Headers();
-  h.append("Authorization", `Bearer ${token}`);
+  if(t)
+    h.append("Authorization", `Bearer ${token}`);
 
   const res = await fetch(url, { headers: h });
   if (res.ok) {

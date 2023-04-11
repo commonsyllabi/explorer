@@ -1,4 +1,4 @@
-import type { GetServerSideProps, NextPage } from "next";
+import type { GetServerSideProps, GetServerSidePropsContext, NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 
@@ -17,13 +17,20 @@ import NotFound from "components/NotFound";
 import { signOut, useSession } from "next-auth/react";
 import React, { useState } from "react";
 import Router from "next/router";
+import { getToken } from "next-auth/jwt";
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
   const collectionId = context.params!.cid;
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  const t = await getToken({req: context.req, secret: process.env.NEXTAUTH_SECRET})
+  const token = t ? (t.user as { _id: string, token: string }).token : '';
   const url = new URL(`collections/${collectionId}`, apiUrl);
 
-  const res = await fetch(url);
+  const h = new Headers();
+  if(t)
+    h.append("Authorization", `Bearer ${token}`);
+
+  const res = await fetch(url, {headers: h});
   if (res.ok) {
     const collectionInfo = await res.json();
     return {

@@ -49,7 +49,12 @@ func Authenticate(c echo.Context) (uuid.UUID, error) {
 		return uuid.Nil, nil
 	}
 	raw := c.Request().Header["Authorization"][0]
-	tokenString := strings.Split(raw, " ")[1]
+	frags := strings.Split(raw, " ")
+	if len(frags) == 1 {
+		return uuid.Nil, errors.New("no token on Authorization header")
+	}
+
+	tokenString := frags[1]
 	token, err := jwt.ParseWithClaims(tokenString, &JWTCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("unexpected JWT signing method")

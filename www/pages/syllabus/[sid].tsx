@@ -32,16 +32,15 @@ import { getToken } from "next-auth/jwt";
 
 export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
   const syllabusId = context.params!.sid;
-  let syllInfo: ISyllabus[] = [];
-  let collInfo: ICollection[] = [];
+  let syllInfo;
+  let collInfo;
 
   const t = await getToken({ req: context.req, secret: process.env.NEXTAUTH_SECRET })
   const token = t ? (t.user as { _id: string, token: string }).token : '';
   const userId = t ? (t.user as { _id: string, token: string })._id : '';
   
   const h = new Headers();
-
-  if (token !== '')
+  if (t)
     h.append("Authorization", `Bearer ${token}`);
 
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -49,23 +48,34 @@ export const getServerSideProps: GetServerSideProps = async (context: GetServerS
   const userUrl = new URL(`users/${userId}`, apiUrl);
 
   //-- get syllabus info
-  let res = await fetch(syllUrl, { headers: h });
-  if (res.ok)
-    syllInfo = await res.json();
+  const syll_res = await fetch(syllUrl, { headers: h });
+  if (syll_res.ok){
+    const data = await syll_res.json();
+    syllInfo = data as ISyllabus;
+  }else{
+    syllInfo = {} as ISyllabus
+  }
 
   //-- if logged in, get user collections
-  res = await fetch(userUrl, { headers: h });
-  if (res.ok){
-    const data = await res.json();
-    collInfo = data.collections as ICollection[];    
+  const coll_res = await fetch(userUrl, { headers: h });
+  if (coll_res.ok){
+    const data = await coll_res.json();
+    collInfo = data.collections ? data.collections as ICollection[] : [] as ICollection[];
+  }else{
+    collInfo = [] as ICollection[]
   }
 
-  return {
-    props: {
-      syllabusInfo: syllInfo,
-      userCollections: collInfo,
+  if(syll_res.ok)
+    return {
+      props: {
+        syllabusInfo: syllInfo,
+        userCollections: collInfo,
+      }
     }
-  }
+  else
+    return{
+      props: {}
+    }
 };
 
 interface ISyllabusPageProps {
