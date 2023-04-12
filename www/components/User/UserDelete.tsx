@@ -42,7 +42,7 @@ const UserDelete: React.FunctionComponent<IUserDeleteProps> = ({ apiUrl }) => {
             })
     }
     return (<>
-        <button onClick={submitDelete}>Delete Account</button>
+        <button className="w-full bg-red-400 hover:bg-red-500 text-white rounded-lg my-5 p-1" onClick={submitDelete}>Delete Account</button>
         <div>{log}</div>
     </>)
 }

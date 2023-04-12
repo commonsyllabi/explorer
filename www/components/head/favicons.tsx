@@ -29,7 +29,7 @@ const Favicons: React.FunctionComponent<IFaviconsProps> = (props) => {
         sizes="192x192"
         href="/common-syllabi-favicon_192.png"
       />
-      <link rel="icon" type="image/png" sizes="256x256" href="/favicon.ico" />
+      <link rel="icon" type="image/png" sizes="256x256" href="/common-syllabi-favicon_128.png" />
     </>
   );
 };

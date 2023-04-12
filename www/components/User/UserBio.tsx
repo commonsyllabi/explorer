@@ -2,6 +2,10 @@ import { signOut, useSession } from "next-auth/react";
 import Router from "next/router";
 import * as React from "react";
 import { useState } from "react";
+import Image from "next/image";
+import editIcon from '../../public/icons/edit-box-line.svg'
+import cancelIcon from '../../public/icons/close-line.svg'
+import checkIcon from '../../public/icons/check-line.svg'
 
 interface IUserBioProps {
   userBio: string | undefined,
@@ -55,19 +59,28 @@ const UserBio: React.FunctionComponent<IUserBioProps> = ({ userBio, isAdmin, api
 
   return (
     <div className="mt-5 flex flex-col">
+      <h3 className="text-lg">Bio</h3>
       {isEditing ?
         <div>
-          <input type="text" value={tmp} onChange={handleChange}></input>
-          <button onClick={() => { setIsEditing(false); }}>cancel</button>
-          <button onClick={submitEdit}>save</button>
+          <textarea value={tmp} placeholder="A few lines about you." onChange={handleChange} className="bg-transparent border border-gray-900 p-1"/>
+          <div className="py-1 mt-2">
+                        <button className="w-6" onClick={() => { setIsEditing(false); }}>
+                            <Image src={cancelIcon} width="24" height="24" alt="Icon to cancel the edit process" />
+                        </button>
+                        <button className="w-6" onClick={submitEdit}>
+                            <Image src={checkIcon} width="24" height="24" alt="Icon to save the edit process" />
+                        </button>
+                    </div>
           <div>{log}</div>
         </div>
         :
-        <div>
+        <div className="flex justify-between">
           <p className="text-muted">{bio.length > 0 ? bio : 'User has not written a bio.'}</p>
           {isAdmin ?
 
-            <button onClick={() => setIsEditing(true)}>edit</button>
+            <button onClick={() => setIsEditing(true)}>
+              <Image src={editIcon} width="18" height="18" alt="Icon to edit the name" />
+            </button>
             : <></>}
         </div>
       }

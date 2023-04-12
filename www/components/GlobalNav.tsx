@@ -6,6 +6,7 @@ import Image from "next/image";
 
 import menuOpenIcon from '../public/icons/menu-line.svg'
 import menuCloseIcon from '../public/icons/close-line.svg'
+import logoImage from '../public/cosyll_black_on_white.png'
 import { useState } from "react";
 
 const GlobalNav: React.FunctionComponent = () => {
@@ -21,12 +22,16 @@ const GlobalNav: React.FunctionComponent = () => {
       className="flex flex-col justify-between border-b-2 border-b-gray-900 dark:border-b-gray-100 border-bottom"
     >
       <div className="flex w-full justify-between items-center p-3">
-        <div className="flex">
-          <Link href="/">
-            <div className="text-2xl md:text-xl">Cosyll</div>
-            <div className="hidden md:flex text-sm opacity-80">Browse and Publish Syllabi</div>
-          </Link>
+        <div className="flex gap-3">
+          <Image src={logoImage} width="50" height="48" alt="Cosyll logo" />
+          <div className="flex">
+            <Link href="/">
+              <div className="text-2xl md:text-xl">Cosyll</div>
+              <div className="hidden md:flex text-sm opacity-80">Browse and Publish Syllabi</div>
+            </Link>
+          </div>
         </div>
+
 
         {/* MOBILE */}
         <div onClick={toggleMenu} className="md:hidden cursor-pointer">

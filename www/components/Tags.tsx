@@ -9,10 +9,10 @@ interface ITagsProps {
 const Tags: React.FunctionComponent<ITagsProps> = ({ tags }) => {
   if (tags) {
     const tagEls = tags.map((tagContent) => (
-      <Link key={`${tagContent}-tag-link`} className="white" href={`/?tags=${tagContent}`}>
-        <Button className="btn-sm btn-tag" key={tagContent}>
+      <Link key={`${tagContent}-tag-link`} href={`/?tags=${tagContent}`}>
+        <button className="rounded-lg bg-gray-300 text-gray-900 px-2 py-1" key={tagContent}>
           {tagContent}
-        </Button>
+        </button>
       </Link>
     ));
     return <>{tagEls}</>;

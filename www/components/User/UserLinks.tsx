@@ -1,8 +1,13 @@
-import * as React from "react";
 import Link from "next/link";
 import { useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import Router from "next/router";
+import Image from "next/image";
+import editIcon from '../../public/icons/edit-box-line.svg'
+import cancelIcon from '../../public/icons/close-line.svg'
+import checkIcon from '../../public/icons/check-line.svg'
+import addIcon from '../../public/icons/add-line.svg'
+import removeIcon from '../../public/icons/subtract-line.svg'
 
 interface IUserLinksProps {
   userLinks: string[],
@@ -90,37 +95,47 @@ const UserLinks: React.FunctionComponent<IUserLinksProps> = ({ userLinks, isAdmi
   }
 
   return (
-    <div id="user-links">
+    <div id="user-links" className="mt-5">
+      <h3 className="text-lg">Links</h3>
       {isEditing ?
         <div>
-          <ul>
+          <ul className="mb-2">
             {tmp.map((item, _index) => (
-              <li key={`${item}-${_index}`}>
-                <input type="text" defaultValue={item} data-index={_index} onChange={handleChange}></input>
-                <button data-index={_index} onClick={remove}>-</button>
+              <li key={`${item}-${_index}`} className="flex justify-between">
+                <input type="text" defaultValue={item} data-index={_index} onChange={handleChange} className="w-11/12 bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"></input>
+                <button data-index={_index} onClick={remove}>
+                  <Image src={removeIcon} width="24" height="24" alt="Icon to remove an element from the list" />
+                </button>
               </li>
             ))}
-            <li>
-              <button onClick={add}>+</button>
-            </li>
           </ul>
+          <button onClick={add}>
+            <Image src={addIcon} width="24" height="24" alt="Icon to add an element to the list" />
+          </button>
 
-          <button onClick={() => { setIsEditing(false); }}>cancel</button>
-          <button onClick={submitEdit}>save</button>
+          <div className="py-1 mt-2">
+            <button className="w-6" onClick={() => { setIsEditing(false); }}>
+              <Image src={cancelIcon} width="24" height="24" alt="Icon to cancel the edit process" />
+            </button>
+            <button className="w-6" onClick={submitEdit}>
+              <Image src={checkIcon} width="24" height="24" alt="Icon to save the edit process" />
+            </button>
+          </div>
           <div>{log}</div>
         </div>
         :
-        <div className="user-links-item mb-3">
+        <div className="flex justify-between mb-3">
           <ul className="list-unstyled">{links.map((link) => (
             <li key={link}>
-              <Link href={link} target="_blank" rel="noreferrer">
+              <Link href={link} target="_blank" rel="noreferrer" className="underline">
                 {link}
               </Link>
             </li>
           ))}</ul>
           {isAdmin ?
-
-            <button onClick={() => setIsEditing(true)}>edit</button>
+            <button className="ml-8" onClick={() => setIsEditing(true)}>
+              <Image src={editIcon} width="18" height="18" alt="Icon to edit the name" />
+            </button>
             : <></>}
         </div>
       }

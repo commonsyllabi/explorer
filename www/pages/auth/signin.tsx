@@ -181,7 +181,7 @@ const SignIn: NextPage = () => {
                   <div className="flex flex-col mb-3">
                     <label>Email address</label>
                     <input
-                      className="w-full bg-transparent mt-2 p-1 border-b-2 border-b-gray-900"
+                      className="w-full bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
                       required
                       name="username"
                       type="email"
@@ -199,7 +199,7 @@ const SignIn: NextPage = () => {
                   >
                     <label>Password</label>
                     <input
-                      className="w-full bg-transparent mt-2 p-1 border-b-2 border-b-gray-900"
+                      className="w-full bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
                       required
                       name="password"
                       type="password"
@@ -224,7 +224,7 @@ const SignIn: NextPage = () => {
                   <div className="mb-8 flex flex-col">
                     <label>Name</label>
                     <input
-                      className="w-full bg-transparent mt-2 p-1 border-b-2 border-b-gray-900"
+                      className="w-full bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
                       type="text"
                       placeholder="Enter name"
                       data-cy="Signup-name"
@@ -236,7 +236,7 @@ const SignIn: NextPage = () => {
                     <div className="mb-3">
                       <label>Email address</label>
                       <input
-                        className="w-full bg-transparent mt-2 p-1 border-b-2 border-b-gray-900"
+                        className="w-full bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
                         type="email"
                         placeholder="Enter email"
                         data-cy="Signup-email"
@@ -249,7 +249,7 @@ const SignIn: NextPage = () => {
                     >
                       <label>Confirm email address</label>
                       <input
-                        className="w-full bg-transparent mt-2 p-1 border-b-2 border-b-gray-900"
+                        className="w-full bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
                         type="email"
                         placeholder="Confirm email"
                         data-cy="Signup-email-conf"
@@ -267,7 +267,7 @@ const SignIn: NextPage = () => {
                   >
                     <label>Password</label>
                     <input
-                      className="w-full bg-transparent mt-2 p-1 border-b-2 border-b-gray-900"
+                      className="w-full bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
                       type="password"
                       placeholder="Password"
                       data-cy="Signup-password"
@@ -281,7 +281,7 @@ const SignIn: NextPage = () => {
                   >
                     <label>Confirm password</label>
                     <input
-                      className="w-full bg-transparent mt-2 p-1 border-b-2 border-b-gray-900"
+                      className="w-full bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
                       type="password"
                       placeholder="Confirm password"
                       data-cy="Signup-password-conf"

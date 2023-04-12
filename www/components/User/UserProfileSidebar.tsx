@@ -3,8 +3,6 @@ import * as React from "react";
 import UserLinks from "components/User/UserLinks";
 import UserInstitutions from "components/User/UserInstitutions";
 
-import Col from "react-bootstrap/Col";
-
 import { IUser, ICollection, IInstitution, ISyllabus } from "types";
 import UserBio from "./UserBio";
 import UserEducation from "./UserEducation";
@@ -41,38 +39,36 @@ const UserProfileSidebar: React.FunctionComponent<IUserProfileSidebarProps> = ({
 
   const [isShowingPasswordRecovery, setShowPasswordRecovery] = useState(false)
   return (
-    <Col lg={isAdmin ? "4" : "3"}>
-      <div id="user-profile" className="py-4">
-        <div id="user-description" className="pb-4">
-          <UserName userName={props.name} isAdmin={isAdmin} apiUrl={apiUrl} />
-          <UserBio userBio={props.bio} isAdmin={isAdmin} apiUrl={apiUrl} />
-          <UserLinks userLinks={props.urls as Array<string>} isAdmin={isAdmin} apiUrl={apiUrl} />
-        </div>
-        <UserInstitutions
-          institutions={getinstitutionNames(props.institutions)}
-          isAdmin={isAdmin} apiUrl={apiUrl}
-        />
-        <UserEducation userEducation={props.education as Array<string>} isAdmin={isAdmin} apiUrl={apiUrl} />
-        {isAdmin ?
-          <div>
-            <h4>User details</h4>
-            <div>
-              <UserEmail userEmail={props.email} apiUrl={apiUrl} />
 
-              {isShowingPasswordRecovery ?
-
-                <UserPassword userEmail={props.email} handleClose={() => setShowPasswordRecovery(false)} />
-                :
-                <button onClick={() => setShowPasswordRecovery(true)}>Reset password</button>
-              }
-              <UserDelete apiUrl={apiUrl} />
-            </div>
-          </div>
-          :
-          <></>}
-
+    <div id="user-profile" className="">
+      <div id="user-description" className="pb-4">
+        <UserName userName={props.name} isAdmin={isAdmin} apiUrl={apiUrl} />
+        <UserBio userBio={props.bio} isAdmin={isAdmin} apiUrl={apiUrl} />
+        <UserLinks userLinks={props.urls as Array<string>} isAdmin={isAdmin} apiUrl={apiUrl} />
       </div>
-    </Col>
+      <UserInstitutions
+        institutions={getinstitutionNames(props.institutions)}
+        isAdmin={isAdmin} apiUrl={apiUrl}
+      />
+      <UserEducation userEducation={props.education as Array<string>} isAdmin={isAdmin} apiUrl={apiUrl} />
+
+      {isAdmin ?
+        <div>
+          <UserEmail userEmail={props.email} apiUrl={apiUrl} />
+          <div className=" mt-5">
+            {isShowingPasswordRecovery ?
+              <UserPassword userEmail={props.email} handleClose={() => setShowPasswordRecovery(false)} />
+              :
+              <button onClick={() => setShowPasswordRecovery(true)} className="w-full border border-gray-900 rounded-lg">Reset password</button>
+            }
+          </div>
+          <UserDelete apiUrl={apiUrl} />
+        </div>
+        :
+        <></>}
+
+    </div>
+
   );
 };
 

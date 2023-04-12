@@ -1,40 +1,29 @@
-import React, { useEffect, useState } from "react";
-import type { GetServerSideProps, NextApiRequest, NextApiResponse, NextPage } from "next";
+import React, { useState } from "react";
+import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import type { GetServerSidePropsContext } from "next"
+import { getToken } from "next-auth/jwt";
 
-import { ISyllabus, IUser } from "types";
-
-import Favicons from "components/head/favicons";
-import GlobalNav from "components/GlobalNav";
-
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import Tab from "react-bootstrap/Tab";
-import Tabs from "react-bootstrap/Tabs";
+import { IUser } from "types";
 
 import { getSyllabusCards } from "components/utils/getSyllabusCards";
 import UserProfileSidebar from "components/User/UserProfileSidebar";
 import { getCollectionCards } from "components/utils/getCollectionCards";
 import NotFound from "components/NotFound";
 import NewCollection from "components/Collection/NewCollection";
-import type { GetServerSidePropsContext } from "next"
-import { getToken } from "next-auth/jwt";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const userId = context.params!.uid;
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;  
-  const t = await getToken({req: context.req, secret: process.env.NEXTAUTH_SECRET})
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  const t = await getToken({ req: context.req, secret: process.env.NEXTAUTH_SECRET })
   const token = t ? (t.user as { _id: string, token: string }).token : '';
   const url = new URL(`users/${userId}`, apiUrl);
 
   const h = new Headers();
-  if(t)
+  if (t)
     h.append("Authorization", `Bearer ${token}`);
 
   const res = await fetch(url, { headers: h });
@@ -51,7 +40,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
     let full_syllabi = []
     for (const syll of userInfo.syllabi) {
-      const r = await fetch(new URL(`syllabi/${syll.uuid}`, apiUrl), {headers: h})
+      const r = await fetch(new URL(`syllabi/${syll.uuid}`, apiUrl), { headers: h })
       if (r.ok) {
         const s = await r.json()
         full_syllabi.push(s)
@@ -83,7 +72,8 @@ interface IUserPageProps {
 const UserPage: NextPage<IUserPageProps> = ({ userInfo, apiUrl }) => {
   const router = useRouter();
   const { data: session, status } = useSession();
-  const [isAdmin, setIsAdmin] = useState(false);
+  const focusedTab = router.query["tab"]
+  const [activeTab, setActiveTab] = useState(focusedTab ? focusedTab : "syllabi")
   const [syllFilter, setSyllFilter] = useState("");
   const [collFilter, setCollFilter] = useState("");
   const [isCreatingCollection, setIsCreatingCollection] = useState(false)
@@ -109,9 +99,6 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo, apiUrl }) => {
     tags_include: [],
     tags_exclude: [],
   }
-
-  const focusedTab = router.query["tab"];
-  const activeTab = focusedTab ? focusedTab : "syllabi";
 
   const handleFilterChange = (event: React.SyntheticEvent) => {
     const t = event.target as HTMLInputElement;
@@ -169,124 +156,110 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo, apiUrl }) => {
           name="description"
           content={`${userInfo.name} shares and collects syllabi on Cosyll.`}
         />
-        <Favicons />
       </Head>
 
-      <Container fluid id="header-section" className="sticky-top">
-        <GlobalNav />
-      </Container>
-      <Container>
-        <Row>
-          <UserProfileSidebar props={userInfo} apiUrl={`${apiUrl}/users/${userInfo.uuid}`} isAdmin={checkIfAdmin()} />
-          <Col>
-            <div className="py-4">
-              <Tabs
-                defaultActiveKey={activeTab as string}
-                id="user-syllabi-collections-tabs"
-                className="mb-3 gap-2"
-                data-cy="userTabs"
-              >
-                <Tab eventKey="syllabi" title="Syllabi" data-cy="syllabiTab">
-                  <div className="flex justify-content-between align-items-baseline py-2">
-                    {checkIfAdmin() ? (
-                      <h2 className="inline h5">Your syllabi</h2>
-                    ) : (
-                      <h2 className="inline h5">Syllabi by {userInfo.name}</h2>
-                    )}
+      <div>
+        <div className="flex w-11/12 md:w-10/12 m-auto mt-4 justify-between">
 
-                    <div className="flex gap-2">
-                      <Form>
-                        <Form.Control
-                          id="syllFilter"
-                          type="Filter"
-                          className="form-control"
-                          placeholder="Search syllabi..."
-                          aria-label="Filter"
-                          value={syllFilter}
-                          onChange={handleFilterChange}
-                        />
-                      </Form>
+          <div className="w-full md:w-3/12 p-3">
+            <UserProfileSidebar props={userInfo} apiUrl={`${apiUrl}/users/${userInfo.uuid}`} isAdmin={checkIfAdmin()} />
+          </div>
 
-                      {/* Only allow new syllabus to be created if one is one their own page */}
-                      {checkIfAdmin() ? (
-                        <Link href="/NewSyllabus">
-                          <Button variant="primary" aria-label="New Syllabus" data-cy="newSyllabusLink">
-                            + New Syllabus
-                          </Button>
-                        </Link>
-                      ) : (
-                        <></>
-                      )}
+          <div className="w-full md:w-8/12 mx-auto mb-4">
 
-                    </div>
-                  </div>
-                  <div id="syllabi">
-                    {getSyllabusCards(
-                      filteredSyllabi(),
-                      default_filters,
-                      undefined,
-                      userInfo.name,
-                      checkIfAdmin()
-                    )?.elements ? getSyllabusCards(
-                      filteredSyllabi(),
-                      default_filters,
-                      undefined,
-                      userInfo.name,
-                      checkIfAdmin()
-                    )?.elements : "No syllabi yet."}
-                  </div>
-                </Tab>
-                <Tab eventKey="collections" title="Collections" data-cy="collectionsTab">
-                  <div className="flex justify-content-between align-items-baseline py-2">
-                    {checkIfAdmin() ? (
-                      <h2 className="inline h5">Your Collections</h2>
-                    ) : (
-                      <h2 className="inline h5">Collections by {userInfo.name}</h2>
-                    )}
-                    <div className="flex gap-2">
-                      <Form>
-                        <Form.Control
-                          id="collFilter"
-                          type="Filter"
-                          className="form-control"
-                          placeholder="Filter..."
-                          aria-label="Filter"
-                          value={collFilter}
-                          onChange={handleFilterChange}
-                        />
-                      </Form>
-                      {checkIfAdmin() ? (
-                        <Button variant="primary" aria-label="New Collection" onClick={() => { setIsCreatingCollection(true) }}>
-                          + New Collection
-                        </Button>
-                      ) : (
-                        <></>
-                      )}
-                    </div>
-                  </div>
-                  <div id="collections">
-                    {getCollectionCards(
-                      filteredCollections(),
-                      userInfo.name,
-                      checkIfAdmin()
-                    ) ? getCollectionCards(
-                      filteredCollections(),
-                      userInfo.name,
-                      checkIfAdmin()
-                    ) : "No collections yet."}
-                  </div>
-                </Tab>
-              </Tabs>
+            <div className="flex my-8" data-cy="userTabs">
+              <div onClick={() => setActiveTab("syllabi")} className={`text-xl mr-6 cursor-pointer ${activeTab === "syllabi" ? "font-bold" : ""}`} data-cy="syllabiTab">Syllabi</div>
+              <div onClick={() => setActiveTab("collections")} className={`text-xl mr-6 cursor-pointer ${activeTab === "collections" ? "font-bold" : ""}`} data-cy="collectionsTab">Collections</div>
             </div>
-          </Col>
-        </Row>
+
+            {activeTab === "syllabi" ?
+              <div title="Syllabi" data-cy="syllabiTab">
+                <div className="flex justify-end items-baseline py-2 content-end">
+                  <div className="flex w-10/12 gap-2 mb-8 justify-end">
+                    <input
+                      id="syllFilter"
+                      type="text"
+                      className="w-4/6 bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
+                      placeholder="Search syllabi..."
+                      aria-label="Filter"
+                      value={syllFilter}
+                      onChange={handleFilterChange}
+                    />
+
+                    {checkIfAdmin() ? (
+                      <Link href="/NewSyllabus" className="w-3/12 text-center mt-4 py-2 bg-gray-900 text-gray-100 border-2 rounded-md" aria-label="New Syllabus" data-cy="newSyllabusLink">
+                        
+                          + New Syllabus
+                        
+                      </Link>
+                    ) : (
+                      <></>
+                    )}
+
+                  </div>
+                </div>
+                <div id="syllabi">
+                  {getSyllabusCards(
+                    filteredSyllabi(),
+                    default_filters,
+                    undefined,
+                    userInfo.name,
+                    checkIfAdmin()
+                  )?.elements ? getSyllabusCards(
+                    filteredSyllabi(),
+                    default_filters,
+                    undefined,
+                    userInfo.name,
+                    checkIfAdmin()
+                  )?.elements : "No syllabi yet."}
+                </div>
+              </div>
+              :
+              <div title="Collections" data-cy="collectionsTab">
+                <div className="flex justify-end items-baseline py-2">
+
+                  <div className="flex w-10/12 gap-2 mb-8 justify-end">
+                    <input
+                      id="collFilter"
+                      type="text"
+                      className="w-4/6 bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
+                      placeholder="Filter..."
+                      aria-label="Filter"
+                      value={collFilter}
+                      onChange={handleFilterChange}
+                    />
+
+                    {checkIfAdmin() ? (
+                      <button className="w-3/12 mt-4 py-2 bg-gray-900 text-gray-100 border-2 rounded-md" aria-label="New Collection" onClick={() => { setIsCreatingCollection(true) }}>
+                        + New Collection
+                      </button>
+                    ) : (
+                      <></>
+                    )}
+                  </div>
+                </div>
+                <div id="collections">
+                  {getCollectionCards(
+                    filteredCollections(),
+                    userInfo.name,
+                    checkIfAdmin()
+                  ) ? getCollectionCards(
+                    filteredCollections(),
+                    userInfo.name,
+                    checkIfAdmin()
+                  ) : "No collections yet."}
+                </div>
+              </div>
+            }
+          </div>
+        </div>
 
         {isCreatingCollection ?
-          <NewCollection syllabusUUID="" handleClose={() => setIsCreatingCollection(false)}/>
+          <NewCollection syllabusUUID="" handleClose={() => setIsCreatingCollection(false)} />
           :
           <></>
         }
-      </Container>
+      </div>
     </>
   );
 };

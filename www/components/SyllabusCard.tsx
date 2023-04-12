@@ -63,8 +63,8 @@ const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = ({
           fields={syllabusInfo.academic_fields}
         />
         <div>
-          <div className="flex justify-between w-full text-xl font-bold hover:underline mt-6 mb-2">
-            <Link href={getSyllabiUrl(syllabusInfo.uuid)}>
+          <div className="flex justify-between w-full mt-6 mb-2">
+            <Link href={getSyllabiUrl(syllabusInfo.uuid)} className="text-xl font-bold hover:underline">
               {syllabusInfo.title}
             </Link>
             {isAdmin ?
@@ -86,7 +86,7 @@ const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = ({
         <div className="course-description whitespace-pre-wrap">
           {syllabusInfo.description}
         </div>
-        <div className="course-tags flex gap-2">
+        <div className="mt-6 mb-2 flex gap-2">
           {syllabusInfo.tags && <Tags tags={syllabusInfo.tags} />}
         </div>
       </div>

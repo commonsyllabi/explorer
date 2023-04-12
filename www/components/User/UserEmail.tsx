@@ -1,6 +1,10 @@
 import { signOut, useSession } from "next-auth/react";
 import Router from "next/router";
 import { useState } from "react";
+import Image from "next/image";
+import editIcon from '../../public/icons/edit-box-line.svg'
+import cancelIcon from '../../public/icons/close-line.svg'
+import checkIcon from '../../public/icons/check-line.svg'
 
 interface IUserEmailProps {
     userEmail: string
@@ -74,20 +78,28 @@ const UserEmail: React.FunctionComponent<IUserEmailProps> = ({ userEmail, apiUrl
     }
 
     return (<div id="user-email">
-        <h5>Email</h5>
+        <h3 className="text-lg">Email</h3>
         {isEditing ?
             <div>
                 <input type="text" placeholder="Enter your email" onChange={handleChange}></input>
                 <input type="text" placeholder="Confirm your email" onChange={handleChangeConf}></input>
-                <button onClick={() => { setIsEditing(false); }}>cancel</button>
-                <button onClick={submitEdit}>save</button>
+                <div className="py-1 mt-2">
+                    <button className="w-6" onClick={() => { setIsEditing(false); }}>
+                        <Image src={cancelIcon} width="24" height="24" alt="Icon to cancel the edit process" />
+                    </button>
+                    <button className="w-6" onClick={submitEdit}>
+                        <Image src={checkIcon} width="24" height="24" alt="Icon to save the edit process" />
+                    </button>
+                </div>
                 <div>{log}</div>
             </div>
             :
-            <>
-                <div>{email}</div>
-                <button onClick={() => setIsEditing(true)}>edit</button>
-            </>
+            <div className="flex justify-between">
+                <div className="underline">{email}</div>
+                <button className="ml-8" onClick={() => setIsEditing(true)}>
+                    <Image src={editIcon} width="18" height="18" alt="Icon to edit the name" />
+                </button>
+            </div>
         }
     </div>)
 }

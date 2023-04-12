@@ -43,12 +43,13 @@ const UserPassword: React.FunctionComponent<IPasswordReset> = ({ userEmail, hand
       onSubmit={handleRecover}
     >
       <div className="">
-        <h2 className="">Password recovery</h2>
-        <div>Enter your email address to receive a link to reset your password</div>
+        <h2 className="font-bold">Password recovery</h2>
+        <div className="text-sm">Enter your email address below, and we will send you a link to reset your password:</div>
         <div className="">
           <input
             onChange={handleEmailChange}
             defaultValue={recoverEmail}
+            className="bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
             type="text"
           />
         </div>
@@ -58,7 +59,7 @@ const UserPassword: React.FunctionComponent<IPasswordReset> = ({ userEmail, hand
       >
         <div className="">
           <button
-            className=""
+            className="w-full border border-gray-900 rounded-lg my-2"
             type="submit"
             onClick={handleRecover}
           >
@@ -87,7 +88,7 @@ const UserPassword: React.FunctionComponent<IPasswordReset> = ({ userEmail, hand
         )}
       </div>
       <div>{log}</div>
-      <button onClick={() => handleClose()}>close</button>
+      <button onClick={() => handleClose()} className="w-full border border-gray-900 rounded-lg">Close</button>
     </div>
   );
 };

@@ -2,6 +2,10 @@ import { signOut, useSession } from "next-auth/react";
 import Router from "next/router";
 import * as React from "react";
 import { useState } from "react";
+import Image from "next/image";
+import editIcon from '../../public/icons/edit-box-line.svg'
+import cancelIcon from '../../public/icons/close-line.svg'
+import checkIcon from '../../public/icons/check-line.svg'
 
 interface IUserNameProps {
     userName: string,
@@ -59,20 +63,27 @@ const UserName: React.FunctionComponent<IUserNameProps> = ({ userName, isAdmin, 
     }
 
     return (
-        <div className="mt-5 flex flex-col">
+        <div className="my-5 flex flex-col">
             {isEditing ?
-                <div>
-                    <input type="text" value={tmp} onChange={handleChange}></input>
-                    <button onClick={() => { setIsEditing(false); }}>cancel</button>
-                    <button onClick={submitEdit}>save</button>
+                <div className="flex items-center justify-between">
+                    <input type="text" className="text-2xl w-8/12 bg-transparent mt-2 py-1 border-b-2 border-b-gray-900" value={tmp} onChange={handleChange}></input>
+                    <div className="py-1 mt-2">
+                        <button className="w-6" onClick={() => { setIsEditing(false); }}>
+                            <Image src={cancelIcon} width="24" height="24" alt="Icon to cancel the edit process" />
+                        </button>
+                        <button className="w-6" onClick={submitEdit}>
+                            <Image src={checkIcon} width="24" height="24" alt="Icon to save the edit process" />
+                        </button>
+                    </div>
                     <div>{log}</div>
                 </div>
                 :
-                <div>
-                    <h2>{name}</h2>
+                <div className="flex justify-between">
+                    <h2 className="text-2xl">{name}</h2>
                     {isAdmin ?
-
-                        <button onClick={() => setIsEditing(true)}>edit</button>
+                        <button className="ml-8" onClick={() => setIsEditing(true)}>
+                            <Image src={editIcon} width="24" height="24" alt="Icon to edit the name" />
+                        </button>
                         : <></>}
                 </div>
             }
