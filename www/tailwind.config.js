@@ -2,6 +2,7 @@
 import defaultTheme from 'tailwindcss/defaultTheme'
 
 module.exports = {
+  darkMode: 'class',
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",

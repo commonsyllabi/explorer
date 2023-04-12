@@ -19,6 +19,7 @@ export default function RootLayout({
         <script defer
           data-domain="explorer.common-syllabi.org"
           src="https://stats.ia-fictions.net/js/plausible.js"></script>
+          <title>Cosyll: share and archive syllabi</title>
       </head>
       <body className="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100">
         <div id="header-section" className="sticky">
