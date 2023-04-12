@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
 import type { GetServerSideProps, NextPage } from "next";
 import { useRouter } from "next/router";
+import Image from "next/image";
 
 import FiltersBar from "components/FiltersBar";
 import { getSyllabusCards } from "../components/utils/getSyllabusCards";
 import PaginationSection from "components/PaginationSection";
 import { IMetaInformation, ISyllabiFilters, ISyllabus } from "types";
+
+import searchIcon from '../public/icons/search-line.svg'
+import clearIcon from '../public/icons/close-line.svg'
 
 const PAGINATION_LIMIT = 15;
 
@@ -206,7 +210,7 @@ const Home: NextPage<IHomeProps> = ({ meta, total, syllabiListings }) => {
     <div className="flex flex-col md:w-10/12 m-auto">
 
       {/* SEARCH BAR */}
-      <div className="w-full mt-3 mb-3 flex justify-between">
+      <div className="w-11/12 m-auto md:w-full mt-3 mb-3 flex justify-between">
         <div className="w-full mt-3 mb-3 flex flex-row items-center">
           <input
             className="w-full bg-transparent border-b-2 border-b-gray-900"
@@ -215,27 +219,26 @@ const Home: NextPage<IHomeProps> = ({ meta, total, syllabiListings }) => {
             placeholder="Search syllabi (e.g. intro to sociology...)"
             onChange={handleSearchChange}
           ></input>
-          <button className="px-2 mx-1" onClick={clearSearch} >
-            X
+          <button className="hidden md:block mx-1" onClick={clearSearch} >
+            <Image src={clearIcon} width="24" height="24" alt="Icon to clear the search" />
           </button>
-          <button className="px-2 mx-1" onClick={startSearch} >
-            Search
+          <button className="mx-1" onClick={startSearch} >
+            <Image src={searchIcon} width="24" height="24" alt="Icon to start the search" />
           </button>
         </div>
       </div>
 
-      <div className="my-2">
-        
-          {syllabiCount === 1
-            ? `Found 1 syllabus.`
-            : `Found ${syllabiCount} syllabi.`}
-        
+      <div className="w-11/12 m-auto md:w-full my-2">
+        {syllabiCount === 1
+          ? `Found 1 syllabus.`
+          : `Found ${syllabiCount} syllabi.`}
       </div>
-      <div className="flex justify-between">
-        <div className="md:w-7/12 pt-3 pb-5 flex flex-col">
+
+      <div className="flex flex-col-reverse md:flex-row justify-between">
+        <div className="w-11/12 m-auto md:m-0 md:w-7/12 pt-3 pb-5 flex flex-col">
           {getAllSyllabi()}
         </div>
-        <div className="md:w-4/12 pb-3 border-bottom border-lg-bottom-0">
+        <div className="w-11/12 md:w-4/12 m-auto md:m-0 pb-3 border-bottom border-lg-bottom-0">
           <FiltersBar updateFilters={handleFilterChange} meta={meta} />
         </div>
       </div>
