@@ -17,7 +17,7 @@ const SyllabusSchoolCodeYear: React.FunctionComponent<
   return (
     <div className="flex gap-3">
       {institution ? (
-        <p className="small">{institution}</p>
+        <p className="text-sm">{institution}</p>
       ) : (
         <p className="small text-muted">
           <em>institution</em>
@@ -25,7 +25,7 @@ const SyllabusSchoolCodeYear: React.FunctionComponent<
       )}
 
       {/* {courseNumber ? (
-        <p className="small">{courseNumber}</p>
+        <p className="text-sm">{courseNumber}</p>
       ) : (
         <p className="small text-muted">
           <em>no course code</em>
@@ -34,14 +34,14 @@ const SyllabusSchoolCodeYear: React.FunctionComponent<
 
       <div className="flex gap-1">
         {term ? (
-          <p className="small">{term}</p>
+          <p className="text-sm">{term}</p>
         ) : (
           <p className="small text-muted">
             <em>term</em>
           </p>
         )}
         {year ? (
-          <p className="small">{year}</p>
+          <p className="text-sm">{year}</p>
         ) : (
           <p className="small text-muted">
             <em>year</em>
@@ -50,7 +50,7 @@ const SyllabusSchoolCodeYear: React.FunctionComponent<
       </div>
 
       {level != null ? (
-          <p className="small">{getAcademicLevelText(level)}</p>
+          <p className="text-sm">{getAcademicLevelText(level)}</p>
         ) : (
           <p className="small text-muted">
             <em>no academic level</em>
@@ -58,7 +58,7 @@ const SyllabusSchoolCodeYear: React.FunctionComponent<
         )}
 
 {fields != null ? (
-          <p className="small">{getAcademicFieldsText(fields).join(" | ")}</p>
+          <p className="text-sm">{getAcademicFieldsText(fields).join(" | ")}</p>
         ) : (
           <p className="small text-muted">
             <em>no academic fields</em>

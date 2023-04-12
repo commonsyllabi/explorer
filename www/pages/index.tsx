@@ -1,27 +1,16 @@
 import React, { useEffect, useState } from "react";
 import type { GetServerSideProps, NextPage } from "next";
-import Head from "next/head";
 import { useRouter } from "next/router";
-import Link from "next/link";
 
-import GlobalNav from "components/GlobalNav";
 import FiltersBar from "components/FiltersBar";
-
 import { getSyllabusCards } from "../components/utils/getSyllabusCards";
 import PaginationSection from "components/PaginationSection";
-
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import { IMetaInformation, ISyllabiFilters, ISyllabus } from "types";
-import Favicons from "components/head/favicons";
-import { Button, Form, InputGroup } from "react-bootstrap";
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 const PAGINATION_LIMIT = 15;
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const url = new URL(`syllabi/`, apiUrl);
+  const url = new URL(`syllabi/`, process.env.NEXT_PUBLIC_API_URL);
   const page = query.page ? (query.page as string) : "1";
   const keywords = query.keywords ? (query.keywords as string) : "";
   const tags = query.tags ? (query.tags as string) : "";
@@ -30,29 +19,19 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   if (tags !== "") url.searchParams.append("tags", tags);
 
   const res = (await fetch(url).catch((err) => {
-    console.log(`error fetching backend: ${err}`);
-
     return {
-      props: {
-        syllabiListings: [],
-      },
+      props: {}
     };
   })) as Response;
 
   if (!res.ok) {
     return {
-      props: {
-        totalPages: 0,
-        totalSyllabi: 0,
-        syllabiListings: [],
-      },
+      props: {}
     };
   }
 
   const payload = await res.json();
-
   const total_pages = Math.floor(payload.syllabi.length / PAGINATION_LIMIT) + 1;
-
   return {
     props: {
       meta: payload.meta,
@@ -170,7 +149,7 @@ const Home: NextPage<IHomeProps> = ({ meta, total, syllabiListings }) => {
 
   const [activePage, setActivePage] = useState(getCurrentPage());
 
-  const getPageContent = () => {
+  const getAllSyllabi = () => {
     if (activePage > totalPages || activePage < 1)
       return getSyllabusCards(syllabi, filters, 1)?.elements;
     else return getSyllabusCards(syllabi, filters, activePage)?.elements;
@@ -184,7 +163,7 @@ const Home: NextPage<IHomeProps> = ({ meta, total, syllabiListings }) => {
   };
 
   const startSearch = () => {
-    const url = new URL(`syllabi/?keywords=${encodeURI(searchTerms)}`, apiUrl);
+    const url = new URL(`syllabi/?keywords=${encodeURI(searchTerms)}`, process.env.NEXT_PUBLIC_API_URL);
 
     fetch(url)
       .then((res) => {
@@ -223,48 +202,51 @@ const Home: NextPage<IHomeProps> = ({ meta, total, syllabiListings }) => {
   };
 
   return (
-    
-      <div className="flex flex-col">
-        <div>
-          <Container className="mt-3 mb-3 flex justify-content-between">
-            <InputGroup className="w-100 mt-3 mb-3">
-              <Form.Control
-                id="search-terms"
-                placeholder="Search syllabi (e.g. intro to sociology...)"
-                onChange={handleSearchChange}
-              ></Form.Control>
-              <Button onClick={clearSearch} variant="secondary">
-                X
-              </Button>
-              <Button onClick={startSearch} variant="primary">
-                Search
-              </Button>
-            </InputGroup>
-          </Container>
-        </div>
-        <div>
-          <Col>
-            {syllabiCount === 1
-              ? `Found 1 syllabus.`
-              : `Found ${syllabiCount} syllabi.`}
-          </Col>
-        </div>
-        <div className="flex flex-row-reverse">
-          <Col lg={4} className="pb-3 border-bottom border-lg-bottom-0">
-            <FiltersBar updateFilters={handleFilterChange} meta={meta} />
-          </Col>
-          <Col lg={8} className="pt-3 pb-5 flex flex-column gap-3">
-          {getPageContent()}
-          </Col>
-        </div>
-        <div>
-          <PaginationSection
-            totalPages={totalPages}
-            activePage={activePage}
-            handlePageChange={paginationHandler}
-          />
+
+    <div className="flex flex-col md:w-10/12 m-auto">
+
+      {/* SEARCH BAR */}
+      <div className="w-full mt-3 mb-3 flex justify-between">
+        <div className="w-full mt-3 mb-3 flex flex-row items-center">
+          <input
+            className="w-full bg-transparent border-b-2 border-b-gray-900"
+            type="text"
+            id="search-terms"
+            placeholder="Search syllabi (e.g. intro to sociology...)"
+            onChange={handleSearchChange}
+          ></input>
+          <button className="px-2 mx-1" onClick={clearSearch} >
+            X
+          </button>
+          <button className="px-2 mx-1" onClick={startSearch} >
+            Search
+          </button>
         </div>
       </div>
+
+      <div className="my-2">
+        
+          {syllabiCount === 1
+            ? `Found 1 syllabus.`
+            : `Found ${syllabiCount} syllabi.`}
+        
+      </div>
+      <div className="flex justify-between">
+        <div className="md:w-7/12 pt-3 pb-5 flex flex-col">
+          {getAllSyllabi()}
+        </div>
+        <div className="md:w-4/12 pb-3 border-bottom border-lg-bottom-0">
+          <FiltersBar updateFilters={handleFilterChange} meta={meta} />
+        </div>
+      </div>
+      <div>
+        <PaginationSection
+          totalPages={totalPages}
+          activePage={activePage}
+          handlePageChange={paginationHandler}
+        />
+      </div>
+    </div>
   );
 };
 

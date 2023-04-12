@@ -54,12 +54,12 @@ const GlobalNav: React.FunctionComponent = () => {
 
           {session ?
             <div
-              className="mx-2 align-self-center"
+              className="mx-2 flex"
               data-cy="loggedUser"
             >
               <Link
                 href={`/user/${session.user._id}`}
-                className="py-2"
+                className="py-2 mx-2"
                 data-cy="accountLink"
               >
                 My Account
@@ -69,7 +69,7 @@ const GlobalNav: React.FunctionComponent = () => {
 
               <Link
                 href="#"
-                className="py-2"
+                className="py-2 mx-2"
                 data-cy="signOut"
                 onClick={() =>
                   signOut({ redirect: false }).then((result) => {
@@ -77,7 +77,7 @@ const GlobalNav: React.FunctionComponent = () => {
                   })
                 }
               >
-                Sign Out
+                Sign out
               </Link>
             </div>
             :
@@ -112,7 +112,7 @@ const GlobalNav: React.FunctionComponent = () => {
 
             {session ?
               <div
-                className="mx-2 align-self-center"
+                className="mx-2 flex"
                 data-cy="loggedUser"
               >
                 <Link
@@ -135,7 +135,7 @@ const GlobalNav: React.FunctionComponent = () => {
                     })
                   }
                 >
-                  Sign Out
+                  Sign out
                 </Link>
               </div>
               :

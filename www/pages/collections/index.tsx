@@ -70,7 +70,7 @@ const Collections: React.FunctionComponent<ICollectionsProps> = ({
       <Container>
         <h1 className="pt-3">Public Collections</h1>
         <Row className="flex ">
-          <Col lg={8} className="pt-3 pb-5 flex flex-column gap-3">
+          <Col lg={8} className="pt-3 pb-5 flex flex-col gap-3">
             {getCollectionCards(collectionsListings)}
           </Col>
         </Row>

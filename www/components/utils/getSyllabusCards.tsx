@@ -5,7 +5,6 @@ import { ISyllabiFilters, ISyllabus } from "types";
 
 export const getSyllabusCards = (
   syllabiArray: ISyllabus[] | undefined,
-
   filters: ISyllabiFilters,
   activePage?: number,
   userName?: string | "anonymous",
@@ -73,20 +72,20 @@ export const getSyllabusCards = (
     <SyllabusCard
       key={item.uuid}
       userName={userName}
-      data={item}
+      syllabusInfo={item}
       isAdmin={isAdmin ? isAdmin : false}
     />
   )) as JSX.Element[];
 
   if (syllabiCards !== undefined && syllabiCards.length > 0)
     return {
-      elements: <div className="flex flex-column gap-3" data-cy="syllabiCards">{syllabiCards}</div>,
+      elements: <div className="flex flex-col gap-12" data-cy="syllabiCards">{syllabiCards}</div>,
       total: filtered.length
     };
   else
     return ({
-      elements: <div className="flex flex-column gap-3" data-cy="syllabiCards">
-        <h1>Sorry!</h1>
+      elements: <div className="flex flex-col gap-12" data-cy="syllabiCards">
+        <h1 className="text-xl">Sorry!</h1>
         <p>We couldn&apos;t find any syllabi matching your search filters.</p>
       </div>,
       total: 0

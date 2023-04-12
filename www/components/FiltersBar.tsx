@@ -26,10 +26,9 @@ const FiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => {
   }, [filters])
 
   //-- todo : generate the options dropdown html given the meta props (might be annoying to deal with fields and levels)
-  
 
   const handleChange = (e: React.SyntheticEvent) => {
-    const t = e.target as HTMLInputElement    
+    const t = e.target as HTMLInputElement
     setFilters({ ...filters, [t.id]: t.value })
   }
 
@@ -45,114 +44,105 @@ const FiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => {
   }
 
   return (
-    <Container className="py-3 flex flex-column gap-3">
+    <div className="py-3 flex flex-col gap-3">
+
+      <h2 className="text-lg font-bold">Search filters</h2>
+
       {/* FILTER BY ACAD LEVEL */}
-      <div>
-        <Form.Group>
-          <Form.Label className="small">Academic Level</Form.Label>
-          <Form.Select
-            id="academic_level"
-            value={filters.academic_level}
-            data-cy="filtersAcademicLevel"
-            onChange={handleChange}>
-            <option value="">All</option>
-            {getLevelsFilters(props.meta.academic_levels)}
-          </Form.Select>
-        </Form.Group>
-      </div>
+      <form className="flex flex-col">
+        <label className="text-sm mb-2">Academic Level</label>
+        <select
+          className="bg-transparent"
+          id="academic_level"
+          value={filters.academic_level}
+          data-cy="filtersAcademicLevel"
+          onChange={handleChange}>
+          <option value="">All</option>
+          {getLevelsFilters(props.meta.academic_levels)}
+        </select>
+      </form>
+
 
       {/* FILTER BY ACADEMIC TERM */}
-      <div>
-        <Form.Group>
-          <Form.Label className="small">Academic Year</Form.Label>
-          <Form.Select
-            id="academic_year"
-            value={filters.academic_year}
-            data-cy="filtersAcademicYear"
-            onChange={handleChange}>
-            <option value="">All</option>
-            {getYearsFilters(props.meta.academic_years)}
-          </Form.Select>
-        </Form.Group>
-      </div>
+      <form className="flex flex-col">
+        <label className="text-sm mb-2">Academic Year</label>
+        <select
+          className="bg-transparent"
+          id="academic_year"
+          value={filters.academic_year}
+          data-cy="filtersAcademicYear"
+          onChange={handleChange}>
+          <option value="">All</option>
+          {getYearsFilters(props.meta.academic_years)}
+        </select>
+      </form>
+
 
       {/* FILTER BY ACADEMIC FIELDS */}
-      <div>
-        <Form.Group>
-          <Form.Label className="small">Academic Field</Form.Label>
-          <Form.Select
-            id="academic_field"
-            value={filters.academic_field}
-            data-cy="filtersAcademicField"
-            onChange={handleChange}>
-            <option value="">All</option>
-            {getFieldsFilters(props.meta.academic_fields)}
-          </Form.Select>
-        </Form.Group>
-      </div>
+      <form className="flex flex-col">
+        <label className="text-sm mb-2">Academic Field</label>
+        <select
+          className="bg-transparent"
+          id="academic_field"
+          value={filters.academic_field}
+          data-cy="filtersAcademicField"
+          onChange={handleChange}>
+          <option value="">All</option>
+          {getFieldsFilters(props.meta.academic_fields)}
+        </select>
+      </form>
+
 
       {/* FILTER BY LANGUAGE */}
-      <div>
-        <Form.Group>
-          <Form.Label className="small">Language / Region</Form.Label>
-          <Form.Select
-            id="language"
-            value={filters.language}
-            data-cy="filtersLanguage"
-            onChange={handleChange}>
-            <option value="">All</option>
-            {getLanguagesFilters(props.meta.languages)}
-          </Form.Select>
-        </Form.Group>
-      </div>
+      <form className="flex flex-col">
+        <label className="text-sm mb-2">Language / Region</label>
+        <select
+          className="bg-transparent"
+          id="language"
+          value={filters.language}
+          data-cy="filtersLanguage"
+          onChange={handleChange}>
+          <option value="">All</option>
+          {getLanguagesFilters(props.meta.languages)}
+        </select>
+      </form>
+
 
       {/* FILTER BY TAGS */}
-      <div>
-        <div className="flex justify-content-between align-items-baseline">
-          <h3 className="small">Filter by Tags</h3>
+      <div id="tag-search-inputs" className="mt-6">
+        <div>
+          <form className="flex flex-col">
+            <label className="text-sm mb-2" id="search-includes-tags">
+              <strong>Include</strong> courses with these tags:
+            </label>
+            <textarea
+              className="bg-transparent border border-gray-900"
+              aria-labelledby="search-includes-tags"
+              id="tags_include"
+              value={filters.tags_include}
+              data-cy="filtersTagsInclude"
+              onChange={handleChange}
+            />
+          </form>
         </div>
-        <div id="tag-search-inputs">
-          <div>
-            <Form>
-              <label className="small" id="search-includes-tags">
-                <strong>Include</strong> courses with these tags:
-              </label>
-              <InputGroup>
-                <Form.Control
-                  as="textarea"
-                  aria-labelledby="search-includes-tags"
-                  id="tags_include"
-                  value={filters.tags_include}
-                  data-cy="filtersTagsInclude"
-                  onChange={handleChange}
-                />
-              </InputGroup>
-            </Form>
-          </div>
-          <div>
-            <Form>
-              <label className="small" id="search-excludes-tags">
-                <strong>Exclude</strong> courses with these tags:
-              </label>
-              <InputGroup>
-                <Form.Control
-                  as="textarea"
-                  aria-labelledby="search-excludes-tags"
-                  id="tags_exclude"
-                  value={filters.tags_exclude}
-                  data-cy="filtersTagsExclude"
-                  onChange={handleChange}
-                />
-              </InputGroup>
-            </Form>
-          </div>
-
-          <div>
-            <Button onClick={handleReset} className="mt-4 w-100" variant="light" data-cy="filtersReset">Reset filters</Button>
-          </div>
+        <div>
+          <form className="flex flex-col">
+            <label className="text-sm mb-2" id="search-excludes-tags">
+              <strong>Exclude</strong> courses with these tags:
+            </label>
+            <textarea
+              className="bg-transparent border border-gray-900"
+              aria-labelledby="search-excludes-tags"
+              id="tags_exclude"
+              value={filters.tags_exclude}
+              data-cy="filtersTagsExclude"
+              onChange={handleChange}
+            />
+          </form>
         </div>
+        <button onClick={handleReset} className="border border-gray-600 p-2 rounded-lg mt-4 w-full" data-cy="filtersReset">Reset filters</button>
       </div>
-    </Container>
+    </div>
   );
 };
 
