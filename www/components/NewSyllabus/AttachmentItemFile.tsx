@@ -77,7 +77,7 @@ const AttachmentItemFile: React.FunctionComponent<IAttachmentItemFileProps> = ({
                 </p>
               )}
             </div>
-            <div className="d-flex gap-2">
+            <div className="flex gap-2">
               <p className="small">
                 <span className="text-muted">Size:</span> {attachment.size} Mb
               </p>

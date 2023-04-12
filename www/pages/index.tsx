@@ -223,22 +223,10 @@ const Home: NextPage<IHomeProps> = ({ meta, total, syllabiListings }) => {
   };
 
   return (
-    <>
-      <Head>
-        <title>Cosyll</title>
-        <meta
-          name="description"
-          content="Share and browse syllabi and course materials."
-        />
-        <Favicons />
-      </Head>
-      <Container fluid id="header-section" className="sticky-top">
-        <GlobalNav />
-      </Container>
-
-      <Container>
-        <Row>
-          <Container className="mt-3 mb-3 d-flex justify-content-between">
+    
+      <div className="flex flex-col">
+        <div>
+          <Container className="mt-3 mb-3 flex justify-content-between">
             <InputGroup className="w-100 mt-3 mb-3">
               <Form.Control
                 id="search-terms"
@@ -253,31 +241,30 @@ const Home: NextPage<IHomeProps> = ({ meta, total, syllabiListings }) => {
               </Button>
             </InputGroup>
           </Container>
-        </Row>
-        <Row>
+        </div>
+        <div>
           <Col>
             {syllabiCount === 1
               ? `Found 1 syllabus.`
               : `Found ${syllabiCount} syllabi.`}
           </Col>
-        </Row>
-        <Row className="d-flex flex-row-reverse">
+        </div>
+        <div className="flex flex-row-reverse">
           <Col lg={4} className="pb-3 border-bottom border-lg-bottom-0">
             <FiltersBar updateFilters={handleFilterChange} meta={meta} />
           </Col>
-          <Col lg={8} className="pt-3 pb-5 d-flex flex-column gap-3">
-            {getPageContent()}
+          <Col lg={8} className="pt-3 pb-5 flex flex-column gap-3">
+          {getPageContent()}
           </Col>
-        </Row>
-        <Row>
+        </div>
+        <div>
           <PaginationSection
             totalPages={totalPages}
             activePage={activePage}
             handlePageChange={paginationHandler}
           />
-        </Row>
-      </Container>
-    </>
+        </div>
+      </div>
   );
 };
 

@@ -187,14 +187,14 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo, apiUrl }) => {
                 data-cy="userTabs"
               >
                 <Tab eventKey="syllabi" title="Syllabi" data-cy="syllabiTab">
-                  <div className="d-flex justify-content-between align-items-baseline py-2">
+                  <div className="flex justify-content-between align-items-baseline py-2">
                     {checkIfAdmin() ? (
                       <h2 className="inline h5">Your syllabi</h2>
                     ) : (
                       <h2 className="inline h5">Syllabi by {userInfo.name}</h2>
                     )}
 
-                    <div className="d-flex gap-2">
+                    <div className="flex gap-2">
                       <Form>
                         <Form.Control
                           id="syllFilter"
@@ -237,13 +237,13 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo, apiUrl }) => {
                   </div>
                 </Tab>
                 <Tab eventKey="collections" title="Collections" data-cy="collectionsTab">
-                  <div className="d-flex justify-content-between align-items-baseline py-2">
+                  <div className="flex justify-content-between align-items-baseline py-2">
                     {checkIfAdmin() ? (
                       <h2 className="inline h5">Your Collections</h2>
                     ) : (
                       <h2 className="inline h5">Collections by {userInfo.name}</h2>
                     )}
-                    <div className="d-flex gap-2">
+                    <div className="flex gap-2">
                       <Form>
                         <Form.Control
                           id="collFilter"

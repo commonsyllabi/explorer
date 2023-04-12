@@ -133,7 +133,7 @@ const NewSyllbusAttachment: React.FunctionComponent<
           />
         </Form.Group>
 
-        <Form.Group className="d-flex pt-3 pb-2 gap-3">
+        <Form.Group className="flex pt-3 pb-2 gap-3">
           <Form.Label>Attachment Type:</Form.Label>
           <Form.Check
             type="radio"

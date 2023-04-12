@@ -517,7 +517,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                     </Form.Control.Feedback>
                   </Form.Group>
 
-                  <div className="d-flex gap-3">
+                  <div className="flex gap-3">
                     <Form.Group className="mb-3">
                       <Form.Label htmlFor="duration">
                         Duration of course in weeks

@@ -57,9 +57,9 @@ const About: NextPage = () => {
           </p>
           <p>We are open to collaborations and cooperations, do not hesitate to <a href="mailto:team@common-syllabi.org">get in touch</a>!</p>
 
-          <div className="d-flex flex-column justify-content-center mb-5 mt-5">
+          <div className="flex flex-column justify-content-center mb-5 mt-5">
             <h4 className="mb-3">Support</h4>
-            <div className="d-flex flex-column flex-sm-row">
+            <div className="flex flex-column flex-sm-row">
               <a
                 href="http://prototypefund.de"
                 target="_blank"

@@ -15,7 +15,7 @@ const SyllabusSchoolCodeYear: React.FunctionComponent<
   ISyllabusSchoolCodeYearProps
 > = ({ institution, courseNumber, level, fields, term, year }) => {
   return (
-    <div className="d-flex gap-3">
+    <div className="flex gap-3">
       {institution ? (
         <p className="small">{institution}</p>
       ) : (
@@ -32,7 +32,7 @@ const SyllabusSchoolCodeYear: React.FunctionComponent<
         </p>
       )} */}
 
-      <div className="d-flex gap-1">
+      <div className="flex gap-1">
         {term ? (
           <p className="small">{term}</p>
         ) : (

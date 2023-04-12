@@ -54,7 +54,7 @@ const UserBio: React.FunctionComponent<IUserBioProps> = ({ userBio, isAdmin, api
   }
 
   return (
-    <div className="mt-5 d-flex flex-column">
+    <div className="mt-5 flex flex-column">
       {isEditing ?
         <div>
           <input type="text" value={tmp} onChange={handleChange}></input>

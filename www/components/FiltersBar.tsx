@@ -45,7 +45,7 @@ const FiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => {
   }
 
   return (
-    <Container className="py-3 d-flex flex-column gap-3">
+    <Container className="py-3 flex flex-column gap-3">
       {/* FILTER BY ACAD LEVEL */}
       <div>
         <Form.Group>
@@ -108,7 +108,7 @@ const FiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => {
 
       {/* FILTER BY TAGS */}
       <div>
-        <div className="d-flex justify-content-between align-items-baseline">
+        <div className="flex justify-content-between align-items-baseline">
           <h3 className="small">Filter by Tags</h3>
         </div>
         <div id="tag-search-inputs">

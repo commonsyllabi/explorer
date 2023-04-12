@@ -122,8 +122,8 @@ const Syllabus: NextPage<ISyllabusPageProps> = ({syllabusInfo, userCollections})
       </Container>
 
       <Container>
-        <Row className="d-flex justify-content-center">
-          <Col className="pt-3 pb-5 d-flex flex-column gap-3" lg={10}>
+        <Row className="flex justify-content-center">
+          <Col className="pt-3 pb-5 flex flex-column gap-3" lg={10}>
             <SyllabusHeader
               institution={getInstitutionName(syllabusInfo.institutions)}
               courseNumber={syllabusInfo.course_number}
@@ -141,7 +141,7 @@ const Syllabus: NextPage<ISyllabusPageProps> = ({syllabusInfo, userCollections})
               </Link>
             </p>
 
-            <div className="course-tags d-flex gap-2">
+            <div className="course-tags flex gap-2">
               {syllabusInfo.tags ? (
                 <Tags tags={syllabusInfo.tags} />
               ) : (
@@ -164,8 +164,8 @@ const Syllabus: NextPage<ISyllabusPageProps> = ({syllabusInfo, userCollections})
           </Col>
         </Row>
         {session ?
-          <Row className="d-flex justify-content-center">
-            <Col className="pt-3 pb-5 d-flex flex-column gap-3" lg={10}>
+          <Row className="flex justify-content-center">
+            <Col className="pt-3 pb-5 flex flex-column gap-3" lg={10}>
 
               <button onClick={() => showIsAddingToCollection(true)}>add to collection</button>
             </Col>

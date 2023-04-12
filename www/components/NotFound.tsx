@@ -20,8 +20,8 @@ const NotFound: React.FunctionComponent = (props) => {
                 <GlobalNav />
             </Container>
             <Container>
-                <Row className="d-flex justify-content-center">
-                    <Col className="pt-3 pb-5 d-flex flex-column gap-3" lg={10}>
+                <Row className="flex justify-content-center">
+                    <Col className="pt-3 pb-5 flex flex-column gap-3" lg={10}>
                         <h1>Sorry!</h1>
                         <p>We couldn&apos;t find what you were looking for.</p>
                         <p>

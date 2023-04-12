@@ -25,5 +25,5 @@ export const getCollectionCards = (
     />
   ));
 
-  return <div className="d-flex flex-column gap-3">{collectionCards}</div>;
+  return <div className="flex flex-column gap-3">{collectionCards}</div>;
 };

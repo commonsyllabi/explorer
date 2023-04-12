@@ -87,11 +87,11 @@ const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = ({
 
   return (
     <Card data-cy="syllabusCard">
-      {showDeleteModal ? <div className="d-flex flex-column justify-content-between right-30 border-black position-absolute bg-white p-5 w-100 h-100">
+      {showDeleteModal ? <div className="flex flex-column justify-content-between right-30 border-black position-absolute bg-white p-5 w-100 h-100">
         <h2>Watch out!</h2>
         <div>You are about to delete <b>{data.title}</b>.</div>
         <div>{modalMessage}</div>
-        <div className="d-flex justify-content-between mt-3">
+        <div className="flex justify-content-between mt-3">
           <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>close</Button>
           <Button variant="danger" onClick={deleteSyllabus} disabled={modalMessage !== ""}>delete</Button>
         </div>
@@ -108,7 +108,7 @@ const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = ({
           fields={data.academic_fields}
         />
         <Card.Title>
-          <div className="d-flex justify-content-between w-100 align-items-center">
+          <div className="flex justify-content-between w-100 align-items-center">
             <Link href={getSyllabiUrl(data.uuid)}>
               {data.title}
             </Link>
@@ -131,10 +131,10 @@ const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = ({
         <Card.Text className="course-description" style={{ whiteSpace: "pre-wrap" }}>
           {data.description}
         </Card.Text>
-        <div className="course-tags d-flex gap-2">
+        <div className="course-tags flex gap-2">
           {data.tags && <Tags tags={data.tags} />}
         </div>
-        {isAdmin ? <div className="controls mt-3 d-flex justify-content-end">
+        {isAdmin ? <div className="controls mt-3 flex justify-content-end">
           <Button variant="danger" onClick={() => setShowDeleteModal(true)}>Delete</Button>
         </div> : <></>}
       </Card.Body>

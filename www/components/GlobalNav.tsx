@@ -3,7 +3,7 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import Router from "next/router";
 
 const GlobalNav: React.FunctionComponent = () => {
@@ -15,7 +15,7 @@ const GlobalNav: React.FunctionComponent = () => {
         bg="dark"
         variant="dark"
         expand="lg"
-        className="d-flex justify-content-md-between border-bottom"
+        className="flex justify-content-md-between border-bottom"
       >
         <Container className="flex">
           <Navbar.Brand href="/">
@@ -85,7 +85,7 @@ const GlobalNav: React.FunctionComponent = () => {
         bg="dark"
         variant="dark"
         expand="lg"
-        className="d-flex justify-content-md-between border-bottom"
+        className="flex justify-content-md-between border-bottom"
       >
         <Container>
           <Navbar.Brand href="/">

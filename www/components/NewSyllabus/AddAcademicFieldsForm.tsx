@@ -66,7 +66,7 @@ const AddAcademicFieldsForm: React.FunctionComponent<
         </p>
       </Form.Label>
       <div
-        className="d-flex gap-2 mb-3"
+        className="flex gap-2 mb-3"
         id="academicFieldsInputSection"
         data-cy="academicFieldsInputSection"
       >

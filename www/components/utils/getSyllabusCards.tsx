@@ -80,12 +80,12 @@ export const getSyllabusCards = (
 
   if (syllabiCards !== undefined && syllabiCards.length > 0)
     return {
-      elements: <div className="d-flex flex-column gap-3" data-cy="syllabiCards">{syllabiCards}</div>,
+      elements: <div className="flex flex-column gap-3" data-cy="syllabiCards">{syllabiCards}</div>,
       total: filtered.length
     };
   else
     return ({
-      elements: <div className="d-flex flex-column gap-3" data-cy="syllabiCards">
+      elements: <div className="flex flex-column gap-3" data-cy="syllabiCards">
         <h1>Sorry!</h1>
         <p>We couldn&apos;t find any syllabi matching your search filters.</p>
       </div>,
