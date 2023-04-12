@@ -2,6 +2,8 @@ import { signOut, useSession } from "next-auth/react";
 import Router from "next/router";
 import React, { useState } from "react";
 import { ICollection } from "types";
+import Image from "next/image";
+import cancelIcon from '../../public/icons/close-line.svg'
 
 interface INewCollectionProps {
     syllabusUUID: string,
@@ -12,7 +14,7 @@ const NewCollection: React.FunctionComponent<INewCollectionProps> = ({ syllabusU
     const [log, setLog] = useState('')
     const [name, setName] = useState('')
     const { data: session } = useSession();
-    
+
     const handleCloseButton = (e: React.BaseSyntheticEvent) => {
         e.preventDefault()
         handleClose()
@@ -48,11 +50,11 @@ const NewCollection: React.FunctionComponent<INewCollectionProps> = ({ syllabusU
                     signOut({ redirect: false }).then((result) => {
                         Router.push("/auth/signin");
                     })
-                } 
+                }
                 throw new Error(res.statusText)
             })
             .then(body => {
-                    
+
             })
             .catch(err => {
                 setLog(`There was an error adding the syllabus to the collection: ${err}`)
@@ -90,7 +92,7 @@ const NewCollection: React.FunctionComponent<INewCollectionProps> = ({ syllabusU
                 }
                 throw new Error(res.statusText)
             })
-            .then((data : ICollection) => {
+            .then((data: ICollection) => {
                 addSyllabusToCollection(data.uuid, syllabusUUID)
             })
             .catch(err => {
@@ -99,15 +101,16 @@ const NewCollection: React.FunctionComponent<INewCollectionProps> = ({ syllabusU
     }
 
     return (<>
-        <div>
-            <h4>Create new Collection</h4>
-            <form>
+        <div className="absolute top-1/3 left-1/4 m-auto w-6/12 bg-gray-50 border-2 border-gray-900 rounded-lg p-8">
+            <h1 className="text-xl mb-8">Create new Collection</h1>
+            <form className="flex flex-col">
                 <label htmlFor="name">Name</label>
-                <input name="name" type="text" placeholder="Name of your new collection" onChange={handleNameChange}></input>
-                <input type="submit" onClick={submitCreate} value="Create Collection"></input>
+                <input name="name" type="text" placeholder="Name of your new collection" onChange={handleNameChange} className="bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"></input>
+                <input type="submit" onClick={submitCreate} value="Create Collection" className="mt-8 p-2 bg-gray-900 text-gray-100 border-2 rounded-md"></input>
                 <div>{log}</div>
             </form>
-            <button onClick={handleCloseButton}>X</button>
+            <button onClick={handleCloseButton} className="absolute top-2 right-2">
+                <Image src={cancelIcon} width="24" height="24" alt="Icon to cancel the edit process" /></button>
         </div>
     </>)
 }
