@@ -14,6 +14,7 @@ import UserProfileSidebar from "components/User/UserProfileSidebar";
 import { getCollectionCards } from "components/utils/getCollectionCards";
 import NotFound from "components/NotFound";
 import NewCollection from "components/Collection/NewCollection";
+import { kurintoSerif } from "app/layout";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const userId = context.params!.uid;
@@ -168,8 +169,8 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo, apiUrl }) => {
           <div className="w-full md:w-8/12 mx-auto mb-4">
 
             <div className="flex my-8" data-cy="userTabs">
-              <div onClick={() => setActiveTab("syllabi")} className={`text-xl mr-6 cursor-pointer ${activeTab === "syllabi" ? "font-bold" : ""}`} data-cy="syllabiTab">Syllabi</div>
-              <div onClick={() => setActiveTab("collections")} className={`text-xl mr-6 cursor-pointer ${activeTab === "collections" ? "font-bold" : ""}`} data-cy="collectionsTab">Collections</div>
+              <div onClick={() => setActiveTab("syllabi")} className={`${kurintoSerif.className} text-xl mr-6 cursor-pointer ${activeTab === "syllabi" ? "font-bold" : ""}`} data-cy="syllabiTab">Syllabi</div>
+              <div onClick={() => setActiveTab("collections")} className={`${kurintoSerif.className} text-xl mr-6 cursor-pointer ${activeTab === "collections" ? "font-bold" : ""}`} data-cy="collectionsTab">Collections</div>
             </div>
 
             {activeTab === "syllabi" ?

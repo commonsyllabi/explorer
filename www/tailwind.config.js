@@ -14,7 +14,8 @@ module.exports = {
   theme: {
     fontFamily: {
       'sans': ['var(--font-inter)', defaultTheme.fontFamily.sans],
-      'serif': ['var(--font-kurinto)', defaultTheme.fontFamily.serif]
+      'serif': ['var(--font-kurinto-serif)', defaultTheme.fontFamily.serif],
+      'book': ['var(--font-kurinto-book)', defaultTheme.fontFamily.serif]
     },
     extend: {},
   },

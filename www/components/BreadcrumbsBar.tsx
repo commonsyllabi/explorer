@@ -1,6 +1,4 @@
-import Container from "react-bootstrap/Container";
 import Link from "next/link";
-import Dropdown from "react-bootstrap/Dropdown";
 
 interface IBreadcrumbsBarProps {
   user: string;
@@ -17,7 +15,7 @@ const BreadcrumbsBar: React.FunctionComponent<IBreadcrumbsBarProps> = (
       return (
         <>
           /{" "}
-          <Link href={`/user/${props.userId}/?tab=collections`} className="text-muted">
+          <Link href={`/user/${props.userId}/?tab=collections`} className="text-gray-600 hover:underline">
             {props.category}
           </Link>
         </>
@@ -26,18 +24,18 @@ const BreadcrumbsBar: React.FunctionComponent<IBreadcrumbsBarProps> = (
     return (
       <>
         /{" "}
-        <Link href={`/user/${props.userId}`} className="text-muted">
+        <Link href={`/user/${props.userId}`} className="text-gray-600 hover:underline">
           {props.category}
         </Link>
       </>
     );
   };
   return (
-    <Container fluid className="border-bottom">
+    <div className="border-bottom">
       <div className="pt-3 d-grid gap-2 flex justify-content-between align-items-baseline">
         <div className="breadcrumbs flex">
           <p className="small">
-            <Link href={`/user/${props.userId}`} className="text-muted">
+            <Link href={`/user/${props.userId}`} className="text-gray-600 hover:underline">
               @{props.user}
             </Link>
             &nbsp;
@@ -47,13 +45,12 @@ const BreadcrumbsBar: React.FunctionComponent<IBreadcrumbsBarProps> = (
         </div>
 
         <div className="flex gap-4">
-          <p className="small text-muted">Flag</p>
           {props.category === "syllabi" ? (
-            <p className="small text-muted">Add to Collection</p>
+            <p className="small text-gray-600 hover:underline">Add to Collection</p>
           ) : null}
         </div>
       </div>
-    </Container>
+    </div>
   );
 };
 

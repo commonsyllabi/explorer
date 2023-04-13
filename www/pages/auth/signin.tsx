@@ -24,11 +24,10 @@ const SignIn: NextPage = () => {
   const [signupPassword, setSignupPassword] = useState("");
   const [signupPasswordConf, setSignupPasswordConf] = useState("");
 
-  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = (e: React.BaseSyntheticEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
-    console.warn("Sanitize the input!");
     const validateEmail = (_e: string) => {
       return String(_e)
         .toLowerCase()
@@ -48,6 +47,9 @@ const SignIn: NextPage = () => {
     }
 
     setLog('')
+
+    console.log('here');
+    
 
     signIn("credentials", {
       username: loginUsername,
@@ -177,7 +179,7 @@ const SignIn: NextPage = () => {
           <div id="tab">
             {activeTab === "Login" ?
               <div className="flex" title="Login">
-                <form className="w-full mt-2" onSubmit={handleLogin}>
+                <form className="w-full mt-2">
                   <div className="flex flex-col mb-3">
                     <label>Email address</label>
                     <input
@@ -210,7 +212,7 @@ const SignIn: NextPage = () => {
                   </div>
 
                   <button
-                    type="submit"
+                    onClick={handleLogin}
                     className="mt-4 p-2 bg-gray-900 text-gray-100 border-2 rounded-md"
                     data-cy="Login-submit"
                   >
@@ -220,7 +222,7 @@ const SignIn: NextPage = () => {
               </div>
               :
               <div className="flex" title="Sign up" data-cy="Sign up">
-                <form className="w-full mt-2" onSubmit={handleSignup}>
+                <form className="w-full mt-2">
                   <div className="mb-8 flex flex-col">
                     <label>Name</label>
                     <input
@@ -290,7 +292,7 @@ const SignIn: NextPage = () => {
                   </div>
 
                   <button
-                    type="submit"
+                    onClick={handleSignup}
                     className="self-end mt-4 p-2 bg-gray-900 text-gray-100 border-2 rounded-md"
                     data-cy="Signup-submit"
                   >

@@ -60,10 +60,10 @@ const FiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => {
 
       <div className={`${isShown ? 'block' : 'hidden'} md:block`}>
         {/* FILTER BY ACAD LEVEL */}
-        <form className="flex flex-col">
+        <form className="flex flex-col my-5">
           <label className="text-sm mb-2">Academic Level</label>
           <select
-            className="bg-transparent"
+            className="bg-transparent border border-gray-900 p-1"
             id="academic_level"
             value={filters.academic_level}
             data-cy="filtersAcademicLevel"
@@ -75,10 +75,10 @@ const FiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => {
 
 
         {/* FILTER BY ACADEMIC TERM */}
-        <form className="flex flex-col">
+        <form className="flex flex-col my-5">
           <label className="text-sm mb-2">Academic Year</label>
           <select
-            className="bg-transparent"
+            className="bg-transparent border border-gray-900 p-1"
             id="academic_year"
             value={filters.academic_year}
             data-cy="filtersAcademicYear"
@@ -90,10 +90,10 @@ const FiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => {
 
 
         {/* FILTER BY ACADEMIC FIELDS */}
-        <form className="flex flex-col">
+        <form className="flex flex-col my-5">
           <label className="text-sm mb-2">Academic Field</label>
           <select
-            className="bg-transparent"
+            className="bg-transparent border border-gray-900 p-1"
             id="academic_field"
             value={filters.academic_field}
             data-cy="filtersAcademicField"
@@ -105,10 +105,10 @@ const FiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => {
 
 
         {/* FILTER BY LANGUAGE */}
-        <form className="flex flex-col">
+        <form className="flex flex-col my-5">
           <label className="text-sm mb-2">Language / Region</label>
           <select
-            className="bg-transparent"
+            className="bg-transparent border border-gray-900 p-1"
             id="language"
             value={filters.language}
             data-cy="filtersLanguage"
@@ -122,7 +122,7 @@ const FiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => {
         {/* FILTER BY TAGS */}
         <div id="tag-search-inputs" className="mt-6">
           <div>
-            <form className="flex flex-col">
+            <form className="flex flex-col my-5">
               <label className="text-sm mb-2" id="search-includes-tags">
                 <strong>Include</strong> courses with these tags:
               </label>
@@ -137,7 +137,7 @@ const FiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => {
             </form>
           </div>
           <div>
-            <form className="flex flex-col">
+            <form className="flex flex-col my-5">
               <label className="text-sm mb-2" id="search-excludes-tags">
                 <strong>Exclude</strong> courses with these tags:
               </label>

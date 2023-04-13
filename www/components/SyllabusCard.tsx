@@ -1,7 +1,6 @@
 import * as React from "react";
 import Link from "next/link";
 
-import Card from "react-bootstrap/Card";
 import SyllabusHeader from "components/Syllabus/SyllabusHeader";
 import Tags from "./Tags";
 import PubBadge from "./PubBadge";
@@ -15,7 +14,7 @@ import {
 
 import { ISyllabus } from "types";
 import { useState } from "react";
-import { kurinto } from "app/layout";
+import { kurintoBook, kurintoSerif } from "app/layout";
 
 
 interface ISyllabusCardProps {
@@ -65,7 +64,7 @@ const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = ({
         />
         <div>
           <div className="flex justify-between w-full mt-6 mb-2">
-            <Link href={getSyllabiUrl(syllabusInfo.uuid)} className={`text-xl font-bold hover:underline ${kurinto.className}`}>
+            <Link href={getSyllabiUrl(syllabusInfo.uuid)} className={`text-xl font-bold hover:underline ${kurintoBook.className}`}>
               {syllabusInfo.title}
             </Link>
             {isAdmin ?
@@ -73,16 +72,8 @@ const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = ({
               : null}
           </div>
         </div>
-        <div className="underline mb-6">
-          {getUserName() ? (
-            <p>
-              <Link href={getUserUrl(syllabusInfo.user_uuid)}>{getUserName()}</Link>
-            </p>
-          ) : (
-            <p className="text-muted">
-              <em>Anonymous</em>
-            </p>
-          )}
+        <div className={`${kurintoSerif.className} mb-6`}>
+          <Link href={getUserUrl(syllabusInfo.user_uuid)}>{getUserName()}</Link>
         </div>
         <div className="course-description whitespace-pre-wrap">
           {syllabusInfo.description}

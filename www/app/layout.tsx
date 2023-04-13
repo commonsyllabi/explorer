@@ -7,9 +7,14 @@ export const inter = localFont({
   variable: '--font-inter',
 })
 
-export const kurinto = localFont({
+export const kurintoBook = localFont({
   src: '../public/fonts/KurintoBook-Regular.ttf',
-  variable: '--font-kurinto',
+  variable: '--font-kurinto-book',
+})
+
+export const kurintoSerif = localFont({
+  src: '../public/fonts/KurintoSerif-Regular.ttf',
+  variable: '--font-kurinto-serif',
 })
 
 
@@ -19,7 +24,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.className} ${kurinto.className}`}>
+    <html lang="en" className={`${inter.className} ${kurintoBook.className}`}>
       <head>
         <meta
           name="description"
@@ -32,7 +37,7 @@ export default function RootLayout({
         <script defer
           data-domain="explorer.common-syllabi.org"
           src="https://stats.ia-fictions.net/js/plausible.js"></script>
-        <title>Cosyll: share and archive syllabi</title>
+          <title>Cosyll: share and archive syllabi</title>
       </head>
       <body className={`bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 ${inter.className}`}>
         <div id="header-section" className="sticky">

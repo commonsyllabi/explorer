@@ -6,6 +6,7 @@ import Image from "next/image";
 import editIcon from '../../public/icons/edit-box-line.svg'
 import cancelIcon from '../../public/icons/close-line.svg'
 import checkIcon from '../../public/icons/check-line.svg'
+import { kurintoSerif } from "app/layout";
 
 interface IUserNameProps {
     userName: string,
@@ -79,7 +80,7 @@ const UserName: React.FunctionComponent<IUserNameProps> = ({ userName, isAdmin, 
                 </div>
                 :
                 <div className="flex justify-between">
-                    <h2 className="text-2xl">{name}</h2>
+                    <h2 className={`${kurintoSerif.className} text-2xl`}>{name}</h2>
                     {isAdmin ?
                         <button className="ml-8" onClick={() => setIsEditing(true)}>
                             <Image src={editIcon} width="24" height="24" alt="Icon to edit the name" />
