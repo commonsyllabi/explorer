@@ -1,4 +1,4 @@
-import SyllabusCard from "components/SyllabusCard";
+import SyllabusCard from "components/Syllabus/SyllabusCard";
 import { useEffect, useState } from "react";
 
 import { ISyllabiFilters, ISyllabus } from "types";

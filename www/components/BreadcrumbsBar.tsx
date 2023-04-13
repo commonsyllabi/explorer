@@ -43,12 +43,6 @@ const BreadcrumbsBar: React.FunctionComponent<IBreadcrumbsBarProps> = (
           <p className="small">{getCategoryLink(props)}</p>
           <p className="small">&nbsp;/&nbsp;{props.pageTitle}</p>
         </div>
-
-        <div className="flex gap-4">
-          {props.category === "syllabi" ? (
-            <p className="small text-gray-600 hover:underline">Add to Collection</p>
-          ) : null}
-        </div>
       </div>
     </div>
   );

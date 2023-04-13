@@ -28,7 +28,7 @@ const GlobalNav: React.FunctionComponent = () => {
           <div className="flex">
             <Link href="/">
               <div className={`${kurintoBook.className} text-2xl md:text-xl`}>Cosyll</div>
-              <div className={`${kurintoSerif.className} hidden md:flex text-sm opacity-80`}>Browse and publish Syllabi</div>
+              <div className={`${kurintoSerif.className} hidden md:flex text-sm text-gray-600`}>Browse and publish Syllabi</div>
             </Link>
           </div>
         </div>
@@ -42,7 +42,7 @@ const GlobalNav: React.FunctionComponent = () => {
         {/* DESKTOP */}
         <div className="hidden md:flex items-center">
           <Link
-            href="/NewSyllabus"
+            href="/new-syllabus"
             className="mx-2 border rounded-md border-gray-900 dark:border-gray-100 p-2 hover:underline"
             data-cy="newSyllabusLink"
           >
@@ -70,7 +70,6 @@ const GlobalNav: React.FunctionComponent = () => {
                 My Account
               </Link>
 
-              <hr />
 
               <Link
                 href="#"
@@ -100,8 +99,8 @@ const GlobalNav: React.FunctionComponent = () => {
         {isMenuDisplayed ?
           <div className="flex flex-col items-end pb-3">
             <Link
-              href="/NewSyllabus"
-              className="mx-2 border rounded-md border-gray-900 dark:border-gray-100 p-2 hover:underline"
+              href="/new-syllabus"
+              className="mx-2 border rounded-md border-gray-900 dark:border-gray-100 p-2 mb-4 hover:underline"
               data-cy="newSyllabusLink"
             >
               + New Syllabus
@@ -116,23 +115,18 @@ const GlobalNav: React.FunctionComponent = () => {
             </Link>
 
             {session ?
-              <div
-                className="mx-2 flex"
-                data-cy="loggedUser"
-              >
+              <>
                 <Link
                   href={`/user/${session.user._id}`}
-                  className="py-2"
+                  className="p-2"
                   data-cy="accountLink"
                 >
                   My Account
                 </Link>
 
-                <hr />
-
                 <Link
                   href="#"
-                  className="py-2"
+                  className="p-2"
                   data-cy="signOut"
                   onClick={() =>
                     signOut({ redirect: false }).then((result) => {
@@ -142,7 +136,7 @@ const GlobalNav: React.FunctionComponent = () => {
                 >
                   Sign out
                 </Link>
-              </div>
+              </>
               :
               <div className="mx-2">
                 <Link href="/auth/signin" className="underline">

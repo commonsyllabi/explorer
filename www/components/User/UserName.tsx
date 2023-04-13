@@ -64,7 +64,7 @@ const UserName: React.FunctionComponent<IUserNameProps> = ({ userName, isAdmin, 
     }
 
     return (
-        <div className="my-5 flex flex-col">
+        <div className="mt-5 mb-16 flex flex-col">
             {isEditing ?
                 <div className="flex items-center justify-between">
                     <input type="text" className="text-2xl w-8/12 bg-transparent mt-2 py-1 border-b-2 border-b-gray-900" value={tmp} onChange={handleChange}></input>
@@ -80,7 +80,7 @@ const UserName: React.FunctionComponent<IUserNameProps> = ({ userName, isAdmin, 
                 </div>
                 :
                 <div className="flex justify-between">
-                    <h2 className={`${kurintoSerif.className} text-2xl`}>{name}</h2>
+                    <h2 className={`${kurintoSerif.className} text-3xl`}>{name}</h2>
                     {isAdmin ?
                         <button className="ml-8" onClick={() => setIsEditing(true)}>
                             <Image src={editIcon} width="24" height="24" alt="Icon to edit the name" />

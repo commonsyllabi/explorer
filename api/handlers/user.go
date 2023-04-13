@@ -159,11 +159,12 @@ func GetUser(c echo.Context) error {
 	if err != nil {
 		if len(id) < 5 || !strings.Contains(id, "-") {
 			zero.Error(err.Error())
-			return c.String(http.StatusBadRequest, "Not a valid ID")
+			return c.String(http.StatusBadRequest, "Not a valid slug")
 		}
 
 		user, err := models.GetUserBySlug(id, user_uuid)
 		if err != nil {
+			zero.Errorf(err.Error())
 			return c.String(http.StatusNotFound, "There was an error getting the requested User.")
 		}
 
@@ -173,7 +174,7 @@ func GetUser(c echo.Context) error {
 	user, err := models.GetUser(uid, user_uuid)
 	if err != nil {
 		zero.Errorf("error getting User by UUID %v: %s", id, err)
-		c.String(http.StatusNotFound, "We couldn't find the User.")
+		return c.String(http.StatusNotFound, "We couldn't find the User.")
 	}
 
 	return c.JSON(http.StatusOK, user)

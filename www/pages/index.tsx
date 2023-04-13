@@ -206,8 +206,7 @@ const Home: NextPage<IHomeProps> = ({ meta, total, syllabiListings }) => {
   };
 
   return (
-
-    <div className="flex flex-col md:w-10/12 m-auto">
+    <div className="flex flex-col w-11/12 sm:w-full lg:w-10/12 m-auto">
 
       {/* SEARCH BAR */}
       <div className="w-11/12 m-auto md:w-full mt-3 mb-3 flex justify-between">

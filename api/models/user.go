@@ -134,6 +134,10 @@ func GetUserBySlug(slug string, user_uuid uuid.UUID) (User, error) {
 		return user, err
 	}
 
+	if user.UUID == uuid.Nil {
+		return user, fmt.Errorf("could not find the user with slug: %v", slug)
+	}
+
 	var sylls []Syllabus
 	err = db.Model(&user).Association("Syllabi").Find(&sylls)
 	if err != nil {

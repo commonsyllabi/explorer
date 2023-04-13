@@ -1,5 +1,5 @@
 import { ICollection } from "types";
-import CollectionCard from "components/CollectionCard";
+import CollectionCard from "components/Collection/CollectionCard";
 
 export const getCollectionCards = (
   collectionArray: ICollection[] | undefined,

@@ -2,8 +2,8 @@ import * as React from "react";
 import Link from "next/link";
 
 import SyllabusHeader from "components/Syllabus/SyllabusHeader";
-import Tags from "./Tags";
-import PubBadge from "./PubBadge";
+import Tags from "../Tags";
+import PubBadge from "../PubBadge";
 
 import { getSyllabiUrl, getUserUrl } from "components/utils/getLinks";
 import {
@@ -13,7 +13,6 @@ import {
 } from "components/utils/getInstitutionInfo";
 
 import { ISyllabus } from "types";
-import { useState } from "react";
 import { kurintoBook, kurintoSerif } from "app/layout";
 
 

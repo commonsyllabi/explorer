@@ -19,7 +19,7 @@ const About: NextPage = () => {
         <h2 className="text-lg my-3">Want to participate?</h2>
       </p>
       <p>
-        To get started, you can get a feeling for Cosyll&apos;s collection by browsing the <Link className="underline" href="/">home page</Link>. If you decide to contribute yourself, start by <Link className="underline" href="/auth/signin">creating an account</Link>, and then <Link className="underline" href="/NewSyllabus">add your first syllabus</Link>.
+        To get started, you can get a feeling for Cosyll&apos;s collection by browsing the <Link className="underline" href="/">home page</Link>. If you decide to contribute yourself, start by <Link className="underline" href="/auth/signin">creating an account</Link>, and then <Link className="underline" href="/new-syllabus">add your first syllabus</Link>.
       </p>
       <p>
         If you are interested in the project and want to contribute to its development, if you have specific questions about how syllabi are handled, or if you just want to say hello, you can email us at <a className="underline" href="mailto:team@common-syllabi.org">team@common-syllabi.org</a>.

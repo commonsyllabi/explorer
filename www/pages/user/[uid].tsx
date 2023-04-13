@@ -34,8 +34,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     if (userInfo.syllabi === null)
       return {
         props: {
-          userInfo: userInfo,
-          apiUrl: apiUrl
+          userInfo: userInfo
         }
       }
 
@@ -53,24 +52,24 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
     return {
       props: {
-        userInfo: userInfo,
-        apiUrl: apiUrl
+        userInfo: userInfo
       }
     };
   } else {
     return {
-      props: {},
+      props: {
+        userInfo: {}
+      },
     };
   }
 
 };
 
 interface IUserPageProps {
-  userInfo: IUser;
-  apiUrl: string,
+  userInfo: IUser
 }
 
-const UserPage: NextPage<IUserPageProps> = ({ userInfo, apiUrl }) => {
+const UserPage: NextPage<IUserPageProps> = ({ userInfo }) => {
   const router = useRouter();
   const { data: session, status } = useSession();
   const focusedTab = router.query["tab"]
@@ -85,12 +84,6 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo, apiUrl }) => {
     }
     return false
   };
-
-  if (!userInfo) {
-    return (
-      <NotFound />
-    )
-  }
 
   const default_filters = {
     academic_level: "",
@@ -149,6 +142,12 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo, apiUrl }) => {
     return userInfo.collections;
   };
 
+  if (Object.keys(userInfo).length === 0) {
+    return (
+      <NotFound />
+    )
+  }
+
   return (
     <>
       <Head>
@@ -160,10 +159,10 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo, apiUrl }) => {
       </Head>
 
       <div>
-        <div className="flex w-11/12 md:w-10/12 m-auto mt-4 justify-between">
+        <div className="flex flex-col md:flex-row w-11/12 sm:w-full lg:w-10/12 m-auto mt-4 justify-between">
 
           <div className="w-full md:w-3/12 p-3">
-            <UserProfileSidebar props={userInfo} apiUrl={`${apiUrl}/users/${userInfo.uuid}`} isAdmin={checkIfAdmin()} />
+            <UserProfileSidebar props={userInfo} apiUrl={`${process.env.NEXT_PUBLIC_API_URL}/users/${userInfo.uuid}`} isAdmin={checkIfAdmin()} />
           </div>
 
           <div className="w-full md:w-8/12 mx-auto mb-4">
@@ -176,7 +175,7 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo, apiUrl }) => {
             {activeTab === "syllabi" ?
               <div title="Syllabi" data-cy="syllabiTab">
                 <div className="flex justify-end items-baseline py-2 content-end">
-                  <div className="flex w-10/12 gap-2 mb-8 justify-end">
+                  <div className="flex w-12/12 md:w-10/12 gap-2 mb-8 justify-end">
                     <input
                       id="syllFilter"
                       type="text"
@@ -188,10 +187,10 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo, apiUrl }) => {
                     />
 
                     {checkIfAdmin() ? (
-                      <Link href="/NewSyllabus" className="w-3/12 text-center mt-4 py-2 bg-gray-900 text-gray-100 border-2 rounded-md" aria-label="New Syllabus" data-cy="newSyllabusLink">
-                        
-                          + New Syllabus
-                        
+                      <Link href="/new-syllabus" className=" w-2/3 md:w-3/12 text-center mt-4 py-2 bg-gray-900 text-gray-100 border-2 rounded-md" aria-label="New Syllabus" data-cy="newSyllabusLink">
+
+                        + New Syllabus
+
                       </Link>
                     ) : (
                       <></>
@@ -219,19 +218,19 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo, apiUrl }) => {
               <div title="Collections" data-cy="collectionsTab">
                 <div className="flex justify-end items-baseline py-2">
 
-                  <div className="flex w-10/12 gap-2 mb-8 justify-end">
+                  <div className="flex w-12/12 md:w-10/12 gap-2 mb-8 justify-end">
                     <input
                       id="collFilter"
                       type="text"
                       className="w-4/6 bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
-                      placeholder="Filter..."
+                      placeholder="Search collections..."
                       aria-label="Filter"
                       value={collFilter}
                       onChange={handleFilterChange}
                     />
 
                     {checkIfAdmin() ? (
-                      <button className="w-3/12 mt-4 py-2 bg-gray-900 text-gray-100 border-2 rounded-md" aria-label="New Collection" onClick={() => { setIsCreatingCollection(true) }}>
+                      <button className="w-2/3 md:w-3/12 mt-4 py-2 bg-gray-900 text-gray-100 border-2 rounded-md" aria-label="New Collection" onClick={() => { setIsCreatingCollection(true) }}>
                         + New Collection
                       </button>
                     ) : (
@@ -254,13 +253,13 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo, apiUrl }) => {
             }
           </div>
         </div>
-
-        {isCreatingCollection ?
-          <NewCollection syllabusUUID="" handleClose={() => setIsCreatingCollection(false)} />
-          :
-          <></>
-        }
       </div>
+
+      {isCreatingCollection ?
+        <NewCollection syllabusUUID="" handleClose={() => setIsCreatingCollection(false)} />
+        :
+        <></>
+      }
     </>
   );
 };

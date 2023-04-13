@@ -100,8 +100,8 @@ const NewCollection: React.FunctionComponent<INewCollectionProps> = ({ syllabusU
             })
     }
 
-    return (<>
-        <div className="absolute top-1/3 left-1/4 m-auto w-6/12 bg-gray-50 border-2 border-gray-900 rounded-lg p-8">
+    return (<div className="absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center bg-gray-50/80">
+        <div className="relative m-auto md:w-6/12 bg-gray-50 border-2 border-gray-900 rounded-lg p-8">
             <h1 className="text-xl mb-8">Create new Collection</h1>
             <form className="flex flex-col">
                 <label htmlFor="name">Name</label>
@@ -112,7 +112,7 @@ const NewCollection: React.FunctionComponent<INewCollectionProps> = ({ syllabusU
             <button onClick={handleCloseButton} className="absolute top-2 right-2">
                 <Image src={cancelIcon} width="24" height="24" alt="Icon to cancel the edit process" /></button>
         </div>
-    </>)
+    </div>)
 }
 
 export default NewCollection;

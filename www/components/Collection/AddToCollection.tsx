@@ -3,6 +3,13 @@ import Router from "next/router";
 import React, { useState } from "react";
 import { ICollection, ISyllabus } from "types";
 import NewCollection from "./NewCollection";
+import Image from "next/image";
+import cancelIcon from '../../public/icons/close-line.svg'
+import addIcon from '../../public/icons/add-line.svg'
+import addCircleIcon from '../../public/icons/add-circle-line.svg'
+import removeIcon from '../../public/icons/subtract-line.svg'
+import { kurintoSerif } from "app/layout";
+import PubBadge from "components/PubBadge";
 
 interface IAddCollectionProps {
     collections: ICollection[],
@@ -22,6 +29,11 @@ const AddToCollection: React.FunctionComponent<IAddCollectionProps> = ({ collect
             if (c.uuid === coll.uuid) return true
 
         return false
+    }
+
+    const handleCloseButton = (e: React.BaseSyntheticEvent) => {
+        e.preventDefault()
+        handleClose()
     }
 
     const removeSyllabusFromCollection = (e: React.BaseSyntheticEvent) => {
@@ -96,33 +108,41 @@ const AddToCollection: React.FunctionComponent<IAddCollectionProps> = ({ collect
 
     }
     return (
-        <div>
-            here is a list of collections from the user
-            <div>
-                {collections.map(c => {
-                    if (checkIfSyllabusInCollection(c, syllabusInfo))
-                        return <div key={c.uuid}>
-                            <div>{c.name} - {c.status}</div>
-                            <button onClick={removeSyllabusFromCollection} data-collectionid={c.uuid}>-</button>
+        <div className="absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center bg-gray-50/80">
+            <div className="relative md:w-6/12 m-2 bg-gray-50 border-2 border-gray-900 rounded-lg p-8">
+                <h2 className={`text-xl mb-8`}>Add syllabus to one of your collections:</h2>
+                <div>
+                    <div className="flex flex-col gap-3">
+                        {collections.map(c => {
+                            if (checkIfSyllabusInCollection(c, syllabusInfo))
+                                return <button onClick={removeSyllabusFromCollection} data-collectionid={c.uuid} key={c.uuid} className="flex gap-2">
+                                    <Image src={removeIcon} width="24" height="24" alt="Icon to remove the syllabus from the collection" />
+                                    <div><span className={`${kurintoSerif.className} text-lg`}>{c.name}</span> - <PubBadge isPublic={c.status === "listed"} /></div>
+                                </button>
+                            else
+                                return <button onClick={addSyllabusToCollection} data-collectionid={c.uuid} key={c.uuid} className="flex gap-2">
+                                    <Image src={addIcon} width="24" height="24" alt="Icon to add the syllabus to a collection" />
+                                    <div><span className={`${kurintoSerif.className} text-lg`}>{c.name}</span>  - <PubBadge isPublic={c.status === "listed"} /></div>
+                                </button>
+                        })}
+                    </div>
 
-                        </div>
-                    else
-                        return <div key={c.uuid}>
-                            <div>{c.name} - {c.status}</div>
-                            <button onClick={addSyllabusToCollection} data-collectionid={c.uuid}>+</button>
-                        </div>
-                })}
-                <button aria-label="New Collection" onClick={() => { setIsCreatingCollection(true) }}>
-                    + Add to new Collection
+
+                    <button aria-label="New Collection" onClick={() => { setIsCreatingCollection(true) }} className="flex mt-8 gap-2 border border-gray-900 rounded-md p-1">
+                        <Image src={addCircleIcon} width="24" height="24" alt="Icon to add the syllabus to a collection" />
+                        <div>Add to new collection</div>
+                    </button>
+                    <div>{log}</div>
+                </div>
+                <button onClick={handleCloseButton} className="absolute top-2 right-2">
+                    <Image src={cancelIcon} width="24" height="24" alt="Icon to cancel the edit process" />
                 </button>
-                {isCreatingCollection ?
-                    <NewCollection syllabusUUID={syllabusInfo.uuid} handleClose={() => setIsCreatingCollection(false)} />
-                    :
-                    <></>
-                }
-                <div>{log}</div>
             </div>
-            <button onClick={() => handleClose()}>close</button>
+            {isCreatingCollection ?
+                <NewCollection syllabusUUID={syllabusInfo.uuid} handleClose={() => setIsCreatingCollection(false)} />
+                :
+                <></>
+            }
         </div>
     )
 }

@@ -1,6 +1,4 @@
-import { Form, Button } from "react-bootstrap";
 import { useEffect, useState } from "react";
-
 import { IUploadAttachment } from "types";
 
 interface INewSyllabusAttachmentProps {
@@ -106,86 +104,87 @@ const NewSyllbusAttachment: React.FunctionComponent<
 
   return (
     <>
-      <div className="p-3 mb-3 gap-3 border rounded bg-light">
-        <Form.Group className="mb-1">
-          <Form.Label>Attachment Name*</Form.Label>
-          <Form.Control
+      <div className="p-3 mb-3 gap-3 border-2 rounded-lg bg-gray-200">
+        <div className="mb-1">
+          <label>Attachment Name*</label>
+          <input
             onChange={handleChange}
             type="text"
+            className="bg-transparent mt-2 py-1 border-b-2 border-b-gray-900 w-full"
             id="name"
             placeholder="required"
             value={thisAttachment.name}
             data-cy="new-attachment-name"
           />
-        </Form.Group>
+        </div>
 
-        <Form.Group>
-          <Form.Label>Description</Form.Label>
-          <Form.Control
+        <div>
+          <label>Description</label>
+          <textarea
             onChange={handleChange}
-            type="text"
+            className="bg-transparent mt-2 p-1 border border-gray-900 w-full"
             id="description"
             placeholder="optional"
             value={thisAttachment.description}
-            as="textarea"
             rows={2}
             data-cy="new-attachment-description"
           />
-        </Form.Group>
+        </div>
 
-        <Form.Group className="flex pt-3 pb-2 gap-3">
-          <Form.Label>Attachment Type:</Form.Label>
-          <Form.Check
+        <div className="flex pt-3 pb-2 gap-3">
+          <label>Attachment Type:</label>
+          <input
             type="radio"
-            label="file upload"
             id="typeFile"
             name="attachmentType"
             onChange={toggleUI}
             data-cy={"new-attachment-type-file"}
             defaultChecked={true}
           />
-          <Form.Check
+          <label htmlFor="attachmentType">File</label>
+          <input
             type="radio"
-            label="url"
             id="typeUrl"
             name="attachmentType"
             onChange={toggleUI}
             data-cy={"new-attachment-type-url"}
           />
-        </Form.Group>
+          <label htmlFor="attachmentType">URL</label>
+        </div>
         {showFileUI ? (
           <div id="uploadControlsFile">
-            <Form.Group>
-              <Form.Label>Upload your file here</Form.Label>
-              <Form.Control
+            <div>
+              <label>Upload your file here</label>
+              <input
                 onChange={handleAttachmentFile}
                 type="file"
+                className="mt-2 py-1"
                 id="file"
                 data-cy={"new-attachment-file"}
               />
-            </Form.Group>
+            </div>
           </div>
         ) : (
           <div id="uploadControlsUrl">
-            <Form.Group>
-              <Form.Label>Enter your URL here</Form.Label>
-              <Form.Control
+            <div>
+              <label>Enter your URL here</label>
+              <input
                 onChange={handleChange}
-                type="text"
+                type="url"
+                className="bg-transparent mt-2 py-1 border-b-2 border-b-gray-900 w-full"
                 id="url"
                 data-cy={"new-attachment-url"}
               />
-            </Form.Group>
+            </div>
           </div>
         )}
-        <Button
-          type="button"
+        <button
           onClick={handleSubmitNewAttachment}
           data-cy="attachment-add"
-          className="mt-3 mb-2"
+          className="mt-6 mb-2 p-1 bg-gray-50 text-gray-900 border-2 border-gray-900 rounded-md"
         >
           Add attachment
-        </Button>
+        </button>
       </div>
     </>
   );

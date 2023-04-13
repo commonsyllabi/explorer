@@ -1,5 +1,6 @@
 import * as React from "react";
-import { Badge, Button, Card } from "react-bootstrap";
+import Image from "next/image";
+import deleteIcon from '../../public/icons/delete-bin-line.svg'
 
 import { IUploadAttachment } from "types";
 
@@ -14,93 +15,58 @@ const AttachmentItemFile: React.FunctionComponent<IAttachmentItemFileProps> = ({
   attachmentData,
   setAttachmentData,
 }) => {
-  const removeAttachment = (event: React.SyntheticEvent) => {
+  const removeAttachment = (event: React.SyntheticEvent) => {    
     const t = event.target as HTMLInputElement;
+
     let keepTheseAttachments = attachmentData.filter((attachment) => {
       return attachment.id != parseInt(t.id);
     });
     setAttachmentData(keepTheseAttachments);
-    // console.log(`REMOVE ME!!!!`);
   };
 
-  if (attachment.type === "url") {
-    return (
-      <>
-        <Card className="mb-3">
-          <Card.Body>
-            <Card.Title>
-              {attachment.name} ({attachment.id})
-            </Card.Title>
-            <div>
-              <p>
-                <a href={attachment.url} target="_blank" rel="noreferrer">
-                  {attachment.url}
-                </a>
-              </p>
-              <p className="small text-muted mb-0">Description:</p>
-              {attachment.description ? (
-                <p>{attachment.description}</p>
-              ) : (
-                <p className="text-muted">
-                  <em>No description.</em>
-                </p>
-              )}
-            </div>
-            <Button
-              variant="danger"
-              size="sm"
-              id={attachment.id.toString()}
-              data-cy={`attachment-remove-${attachment.id.toString()}`}
-              onClick={removeAttachment}
-            >
-              Delete
-            </Button>
-          </Card.Body>
-        </Card>
-      </>
-    );
-  } else {
-    return (
-      <>
-        <Card className="mb-3">
-          <Card.Body>
-            <Card.Title>
-              {attachment.name} ({attachment.id})
-            </Card.Title>
-            <div>
-              <p className="small text-muted mb-0">Description:</p>
-              {attachment.description ? (
-                <p>{attachment.description}</p>
-              ) : (
-                <p className="text-muted">
-                  <em>No description.</em>
-                </p>
-              )}
-            </div>
-            <div className="flex gap-2">
-              <p className="small">
-                <span className="text-muted">Size:</span> {attachment.size} Mb
-              </p>
-              <p className="small">|</p>
-              <p className="small">
-                <span className="text-muted">Type:</span>{" "}
-                <Badge bg="secondary">{attachment.type}</Badge>
-              </p>
-            </div>
-            <Button
-              variant="danger"
-              size="sm"
-              id={attachment.id.toString()}
-              data-cy={`attachment-remove-${attachment.id.toString()}`}
-              onClick={removeAttachment}
-            >
-              Delete
-            </Button>
-          </Card.Body>
-        </Card>
-      </>
-    );
-  }
+  return (
+    <div className="my-3 p-3 rounded-md bg-gray-100 border-gray-400 border-2">
+      <div className="font-bold">
+        #{attachment.id + 1} - {attachment.name}
+      </div>
+
+      {attachment.type === "url" ?
+        <div className="my-2">
+          <div className="my-3">
+            {attachment.description ? attachment.description : 'No description.'}
+          </div>
+          <p>
+            <a href={attachment.url} target="_blank" rel="noreferrer" className="underline">
+              {attachment.url}
+            </a>
+          </p>
+        </div>
+        : <>
+          <div className="my-3">
+            {attachment.description ? attachment.description : 'No description.'}
+          </div>
+          <div className="flex flex-col md:flex-row gap-2">
+            <p className="small">
+              <span className="font-bold">Size:</span> {attachment.size} Mb
+            </p>
+            <p className="small">
+              <span className="font-bold">Type:</span>{" "}
+              <div>{attachment.type}</div>
+            </p>
+          </div>
+        </>}
+
+
+      <button id={attachment.id.toString()}
+        data-cy={`attachment-remove-${attachment.id.toString()}`}
+        onClick={removeAttachment} className="mt-6 flex p-2 bg-red-100 hover:bg-red-400 border-2 border-red-500 rounded-md gap-3" >
+        <Image src={deleteIcon} width="24" height="24" alt="Icon to edit the name" />
+        <div>Remove attachment</div>
+      </button>
+
+    </div>
+  );
+
 };
 
 export default AttachmentItemFile;

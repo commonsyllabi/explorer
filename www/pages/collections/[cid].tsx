@@ -20,10 +20,11 @@ import removeIcon from '../../public/icons/subtract-line.svg'
 
 export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
   const collectionId = context.params!.cid;
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  console.log(collectionId);
+  
   const t = await getToken({ req: context.req, secret: process.env.NEXTAUTH_SECRET })
   const token = t ? (t.user as { _id: string, token: string }).token : '';
-  const url = new URL(`collections/${collectionId}`, apiUrl);
+  const url = new URL(`collections/${collectionId}`, process.env.NEXT_PUBLIC_API_URL);
 
   const h = new Headers();
   if (t)
@@ -55,9 +56,10 @@ interface ICollectionProps {
 const Collection: NextPage<ICollectionProps> = (props) => {
 
   const { data: session, status } = useSession();
+
   const [isEditing, setIsEditing] = useState(false);
-  const [name, setName] = useState(props.name)
-  const [tmp, setTmp] = useState(props.name)
+  const [name, setName] = useState(props.name || '')
+  const [tmp, setTmp] = useState(props.name || '')
   const [log, setLog] = useState('')
   const url = new URL(`/collections/${props.uuid}`, process.env.NEXT_PUBLIC_API_URL)
   const confirmMsg = `Do you really want to delete the collection ${name}? This action cannot be undone.`;
@@ -70,6 +72,12 @@ const Collection: NextPage<ICollectionProps> = (props) => {
     language: "",
     tags_include: [],
     tags_exclude: [],
+  }
+
+  if (Object.keys(props).length === 0) {
+    return (
+      <NotFound />
+    )
   }
 
   const checkIfAdmin = () => {
@@ -175,22 +183,15 @@ const Collection: NextPage<ICollectionProps> = (props) => {
       })
   }
 
-  if (Object.keys(props).length === 0) {
-    return (
-      <NotFound />
-    )
-  }
-
   return (
     <>
-      <BreadcrumbsBar
-        user={props.user.name}
-        userId={props.user_uuid}
-        category="collections"
-        pageTitle={props.name}
-      />
-
-      <div>
+      <div className="w-11/12 md:w-10/12 m-auto mt-8">
+        <BreadcrumbsBar
+          user={props.user.name}
+          userId={props.user_uuid}
+          category="collections"
+          pageTitle={props.name}
+        />
         <div className="flex flex-col gap-2 my-6">
           {isEditing ?
             <>

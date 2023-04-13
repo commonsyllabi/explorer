@@ -75,7 +75,7 @@ const UserBio: React.FunctionComponent<IUserBioProps> = ({ userBio, isAdmin, api
         </div>
         :
         <div className="flex justify-between">
-          <p className="text-muted">{bio.length > 0 ? bio : 'User has not written a bio.'}</p>
+          <p className="text-sm">{bio.length > 0 ? bio : 'User has not written a bio.'}</p>
           {isAdmin ?
 
             <button onClick={() => setIsEditing(true)}>

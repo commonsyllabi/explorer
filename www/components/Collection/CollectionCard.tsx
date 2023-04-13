@@ -1,9 +1,9 @@
 import * as React from "react";
 import Link from "next/link";
-import PubBadge from "./PubBadge";
+import PubBadge from "../PubBadge";
 import { getIsPublic } from "components/utils/getIsPublic";
-import Tags from "./Tags";
-import { getUserUrl } from "./utils/getLinks";
+import Tags from "../Tags";
+import { getUserUrl } from "../utils/getLinks";
 
 interface ICollectionCardProps {
   uuid: string;
