@@ -15,6 +15,7 @@ import {
 
 import { ISyllabus } from "types";
 import { useState } from "react";
+import { kurinto } from "app/layout";
 
 
 interface ISyllabusCardProps {
@@ -64,7 +65,7 @@ const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = ({
         />
         <div>
           <div className="flex justify-between w-full mt-6 mb-2">
-            <Link href={getSyllabiUrl(syllabusInfo.uuid)} className="text-xl font-bold hover:underline">
+            <Link href={getSyllabiUrl(syllabusInfo.uuid)} className={`text-xl font-bold hover:underline ${kurinto.className}`}>
               {syllabusInfo.title}
             </Link>
             {isAdmin ?
