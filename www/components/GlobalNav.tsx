@@ -1,63 +1,132 @@
 import * as React from "react";
-import Container from "react-bootstrap/Container";
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
-import NavDropdown from "react-bootstrap/NavDropdown";
-import Button from "react-bootstrap/Button";
-import { useSession, signIn, signOut } from "next-auth/react";
-import { setEnvironmentData } from "worker_threads";
+import { useSession, signOut } from "next-auth/react";
 import Router from "next/router";
+import Link from "next/link";
+import Image from "next/image";
+
+import menuOpenIcon from '../public/icons/menu-line.svg'
+import menuCloseIcon from '../public/icons/close-line.svg'
+import logoImage from '../public/cosyll_black_on_white.png'
+import { useState } from "react";
+import { kurintoBook, kurintoSerif } from "app/layout";
 
 const GlobalNav: React.FunctionComponent = () => {
   const { data: session, status } = useSession();
+  const [isMenuDisplayed, setMenuDisplay] = useState(false)
+  const toggleMenu = () => {
+    setMenuDisplay(!isMenuDisplayed)
+  }
 
-  if (status === "authenticated") {
-    return (
-      <Navbar
-        bg="dark"
-        variant="dark"
-        expand="lg"
-        className="d-flex justify-content-md-between border-bottom"
-      >
-        <Container className="flex">
-          <Navbar.Brand href="/">
-            Cosyll
-            <span className="nav-tagline">Browse and Publish Syllabi</span>
-          </Navbar.Brand>
+  return (
+    <div
+      id="global-nav"
+      className="flex flex-col justify-between border-b-2 border-b-gray-900 dark:border-b-gray-100 border-bottom"
+    >
+      <div className="flex w-full justify-between items-center p-3">
+        <div className="flex gap-3">
+          <Image src={logoImage} width="50" height="48" alt="Cosyll logo" />
+          <div className="flex">
+            <Link href="/">
+              <div className={`${kurintoBook.className} text-2xl md:text-xl`}>Cosyll</div>
+              <div className={`${kurintoSerif.className} hidden md:flex text-sm text-gray-600`}>Browse and publish Syllabi</div>
+            </Link>
+          </div>
+        </div>
 
-          <Navbar.Toggle aria-controls="global-nav" />
-        </Container>
-        <Container>
-          <Navbar.Collapse id="global-nav" className="flex-row-reverse">
-            <Nav className="float-end">
-              <Nav.Link
-                href="/about"
-                className="py-3 text-end"
-                data-cy="aboutlink"
+        {/* MOBILE */}
+        <div onClick={toggleMenu} className="md:hidden cursor-pointer">
+          {isMenuDisplayed ? <Image src={menuCloseIcon} width='24' height='24' alt='Icon to display the menu' /> :
+            <Image src={menuOpenIcon} width='24' height='24' alt='Icon to display the menu' />}
+        </div>
+
+        {/* DESKTOP */}
+        <div className="hidden md:flex items-center">
+          <Link
+            href="/new-syllabus"
+            className="mx-2 border rounded-md border-gray-900 dark:border-gray-100 p-2 hover:underline"
+            data-cy="newSyllabusLink"
+          >
+            + New Syllabus
+          </Link>
+
+          <Link
+            href="/about"
+            className="mx-2"
+            data-cy="aboutlink"
+          >
+            About
+          </Link>
+
+          {session ?
+            <div
+              className="mx-2 flex"
+              data-cy="loggedUser"
+            >
+              <Link
+                href={`/user/${session.user._id}`}
+                className="py-2 mx-2"
+                data-cy="accountLink"
               >
-                About
-              </Nav.Link>
+                My Account
+              </Link>
 
-              <NavDropdown
-                title={session.user.name}
-                id="userNavDropdown"
-                className=" text-end align-self-center"
-                align="end"
-                data-cy="loggedUser"
+
+              <Link
+                href="#"
+                className="py-2 mx-2"
+                data-cy="signOut"
+                onClick={() =>
+                  signOut({ redirect: false }).then((result) => {
+                    Router.push("/");
+                  })
+                }
               >
-                <NavDropdown.Item
+                Sign out
+              </Link>
+            </div>
+            :
+            <div className="mx-2">
+              <Link href="/auth/signin" className="underline">
+                Login
+              </Link>
+            </div>
+          }
+        </div>
+      </div>
+
+      {/* MOBILE MENU */}
+      <div>
+        {isMenuDisplayed ?
+          <div className="flex flex-col items-end pb-3">
+            <Link
+              href="/new-syllabus"
+              className="mx-2 border rounded-md border-gray-900 dark:border-gray-100 p-2 mb-4 hover:underline"
+              data-cy="newSyllabusLink"
+            >
+              + New Syllabus
+            </Link>
+
+            <Link
+              href="/about"
+              className="mx-2"
+              data-cy="aboutlink"
+            >
+              About
+            </Link>
+
+            {session ?
+              <>
+                <Link
                   href={`/user/${session.user._id}`}
-                  className="py-2 text-end"
+                  className="p-2"
                   data-cy="accountLink"
                 >
                   My Account
-                </NavDropdown.Item>
+                </Link>
 
-                <NavDropdown.Divider />
-
-                <NavDropdown.Item
+                <Link
                   href="#"
-                  className="py-2 text-end"
+                  className="p-2"
                   data-cy="signOut"
                   onClick={() =>
                     signOut({ redirect: false }).then((result) => {
@@ -65,65 +134,24 @@ const GlobalNav: React.FunctionComponent = () => {
                     })
                   }
                 >
-                  Sign Out
-                </NavDropdown.Item>
-              </NavDropdown>
+                  Sign out
+                </Link>
+              </>
+              :
+              <div className="mx-2">
+                <Link href="/auth/signin" className="underline">
+                  Login
+                </Link>
+              </div>
+            }
+          </div>
+          :
+          <></>}
+      </div>
 
-              <Nav.Link
-                href="/NewSyllabus"
-                className="py-3 text-end"
-                data-cy="newSyllabusLink"
-              >
-                + New Syllabus
-              </Nav.Link>
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
-    );
-  } else {
-    return (
-      <Navbar
-        bg="dark"
-        variant="dark"
-        expand="lg"
-        className="d-flex justify-content-md-between border-bottom"
-      >
-        <Container>
-          <Navbar.Brand href="/">
-            Cosyll
-            <span className="nav-tagline">Browse and Publish Syllabi</span>
-          </Navbar.Brand>
+    </div>
+  );
 
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        </Container>
-        <Container>
-          <Navbar.Collapse id="basic-navbar-nav" className="flex-row-reverse">
-            <Nav className="float-end">
-              <Nav.Link
-                href="/NewSyllabus"
-                className="py-3 text-end"
-                data-cy="newSyllabusLink"
-              >
-                + New Syllabus
-              </Nav.Link>
-              <Nav.Link href="/about" className="py-3 text-end">
-                About
-              </Nav.Link>
-              <Nav.Link
-                href="/auth/signin"
-                className="py-3 text-end"
-                id="login-btn"
-                data-cy="Login"
-              >
-                Login
-              </Nav.Link>
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
-    );
-  }
 };
 
 export default GlobalNav;

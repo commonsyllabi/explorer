@@ -19,14 +19,14 @@ const PaginationNext: React.FunctionComponent<IPaginationNextProps> = ({
 
   if (activePage >= totalPages) {
     return (
-      <li className="page-item disabled">
-        <span className="page-link">Next</span>
+      <li className="disabled">
+        Next
       </li>
     );
   }
   return (
-    <li className="page-item" data-cy="nextPage" onClick={getTargetPage}>
-      <span className="page-link">Next</span>
+    <li className="cursor-pointer" data-cy="nextPage" onClick={getTargetPage}>
+      Next
     </li>
   );
 };

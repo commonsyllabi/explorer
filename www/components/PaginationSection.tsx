@@ -34,8 +34,8 @@ const PaginationSection: React.FunctionComponent<IPaginationSectionProps> = ({
     return null;
   }
   return (
-    <nav aria-label="Pagination Navigation" role="navigation">
-      <ul className="pagination">
+    <nav className="w-full mt-3 mb-6" aria-label="Pagination Navigation" role="navigation">
+      <ul className="flex w-min m-auto gap-4">
         <PaginationPrev
           activePage={activePage}
           handlePageChange={handlePageChange}

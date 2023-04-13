@@ -15,30 +15,15 @@ const PaginationItem: React.FunctionComponent<IPaginationItemProps> = ({
     const t = event.target as HTMLInputElement;
     event.preventDefault();
     event.stopPropagation();
-    // console.log(`TRYING TO GO TO PAGE ${t.id}`);
     handlePageChange(parseInt(t.id));
   };
-  if (isActive) {
-    return (
-      <li className="page-item active">
-        <a
-          className="page-link"
-          aria-label={`Current Page, Page ${pageNum}`}
-          aria-current="true"
-          id={pageNum.toString()}
-          onClick={getTargetPage}
-          href="#"
-        >
-          {pageNum}
-        </a>
-      </li>
-    );
-  }
+
   return (
-    <li className="page-item">
+    <li className={`page-item ${isActive ? 'underline font-bold' : ''}`}>
       <a
-        className="page-link"
-        aria-label={`Goto Page ${pageNum}`}
+        className=""
+        aria-label={`Current Page, Page ${pageNum}`}
+        aria-current={isActive}
         id={pageNum.toString()}
         onClick={getTargetPage}
         href="#"

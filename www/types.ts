@@ -1,9 +1,10 @@
 export interface IUser {
   uuid: string;
   name: string;
+  email: string;
   bio?: string;
   urls?: string[];
-  education?: string | string[];
+  education?: string[];
   institutions?: IInstitution[];
   syllabi?: ISyllabus[];
   collections?: ICollection[];
@@ -55,6 +56,7 @@ export interface ISyllabus {
   description: string;
   learning_outcomes?: string;
   attachments?: IResources[];
+  collections?: ICollection[];
 }
 
 export interface IFormData {

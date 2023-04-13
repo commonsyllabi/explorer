@@ -114,15 +114,21 @@ func UpdateCollection(uuid uuid.UUID, user_uuid uuid.UUID, coll *Collection) (Co
 
 func AddSyllabusToCollection(coll_uuid uuid.UUID, syll_uuid uuid.UUID, user_uuid uuid.UUID) (Collection, error) {
 	var coll Collection
-	result := db.Where("uuid = ? ", coll_uuid).First(&coll)
+	result := db.Where("uuid = ? AND user_uuid = ?", coll_uuid, user_uuid).First(&coll)
 	if result.Error != nil {
 		return coll, result.Error
 	}
 
 	var syll Syllabus
-	result = db.Where("uuid = ? ", syll_uuid).First(&syll)
+	result = db.Preload("Collections").Where("uuid = ? ", syll_uuid).First(&syll)
 	if result.Error != nil {
 		return coll, result.Error
+	}
+
+	for _, c := range syll.Collections {
+		if c.UUID == coll_uuid {
+			return coll, fmt.Errorf("the syllabus already belongs to the collection")
+		}
 	}
 
 	err := db.Model(&coll).Association("Syllabi").Append(&syll)
@@ -134,9 +140,10 @@ func AddSyllabusToCollection(coll_uuid uuid.UUID, syll_uuid uuid.UUID, user_uuid
 	return updated, err
 }
 
-func RemoveSyllabusFromCollection(coll_uuid uuid.UUID, syll_uuid uuid.UUID, user_uuid uuid.UUID) (Collection, error) {
+// -- removes the assocation between syllabus and collection
+func RemoveCollectionSyllabus(coll_uuid uuid.UUID, syll_uuid uuid.UUID, user_uuid uuid.UUID) (Collection, error) {
 	var coll Collection
-	result := db.Where("uuid = ? ", coll_uuid).First(&coll)
+	result := db.Where("uuid = ? AND user_uuid = ?", coll_uuid, user_uuid).First(&coll)
 	if result.Error != nil {
 		return coll, result.Error
 	}

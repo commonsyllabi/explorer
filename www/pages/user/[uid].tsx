@@ -1,47 +1,46 @@
-import React, { useEffect, useState } from "react";
-import type { GetServerSideProps, NextPage } from "next";
+import React, { useState } from "react";
+import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import type { GetServerSidePropsContext } from "next"
+import { getToken } from "next-auth/jwt";
 
-import { ISyllabus, IUser } from "types";
-
-import Favicons from "components/head/favicons";
-import GlobalNav from "components/GlobalNav";
-import CollectionCard from "components/CollectionCard";
-import SyllabusCard from "components/SyllabusCard";
-
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import Tab from "react-bootstrap/Tab";
-import Tabs from "react-bootstrap/Tabs";
+import { IUser } from "types";
 
 import { getSyllabusCards } from "components/utils/getSyllabusCards";
 import UserProfileSidebar from "components/User/UserProfileSidebar";
 import { getCollectionCards } from "components/utils/getCollectionCards";
 import NotFound from "components/NotFound";
+import NewCollection from "components/Collection/NewCollection";
+import { kurintoSerif } from "app/layout";
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
   const userId = context.params!.uid;
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  const t = await getToken({ req: context.req, secret: process.env.NEXTAUTH_SECRET })
+  const token = t ? (t.user as { _id: string, token: string }).token : '';
   const url = new URL(`users/${userId}`, apiUrl);
 
-  const res = await fetch(url);
+  const h = new Headers();
+  if (t)
+    h.append("Authorization", `Bearer ${token}`);
+
+  const res = await fetch(url, { headers: h });
   if (res.ok) {
     const userInfo = await res.json();
 
     if (userInfo.syllabi === null)
       return {
-        props: userInfo
+        props: {
+          userInfo: userInfo
+        }
       }
 
     let full_syllabi = []
     for (const syll of userInfo.syllabi) {
-      const r = await fetch(new URL(`syllabi/${syll.uuid}`, apiUrl))
+      const r = await fetch(new URL(`syllabi/${syll.uuid}`, apiUrl), { headers: h })
       if (r.ok) {
         const s = await r.json()
         full_syllabi.push(s)
@@ -52,28 +51,39 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     userInfo.syllabi = full_syllabi
 
     return {
-      props: userInfo,
+      props: {
+        userInfo: userInfo
+      }
     };
   } else {
     return {
-      props: {},
+      props: {
+        userInfo: {}
+      },
     };
   }
 
 };
 
-const About: NextPage<IUser> = (props) => {
+interface IUserPageProps {
+  userInfo: IUser
+}
+
+const UserPage: NextPage<IUserPageProps> = ({ userInfo }) => {
   const router = useRouter();
   const { data: session, status } = useSession();
-  const [isAdmin, setIsAdmin] = useState(false);
+  const focusedTab = router.query["tab"]
+  const [activeTab, setActiveTab] = useState(focusedTab ? focusedTab : "syllabi")
   const [syllFilter, setSyllFilter] = useState("");
   const [collFilter, setCollFilter] = useState("");
+  const [isCreatingCollection, setIsCreatingCollection] = useState(false)
 
-  if (Object.keys(props).length === 0) {
-    return (
-      <NotFound />
-    )
-  }
+  const checkIfAdmin = () => {
+    if (session != null && session.user != null) {
+      return session.user._id === userInfo.uuid;
+    }
+    return false
+  };
 
   const default_filters = {
     academic_level: "",
@@ -84,16 +94,6 @@ const About: NextPage<IUser> = (props) => {
     tags_exclude: [],
   }
 
-  const checkIfAdmin = () => {
-    if (session != null && session.user != null) {
-      return session.user._id === props.uuid;
-    }
-    return false
-  };
-
-  const focusedTab = router.query["tab"];
-  const activeTab = focusedTab ? focusedTab : "syllabi";
-
   const handleFilterChange = (event: React.SyntheticEvent) => {
     const t = event.target as HTMLInputElement;
     if (t.id === "collFilter") {
@@ -102,16 +102,15 @@ const About: NextPage<IUser> = (props) => {
     if (t.id === "syllFilter") {
       setSyllFilter(t.value);
     }
-    console.log(`syllFilter: ${syllFilter}; collFilter: ${collFilter}`);
     return;
   };
 
   const filteredSyllabi = () => {
-    if (props.syllabi === undefined) {
+    if (userInfo.syllabi === undefined) {
       return undefined;
     }
     if (syllFilter.length > 0) {
-      const results = props.syllabi.filter((item) => {
+      const results = userInfo.syllabi.filter((item) => {
         return (
           item.title.toLowerCase().includes(syllFilter.toLowerCase()) ||
           item.description.toLowerCase().includes(syllFilter.toLowerCase())
@@ -119,15 +118,15 @@ const About: NextPage<IUser> = (props) => {
       });
       return results;
     }
-    return props.syllabi;
+    return userInfo.syllabi;
   };
 
   const filteredCollections = () => {
-    if (props.collections === undefined) {
+    if (userInfo.collections === undefined) {
       return undefined;
     }
     if (collFilter.length > 0) {
-      const results = props.collections.filter((item) => {
+      const results = userInfo.collections.filter((item) => {
         if (item.name.toLowerCase().includes(collFilter.toLowerCase())) {
           return true;
         }
@@ -140,131 +139,129 @@ const About: NextPage<IUser> = (props) => {
       });
       return results;
     }
-    return props.collections;
+    return userInfo.collections;
   };
+
+  if (Object.keys(userInfo).length === 0) {
+    return (
+      <NotFound />
+    )
+  }
 
   return (
     <>
       <Head>
-        <title>{props.name}</title>
+        <title>{`Cosyll | ${userInfo.name}`}</title>
         <meta
           name="description"
-          content={`${props.name} shares and collects syllabi on Cosyll.`}
+          content={`${userInfo.name} shares and collects syllabi on Cosyll.`}
         />
-        <Favicons />
       </Head>
 
-      <Container fluid id="header-section" className="sticky-top">
-        <GlobalNav />
-      </Container>
-      <Container>
-        <Row>
-          <UserProfileSidebar props={props} isAdmin={checkIfAdmin()} />
-          <Col>
-            <div className="py-4">
-              <Tabs
-                defaultActiveKey={activeTab as string}
-                id="user-syllabi-collections-tabs"
-                className="mb-3 gap-2"
-                data-cy="userTabs"
-              >
-                <Tab eventKey="syllabi" title="Syllabi" data-cy="syllabiTab">
-                  <div className="d-flex justify-content-between align-items-baseline py-2">
-                    {checkIfAdmin() ? (
-                      <h2 className="inline h5">Your syllabi</h2>
-                    ) : (
-                      <h2 className="inline h5">Syllabi by {props.name}</h2>
-                    )}
+      <div>
+        <div className="flex flex-col md:flex-row w-11/12 sm:w-full lg:w-10/12 m-auto mt-4 justify-between">
 
-                    <div className="d-flex gap-2">
-                      <Form>
-                        <Form.Control
-                          id="syllFilter"
-                          type="Filter"
-                          className="form-control"
-                          placeholder="Search syllabi..."
-                          aria-label="Filter"
-                          value={syllFilter}
-                          onChange={handleFilterChange}
-                        />
-                      </Form>
+          <div className="w-full md:w-3/12 p-3">
+            <UserProfileSidebar props={userInfo} apiUrl={`${process.env.NEXT_PUBLIC_API_URL}/users/${userInfo.uuid}`} isAdmin={checkIfAdmin()} />
+          </div>
 
-                      {/* Only allow new syllabus to be created if one is one their own page */}
-                      {checkIfAdmin() ? (
-                        <Link href="/NewSyllabus">
-                          <Button variant="primary" aria-label="New Syllabus" data-cy="newSyllabusLink">
-                            + New Syllabus
-                          </Button>
-                        </Link>
-                      ) : (
-                        <></>
-                      )}
+          <div className="w-full md:w-8/12 mx-auto mb-4">
 
-                    </div>
-                  </div>
-                  <div id="syllabi">
-                    {getSyllabusCards(
-                      filteredSyllabi(),
-                      default_filters,
-                      undefined,
-                      props.name,
-                      checkIfAdmin()
-                    )?.elements ? getSyllabusCards(
-                      filteredSyllabi(),
-                      default_filters,
-                      undefined,
-                      props.name,
-                      checkIfAdmin()
-                    )?.elements : "You do not have any syllabi yet."}
-                  </div>
-                </Tab>
-                <Tab eventKey="collections" title="Collections" data-cy="collectionsTab">
-                  <div className="d-flex justify-content-between align-items-baseline py-2">
-                    {checkIfAdmin() ? (
-                      <h2 className="inline h5">Your Collections</h2>
-                    ) : (
-                      <h2 className="inline h5">Collections by {props.name}</h2>
-                    )}
-                    <div className="d-flex gap-2">
-                      <Form>
-                        <Form.Control
-                          id="collFilter"
-                          type="Filter"
-                          className="form-control"
-                          placeholder="Filter..."
-                          aria-label="Filter"
-                          value={collFilter}
-                          onChange={handleFilterChange}
-                        />
-                      </Form>
-                      {checkIfAdmin() ? (
-                        <Button variant="primary" aria-label="New Collection">
-                          + New
-                        </Button>
-                      ) : (
-                        <></>
-                      )}
-                    </div>
-                  </div>
-                  <div id="collections">
-                    {getCollectionCards(
-                      filteredCollections(),
-                      props.name,
-                      checkIfAdmin()
-                    ) ? getCollectionCards(
-                      filteredCollections(),
-                      props.name,
-                      checkIfAdmin()
-                    ) : "You do not have any collections yet."}
-                  </div>
-                </Tab>
-              </Tabs>
+            <div className="flex my-8" data-cy="userTabs">
+              <div onClick={() => setActiveTab("syllabi")} className={`${kurintoSerif.className} text-xl mr-6 cursor-pointer ${activeTab === "syllabi" ? "font-bold" : ""}`} data-cy="syllabiTab">Syllabi</div>
+              <div onClick={() => setActiveTab("collections")} className={`${kurintoSerif.className} text-xl mr-6 cursor-pointer ${activeTab === "collections" ? "font-bold" : ""}`} data-cy="collectionsTab">Collections</div>
             </div>
-          </Col>
-        </Row>
-      </Container>
+
+            {activeTab === "syllabi" ?
+              <div title="Syllabi" data-cy="syllabiTab">
+                <div className="flex justify-end items-baseline py-2 content-end">
+                  <div className="flex w-12/12 md:w-10/12 gap-2 mb-8 justify-end">
+                    <input
+                      id="syllFilter"
+                      type="text"
+                      className="w-4/6 bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
+                      placeholder="Search syllabi..."
+                      aria-label="Filter"
+                      value={syllFilter}
+                      onChange={handleFilterChange}
+                    />
+
+                    {checkIfAdmin() ? (
+                      <Link href="/new-syllabus" className=" w-2/3 md:w-3/12 text-center mt-4 py-2 bg-gray-900 text-gray-100 border-2 rounded-md" aria-label="New Syllabus" data-cy="newSyllabusLink">
+
+                        + New Syllabus
+
+                      </Link>
+                    ) : (
+                      <></>
+                    )}
+
+                  </div>
+                </div>
+                <div id="syllabi">
+                  {getSyllabusCards(
+                    filteredSyllabi(),
+                    default_filters,
+                    undefined,
+                    userInfo.name,
+                    checkIfAdmin()
+                  )?.elements ? getSyllabusCards(
+                    filteredSyllabi(),
+                    default_filters,
+                    undefined,
+                    userInfo.name,
+                    checkIfAdmin()
+                  )?.elements : "No syllabi yet."}
+                </div>
+              </div>
+              :
+              <div title="Collections" data-cy="collectionsTab">
+                <div className="flex justify-end items-baseline py-2">
+
+                  <div className="flex w-12/12 md:w-10/12 gap-2 mb-8 justify-end">
+                    <input
+                      id="collFilter"
+                      type="text"
+                      className="w-4/6 bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
+                      placeholder="Search collections..."
+                      aria-label="Filter"
+                      value={collFilter}
+                      onChange={handleFilterChange}
+                    />
+
+                    {checkIfAdmin() ? (
+                      <button className="w-2/3 md:w-3/12 mt-4 py-2 bg-gray-900 text-gray-100 border-2 rounded-md" aria-label="New Collection" onClick={() => { setIsCreatingCollection(true) }}>
+                        + New Collection
+                      </button>
+                    ) : (
+                      <></>
+                    )}
+                  </div>
+                </div>
+                <div id="collections">
+                  {getCollectionCards(
+                    filteredCollections(),
+                    userInfo.name,
+                    checkIfAdmin()
+                  ) ? getCollectionCards(
+                    filteredCollections(),
+                    userInfo.name,
+                    checkIfAdmin()
+                  ) : "No collections yet."}
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      {isCreatingCollection ?
+        <NewCollection syllabusUUID="" handleClose={() => setIsCreatingCollection(false)} />
+        :
+        <></>
+      }
     </>
   );
 };
 
-export default About;
+export default UserPage;

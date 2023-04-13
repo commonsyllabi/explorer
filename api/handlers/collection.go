@@ -236,21 +236,7 @@ func RemoveCollectionSyllabus(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, "Not a valid Syllabus ID.")
 	}
 
-	_, err = models.GetCollection(coll_uid, user_uuid)
-	if err != nil {
-		zero.Error(err.Error())
-		return c.String(http.StatusNotFound, "There was an error finding the Collection.")
-	}
-
-	syll, err := models.GetSyllabus(syll_uid, user_uuid)
-	if err != nil {
-		zero.Error(err.Error())
-		return c.String(http.StatusNotFound, "There was an error finding the Syllabus.")
-	}
-
-	zero.Warn("the way to remove a syllabus from a collection needs to be updated")
-
-	updated, err := models.UpdateSyllabus(syll.UUID, user_uuid, &syll)
+	updated, err := models.RemoveCollectionSyllabus(coll_uid, syll_uid, user_uuid)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusInternalServerError, "There was an error updating the Collection.")

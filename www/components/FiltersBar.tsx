@@ -1,10 +1,9 @@
 import * as React from "react";
-import { Container } from "react-bootstrap";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import InputGroup from "react-bootstrap/InputGroup";
+import Image from "next/image";
 import { ISyllabiFilters, IMetaInformation } from "../types"
 import { getFieldsFilters, getLanguagesFilters, getLevelsFilters, getYearsFilters } from "./utils/getSearchFilters";
+import plusIcon from '../public/icons/add-line.svg'
+import minusIcon from '../public/icons/subtract-line.svg'
 
 interface syllabiFiltersProps {
   updateFilters: (filters: ISyllabiFilters) => void;
@@ -12,6 +11,7 @@ interface syllabiFiltersProps {
 }
 
 const FiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => {
+  const [isShown, setIsShown] = React.useState(false)
   const [filters, setFilters] = React.useState<ISyllabiFilters>({
     academic_level: "",
     academic_field: "",
@@ -26,10 +26,9 @@ const FiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => {
   }, [filters])
 
   //-- todo : generate the options dropdown html given the meta props (might be annoying to deal with fields and levels)
-  
 
   const handleChange = (e: React.SyntheticEvent) => {
-    const t = e.target as HTMLInputElement    
+    const t = e.target as HTMLInputElement
     setFilters({ ...filters, [t.id]: t.value })
   }
 
@@ -45,114 +44,117 @@ const FiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => {
   }
 
   return (
-    <Container className="py-3 d-flex flex-column gap-3">
-      {/* FILTER BY ACAD LEVEL */}
-      <div>
-        <Form.Group>
-          <Form.Label className="small">Academic Level</Form.Label>
-          <Form.Select
+    <div className="py-3 flex flex-col gap-3">
+      
+      <div className="flex justify-between">
+        <h2 className="text-lg font-bold">Search filters</h2>
+        <div className="md:hidden">
+          <button className={`${isShown ? 'hidden' : ''}`} onClick={() => setIsShown(true)}>
+            <Image src={plusIcon} width="24" height="24" alt="Icon to reveal the search filters" />
+          </button>
+          <button className={`${isShown ? '' : 'hidden'}`} onClick={() => setIsShown(false)}>
+            <Image src={minusIcon} width="24" height="24" alt="Icon to hide the search filters" />
+          </button>
+        </div>
+      </div>
+
+      <div className={`${isShown ? 'block' : 'hidden'} md:block`}>
+        {/* FILTER BY ACAD LEVEL */}
+        <form className="flex flex-col my-5">
+          <label className="text-sm mb-2">Academic Level</label>
+          <select
+            className="bg-transparent border border-gray-900 p-1"
             id="academic_level"
             value={filters.academic_level}
             data-cy="filtersAcademicLevel"
             onChange={handleChange}>
             <option value="">All</option>
             {getLevelsFilters(props.meta.academic_levels)}
-          </Form.Select>
-        </Form.Group>
-      </div>
+          </select>
+        </form>
 
-      {/* FILTER BY ACADEMIC TERM */}
-      <div>
-        <Form.Group>
-          <Form.Label className="small">Academic Year</Form.Label>
-          <Form.Select
+
+        {/* FILTER BY ACADEMIC TERM */}
+        <form className="flex flex-col my-5">
+          <label className="text-sm mb-2">Academic Year</label>
+          <select
+            className="bg-transparent border border-gray-900 p-1"
             id="academic_year"
             value={filters.academic_year}
             data-cy="filtersAcademicYear"
             onChange={handleChange}>
             <option value="">All</option>
             {getYearsFilters(props.meta.academic_years)}
-          </Form.Select>
-        </Form.Group>
-      </div>
+          </select>
+        </form>
 
-      {/* FILTER BY ACADEMIC FIELDS */}
-      <div>
-        <Form.Group>
-          <Form.Label className="small">Academic Field</Form.Label>
-          <Form.Select
+
+        {/* FILTER BY ACADEMIC FIELDS */}
+        <form className="flex flex-col my-5">
+          <label className="text-sm mb-2">Academic Field</label>
+          <select
+            className="bg-transparent border border-gray-900 p-1"
             id="academic_field"
             value={filters.academic_field}
             data-cy="filtersAcademicField"
             onChange={handleChange}>
             <option value="">All</option>
             {getFieldsFilters(props.meta.academic_fields)}
-          </Form.Select>
-        </Form.Group>
-      </div>
+          </select>
+        </form>
 
-      {/* FILTER BY LANGUAGE */}
-      <div>
-        <Form.Group>
-          <Form.Label className="small">Language / Region</Form.Label>
-          <Form.Select
+
+        {/* FILTER BY LANGUAGE */}
+        <form className="flex flex-col my-5">
+          <label className="text-sm mb-2">Language / Region</label>
+          <select
+            className="bg-transparent border border-gray-900 p-1"
             id="language"
             value={filters.language}
             data-cy="filtersLanguage"
             onChange={handleChange}>
             <option value="">All</option>
             {getLanguagesFilters(props.meta.languages)}
-          </Form.Select>
-        </Form.Group>
-      </div>
+          </select>
+        </form>
 
-      {/* FILTER BY TAGS */}
-      <div>
-        <div className="d-flex justify-content-between align-items-baseline">
-          <h3 className="small">Filter by Tags</h3>
-        </div>
-        <div id="tag-search-inputs">
+
+        {/* FILTER BY TAGS */}
+        <div id="tag-search-inputs" className="mt-6">
           <div>
-            <Form>
-              <label className="small" id="search-includes-tags">
+            <form className="flex flex-col my-5">
+              <label className="text-sm mb-2" id="search-includes-tags">
                 <strong>Include</strong> courses with these tags:
               </label>
-              <InputGroup>
-                <Form.Control
-                  as="textarea"
-                  aria-labelledby="search-includes-tags"
-                  id="tags_include"
-                  value={filters.tags_include}
-                  data-cy="filtersTagsInclude"
-                  onChange={handleChange}
-                />
-              </InputGroup>
-            </Form>
+              <textarea
+                className="bg-transparent border border-gray-900"
+                aria-labelledby="search-includes-tags"
+                id="tags_include"
+                value={filters.tags_include}
+                data-cy="filtersTagsInclude"
+                onChange={handleChange}
+              />
+            </form>
           </div>
           <div>
-            <Form>
-              <label className="small" id="search-excludes-tags">
+            <form className="flex flex-col my-5">
+              <label className="text-sm mb-2" id="search-excludes-tags">
                 <strong>Exclude</strong> courses with these tags:
               </label>
-              <InputGroup>
-                <Form.Control
-                  as="textarea"
-                  aria-labelledby="search-excludes-tags"
-                  id="tags_exclude"
-                  value={filters.tags_exclude}
-                  data-cy="filtersTagsExclude"
-                  onChange={handleChange}
-                />
-              </InputGroup>
-            </Form>
+              <textarea
+                className="bg-transparent border border-gray-900"
+                aria-labelledby="search-excludes-tags"
+                id="tags_exclude"
+                value={filters.tags_exclude}
+                data-cy="filtersTagsExclude"
+                onChange={handleChange}
+              />
+            </form>
           </div>
-
-          <div>
-            <Button onClick={handleReset} className="mt-4 w-100" variant="light" data-cy="filtersReset">Reset filters</Button>
-          </div>
+          <button onClick={handleReset} className="border border-gray-600 p-2 rounded-lg mt-4 w-full" data-cy="filtersReset">Reset filters</button>
         </div>
       </div>
-    </Container>
+    </div>
   );
 };
 

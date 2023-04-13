@@ -7,30 +7,15 @@ import GlobalNav from "./GlobalNav";
 
 const NotFound: React.FunctionComponent = (props) => {
     return (
-        <>
-            <Head>
-                <Favicons />
-            </Head>
-
-            <Container
-                fluid
-                id="header-section"
-                className="container-fluid sticky-top"
-            >
-                <GlobalNav />
-            </Container>
-            <Container>
-                <Row className="d-flex justify-content-center">
-                    <Col className="pt-3 pb-5 d-flex flex-column gap-3" lg={10}>
-                        <h1>Sorry!</h1>
-                        <p>We couldn&apos;t find what you were looking for.</p>
-                        <p>
-                            Go back to the <Link href="/">the explorer</Link>.
-                        </p>
-                    </Col>
-                </Row>
-            </Container>
-        </>
+        <div className="flex justify-center mt-8">
+            <div className="pt-3 pb-5 flex flex-col gap-3">
+                <h1 className="text-2xl font-bold">Sorry!</h1>
+                <p>We couldn&apos;t find what you were looking for.</p>
+                <p>
+                    Go back to the <Link href="/" className="underline">main page</Link>.
+                </p>
+            </div>
+        </div>
     );
 };
 

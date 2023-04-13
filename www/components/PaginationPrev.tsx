@@ -17,14 +17,14 @@ const PaginationPrev: React.FunctionComponent<IPaginationPrevProps> = ({
 
   if (activePage <= 1) {
     return (
-      <li className="page-item disabled">
-        <span className="page-link">Previous</span>
+      <li className=" disabled">
+        Previous
       </li>
     );
   }
   return (
-    <li className="page-item" data-cy="prevPage" onClick={getTargetPage}>
-      <span className="page-link">Previous</span>
+    <li className="cursor-pointer" data-cy="prevPage" onClick={getTargetPage}>
+      Previous
     </li>
   );
 };

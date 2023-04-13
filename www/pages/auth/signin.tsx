@@ -1,45 +1,16 @@
 import type { GetStaticProps, NextPage } from "next";
-import Head from "next/head";
-import GlobalNav from "components/GlobalNav";
-import Link from "next/link";
-
-import {
-  Alert,
-  Tabs,
-  Tab,
-  Row,
-  Button,
-  Col,
-  Container,
-  Form,
-  FormControlProps,
-} from "react-bootstrap";
 import React, { useState } from "react";
 
 import { useSession, signIn, signOut } from "next-auth/react";
 import Router from "next/router";
-import Favicons from "components/head/favicons";
+import Link from "next/link";
+import UserName from "components/User/UserName";
 
-export const getStaticProps: GetStaticProps = async () => {
-  const states = ["Login", "Sign up"];
-  const apiUrl =
-    process.env.NODE_ENV == "test"
-      ? "http://backend_explorer:3046/"
-      : process.env.NEXT_PUBLIC_API_URL;
-  return {
-    props: { apiUrl: apiUrl, states: states },
-  };
-};
-
-interface IAuthProps {
-  apiUrl: string;
-  states: Array<string>;
-}
-
-const SignIn: NextPage<IAuthProps> = (props) => {
+const SignIn: NextPage = () => {
   const { data: session, status } = useSession();
-  const url = new URL("users/", props.apiUrl);
 
+  const url = new URL("users/", process.env.NEXT_PUBLIC_API_URL);
+  const [activeTab, setActiveTab] = useState("Login")
   const [log, setLog] = useState("");
   const [error, setError] = useState("");
   const [isCreated, setCreated] = useState(false);
@@ -53,23 +24,44 @@ const SignIn: NextPage<IAuthProps> = (props) => {
   const [signupPassword, setSignupPassword] = useState("");
   const [signupPasswordConf, setSignupPasswordConf] = useState("");
 
-  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = (e: React.BaseSyntheticEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
-    console.warn("Sanitize the input!");
+    const validateEmail = (_e: string) => {
+      return String(_e)
+        .toLowerCase()
+        .match(
+          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        );
+    };
+
+    if (!validateEmail(loginUsername)) {
+      setLog("The email does not seem to be valid.")
+      return
+    }
+
+    if (loginPassword.length < 8) {
+      setLog("The password should be at least 8 characters long.")
+      return;
+    }
+
+    setLog('')
+
+    console.log('here');
+    
+
     signIn("credentials", {
       username: loginUsername,
       password: loginPassword,
-      redirect: false,
-    }).then((result) => {
-      if (!result || result.error)
-        setError(
-          "There was an error logging you in. Please check your credentials"
-        );
-      else Router.push("/");
-    });
-  };
+      redirect: false
+    }).
+      then(res => {
+        if (!res || res.error) setError("There was an error during login. Please check your email and password.")
+        else
+          if (res.ok) Router.push("/")
+      })
+  }
 
   const handleSignup = (e: React.BaseSyntheticEvent) => {
     e.preventDefault();
@@ -157,205 +149,181 @@ const SignIn: NextPage<IAuthProps> = (props) => {
     setSignupPasswordConf(v);
   };
 
-  //if already signed in, render usder info
+  //if already signed in, render user info
   if (status === "authenticated") {
     return (
-      <>
-        <Head>
-          <title>Sign In: Cosyll</title>
-          <meta name="description" content="Sign in to Cosyll" />
-          <Favicons />
-        </Head>
-
-        <Container fluid id="header-section" className="sticky-top">
-          <GlobalNav />
-        </Container>
-        <Container>
-          <Row>
-            <Col className="col-8 offset-2 py-5">
-              <h1 className="h3 mb-3">
-                You are logged in as{" "}
-                <Link href={`/user/${session.user._id}`}>
-                  {session.user.name}
-                </Link>
-                .
-              </h1>
-              <Button href="#" onClick={() => signOut({ callbackUrl: "/" })}>
-                {" "}
-                Sign Out
-              </Button>
-            </Col>
-          </Row>
-        </Container>
-      </>
+      <div className="w-11/12 md:w-6/12 m-auto mt-5">
+        <h1 className="h3 mb-3">
+          You are logged in as{" "}
+          <Link href={`/user/${session.user._id}`}>
+            {session.user.name}
+          </Link>
+          .
+        </h1>
+        <button onClick={() => signOut({ callbackUrl: "/" })} className="mt-4 p-2 bg-gray-900 text-gray-100 border-2 rounded-md">
+          {" "}
+          Sign Out
+        </button>
+      </div>
     );
   }
 
-  //else render login form
   return (
-    <>
-      <Head>
-        <title>Sign In: Cosyll</title>
-        <meta name="description" content="Sign in to Cosyll" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+    <div className="w-11/12 md:w-6/12 m-auto mt-5">
+      {!isCreated ? (
+        <div>
+          <div className="flex my-8">
+            <div onClick={() => setActiveTab("Login")} className={`text-xl mr-6 cursor-pointer ${activeTab === "Login" ? "font-bold" : ""}`}>Login</div>
+            <div onClick={() => setActiveTab("Sign up")} className={`text-xl mr-6 cursor-pointer ${activeTab === "Sign up" ? "font-bold" : ""}`}>Sign up</div>
+          </div>
+          <div id="tab">
+            {activeTab === "Login" ?
+              <div className="flex" title="Login">
+                <form className="w-full mt-2">
+                  <div className="flex flex-col mb-3">
+                    <label>Email address</label>
+                    <input
+                      className="w-full bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
+                      required
+                      name="username"
+                      type="email"
+                      placeholder="Enter email"
+                      data-cy="Login-email"
+                      onChange={handleLoginUsername}
+                    />
+                    <div className="text-sm">
+                      We&#39;ll never share your email with anyone else.
+                    </div>
+                  </div>
 
-      <Container fluid id="header-section" className="sticky-top">
-        <GlobalNav />
-      </Container>
-      <Container>
-        <Row>
-          <Col lg={{ span: 6, offset: 3 }} className="mt-5">
-            {isCreated === false ? (
-              <Container>
-                <Tabs defaultActiveKey={props.states[0]} id="tab">
-                  {/* LOGIN */}
-                  <Tab eventKey="Login" title="Login">
-                    <Form className="mt-2" onSubmit={handleLogin}>
-                      <Form.Group className="mb-3" controlId="loginBasicEmail">
-                        <Form.Label>Email address</Form.Label>
-                        <Form.Control
-                          required
-                          name="username"
-                          type="email"
-                          placeholder="Enter email"
-                          data-cy="Login-email"
-                          onChange={handleLoginUsername}
-                        />
-                        <Form.Text className="text-muted">
-                          We&#39;ll never share your email with anyone else.
-                        </Form.Text>
-                      </Form.Group>
+                  <div
+                    className="mb-3 flex flex-col "
+                  >
+                    <label>Password</label>
+                    <input
+                      className="w-full bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
+                      required
+                      name="password"
+                      type="password"
+                      placeholder="Password"
+                      data-cy="Login-password"
+                      onChange={handleLoginPassword}
+                    />
+                  </div>
 
-                      <Form.Group
-                        className="mb-3"
-                        controlId="loginBasicPassword"
-                      >
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control
-                          required
-                          name="password"
-                          type="password"
-                          placeholder="Password"
-                          data-cy="Login-password"
-                          onChange={handleLoginPassword}
-                        />
-                      </Form.Group>
+                  <button
+                    onClick={handleLogin}
+                    className="mt-4 p-2 bg-gray-900 text-gray-100 border-2 rounded-md"
+                    data-cy="Login-submit"
+                  >
+                    Login
+                  </button>
+                </form>
+              </div>
+              :
+              <div className="flex" title="Sign up" data-cy="Sign up">
+                <form className="w-full mt-2">
+                  <div className="mb-8 flex flex-col">
+                    <label>Name</label>
+                    <input
+                      className="w-full bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
+                      type="text"
+                      placeholder="Enter name"
+                      data-cy="Signup-name"
+                      onChange={handleSignupName}
+                    />
+                  </div>
 
-                      <Button
-                        variant="primary"
-                        type="submit"
-                        data-cy="Login-submit"
-                      >
-                        Submit
-                      </Button>
-                    </Form>
-                  </Tab>
+                  <div className="mb-8 flex flex-col">
+                    <div className="mb-3">
+                      <label>Email address</label>
+                      <input
+                        className="w-full bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
+                        type="email"
+                        placeholder="Enter email"
+                        data-cy="Signup-email"
+                        onChange={handleSignupEmail}
+                      />
+                    </div>
 
-                  {/* SIGN UP */}
-                  <Tab eventKey="Sign up" title="Sign up" data-cy="Sign up">
-                    <Form className="mt-2" onSubmit={handleSignup}>
-                      <Form.Group className="mb-3" controlId="signupBasicName">
-                        <Form.Label>Name</Form.Label>
-                        <Form.Control
-                          type="text"
-                          placeholder="Enter name"
-                          data-cy="Signup-name"
-                          onChange={handleSignupName}
-                        />
-                      </Form.Group>
+                    <div
+                      className="mb-3 flex flex-col "
+                    >
+                      <label>Confirm email address</label>
+                      <input
+                        className="w-full bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
+                        type="email"
+                        placeholder="Confirm email"
+                        data-cy="Signup-email-conf"
+                        onChange={handleSignupEmailConf}
+                      />
+                      <div className="text-sm">
+                        We&#39;ll never share your email with anyone else.
+                      </div>
+                    </div>
+                  </div>
 
-                      <Form.Group className="mb-3" controlId="signupBasicEmail">
-                        <Form.Label>Email address</Form.Label>
-                        <Form.Control
-                          type="email"
-                          placeholder="Enter email"
-                          data-cy="Signup-email"
-                          onChange={handleSignupEmail}
-                        />
-                      </Form.Group>
+                  <div
+                    className="mb-3 flex flex-col"
 
-                      <Form.Group
-                        className="mb-3"
-                        controlId="signupBasicEmailConfirm"
-                      >
-                        <Form.Label>Confirm email address</Form.Label>
-                        <Form.Control
-                          type="email"
-                          placeholder="Confirm email"
-                          data-cy="Signup-email-conf"
-                          onChange={handleSignupEmailConf}
-                        />
-                        <Form.Text className="text-muted">
-                          We&#39;ll never share your email with anyone else.
-                        </Form.Text>
-                      </Form.Group>
+                  >
+                    <label>Password</label>
+                    <input
+                      className="w-full bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
+                      type="password"
+                      placeholder="Password"
+                      data-cy="Signup-password"
+                      onChange={handleSignupPassword}
+                    />
+                  </div>
 
-                      <Form.Group
-                        className="mb-3"
-                        controlId="signupBasicPassword"
-                      >
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control
-                          type="password"
-                          placeholder="Password"
-                          data-cy="Signup-password"
-                          onChange={handleSignupPassword}
-                        />
-                      </Form.Group>
+                  <div
+                    className="mb-3 flex flex-col"
 
-                      <Form.Group
-                        className="mb-3"
-                        controlId="signupBasicPasswordConfirm"
-                      >
-                        <Form.Label>Confirm password</Form.Label>
-                        <Form.Control
-                          type="password"
-                          placeholder="Confirm password"
-                          data-cy="Signup-password-conf"
-                          onChange={handleSignupPasswordConf}
-                        />
-                      </Form.Group>
+                  >
+                    <label>Confirm password</label>
+                    <input
+                      className="w-full bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
+                      type="password"
+                      placeholder="Confirm password"
+                      data-cy="Signup-password-conf"
+                      onChange={handleSignupPasswordConf}
+                    />
+                  </div>
 
-                      <Button
-                        variant="primary"
-                        type="submit"
-                        data-cy="Signup-submit"
-                      >
-                        Sign up
-                      </Button>
-                    </Form>
-                  </Tab>
-                </Tabs>
+                  <button
+                    onClick={handleSignup}
+                    className="self-end mt-4 p-2 bg-gray-900 text-gray-100 border-2 rounded-md"
+                    data-cy="Signup-submit"
+                  >
+                    Sign up
+                  </button>
+                </form>
+              </div>
+            }
+          </div>
 
-                {log !== "" ? (
-                  <Alert variant="warning" className="mt-3">
-                    {log}
-                  </Alert>
-                ) : (
-                  <></>
-                )}
+          {log !== "" ?
+            <div className="w-full mt-3 p-2 bg-amber-200">
+              {log}
+            </div>
+            : <></>}
 
-                {error !== "" ? (
-                  <Alert variant="danger" className="mt-3">
-                    {error}
-                  </Alert>
-                ) : (
-                  <></>
-                )}
-              </Container>
-            ) : (
-              <>
-                <h1 data-cy="Success" className="h2">
-                  Your account was created!
-                </h1>
-                <p>Please check your email address to activate your account.</p>
-              </>
-            )}
-          </Col>
-        </Row>
-      </Container>
-    </>
+          {error !== "" ?
+            <div className="w-full mt-3 p-2 bg-red-200">
+              {error}
+            </div>
+            : <></>}
+        </div>
+      ) : (
+        <div>
+          <h1 data-cy="Success" className="text-xl mt-8">
+            Your account was created!
+          </h1>
+          <div>Please check your email address ({signupEmail}) to activate it.</div>
+        </div>
+      )}
+    </div>
   );
 };
 

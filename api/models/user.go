@@ -57,9 +57,21 @@ func CreateUser(user *User) (User, error) {
 
 func GetUser(uuid uuid.UUID, user_uuid uuid.UUID) (User, error) {
 	var user User
-	err := db.Preload("Collections", "(status = 'listed' OR user_uuid = ?)", user_uuid).Where("uuid = ?", uuid).First(&user).Error
+	err := db.Where("uuid = ?", uuid).First(&user).Error
 	if err != nil {
 		return user, err
+	}
+
+	var colls []Collection
+	err = db.Model(&user).Association("Collections").Find(&colls)
+	if err != nil {
+		return user, err
+	}
+
+	for _, coll := range colls {
+		if coll.Status == "listed" || coll.UserUUID == user_uuid {
+			user.Collections = append(user.Collections, coll)
+		}
 	}
 
 	var sylls []Syllabus
@@ -120,6 +132,10 @@ func GetUserBySlug(slug string, user_uuid uuid.UUID) (User, error) {
 	err := db.Preload("Collections").Where("slug = ?", slug).Find(&user).Error
 	if err != nil {
 		return user, err
+	}
+
+	if user.UUID == uuid.Nil {
+		return user, fmt.Errorf("could not find the user with slug: %v", slug)
 	}
 
 	var sylls []Syllabus

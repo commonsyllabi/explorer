@@ -1,5 +1,5 @@
 import { ICollection } from "types";
-import CollectionCard from "components/CollectionCard";
+import CollectionCard from "components/Collection/CollectionCard";
 
 export const getCollectionCards = (
   collectionArray: ICollection[] | undefined,
@@ -25,5 +25,5 @@ export const getCollectionCards = (
     />
   ));
 
-  return <div className="d-flex flex-column gap-3">{collectionCards}</div>;
+  return <div className="flex flex-col gap-3">{collectionCards}</div>;
 };

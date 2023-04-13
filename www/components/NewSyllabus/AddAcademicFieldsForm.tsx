@@ -58,32 +58,34 @@ const AddAcademicFieldsForm: React.FunctionComponent<
   }, [broadField, narrowField, detailedField]);
 
   return (
-    <Form.Group className="mb-5">
-      <Form.Label htmlFor="academic_fields">
+    <div className="mb-5">
+      <label htmlFor="academic_fields">
         Academic Field{" "}
-        <p className="small text-muted mb-1">
+        <p className="text-sm text-muted mb-1">
           <em>ISCED Fields of Education and Training</em>
         </p>
-      </Form.Label>
+      </label>
       <div
-        className="d-flex gap-2 mb-3"
+        className="flex flex-col md:flex-row w-full gap-2 mb-3"
         id="academicFieldsInputSection"
         data-cy="academicFieldsInputSection"
       >
-        <div className="col-4">
-          <p className="small text-muted mb-0">BROAD</p>
-          <Form.Select
+        <div className="w-full">
+          <p className="text-sm text-muted mb-0">BROAD</p>
+          <select
+          className="bg-transparent mt-2 p-1 border-2 border-gray-900 w-full"
             id="academic_field_broad"
             onChange={handleBroadFieldChange}
           >
             <option value="">–</option>
             {generateAcadFieldsBroad()}
-          </Form.Select>
+          </select>
         </div>
 
-        <div className="col-4">
-          <p className="small text-muted mb-0">NARROW</p>
-          <Form.Select
+        <div className="w-full">
+          <p className="text-sm text-muted mb-0">NARROW</p>
+          <select
+          className="bg-transparent mt-2 p-1 border-2 border-gray-900 w-full"
             id="academic_field_narrow"
             onChange={handleNarrowFieldChange}
           >
@@ -93,12 +95,13 @@ const AddAcademicFieldsForm: React.FunctionComponent<
               }
               fieldLabel="Narrow"
             />
-          </Form.Select>
+          </select>
         </div>
 
-        <div className="col-4">
+        <div className="w-full">
           <p className="small text-muted mb-0">DETAILED</p>
-          <Form.Select
+          <select
+          className="bg-transparent mt-2 p-1 border-2 border-gray-900 w-full"
             id="academic_field_detailed"
             onChange={handleDetailedFieldChange}
           >
@@ -108,11 +111,11 @@ const AddAcademicFieldsForm: React.FunctionComponent<
               }
               fieldLabel="Detailed"
             />
-          </Form.Select>
+          </select>
         </div>
       </div>
       {/* <Button variant="secondary">Add another category</Button> */}
-    </Form.Group>
+    </div>
   );
 };
 

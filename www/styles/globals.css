@@ -1,9 +1,90 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* @layer base {
+
+
+  @font-face {
+    font-family: 'Inter';
+    src: local(''), url('/fonts/Inter-Regular.woff'), format('woff');
+    font-weight: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Inter';
+    src: local(''), url('/fonts/Inter-Light.woff'), format('woff');
+    font-weight: lighter;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Inter';
+    src: local(''), url('/fonts/Inter-LightItalic.woff'), format('woff');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Inter';
+    src: local(''), url('/fonts/Inter-Bold.woff'), format('woff');
+    font-weight: bold;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Inter';
+    src: local(''), url('/fonts/Inter-Medium.woff'), format('woff');
+    font-weight: 600;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Inter';
+    src: local(''), url('/fonts/Inter-BoldItalic.woff'), format('woff');
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'KurintoBook';
+    src: local(''), url('/fonts/KurintoBook-Regular.ttf'), format('ttf');
+    font-weight: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'KurintoBook';
+    src: local(''), url('/fonts/KurintoBook-Italic.ttf'), format('ttf');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'KurintoBook';
+    src: local(''), url('/fonts/KurintoBook-Bold.ttf'), format('ttf');
+    font-weight: bold;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'KurintoBook';
+    src: local(''), url('/fonts/KurintoBook-BoldItalic.ttf'), format('ttf');
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+  }
+} */
+
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+
 }
 
 a {
@@ -19,9 +100,9 @@ a {
   html {
     color-scheme: dark;
   }
+
   body {
     color: white;
     background: black;
   }
 }
-

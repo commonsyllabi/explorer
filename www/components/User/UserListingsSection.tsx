@@ -21,7 +21,7 @@ const UserListingsSection: React.FunctionComponent<
   const linkEls = sectionContents.map((linkItem) => (
     <li key={linkItem.uuid}>
       <Link href={linkItem.url}>
-        <a>{linkItem.title}</a>
+        {linkItem.title}
       </Link>
     </li>
   ));
@@ -29,7 +29,7 @@ const UserListingsSection: React.FunctionComponent<
   const privateLinkEls = sectionPrivateContents.map((linkItem) => (
     <li key={linkItem.uuid}>
       <Link href={linkItem.url}>
-        <a>{linkItem.title}</a>
+        {linkItem.title}
       </Link>
     </li>
   ));

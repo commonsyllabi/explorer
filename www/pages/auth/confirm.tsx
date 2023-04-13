@@ -48,24 +48,12 @@ interface IConfirmProps {
 
 const Confirm: NextPage<IConfirmProps> = (props) => {
   return (
-    <>
-      <Head>
-        <title>Sign In: Cosyll</title>
-        <meta name="description" content="Sign in to Cosyll" />
-        <Favicons />
-      </Head>
-      <Container fluid id="header-section" className="sticky-top">
-        <GlobalNav />
-      </Container>
-      <Container>
-        <Row>
-          <Col lg={{ span: 6, offset: 3 }} className="mt-5">
-            <h2>Confirm your account</h2>
-            <p>{props.log}</p>
-          </Col>
-        </Row>
-      </Container>
-    </>
+
+    <div className="flex flex-col gap-5 w-11/12 md:w-4/12 m-auto mt-8">
+      <h2 className="text-2xl">Confirm your account</h2>
+      <p>{props.log}</p>
+    </div>
+
   );
 };
 
