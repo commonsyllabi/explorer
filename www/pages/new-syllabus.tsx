@@ -11,7 +11,7 @@ import {
   IUploadAttachment,
   IInstitution,
   IFormInstitution,
-  IParsedData,
+  IFormDataOptional,
 } from "types";
 
 import Badge from "react-bootstrap/Badge";
@@ -60,34 +60,24 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
   const [institutionCreated, setInstitutionCreated] = useState("pending");
   const [attachmentsCreated, setAttachmentsCreated] = useState("pending");
   const [syllabusUUID, setSyllabusUUID] = useState("");
-  const [parsedData, setParsedData] = useState<IParsedData>();
+  const [parsedData, setParsedData] = useState<IFormDataOptional>();
+  const [parsedFile, setParsedFile] = useState<File>();
 
   useEffect(() => {
-
+    if (parsedData) {
+      console.log(parsedData);
+  
+      setFormData((prevFormData) => {
+        const newData = { ...prevFormData };
+        for (const key in parsedData) {
+          if (Object.prototype.hasOwnProperty.call(parsedData, key) && key in newData) {
+            // newData[key] = parsedData[key]; //-- type error?
+          }
+        }
+        return newData;
+      });
+    }
   }, [parsedData]);
-
-  //Form data and submission handling
-  //---------------------------------------
-  //Store form data
-  // const [formData, setFormData] = useState<IFormData>({
-  //   institutions: [],
-  //   title: "",
-  //   course_number: "",
-  //   description: "",
-  //   attachments: [],
-  //   tags: [],
-  //   language: "",
-  //   learning_outcomes: [],
-  //   topic_outlines: [],
-  //   readings: [],
-  //   grading_rubric: "",
-  //   assignments: [],
-  //   other: "",
-  //   status: "unlisted",
-  //   academic_fields: [],
-  //   academic_level: 0,
-  //   duration: 0,
-  // });
 
   const [formData, setFormData] = useState<IFormData>({
     institutions: [],
@@ -347,7 +337,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                       New
                     </span>
                   </h4>
-                  <DragAndDropSyllabus session={session} onSyllabusUpload={setParsedData} />
+                  <DragAndDropSyllabus session={session} setParsedData={setParsedData} setParsedFile={setParsedFile}/>
                 </div>
 
                 <hr className="my-12 border border-gray-300" />
