@@ -9,7 +9,8 @@ import addIcon from '../../public/icons/add-line.svg'
 import addCircleIcon from '../../public/icons/add-circle-line.svg'
 import removeIcon from '../../public/icons/subtract-line.svg'
 import { kurintoSerif } from "app/layout";
-import PubBadge from "components/PubBadge";
+import PubBadge from "components/commons/PubBadge";
+import Modal from "components/commons/Modal";
 
 interface IAddCollectionProps {
     collections: ICollection[],
@@ -108,8 +109,8 @@ const AddToCollection: React.FunctionComponent<IAddCollectionProps> = ({ collect
 
     }
     return (
-        <div className="absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center bg-gray-50/80">
-            <div className="relative md:w-6/12 m-2 bg-gray-50 border-2 border-gray-900 rounded-lg p-8">
+        <div>
+            <Modal>
                 <h2 className={`text-xl mb-8`}>Add syllabus to one of your collections:</h2>
                 <div>
                     <div className="flex flex-col gap-3">
@@ -137,9 +138,11 @@ const AddToCollection: React.FunctionComponent<IAddCollectionProps> = ({ collect
                 <button onClick={handleCloseButton} className="absolute top-2 right-2">
                     <Image src={cancelIcon} width="24" height="24" alt="Icon to cancel the edit process" />
                 </button>
-            </div>
+            </Modal>
             {isCreatingCollection ?
-                <NewCollection syllabusUUID={syllabusInfo.uuid} handleClose={() => setIsCreatingCollection(false)} />
+                <Modal>
+                    <NewCollection syllabusUUID={syllabusInfo.uuid} handleClose={() => setIsCreatingCollection(false)} />
+                </Modal>
                 :
                 <></>
             }
