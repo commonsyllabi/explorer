@@ -4,9 +4,9 @@ import Router from "next/router";
 import Link from "next/link";
 import Image from "next/image";
 
-import menuOpenIcon from '../public/icons/menu-line.svg'
-import menuCloseIcon from '../public/icons/close-line.svg'
-import logoImage from '../public/cosyll_black_on_white.png'
+import menuOpenIcon from '../../public/icons/menu-line.svg'
+import menuCloseIcon from '../../public/icons/close-line.svg'
+import logoImage from '../../public/cosyll_black_on_white.png'
 import { useState } from "react";
 import { kurintoBook, kurintoSerif } from "app/layout";
 

@@ -1,7 +1,7 @@
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 
-import GlobalNav from "components/GlobalNav";
+import GlobalNav from "components/commons/GlobalNav";
 
 import { Row, Col, Container } from "react-bootstrap";
 import Favicons from "components/head/favicons";

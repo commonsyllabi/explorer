@@ -1,4 +1,4 @@
-import GlobalNav from "components/GlobalNav";
+import GlobalNav from "components/commons/GlobalNav";
 
 import localFont from '@next/font/local'
 

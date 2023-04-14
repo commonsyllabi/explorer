@@ -1,9 +1,10 @@
 import * as React from "react";
 import Link from "next/link";
-import PubBadge from "../PubBadge";
+import PubBadge from "../commons/PubBadge";
 import { getIsPublic } from "components/utils/getIsPublic";
-import Tags from "../Tags";
+import Tags from "../Syllabus/Tags";
 import { getUserUrl } from "../utils/getLinks";
+import { property } from "cypress/types/lodash";
 
 interface ICollectionCardProps {
   uuid: string;
@@ -34,7 +35,7 @@ const CollectionCard: React.FunctionComponent<ICollectionCardProps> = (
         <p className="collection-meta text-sm">
           collection by{" "}
           <Link href={getUserUrl(props.userUuid)} className="underline">{props.userName}</Link> |
-          contains {props.syllabiCount} syllabi
+          contains {`${props.syllabiCount === 1 ? '1 syllabus' : props.syllabiCount + ' syllabi'} `} 
         </p>
         <div className="course-description">
           {props.description}

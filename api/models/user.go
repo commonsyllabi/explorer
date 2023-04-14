@@ -63,7 +63,7 @@ func GetUser(uuid uuid.UUID, user_uuid uuid.UUID) (User, error) {
 	}
 
 	var colls []Collection
-	err = db.Model(&user).Association("Collections").Find(&colls)
+	err = db.Where("user_uuid = ?", uuid).Preload("Syllabi").Find(&colls).Error
 	if err != nil {
 		return user, err
 	}

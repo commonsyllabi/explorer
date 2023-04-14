@@ -2,10 +2,10 @@ import type { GetServerSideProps, GetServerSidePropsContext, NextPage } from "ne
 import Image from "next/image";
 
 import { IUser, ISyllabus } from "types";
-import BreadcrumbsBar from "components/BreadcrumbsBar";
+import BreadcrumbsBar from "components/commons/BreadcrumbsBar";
 
 import { getSyllabusCards } from "components/utils/getSyllabusCards";
-import NotFound from "components/NotFound";
+import NotFound from "components/commons/NotFound";
 import { signOut, useSession } from "next-auth/react";
 import React, { useState } from "react";
 import Router from "next/router";

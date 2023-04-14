@@ -7,10 +7,10 @@ import Image from "next/image";
 
 import { ICollection, ISyllabus } from "types";
 
-import BreadcrumbsBar from "components/BreadcrumbsBar";
+import BreadcrumbsBar from "components/commons/BreadcrumbsBar";
 import SyllabusResources from "components/Syllabus/SyllabusResources";
-import Tags from "components/Tags";
-import NotFound from "components/NotFound";
+import Tags from "components/Syllabus/Tags";
+import NotFound from "components/commons/NotFound";
 import Link from "next/link";
 
 import {
@@ -24,7 +24,8 @@ import AddToCollection from "components/Collection/AddToCollection";
 import addCircleIcon from '../../public/icons/add-circle-line.svg'
 import deleteIcon from '../../public/icons/delete-bin-line.svg'
 import { kurintoSerif } from "app/layout";
-import SyllabusDeleteModal from "components/Syllabus/SyllabusDeleteModal";
+import SyllabusDelete from "components/Syllabus/SyllabusDelete";
+import Modal from "components/commons/Modal";
 
 export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
   const syllabusId = context.params!.sid;
@@ -124,7 +125,9 @@ const Syllabus: NextPage<ISyllabusPageProps> = ({ syllabusInfo, userCollections 
         />
 
         {showDeleteModal ?
-         <SyllabusDeleteModal syllabusInfo={syllabusInfo} handleClose={() => setShowDeleteModal(false)}/>
+          <Modal>
+            <SyllabusDelete syllabusInfo={syllabusInfo} handleClose={() => setShowDeleteModal(false)} />
+          </Modal>
           : <></>}
 
         <div>

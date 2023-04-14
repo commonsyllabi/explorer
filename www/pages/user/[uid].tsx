@@ -12,7 +12,7 @@ import { IUser } from "types";
 import { getSyllabusCards } from "components/utils/getSyllabusCards";
 import UserProfileSidebar from "components/User/UserProfileSidebar";
 import { getCollectionCards } from "components/utils/getCollectionCards";
-import NotFound from "components/NotFound";
+import NotFound from "components/commons/NotFound";
 import NewCollection from "components/Collection/NewCollection";
 import { kurintoSerif } from "app/layout";
 

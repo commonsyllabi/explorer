@@ -1,9 +1,5 @@
 import * as React from "react";
-import Head from "next/head";
-import Favicons from "./head/favicons";
 import Link from "next/link"
-import { Container, Col, Row } from "react-bootstrap";
-import GlobalNav from "./GlobalNav";
 
 const NotFound: React.FunctionComponent = (props) => {
     return (
