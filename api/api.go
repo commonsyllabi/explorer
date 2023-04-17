@@ -91,6 +91,7 @@ func SetupRouter() *echo.Echo {
 		syllabi.DELETE("/:id", handlers.DeleteSyllabus)
 
 		syllabi.POST("/:id/institutions", handlers.AddSyllabusInstitution)
+		syllabi.PATCH("/:id/institutions/:inst_id", handlers.EditUserInstitution)
 		syllabi.DELETE("/:id/institutions/:inst_id", handlers.RemoveSyllabusInstitution)
 
 		syllabi.POST("/:id/attachments", handlers.AddSyllabusAttachment)

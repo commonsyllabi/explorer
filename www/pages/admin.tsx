@@ -74,7 +74,7 @@ const AdminPanel: React.FunctionComponent<IAdminPanelProps> = ({
                 <div>
                     <h1 className={`${kurintoSerif.className} text-2xl p-0 my-4 hover:underline cursor-pointer`} onClick={() => setShowCollections(!showCollections)}>Collections ({collections.length})</h1>
                     <div className="flex flex-col gap-3">
-                        {showCollections ? getCollectionCards(collections, undefined, false) : <></>}
+                        {showCollections ? getCollectionCards(collections, false) : <></>}
                         
                     </div>
                 </div>

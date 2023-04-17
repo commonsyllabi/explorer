@@ -1,27 +1,27 @@
 import * as React from "react";
 
-import { IResources, ISyllabus } from "types";
+import { IAttachment, ISyllabus } from "types";
 
 import SyllabusResource from "components/Syllabus/SyllabusResource";
 import { kurintoSerif } from "app/layout";
 
 interface ISyllabusResourcesProps {
-  resources?: IResources[];
+  attachments?: IAttachment[];
 }
 
 const SyllabusResources: React.FunctionComponent<ISyllabusResourcesProps> = ({
-  resources,
+  attachments,
 }) => {
-  if (resources === undefined || resources.length < 1) {
-    return <p className="text-gray-600">No resources to show.</p>;
+  if (attachments === undefined || attachments.length < 1) {
+    return <p className="text-gray-600">No attachments to show.</p>;
   }
-  const resourceEls = resources.map((resource) => (
+  const resourceEls = attachments.map((att) => (
     <SyllabusResource
-      resourceTitle={resource.name}
-      resourceUrl={resource.url}
-      resourceDescription={resource.description}
-      resourceType={resource.type}
-      key={resource.uuid}
+      resourceTitle={att.name}
+      resourceUrl={att.url ? att.url : ""}
+      resourceDescription={att.description ? att.description : ""}
+      resourceType={att.type}
+      key={att.uuid}
     />
   ));
   return <div className="syllabus-resources">

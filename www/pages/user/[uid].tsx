@@ -202,14 +202,10 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo }) => {
                   {getSyllabusCards(
                     filteredSyllabi(),
                     default_filters,
-                    undefined,
-                    userInfo.name,
                     checkIfAdmin()
                   )?.elements ? getSyllabusCards(
                     filteredSyllabi(),
                     default_filters,
-                    undefined,
-                    userInfo.name,
                     checkIfAdmin()
                   )?.elements : "No syllabi yet."}
                 </div>
@@ -241,11 +237,9 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo }) => {
                 <div id="collections" className="flex flex-col gap-3">
                   {getCollectionCards(
                     filteredCollections(),
-                    userInfo.name,
                     checkIfAdmin()
                   ) ? getCollectionCards(
                     filteredCollections(),
-                    userInfo.name,
                     checkIfAdmin()
                   ) : "No collections yet."}
                 </div>

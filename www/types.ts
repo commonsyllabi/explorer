@@ -56,8 +56,14 @@ export interface ISyllabus {
   user: IUser;
   tags?: string[];
   description: string;
-  learning_outcomes?: string;
-  attachments?: IResources[];
+  duration: number;
+  learning_outcomes?: string[];
+  topic_outlines?: string[];
+  readings?: string[];
+  grading_rubric?: string;
+  assignments?: string[];
+  other?: string;
+  attachments?: IAttachment[];
   collections?: ICollection[];
 }
 
@@ -99,14 +105,17 @@ export interface IResources {
 
 export interface IAttachment {
   id: string;
+  uuid: string;
   name: string;
-  description: string;
+  description?: string;
   file: File;
-  url: string;
+  size?: string;
+  url?: string;
+  type: string;
 }
 
 export interface IUploadAttachment {
-  id: number;
+  id: string;
   name: string;
   description?: string;
   file?: File;

@@ -3,7 +3,6 @@ import { IUploadAttachment, IFormData, IFormInstitution } from "types"
 
 import models from "models.json"; //import academic field codes
 import modelsIsced from "models-isced.json"; //import tiered academic field codes
-import { Session } from "next-auth";
 
 //Get public/private form label
 export const getPublicPrivateLabel = (status: string) => {
@@ -21,14 +20,12 @@ const languages = require("@cospired/i18n-iso-languages");
 //Set up list of countries
 const setUpCountries = () => {
   countries.registerLocale(require("i18n-iso-countries/langs/en.json"));
-  // console.log(countries.getNames("en", { select: "official" }));
   const countriesList = countries.getNames("en", { select: "official" });
   let numericCountriesList: { [key: string]: string } = {};
   Object.keys(countriesList).forEach((countryAlpha2Code) => {
     const countryNumCode = countries.alpha2ToNumeric(countryAlpha2Code);
     numericCountriesList[countriesList[countryAlpha2Code]] = countryNumCode;
   });
-  // console.log(numericCountriesList);
   return numericCountriesList;
 };
 
@@ -48,7 +45,6 @@ const setUpLanguages = () => {
   languages.registerLocale(
     require("@cospired/i18n-iso-languages/langs/en.json")
   );
-  // console.log(languages.getNames("en"));
   return languages.getNames("en");
 };
 
@@ -70,6 +66,9 @@ const generateAcademicFields = (ACAD_FIELD_JSON_DATA: {
 }) => {
   const acadFields: { [key: string]: string | { [key: string]: string } } =
     ACAD_FIELD_JSON_DATA;
+
+  if (!acadFields)
+    return (<></>)
 
   const acadFieldsElements = Object.keys(acadFields).map((fieldCode) => (
     <option key={fieldCode} value={fieldCode}>
@@ -101,14 +100,12 @@ export const generateAcadFieldsDetailed = (narrowFieldCode: keyof typeof modelsI
 export const generateAcademicFieldsCheckboxes = (
   eventHandler: (event: React.SyntheticEvent) => void
 ) => {
-  // console.log(models.ACADEMIC_FIELDS);
   const acadFields: { [key: string]: string } = models.ACADEMIC_FIELDS;
   // Process acadFields into categories
 
   const acadFieldsCheckboxes = Object.keys(acadFields).map((fieldCode) => (
-    <Form.Check
+    <input
       type="checkbox"
-      label={`${acadFields[fieldCode]} [${fieldCode}]`}
       key={fieldCode}
       id={fieldCode}
       onChange={eventHandler}
@@ -180,7 +177,7 @@ export const isValidForm = (form: IFormData, attachments: IUploadAttachment[], i
   return { errors: messages }
 }
 
-export const submitForm = async (form: IFormData, endpoint: string, h: Headers): Promise<Response> => {
+export const submitForm = async (form: IFormData, endpoint: string, method: string, h: Headers): Promise<Response> => {
 
   let body = new FormData();
   for (let [key, value] of Object.entries(form)) {
@@ -188,18 +185,16 @@ export const submitForm = async (form: IFormData, endpoint: string, h: Headers):
       for (const t of value) {
         body.append("tags[]", t as string)
       }
-    else if(key == "academic_fields")
+    else if (key == "academic_fields")
       for (const t of value) {
         body.append("academic_fields[]", t as string)
       }
     else
-      body.append(key, value as string);    
+      body.append(key, value as string);
   }
 
-  // todo: have a 'pending' status
-  const syll_endpoint = new URL("/syllabi/", endpoint);
-  const res = await fetch(syll_endpoint, {
-    method: "POST",
+  const res = await fetch(endpoint, {
+    method: method,
     headers: h,
     body: body,
   })
@@ -207,7 +202,7 @@ export const submitForm = async (form: IFormData, endpoint: string, h: Headers):
   return res
 }
 
-export const submitInstitution = (institution: IFormInstitution, endpoint: URL, h: Headers): Promise<Response> => {
+export const submitInstitution = (institution: IFormInstitution, endpoint: URL, method: string, h: Headers): Promise<Response> => {
 
   const i = new FormData();
   i.append("name", institution.name);
@@ -217,7 +212,7 @@ export const submitInstitution = (institution: IFormInstitution, endpoint: URL, 
   i.append("date_term", institution.date_term);
 
   const res = fetch(endpoint, {
-    method: "POST",
+    method: method,
     headers: h,
     body: i,
   })
@@ -225,7 +220,7 @@ export const submitInstitution = (institution: IFormInstitution, endpoint: URL, 
   return res
 }
 
-export const submitAttachments = (att: IUploadAttachment, endpoint: URL, h: Headers): Promise<Response> => {
+export const submitAttachments = (att: IUploadAttachment, endpoint: URL, method: string, h: Headers): Promise<Response> => {
   const a = new FormData();
   a.append("name", att.name);
   a.append("description", att.description ? att.description : "");
@@ -233,7 +228,7 @@ export const submitAttachments = (att: IUploadAttachment, endpoint: URL, h: Head
   a.append("url", att.url ? att.url : ""); //-- otherwise it defaults to "undefined"
 
   const res = fetch(endpoint, {
-    method: "POST",
+    method: method,
     headers: h,
     body: a,
   })

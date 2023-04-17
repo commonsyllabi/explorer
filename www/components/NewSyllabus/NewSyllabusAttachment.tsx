@@ -12,7 +12,7 @@ const NewSyllbusAttachment: React.FunctionComponent<
   // Set up file data
 
   const blankAttachment: IUploadAttachment = {
-    id: 0,
+    id: '0',
     name: "",
     description: "",
     file: undefined,
@@ -30,11 +30,11 @@ const NewSyllbusAttachment: React.FunctionComponent<
   const setNewId = () => {
     let currentGreatestId;
     if (attachmentData.length) {
-      currentGreatestId = attachmentData[attachmentData.length - 1].id + 1;
+      currentGreatestId = parseInt(attachmentData[attachmentData.length - 1].id) + 1;
     } else {
       currentGreatestId = 0;
     }
-    setThisAttachment({ ...blankAttachment, id: currentGreatestId });
+    setThisAttachment({ ...blankAttachment, id: currentGreatestId.toString() });
   };
 
   // For togging between file and url upload UI
@@ -156,8 +156,8 @@ const NewSyllbusAttachment: React.FunctionComponent<
           <label htmlFor="attachmentType">URL</label>
         </div>
         {showFileUI ? (
-          <div id="uploadControlsFile">
-            <div>
+          <div id="uploadControlsFile" className="flex flex-col my-6">
+            
               <label>Upload your file here</label>
               <input
                 onChange={handleAttachmentFile}
@@ -166,7 +166,7 @@ const NewSyllbusAttachment: React.FunctionComponent<
                 id="file"
                 data-cy={"new-attachment-file"}
               />
-            </div>
+            
           </div>
         ) : (
           <div id="uploadControlsUrl">

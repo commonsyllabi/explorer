@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import type { NextPage } from "next";
+import React, { useState, useEffect, FormEvent } from "react";
+import type { GetServerSidePropsContext, GetStaticProps, NextPage } from "next";
 import { getSession, useSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
@@ -12,9 +12,8 @@ import {
   IInstitution,
   IFormInstitution,
   IParsedData,
+  ISyllabus,
 } from "types";
-
-import Badge from "react-bootstrap/Badge";
 
 //Components
 import NewSyllabusAttachment from "components/NewSyllabus/NewSyllabusAttachment";
@@ -39,8 +38,49 @@ import {
 import AddAcademicFieldsForm from "components/NewSyllabus/AddAcademicFieldsForm";
 import DragAndDropSyllabus from "components/NewSyllabus/DragAndDropSyllabus";
 import { kurintoSerif } from "app/layout";
+import { getToken } from "next-auth/jwt";
+import AttachmentItemEditable from "components/NewSyllabus/AttachmentItemEditable";
+import NotFound from "components/commons/NotFound";
+import Router from "next/router";
 
-const NewSyllabus: NextPage = () => {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const syllId = context.query.sid
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  const t = await getToken({ req: context.req, secret: process.env.NEXTAUTH_SECRET })
+
+  const token = t ? (t.user as { _id: string, token: string }).token : '';
+  const user_uuid = t ? (t.user as { _id: string, token: string })._id : '';
+  const url = new URL(`syllabi/${syllId}`, apiUrl);
+
+  const h = new Headers();
+  if (t)
+    h.append("Authorization", `Bearer ${token}`);
+
+  const res = await fetch(url, { headers: h });
+  if (res.ok) {
+    const info = await res.json();
+
+    if (info.user_uuid !== user_uuid)
+      return { props: {} }
+
+    return {
+      props: {
+        syllabusInfo: info
+      }
+    };
+  } else {
+    return {
+      props: {},
+    };
+  }
+
+};
+
+interface IEditSyllabusProps {
+  syllabusInfo: ISyllabus
+}
+
+const EditSyllabus: NextPage<IEditSyllabusProps> = ({ syllabusInfo }) => {
   const { data: session, status } = useSession();
   const [validated, setValidated] = useState(false);
   const [errors, setErrors] = useState(Array);
@@ -51,93 +91,66 @@ const NewSyllabus: NextPage = () => {
   const [syllabusUUID, setSyllabusUUID] = useState("");
   const [parsedData, setParsedData] = useState<IParsedData>();
 
-  useEffect(() => {
-
-  }, [parsedData]);
-
-  //Form data and submission handling
-  //---------------------------------------
-  //Store form data
-  // const [formData, setFormData] = useState<IFormData>({
-  //   institutions: [],
-  //   title: "",
-  //   course_number: "",
-  //   description: "",
-  //   attachments: [],
-  //   tags: [],
-  //   language: "",
-  //   learning_outcomes: [],
-  //   topic_outlines: [],
-  //   readings: [],
-  //   grading_rubric: "",
-  //   assignments: [],
-  //   other: "",
-  //   status: "unlisted",
-  //   academic_fields: [],
-  //   academic_level: 0,
-  //   duration: 0,
-  // });
+  if (!syllabusInfo || Object.keys(syllabusInfo).length === 0) {
+    return (<NotFound />)
+  }
 
   const [formData, setFormData] = useState<IFormData>({
-    institutions: [],
-    title: "",
-    course_number: "",
-    description: "",
-    attachments: [],
-    tags: [],
-    language: "",
-    learning_outcomes: [],
-    topic_outlines: [],
-    readings: [],
-    grading_rubric: "",
-    assignments: [],
-    other: "",
-    status: "listed",
-    academic_fields: [],
-    academic_level: 0,
-    duration: 0,
+    institutions: syllabusInfo.institutions as IInstitution[],
+    title: syllabusInfo.title,
+    course_number: syllabusInfo.course_number as string,
+    description: syllabusInfo.description,
+    attachments: syllabusInfo.attachments as IAttachment[],
+    tags: syllabusInfo.tags as string[],
+    language: syllabusInfo.language,
+    learning_outcomes: syllabusInfo.learning_outcomes as string[],
+    topic_outlines: syllabusInfo.topic_outlines as string[],
+    readings: syllabusInfo.readings as string[],
+    grading_rubric: syllabusInfo.grading_rubric as string,
+    assignments: syllabusInfo.assignments as string[],
+    other: syllabusInfo.other as string,
+    status: syllabusInfo.status,
+    academic_fields: syllabusInfo.academic_fields.map(ac => { return ac.toString() }),
+    academic_level: syllabusInfo.academic_level as number,
+    duration: syllabusInfo.duration as number,
   });
 
+  console.log(syllabusInfo);
+
+
   const [institutionData, setInstitutionData] = useState<IFormInstitution>({
-    name: "",
-    country: "",
-    url: "",
-    date_year: "",
-    date_term: "",
+    name: syllabusInfo.institutions && syllabusInfo.institutions.length > 0 ? syllabusInfo.institutions[0].name : "",
+    country: syllabusInfo.institutions && syllabusInfo.institutions.length > 0 ? syllabusInfo.institutions[0].country as unknown as string : "",
+    url: syllabusInfo.institutions && syllabusInfo.institutions.length > 0 ? syllabusInfo.institutions[0].url as string : "",
+    date_year: syllabusInfo.institutions && syllabusInfo.institutions.length > 0 ? syllabusInfo.institutions[0].date.year : "",
+    date_term: syllabusInfo.institutions && syllabusInfo.institutions.length > 0 ? syllabusInfo.institutions[0].date.term as string : "",
   });
 
   //Handle form submission
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL as string;
   const handleSubmit = async (event: React.BaseSyntheticEvent) => {
-    // const form = event.currentTarget;
     event.preventDefault();
     event.stopPropagation();
-    // if (form.checkValidity() === false) {
-    //   setValidated(true);
-    // }
 
-    // check if user is logged in
     if (session == null || session.user == null) {
-      setErrors([
-        `It seems you have been logged out. Please log in and try again.`,
-      ]);
-      console.warn("No session found!");
+      Router.push("/auth/signin")
       return;
     }
 
-    // bootstrap also supports validation with form.checkValidity()
     const validForm = isValidForm(formData, attachmentData, institutionData);
     if (validForm.errors.length > 0) {
       setErrors(validForm.errors);
       return;
     }
 
-    const header = new Headers();
-    header.append("Authorization", `Bearer ${session.user.token}`);
+    const h = new Headers();
+    h.append("Authorization", `Bearer ${session.user.token}`);
 
-    const res = await submitForm(formData, apiUrl, "POST", header);
+    const syll_endpoint = new URL(`syllabi/${syllabusInfo.uuid}`, process.env.NEXT_PUBLIC_API_URL)
+    console.log(syll_endpoint);
+
+    const res = await submitForm(formData, syll_endpoint.toString(), "PATCH", h);
     setFormSubmitted(true);
-    if (res.status !== 201) {
+    if (res.status !== 200) {
       const err = await res.text();
       setErrors([err]);
       setSyllabusCreated("failed");
@@ -148,11 +161,27 @@ const NewSyllabus: NextPage = () => {
     setSyllabusCreated("created");
     setSyllabusUUID(body.uuid);
 
-    const instit_endpoint = new URL(
-      `/syllabi/${body.uuid}/institutions`,
-      apiUrl
-    );
-    submitInstitution(institutionData, instit_endpoint, "POST", header).then(
+    //-- if the syllabus has no institutions, add one
+    //-- otherwise, edit the one in place
+    let instit_endpoint, method: string = '';
+    if (syllabusInfo && syllabusInfo.institutions && syllabusInfo.institutions.length === 0) {
+      instit_endpoint = new URL(
+        `/syllabi/${body.uuid}/institutions`,
+        process.env.NEXT_PUBLIC_API_URL
+      );
+      method = 'POST'
+    } else if (syllabusInfo && syllabusInfo.institutions && syllabusInfo.institutions.length === 1) {
+      instit_endpoint = new URL(
+        `/syllabi/${body.uuid}/institutions/${syllabusInfo.institutions[0].uuid}`,
+        process.env.NEXT_PUBLIC_API_URL
+      );
+      method = 'PATCH'
+    } else {
+      console.warn("Unexpected number of institutions:", syllabusInfo.institutions)
+      return;
+    }
+
+    submitInstitution(institutionData, instit_endpoint, method, h).then(
       (res) => {
         if (res.status === 200) {
           setInstitutionCreated("created");
@@ -162,16 +191,19 @@ const NewSyllabus: NextPage = () => {
       }
     );
 
+
+    //-- edits to existing attachments are handled separately. here we add new attachments only
+    //-- todo: currently, existing attachments are being recreated
     if (attachmentData.length === 0) {
       setAttachmentsCreated("created");
       return;
     }
     const attach_endpoint = new URL(
       `/attachments/?syllabus_id=${body.uuid}`,
-      apiUrl
+      process.env.NEXT_PUBLIC_API_URL
     );
     attachmentData.map((att) => {
-      submitAttachments(att, attach_endpoint, "POST", header).then((res) => {
+      submitAttachments(att, attach_endpoint, "POST", h).then((res) => {
         if (res.status === 201) {
           setAttachmentsCreated("created");
         } else {
@@ -206,13 +238,17 @@ const NewSyllabus: NextPage = () => {
   };
 
   const [attachmentData, setAttachmentData] = useState(
-    Array<IUploadAttachment>
+    syllabusInfo.attachments ? syllabusInfo.attachments.map((att, i) => {
+      att.id = i.toString()
+      att.type = att.url ? att.url.startsWith("http") ? "url" : "file" : "file"
+      return att
+    }) : []
   );
 
   //display elements for attachment
-  const getUploadedAttachments = (attachmentData: IUploadAttachment[]) => {
+  const getUploadedAttachments = (attachmentData: IAttachment[]) => {
     const uploadedAttachments = attachmentData.map((attachment) => (
-      <AttachmentItem
+      <AttachmentItemEditable
         key={`attachment-${attachment.id}`}
         attachment={attachment}
         attachmentData={attachmentData}
@@ -281,7 +317,7 @@ const NewSyllabus: NextPage = () => {
         <div className="w-11/12 md:w-10/12 m-auto mt-8">
           <div className="pt-3 pb-3">
             <div className="col-8 offset-2">
-              <h1 className={`${kurintoSerif.className} text-3xl`}>New Syllabus</h1>
+              <h1 className={`${kurintoSerif.className} text-3xl`}>Edit Syllabus</h1>
             </div>
           </div>
 
@@ -457,8 +493,8 @@ const NewSyllabus: NextPage = () => {
                   </div> */}
 
                 <AddAcademicFieldsForm
+                  academicFields={formData.academic_fields}
                   setAcadFieldsData={setAcadFieldsData}
-                  academicFields={[]}
                 />
 
                 <div className="mb-5">
@@ -488,6 +524,7 @@ const NewSyllabus: NextPage = () => {
                     id="language"
                     onChange={handleChange}
                     data-cy="courseLanguageInput"
+                    value={formData.language.toUpperCase()}
                   >
                     <option value="">—</option>
                     {generateLanguageOptions()}
@@ -508,6 +545,7 @@ const NewSyllabus: NextPage = () => {
                       type="text"
                       id="duration"
                       onChange={handleChange}
+                      value={formData.duration}
                       placeholder="e.g. 14 weeks"
                       data-cy="courseDurationInput"
                     />
@@ -523,6 +561,7 @@ const NewSyllabus: NextPage = () => {
                     required
                     id="tags"
                     onChange={handleChange}
+                    value={formData.tags.join(", ")}
                     placeholder="introductory, sociology, methodology"
                     data-cy="courseTagsInput"
                   />
@@ -541,6 +580,7 @@ const NewSyllabus: NextPage = () => {
                     id="description"
                     onChange={handleChange}
                     rows={4}
+                    value={formData.description}
                     placeholder="Course outline..."
                     data-cy="courseDescriptionInput"
                   />
@@ -558,6 +598,7 @@ const NewSyllabus: NextPage = () => {
                     id="learning_outcomes"
                     onChange={handleChange}
                     rows={4}
+                    value={formData.learning_outcomes}
                     placeholder="Course learning outcomes..."
                     data-cy="courseLearningOutcomes"
                   />
@@ -565,13 +606,14 @@ const NewSyllabus: NextPage = () => {
 
                 <div className="flex flex-col my-8 gap-2">
                   <label htmlFor="topic_outlines">
-                    Topics Outline
+                    Topics
                   </label>
                   <textarea
                     className="bg-transparent mt-2 p-1 border border-gray-900"
                     id="topic_outlines"
                     onChange={handleChange}
                     rows={4}
+                    value={formData.topic_outlines}
                     placeholder="Course topics outline..."
                     data-cy="courseTopicsOutline"
                   />
@@ -584,6 +626,7 @@ const NewSyllabus: NextPage = () => {
                     id="readings"
                     onChange={handleChange}
                     rows={4}
+                    value={formData.readings}
                     placeholder="Course readings..."
                     data-cy="courseReadings"
                   />
@@ -598,6 +641,7 @@ const NewSyllabus: NextPage = () => {
                     id="grading_rubric"
                     onChange={handleChange}
                     rows={4}
+                    value={formData.grading_rubric}
                     placeholder="Course grading rubric..."
                     data-cy="courseGradingRubric"
                   />
@@ -609,6 +653,7 @@ const NewSyllabus: NextPage = () => {
                     className="bg-transparent mt-2 p-1 border border-gray-900"
                     id="assignments"
                     rows={4}
+                    value={formData.assignments}
                     placeholder="Course assignments..."
                     data-cy="courseAssignments"
                   />
@@ -628,7 +673,7 @@ const NewSyllabus: NextPage = () => {
                 </div>
 
                 <button onClick={handleSubmit} data-cy="courseSubmitButton" className="p-2 bg-gray-900 text-gray-100 border-2 rounded-md">
-                  Submit New Syllabus
+                  Save changes
                 </button>
 
                 {errors.length > 0 ? (
@@ -667,4 +712,4 @@ const NewSyllabus: NextPage = () => {
   );
 };
 
-export default NewSyllabus;
+export default EditSyllabus;

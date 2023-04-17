@@ -15,12 +15,12 @@ export const getAcademicFieldsText = (_fields: number[]) => {
             case 3:
                 fields.push("Personal skills and development");
                 break
-        
+
             case 100:
                 fields.push("Education");
                 break
             case 11:
-                fields.push( "Education");
+                fields.push("Education");
                 break
             case 111:
                 fields.push("Education sciences");
@@ -34,12 +34,12 @@ export const getAcademicFieldsText = (_fields: number[]) => {
             case 114:
                 fields.push("Teacher training with subject specialization");
                 break
-        
+
             case 200:
                 fields.push("Arts and humanities");
                 break
             case 21:
-                fields.push( "Arts");
+                fields.push("Arts");
                 break
             case 211:
                 fields.push("Audio-visual techniques and media production");
@@ -57,7 +57,7 @@ export const getAcademicFieldsText = (_fields: number[]) => {
                 fields.push("Music and performing arts");
                 break
             case 22:
-                fields.push( "Humanities");
+                fields.push("Humanities");
                 break
             case 221:
                 fields.push("Religion and theology");
@@ -74,12 +74,12 @@ export const getAcademicFieldsText = (_fields: number[]) => {
             case 232:
                 fields.push("Literature and linguistics");
                 break
-        
+
             case 300:
                 fields.push("Social sciences, journalism and information");
                 break
             case 31:
-                fields.push( "Social and behavioural sciences");
+                fields.push("Social and behavioural sciences");
                 break
             case 311:
                 fields.push("Economics");
@@ -94,7 +94,7 @@ export const getAcademicFieldsText = (_fields: number[]) => {
                 fields.push("Sociology and cultural studies");
                 break
             case 32:
-                fields.push( "Journalism and information");
+                fields.push("Journalism and information");
                 break
             case 321:
                 fields.push("Journalism and reporting");
@@ -102,12 +102,12 @@ export const getAcademicFieldsText = (_fields: number[]) => {
             case 322:
                 fields.push("Library, information and archival studies");
                 break
-        
+
             case 400:
                 fields.push("Business, Administration and law");
                 break
             case 41:
-                fields.push( "Business and administration");
+                fields.push("Business and administration");
                 break
             case 411:
                 fields.push("Accounting and taxation");
@@ -131,17 +131,17 @@ export const getAcademicFieldsText = (_fields: number[]) => {
                 fields.push("Work skills");
                 break
             case 42:
-                fields.push( "Law");
+                fields.push("Law");
                 break
             case 421:
                 fields.push("Law");
                 break
-        
+
             case 500:
                 fields.push("Natural sciences, mathematics and statistics");
                 break
             case 51:
-                fields.push( "Biological and related sciences");
+                fields.push("Biological and related sciences");
                 break
             case 511:
                 fields.push("Biology");
@@ -150,7 +150,7 @@ export const getAcademicFieldsText = (_fields: number[]) => {
                 fields.push("Biochemistry");
                 break
             case 52:
-                fields.push( "Environment");
+                fields.push("Environment");
                 break
             case 521:
                 fields.push("Environmental sciences");
@@ -159,7 +159,7 @@ export const getAcademicFieldsText = (_fields: number[]) => {
                 fields.push("Natural environments and wildlife");
                 break
             case 53:
-                fields.push( "Physical Sciences");
+                fields.push("Physical Sciences");
                 break
             case 531:
                 fields.push("Chemistry");
@@ -171,7 +171,7 @@ export const getAcademicFieldsText = (_fields: number[]) => {
                 fields.push("Physics");
                 break
             case 54:
-                fields.push( "Mathematics and sciences");
+                fields.push("Mathematics and sciences");
                 break
             case 541:
                 fields.push("Mathematics");
@@ -179,12 +179,12 @@ export const getAcademicFieldsText = (_fields: number[]) => {
             case 542:
                 fields.push("Statistics");
                 break
-        
+
             case 600:
                 fields.push("Information and communication technologies");
                 break
             case 61:
-                fields.push( "Information and Communication Technologies");
+                fields.push("Information and Communication Technologies");
                 break
             case 611:
                 fields.push("Computer use");
@@ -195,12 +195,12 @@ export const getAcademicFieldsText = (_fields: number[]) => {
             case 613:
                 fields.push("Software and application development and anaysis");
                 break
-        
+
             case 700:
                 fields.push("Engineering, manufacturing and construction");
                 break
             case 71:
-                fields.push( "Engineering and engineering trades");
+                fields.push("Engineering and engineering trades");
                 break
             case 711:
                 fields.push("Chemical engineering and processes");
@@ -221,7 +221,7 @@ export const getAcademicFieldsText = (_fields: number[]) => {
                 fields.push("Motor vehicles, ships and aircrafts");
                 break
             case 72:
-                fields.push( "Manufacturing and processing");
+                fields.push("Manufacturing and processing");
                 break
             case 721:
                 fields.push("Food processing");
@@ -236,7 +236,7 @@ export const getAcademicFieldsText = (_fields: number[]) => {
                 fields.push("Mining and extraction");
                 break
             case 73:
-                fields.push( "Architecture and construction");
+                fields.push("Architecture and construction");
                 break
             case 731:
                 fields.push("Architecture and town planning");
@@ -244,12 +244,12 @@ export const getAcademicFieldsText = (_fields: number[]) => {
             case 732:
                 fields.push("Building and civil engineering");
                 break
-        
+
             case 800:
                 fields.push("Agriculture, forestry, fisheries and veterinary");
                 break
             case 81:
-                fields.push( "Agriculture");
+                fields.push("Agriculture");
                 break
             case 811:
                 fields.push("Crop and livestock production");
@@ -258,29 +258,29 @@ export const getAcademicFieldsText = (_fields: number[]) => {
                 fields.push("Horticulture");
                 break
             case 82:
-                fields.push( "Forestry");
+                fields.push("Forestry");
                 break
             case 821:
                 fields.push("Forestry");
                 break
             case 83:
-                fields.push( "Fisheries");
+                fields.push("Fisheries");
                 break
             case 831:
                 fields.push("Fisheries");
                 break
             case 84:
-                fields.push( "Veterinary");
+                fields.push("Veterinary");
                 break
             case 841:
                 fields.push("Veterinary");
                 break
-        
+
             case 900:
                 fields.push("Health and Welfare");
                 break
             case 91:
-                fields.push( "Health");
+                fields.push("Health");
                 break
             case 911:
                 fields.push("Dental studies");
@@ -303,12 +303,12 @@ export const getAcademicFieldsText = (_fields: number[]) => {
             case 917:
                 fields.push("Traditional and complementary medicine and therapy");
                 break
-        
+
             case 1000:
                 fields.push("Services");
                 break
             case 101:
-                fields.push( "Personal services");
+                fields.push("Personal services");
                 break
             case 1011:
                 fields.push("Domestic services");
@@ -326,7 +326,7 @@ export const getAcademicFieldsText = (_fields: number[]) => {
                 fields.push("Travel, tourism, and leisure");
                 break
             case 102:
-                fields.push( "Hygiene and occupational health services");
+                fields.push("Hygiene and occupational health services");
                 break
             case 1021:
                 fields.push("Community sanitation");
@@ -341,15 +341,244 @@ export const getAcademicFieldsText = (_fields: number[]) => {
                 fields.push("Protection of persons and property");
                 break
             case 104:
-                fields.push( "Transport");
+                fields.push("Transport");
                 break
             case 1041:
                 fields.push("Transportation services");
                 break
             default:
-              fields.push(`Default: ${field}`)
-          }
+                fields.push(`Default: ${field}`)
+        }
     }
 
     return fields;
-  };
+};
+
+export const getSingleAcademicFieldText = (_field: number) => {
+    switch (_field) {
+        case 0:
+            return ("Generic");
+        case 1:
+            return ("Basic programmes and qualifications");
+        case 2:
+            return ("Literacy and numeracy");
+        case 3:
+            return ("Personal skills and development");
+        case 100:
+            return ("Education");
+        case 11:
+            return ("Education");
+        case 111:
+            return ("Education sciences");
+        case 112:
+            return ("Training for pre-school teachers");
+        case 113:
+            return ("Teacher training without subject specialization");
+        case 114:
+            return ("Teacher training with subject specialization");
+        case 200:
+            return ("Arts and humanities");
+        case 21:
+            return ("Arts");
+        case 211:
+            return ("Audio-visual techniques and media production");
+        case 212:
+            return ("Fashion, interior and industrial design");
+        case 213:
+            return ("Fine arts");
+        case 214:
+            return ("Handicrafts");
+        case 215:
+            return ("Music and performing arts");
+        case 22:
+            return ("Humanities");
+        case 221:
+            return ("Religion and theology");
+        case 222:
+            return ("History and archeology");
+        case 223:
+            return ("Philosophy and ethics");
+        case 231:
+            return ("Language acquisition");
+        case 232:
+            return ("Literature and linguistics");
+        case 300:
+            return ("Social sciences, journalism and information");
+        case 31:
+            return ("Social and behavioural sciences");
+        case 311:
+            return ("Economics");
+        case 312:
+            return ("Political sciences and civics");
+        case 313:
+            return ("Psychology");
+        case 314:
+            return ("Sociology and cultural studies");
+        case 32:
+            return ("Journalism and information");
+        case 321:
+            return ("Journalism and reporting");
+        case 322:
+            return ("Library, information and archival studies");
+        case 400:
+            return ("Business, Administration and law");
+        case 41:
+            return ("Business and administration");
+        case 411:
+            return ("Accounting and taxation");
+        case 412:
+            return ("Finance, banking and insurance");
+        case 413:
+            return ("Management and administration");
+        case 414:
+            return ("Marketing and advertising");
+        case 415:
+            return ("Secretarial and office work");
+        case 416:
+            return ("Wholesale and retail sales");
+        case 417:
+            return ("Work skills");
+        case 42:
+            return ("Law");
+        case 421:
+            return ("Law");
+        case 500:
+            return ("Natural sciences, mathematics and statistics");
+        case 51:
+            return ("Biological and related sciences");
+        case 511:
+            return ("Biology");
+        case 512:
+            return ("Biochemistry");
+        case 52:
+            return ("Environment");
+        case 521:
+            return ("Environmental sciences");
+        case 522:
+            return ("Natural environments and wildlife");
+        case 53:
+            return ("Physical Sciences");
+        case 531:
+            return ("Chemistry");
+        case 532:
+            return ("Earth sciences");
+        case 533:
+            return ("Physics");
+        case 54:
+            return ("Mathematics and sciences");
+        case 541:
+            return ("Mathematics");
+        case 542:
+            return ("Statistics");
+        case 600:
+            return ("Information and communication technologies");
+        case 61:
+            return ("Information and Communication Technologies");
+        case 611:
+            return ("Computer use");
+        case 612:
+            return ("Database and network design and administration");
+        case 613:
+            return ("Software and application development and anaysis");
+        case 700:
+            return ("Engineering, manufacturing and construction");
+        case 71:
+            return ("Engineering and engineering trades");
+        case 711:
+            return ("Chemical engineering and processes");
+        case 712:
+            return ("Environmental protextion technology");
+        case 713:
+            return ("Electricity and energy");
+        case 714:
+            return ("Electronics and automation");
+        case 715:
+            return ("Mechanics and metal trades");
+        case 716:
+            return ("Motor vehicles, ships and aircrafts");
+        case 72:
+            return ("Manufacturing and processing");
+        case 721:
+            return ("Food processing");
+        case 722:
+            return ("Materials (glass, paper, plastic and wood)");
+        case 723:
+            return ("Textile (clothes, footwear, leather)");
+        case 724:
+            return ("Mining and extraction");
+        case 73:
+            return ("Architecture and construction");
+        case 731:
+            return ("Architecture and town planning");
+        case 732:
+            return ("Building and civil engineering");
+        case 800:
+            return ("Agriculture, forestry, fisheries and veterinary");
+        case 81:
+            return ("Agriculture");
+        case 811:
+            return ("Crop and livestock production");
+        case 812:
+            return ("Horticulture");
+        case 82:
+            return ("Forestry");
+        case 821:
+            return ("Forestry");
+        case 83:
+            return ("Fisheries");
+        case 831:
+            return ("Fisheries");
+        case 84:
+            return ("Veterinary");
+        case 841:
+            return ("Veterinary");
+        case 900:
+            return ("Health and Welfare");
+        case 91:
+            return ("Health");
+        case 911:
+            return ("Dental studies");
+        case 912:
+            return ("Medicine");
+        case 913:
+            return ("Nursing and midwifery");
+        case 914:
+            return ("Medical diagnostic and treatment technology");
+        case 915:
+            return ("Therapy and rehabilitation");
+        case 916:
+            return ("Pharmacy");
+        case 917:
+            return ("Traditional and complementary medicine and therapy");
+        case 1000:
+            return ("Services");
+        case 101:
+            return ("Personal services");
+        case 1011:
+            return ("Domestic services");
+        case 1012:
+            return ("Hair and beauty services");
+        case 1013:
+            return ("Hotel, restaurants and catering");
+        case 1014:
+            return ("Sports");
+        case 1015:
+            return ("Travel, tourism, and leisure");
+        case 102:
+            return ("Hygiene and occupational health services");
+        case 1021:
+            return ("Community sanitation");
+        case 1022:
+            return ("Occupational and health and safety");
+        case 1031:
+            return ("Military and defence");
+        case 1032:
+            return ("Protection of persons and property");
+        case 104:
+            return ("Transport");
+        case 1041:
+            return ("Transportation services");
+        default:
+            return (`Default: ${_field}`)
+    }
+}

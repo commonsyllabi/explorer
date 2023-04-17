@@ -10,7 +10,7 @@ interface IAttachmentItemFileProps {
   setAttachmentData: Function;
 }
 
-const AttachmentItemFile: React.FunctionComponent<IAttachmentItemFileProps> = ({
+const AttachmentItem: React.FunctionComponent<IAttachmentItemFileProps> = ({
   attachment,
   attachmentData,
   setAttachmentData,
@@ -19,7 +19,7 @@ const AttachmentItemFile: React.FunctionComponent<IAttachmentItemFileProps> = ({
     const t = event.target as HTMLInputElement;
 
     let keepTheseAttachments = attachmentData.filter((attachment) => {
-      return attachment.id != parseInt(t.id);
+      return attachment.id != t.id;
     });
     setAttachmentData(keepTheseAttachments);
   };
@@ -69,4 +69,4 @@ const AttachmentItemFile: React.FunctionComponent<IAttachmentItemFileProps> = ({
 
 };
 
-export default AttachmentItemFile;
+export default AttachmentItem;

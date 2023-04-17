@@ -23,6 +23,7 @@ import { useState } from "react";
 import AddToCollection from "components/Collection/AddToCollection";
 import addCircleIcon from '../../public/icons/add-circle-line.svg'
 import deleteIcon from '../../public/icons/delete-bin-line.svg'
+import editIcon from '../../public/icons/edit-box-line.svg'
 import { kurintoSerif } from "app/layout";
 import SyllabusDelete from "components/Syllabus/SyllabusDelete";
 import Modal from "components/commons/Modal";
@@ -168,7 +169,7 @@ const Syllabus: NextPage<ISyllabusPageProps> = ({ syllabusInfo, userCollections 
                   </p>
                 </div>
 
-                <SyllabusResources resources={syllabusInfo.attachments} />
+                <SyllabusResources attachments={syllabusInfo.attachments} />
               </div>
             </div>
           </div>
@@ -183,10 +184,16 @@ const Syllabus: NextPage<ISyllabusPageProps> = ({ syllabusInfo, userCollections 
               <></>
             }
             {checkIfAdmin() ?
-              <button onClick={() => setShowDeleteModal(true)} className="mt-3 flex p-2 bg-red-400 hover:bg-red-500 text-white rounded-md gap-3" >
-                <Image src={deleteIcon} width="24" height="24" alt="Icon to edit the name" />
-                <div>Delete syllabus</div>
-              </button>
+              <>
+                <Link href={`/edit-syllabus?sid=${syllabusInfo.uuid}`} className="mt-3 flex p-2 rounded-md gap-3 border border-gray-900" >
+                  <Image src={editIcon} width="24" height="24" alt="Icon to edit the name" />
+                  <div>Edit syllabus</div>
+                </Link>
+                <button onClick={() => setShowDeleteModal(true)} className="mt-3 flex p-2 bg-red-400 hover:bg-red-500 text-white rounded-md gap-3" >
+                  <Image src={deleteIcon} width="24" height="24" alt="Icon to delete the syllabus" />
+                  <div>Delete syllabus</div>
+                </button>
+              </>
               : <></>}
           </div>
           {isAddingToCollection ?

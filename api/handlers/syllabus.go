@@ -284,6 +284,42 @@ func RemoveSyllabusAttachment(c echo.Context) error {
 	return c.JSON(http.StatusOK, syll)
 }
 
+func EditUserInstitution(c echo.Context) error {
+	user_uuid := mustGetUser(c)
+	if user_uuid == uuid.Nil {
+		return c.String(http.StatusUnauthorized, "unauthorized")
+	}
+
+	owner_id := c.Param("id")
+	owner_uuid, err := uuid.Parse(owner_id)
+	if err != nil {
+		zero.Error(err.Error())
+		return c.String(http.StatusBadRequest, "Not a valid ID")
+	}
+
+	inst_id := c.Param("inst_id")
+	inst_uid, err := uuid.Parse(inst_id)
+	if err != nil {
+		zero.Error(err.Error())
+		return c.JSON(http.StatusBadRequest, "Not a valid institution ID.")
+	}
+
+	var inst models.Institution
+	err = c.Bind(&inst)
+	if err != nil {
+		zero.Error(err.Error())
+		return c.String(http.StatusBadRequest, "We had a problem binding your information, please check it again.")
+	}
+
+	syll, err := models.EditInstitutionToSyllabus(owner_uuid, user_uuid, inst_uid, &inst)
+	if err != nil {
+		zero.Error(err.Error())
+		return c.String(http.StatusInternalServerError, "We had a problem adding the Institution to the User profile.")
+	}
+
+	return c.JSON(http.StatusOK, syll)
+}
+
 func RemoveSyllabusInstitution(c echo.Context) error {
 	user_uuid := mustGetUser(c)
 	if user_uuid == uuid.Nil {
