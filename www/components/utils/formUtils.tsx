@@ -33,7 +33,7 @@ const setUpCountries = () => {
 export const generateCountryOptions = () => {
   const countries = setUpCountries();
   const elements = Object.keys(countries).map((countryName) => (
-    <option key={countries[countryName]} value={countries[countryName]}>
+    <option key={countries[countryName]} value={parseInt(countries[countryName])}>
       {countryName}
     </option>
   ));

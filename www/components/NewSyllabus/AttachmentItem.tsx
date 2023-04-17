@@ -15,11 +15,9 @@ const AttachmentItem: React.FunctionComponent<IAttachmentItemFileProps> = ({
   attachmentData,
   setAttachmentData,
 }) => {
-  const removeAttachment = (event: React.SyntheticEvent) => {    
-    const t = event.target as HTMLInputElement;
-
-    let keepTheseAttachments = attachmentData.filter((attachment) => {
-      return attachment.id != t.id;
+  const removeAttachment = () => {    
+    let keepTheseAttachments = attachmentData.filter((att) => {
+      return att.id != attachment.id;
     });
     setAttachmentData(keepTheseAttachments);
   };
@@ -27,7 +25,7 @@ const AttachmentItem: React.FunctionComponent<IAttachmentItemFileProps> = ({
   return (
     <div className="my-3 p-3 rounded-md bg-gray-100 border-gray-400 border-2">
       <div className="font-bold">
-        #{attachment.id + 1} - {attachment.name}
+        #{parseInt(attachment.id) + 1} - {attachment.name}
       </div>
 
       {attachment.type === "url" ?

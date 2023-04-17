@@ -162,7 +162,7 @@ const EditSyllabus: NextPage<IEditSyllabusProps> = ({ syllabusInfo }) => {
     setSyllabusUUID(body.uuid);
 
     //-- if the syllabus has no institutions, add one
-    //-- otherwise, edit the one in place
+    //-- otherwise, edit the existing one
     let instit_endpoint, method: string = '';
     if (syllabusInfo && syllabusInfo.institutions && syllabusInfo.institutions.length === 0) {
       instit_endpoint = new URL(
@@ -202,7 +202,7 @@ const EditSyllabus: NextPage<IEditSyllabusProps> = ({ syllabusInfo }) => {
       `/attachments/?syllabus_id=${body.uuid}`,
       process.env.NEXT_PUBLIC_API_URL
     );
-    attachmentData.map((att) => {
+    newAttachmentData.map((att) => {
       submitAttachments(att, attach_endpoint, "POST", h).then((res) => {
         if (res.status === 201) {
           setAttachmentsCreated("created");
@@ -245,18 +245,31 @@ const EditSyllabus: NextPage<IEditSyllabusProps> = ({ syllabusInfo }) => {
     }) : []
   );
 
+  const [newAttachmentData, setNewAttachmentData] = useState<IAttachment[]>([])
+
   //display elements for attachment
-  const getUploadedAttachments = (attachmentData: IAttachment[]) => {
+  const getExistingAttachments = (attachmentData: IAttachment[]) => {
     const uploadedAttachments = attachmentData.map((attachment) => (
       <AttachmentItemEditable
-        key={`attachment-${attachment.id}`}
+        key={`attachment-editable-${attachment.id}`}
         attachment={attachment}
-        attachmentData={attachmentData}
-        setAttachmentData={setAttachmentData}
       />
     ));
     return uploadedAttachments;
   };
+
+  const getNewAttachments = (attachmentData: IAttachment[]) => {
+    const uploadedAttachments = attachmentData.map((attachment) => (
+      <AttachmentItem
+        key={`attachment-new-${attachment.id}`}
+        attachment={attachment}
+        attachmentData={newAttachmentData}
+        setAttachmentData={setNewAttachmentData}
+      />
+    ));
+    return uploadedAttachments;
+  };
+
 
   //if submitted, show progress and status confirmation
   if (status === "authenticated" && formSubmitted === true) {
@@ -269,7 +282,7 @@ const EditSyllabus: NextPage<IEditSyllabusProps> = ({ syllabusInfo }) => {
                 attachmentsCreated === "created" &&
                 institutionCreated === "created" ? (
                 <>
-                  <h2>Success!</h2>
+                  <h1 className="text-2xl my-8">Success!</h1>
                   <div>
                     View{" "}
                     <Link href={`/syllabus/${syllabusUUID}`}>
@@ -280,27 +293,13 @@ const EditSyllabus: NextPage<IEditSyllabusProps> = ({ syllabusInfo }) => {
                 </>
               ) : (
                 <>
-                  <h1 className="h3">Creating new syllabus...</h1>
-
+                  <h1 className="text-2xl my-8">Saving...</h1>
                   <ul>
                     <SyllabusCreationStatus status={syllabusCreated} />
-                    <li>
-                      syllabusCreated:
-                      <pre>{syllabusCreated}</pre>
-                    </li>
-
                     <InstitutionCreationStatus status={institutionCreated} />
-                    <li>
-                      institutionCreated:
-                      <pre>{institutionCreated}</pre>
-                    </li>
-
                     <AttachmentsCreationStatus status={attachmentsCreated} />
-                    <li>
-                      attachmentsCreated:
-                      <pre>{attachmentsCreated}</pre>
-                    </li>
                   </ul>
+                  <div onClick={() => Router.reload()} className="mt-8 underline cursor-pointer">Back to editing</div>
                 </>
               )}
             </div>
@@ -389,6 +388,7 @@ const EditSyllabus: NextPage<IEditSyllabusProps> = ({ syllabusInfo }) => {
                         type="text"
                         required
                         id="name"
+                        value={institutionData.name}
                         placeholder="e.g. Open University"
                         onChange={handleInstitutionChange}
                         data-cy="institutionNameInput"
@@ -405,6 +405,7 @@ const EditSyllabus: NextPage<IEditSyllabusProps> = ({ syllabusInfo }) => {
                     <select
                       className="w-full bg-transparent mt-2 p-1 border-2 border-gray-900"
                       id="country"
+                      value={institutionData.country}
                       onChange={handleInstitutionChange}
                       data-cy="institutionCountryInput"
                     >
@@ -425,6 +426,7 @@ const EditSyllabus: NextPage<IEditSyllabusProps> = ({ syllabusInfo }) => {
                         className="w-full bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
                         type="url"
                         id="url"
+                        value={institutionData.url}
                         placeholder="e.g. https://open.university"
                         onChange={handleInstitutionChange}
                         data-cy="institutionUrlInput"
@@ -442,6 +444,7 @@ const EditSyllabus: NextPage<IEditSyllabusProps> = ({ syllabusInfo }) => {
                           required
                           id="date_year"
                           placeholder="e.g. 2021"
+                          value={institutionData.date_year}
                           type="number"
                           min="1800"
                           max={new Date().getFullYear()}
@@ -463,6 +466,7 @@ const EditSyllabus: NextPage<IEditSyllabusProps> = ({ syllabusInfo }) => {
                           type="text"
                           required
                           id="date_term"
+                          value={institutionData.date_term}
                           placeholder="e.g. Spring"
                           onChange={handleInstitutionChange}
                           data-cy="institutionTermInput"
@@ -665,10 +669,11 @@ const EditSyllabus: NextPage<IEditSyllabusProps> = ({ syllabusInfo }) => {
                   <h2 className="text-xl">
                     Attachments ({attachmentData.length})
                   </h2>
-                  {getUploadedAttachments(attachmentData)}
+                  {getExistingAttachments(attachmentData)}
+                  {getNewAttachments(newAttachmentData)}
                   <NewSyllabusAttachment
-                    attachmentData={attachmentData}
-                    setAttachmentData={setAttachmentData}
+                    attachmentData={newAttachmentData}
+                    setAttachmentData={setNewAttachmentData}
                   />
                 </div>
 

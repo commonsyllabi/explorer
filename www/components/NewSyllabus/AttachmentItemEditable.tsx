@@ -9,15 +9,12 @@ import { signOut, useSession } from "next-auth/react";
 import Router from "next/router";
 import { useState } from "react";
 
-interface IAttachmentItemFileProps {
+interface IAttachmentItemEditableProps {
   attachment: IAttachment;
-  attachmentData: IAttachment[];
-  setAttachmentData: Function;
 }
 
-const AttachmentItemFile: React.FunctionComponent<IAttachmentItemFileProps> = ({
-  attachment,
-  attachmentData,
+const AttachmentItemFile: React.FunctionComponent<IAttachmentItemEditableProps> = ({
+  attachment
 }) => {
   const { data: session } = useSession()
   const [log, setLog] = useState("")
@@ -119,15 +116,15 @@ const AttachmentItemFile: React.FunctionComponent<IAttachmentItemFileProps> = ({
 
   return (
     <div className="my-3 p-3 rounded-md bg-gray-100 border-gray-400 border-2">
-      <div className="font-bold">
-        #{attachment.id + 1} - <input type="text" value={name} onChange={handleNameChange} className="bg-transparent mt-2 py-1 border-b-2 border-b-gray-900" />
+      <div className="font-bold w-full">
+        #{parseInt(attachment.id) + 1} - <input type="text" value={name} onChange={handleNameChange} className="bg-transparent mt-2 py-1 border-b-2 border-b-gray-900" />
       </div>
 
       {attachment.type === "url" ?
         <div className="my-2">
-          <textarea className="bg-transparent mt-2 p-1 border border-gray-900 w-1/2" rows={4} value={description} placeholder="No description" onChange={handleDescriptionChange} />
+          <textarea className="w-full bg-transparent mt-2 p-1 border border-gray-900" rows={4} value={description} placeholder="No description" onChange={handleDescriptionChange} />
           <div>
-            <input type="url" value={url} onChange={handleUrlChange} className="w-1/2 bg-transparent mt-2 py-1 border-b-2 border-b-gray-900" />
+            <input type="url" value={url} onChange={handleUrlChange} className="w-full bg-transparent mt-2 py-1 border-b-2 border-b-gray-900" />
           </div>
         </div>
         : <>
@@ -144,21 +141,20 @@ const AttachmentItemFile: React.FunctionComponent<IAttachmentItemFileProps> = ({
         </>}
 
 
-      <div className="flex items-center gap-3 mt-8">
+      <div className="flex items-center justify-between gap-3 mt-8">
         <button onClick={submitChanges} className="flex p-2 rounded-md gap-3 border border-gray-900" >
           <Image src={editIcon} width="24" height="24" alt="Icon to edit the name" />
           <div>Save changes</div>
         </button>
-
+        <div>
+          {log}
+        </div>
         <button id={attachment.id.toString()}
           data-cy={`attachment-remove-${attachment.id.toString()}`}
           onClick={deleteAttachment} className="flex p-2 bg-red-100 hover:bg-red-400 border-2 border-red-500 rounded-md gap-3" >
           <Image src={deleteIcon} width="24" height="24" alt="Icon to edit the name" />
           <div>Delete attachment</div>
         </button>
-        <div>
-          {log}
-        </div>
       </div>
     </div>
   );

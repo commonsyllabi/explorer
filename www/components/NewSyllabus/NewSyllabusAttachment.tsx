@@ -177,6 +177,7 @@ const NewSyllbusAttachment: React.FunctionComponent<
                 type="url"
                 className="bg-transparent mt-2 py-1 border-b-2 border-b-gray-900 w-full"
                 id="url"
+                value={thisAttachment.url}
                 data-cy={"new-attachment-url"}
               />
             </div>
