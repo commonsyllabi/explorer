@@ -115,16 +115,16 @@ const EditSyllabus: NextPage<IEditSyllabusProps> = ({ syllabusInfo }) => {
     duration: syllabusInfo.duration as number,
   });
 
-  console.log(syllabusInfo);
-
-
-  const [institutionData, setInstitutionData] = useState<IFormInstitution>({
-    name: syllabusInfo.institutions && syllabusInfo.institutions.length > 0 ? syllabusInfo.institutions[0].name : "",
-    country: syllabusInfo.institutions && syllabusInfo.institutions.length > 0 ? syllabusInfo.institutions[0].country as unknown as string : "",
-    url: syllabusInfo.institutions && syllabusInfo.institutions.length > 0 ? syllabusInfo.institutions[0].url as string : "",
-    date_year: syllabusInfo.institutions && syllabusInfo.institutions.length > 0 ? syllabusInfo.institutions[0].date.year : "",
-    date_term: syllabusInfo.institutions && syllabusInfo.institutions.length > 0 ? syllabusInfo.institutions[0].date.term as string : "",
-  });
+  const [institutionData, setInstitutionData] = useState<IFormInstitution>({} as IFormInstitution);
+  useEffect(() => {
+    setInstitutionData({
+      name: syllabusInfo.institutions && syllabusInfo.institutions.length > 0 ? syllabusInfo.institutions[0].name : "",
+      country: syllabusInfo.institutions && syllabusInfo.institutions.length > 0 ? syllabusInfo.institutions[0].country as unknown as string : "",
+      url: syllabusInfo.institutions && syllabusInfo.institutions.length > 0 ? syllabusInfo.institutions[0].url as string : "",
+      date_year: syllabusInfo.institutions && syllabusInfo.institutions.length > 0 ? syllabusInfo.institutions[0].date.year : "",
+      date_term: syllabusInfo.institutions && syllabusInfo.institutions.length > 0 ? syllabusInfo.institutions[0].date.term as string : "",
+    })
+  }, [])  
 
   //Handle form submission
   const handleSubmit = async (event: React.BaseSyntheticEvent) => {
@@ -178,6 +178,7 @@ const EditSyllabus: NextPage<IEditSyllabusProps> = ({ syllabusInfo }) => {
       method = 'PATCH'
     } else {
       console.warn("Unexpected number of institutions:", syllabusInfo.institutions)
+      setInstitutionCreated("failed")
       return;
     }
 
@@ -194,7 +195,7 @@ const EditSyllabus: NextPage<IEditSyllabusProps> = ({ syllabusInfo }) => {
 
     //-- edits to existing attachments are handled separately. here we add new attachments only
     //-- todo: currently, existing attachments are being recreated
-    if (attachmentData.length === 0) {
+    if (newAttachmentData.length === 0) {
       setAttachmentsCreated("created");
       return;
     }
@@ -228,9 +229,9 @@ const EditSyllabus: NextPage<IEditSyllabusProps> = ({ syllabusInfo }) => {
 
   const handleInstitutionChange = (event: React.SyntheticEvent) => {
     const t = event.target as HTMLInputElement;
-    const key = t.id as keyof IFormInstitution;
+    const key = t.id as keyof IFormInstitution;    
     institutionData[key] = t.value;
-    setInstitutionData(institutionData);
+    setInstitutionData({...institutionData});
   };
 
   const setAcadFieldsData = (acadFieldsArray: string[]) => {
@@ -285,7 +286,7 @@ const EditSyllabus: NextPage<IEditSyllabusProps> = ({ syllabusInfo }) => {
                   <h1 className="text-2xl my-8">Success!</h1>
                   <div>
                     View{" "}
-                    <Link href={`/syllabus/${syllabusUUID}`}>
+                    <Link href={`/syllabus/${syllabusUUID}`} className="underline">
                       {formData.title} here
                     </Link>
                     .
@@ -338,7 +339,6 @@ const EditSyllabus: NextPage<IEditSyllabusProps> = ({ syllabusInfo }) => {
                     onChange={handleChange}
                     value={formData.title}
                     data-cy="courseTitleInput"
-                  // defaultValue={parsedData?.data?.title || ""} -- // TODO: we cannot have both defaultValue and value props. parsedData should set formData.title, instead?
                   />
                   <div className="text-sm">
                     Please provide a valid course title.
@@ -388,6 +388,7 @@ const EditSyllabus: NextPage<IEditSyllabusProps> = ({ syllabusInfo }) => {
                         type="text"
                         required
                         id="name"
+                        name="name"
                         value={institutionData.name}
                         placeholder="e.g. Open University"
                         onChange={handleInstitutionChange}
@@ -405,6 +406,7 @@ const EditSyllabus: NextPage<IEditSyllabusProps> = ({ syllabusInfo }) => {
                     <select
                       className="w-full bg-transparent mt-2 p-1 border-2 border-gray-900"
                       id="country"
+                      name="country"
                       value={institutionData.country}
                       onChange={handleInstitutionChange}
                       data-cy="institutionCountryInput"
@@ -645,7 +647,7 @@ const EditSyllabus: NextPage<IEditSyllabusProps> = ({ syllabusInfo }) => {
                     id="grading_rubric"
                     onChange={handleChange}
                     rows={4}
-                    value={formData.grading_rubric}
+                    value={formData.grading_rubric as string}
                     placeholder="Course grading rubric..."
                     data-cy="courseGradingRubric"
                   />

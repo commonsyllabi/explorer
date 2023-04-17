@@ -284,7 +284,7 @@ func RemoveSyllabusAttachment(c echo.Context) error {
 	return c.JSON(http.StatusOK, syll)
 }
 
-func EditUserInstitution(c echo.Context) error {
+func EditSyllabusInstitution(c echo.Context) error {
 	user_uuid := mustGetUser(c)
 	if user_uuid == uuid.Nil {
 		return c.String(http.StatusUnauthorized, "unauthorized")
@@ -311,7 +311,7 @@ func EditUserInstitution(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "We had a problem binding your information, please check it again.")
 	}
 
-	syll, err := models.EditInstitutionToSyllabus(owner_uuid, user_uuid, inst_uid, &inst)
+	syll, err := models.EditInstitutionToSyllabus(owner_uuid, inst_uid, &inst)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusInternalServerError, "We had a problem adding the Institution to the User profile.")

@@ -111,16 +111,8 @@ func GetSyllabus(uuid uuid.UUID, user_uuid uuid.UUID) (Syllabus, error) {
 		return syll, result.Error
 	}
 
-	var insts []Institution
-	err := db.Model(&syll).Association("Institutions").Find(&insts)
-	if err != nil {
-		return syll, err
-	}
-
-	syll.Institutions = append(syll.Institutions, insts...)
-
 	var colls []Collection
-	err = db.Model(&syll).Association("Collections").Find(&colls)
+	err := db.Model(&syll).Association("Collections").Find(&colls)
 	if err != nil {
 		return syll, err
 	}
@@ -315,9 +307,9 @@ func AddInstitutionToSyllabus(syll_uuid uuid.UUID, user_uuid uuid.UUID, inst *In
 	return syll, err
 }
 
-func EditInstitutionToSyllabus(uuid uuid.UUID, user_uuid uuid.UUID, inst_uuid uuid.UUID, updated *Institution) (Institution, error) {
+func EditInstitutionToSyllabus(uuid uuid.UUID, inst_uuid uuid.UUID, updated *Institution) (Institution, error) {
 	var existing Institution
-	result := db.Where("uuid = ? AND user_uuid = ?", inst_uuid, user_uuid).First(&existing)
+	result := db.Where("uuid = ?", inst_uuid).First(&existing)
 	if result.Error != nil {
 		return existing, result.Error
 	}
