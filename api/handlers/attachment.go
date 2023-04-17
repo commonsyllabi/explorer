@@ -224,8 +224,10 @@ func DeleteAttachment(c echo.Context) error {
 }
 
 func sanitizeAttachment(c echo.Context) error {
-	if len(c.FormValue("name")) < 5 || len(c.FormValue("name")) > 150 {
-		return fmt.Errorf("the name of the Attachment should be between 10 and 50 characters: %d", len(c.FormValue("name")))
+	min := 4
+	max := 100
+	if len(c.FormValue("name")) < min || len(c.FormValue("name")) > max {
+		return fmt.Errorf("the name of the Attachment should be between %d and %d characters: %d", min, max, len(c.FormValue("name")))
 	}
 
 	return nil
