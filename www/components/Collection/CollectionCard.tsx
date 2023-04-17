@@ -4,43 +4,36 @@ import PubBadge from "../commons/PubBadge";
 import { getIsPublic } from "components/utils/getIsPublic";
 import Tags from "../Syllabus/Tags";
 import { getUserUrl } from "../utils/getLinks";
-import { property } from "cypress/types/lodash";
+import { ICollection } from "types";
 
 interface ICollectionCardProps {
-  uuid: string;
-  name: string;
-  status: string;
-  description?: string;
-  tags?: string[];
-  userName: string;
-  userUuid: string;
-  syllabiCount?: number;
+  collection: ICollection
   isAdmin: boolean;
 }
 
 const CollectionCard: React.FunctionComponent<ICollectionCardProps> = (
-  props
+  {collection, isAdmin}
 ) => {
   return (
     <div data-cy="syllabusCard" className="border-2 border-gray-600 rounded-lg p-3">
       <div>
         <div className="flex justify-between w-full mt-2 mb-2">
-          <Link href={`/collections/${props.uuid}`} className="text-xl font-bold hover:underline">
-            {props.name}
+          <Link href={`/collections/${collection.uuid}`} className="text-xl font-bold hover:underline">
+            {collection.name}
           </Link>
-          {props.isAdmin ? (
-            <PubBadge isPublic={getIsPublic(props.status)} />
+          {isAdmin ? (
+            <PubBadge isPublic={getIsPublic(collection.status)} />
           ) : null}
         </div>
         <p className="collection-meta text-sm">
           collection by{" "}
-          <Link href={getUserUrl(props.userUuid)} className="underline">{props.userName}</Link> |
-          contains {`${props.syllabiCount === 1 ? '1 syllabus' : props.syllabiCount + ' syllabi'} `} 
+          <Link href={getUserUrl(collection.user_uuid)} className="underline">{collection.user.name}</Link> |
+          contains {`${collection.syllabi.length === 1 ? '1 syllabus' : collection.syllabi.length + ' syllabi'} `} 
         </p>
-        <div className="course-description">
-          {props.description}
+        <div className="collection-description">
+          {collection.description}
         </div>
-        <Tags tags={props.tags} />
+        <Tags tags={collection.tags} />
       </div>
     </div>
   );

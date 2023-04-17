@@ -17,14 +17,12 @@ import { kurintoBook, kurintoSerif } from "app/layout";
 
 
 interface ISyllabusCardProps {
-  userName?: string;
   syllabusInfo: ISyllabus;
   isAdmin: boolean;
 }
 
 const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = ({
   syllabusInfo,
-  userName,
   isAdmin,
 }) => {
 
@@ -34,16 +32,6 @@ const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = ({
       return false;
     } else if (status === "listed") {
       return true;
-    } else {
-      return null;
-    }
-  };
-
-  const getUserName = () => {
-    if (userName) {
-      return userName;
-    } else if (syllabusInfo.user.name) {
-      return syllabusInfo.user.name;
     } else {
       return null;
     }
@@ -67,12 +55,15 @@ const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = ({
               {syllabusInfo.title}
             </Link>
             {isAdmin ?
-              <PubBadge isPublic={getVisbility(syllabusInfo.status)} />
+              <div className="flex flex-col items-end">
+                <PubBadge isPublic={getVisbility(syllabusInfo.status)} />
+                <div className="text-sm text-gray-500">{syllabusInfo.uuid}</div>
+              </div>
               : null}
           </div>
         </div>
         <div className={`${kurintoSerif.className} mb-6`}>
-          <Link href={getUserUrl(syllabusInfo.user_uuid)}>{getUserName()}</Link>
+          <Link href={getUserUrl(syllabusInfo.user_uuid)}>{syllabusInfo.user.name}</Link>
         </div>
         <div className="course-description whitespace-pre-wrap">
           {syllabusInfo.description}

@@ -2,6 +2,7 @@ export interface IUser {
   uuid: string;
   name: string;
   email: string;
+  status: string;
   bio?: string;
   urls?: string[];
   education?: string[];
@@ -38,6 +39,7 @@ export interface ICollection {
   tags: string[];
   syllabi: ISyllabus[];
   user_uuid: string;
+  user: IUser;
 }
 
 export interface ISyllabus {

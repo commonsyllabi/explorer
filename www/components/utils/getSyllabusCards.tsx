@@ -1,20 +1,17 @@
 import SyllabusCard from "components/Syllabus/SyllabusCard";
-import { useEffect, useState } from "react";
 
 import { ISyllabiFilters, ISyllabus } from "types";
 
 export const getSyllabusCards = (
   syllabiArray: ISyllabus[] | undefined,
-  filters: ISyllabiFilters,
+  filters: ISyllabiFilters | undefined,
+  isAdmin: boolean | false,
   activePage?: number,
-  userName?: string | "anonymous",
-  isAdmin?: boolean
 ) => {
-  // const [syllabiCards, setSyllabiCards] = useState<JSX.Element[]>()
   let syllabiCards;
 
   if (!syllabiArray || syllabiArray.length === 0) {
-    return;
+    return({elements: [], total: 0});
   }
 
   const isShown = (filters: ISyllabiFilters, item: ISyllabus): boolean => {
@@ -62,7 +59,7 @@ export const getSyllabusCards = (
   };
 
   const PAGINATION_LIMIT = 15;
-  const filtered = syllabiArray.filter((item) => isShown(filters, item));
+  let filtered = filters ? syllabiArray.filter((item) => isShown(filters as ISyllabiFilters, item)) : syllabiArray;
 
   const paginated = (activePage != undefined) ? filtered.filter((item, index) => {
     return (activePage - 1) * PAGINATION_LIMIT <= index && index < (activePage) * PAGINATION_LIMIT;
@@ -71,9 +68,8 @@ export const getSyllabusCards = (
   syllabiCards = paginated.map((item) => (
     <SyllabusCard
       key={item.uuid}
-      userName={userName}
       syllabusInfo={item}
-      isAdmin={isAdmin ? isAdmin : false}
+      isAdmin={isAdmin}
     />
   )) as JSX.Element[];
 

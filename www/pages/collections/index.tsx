@@ -1,14 +1,6 @@
 import * as React from "react";
 
 import type { GetServerSideProps, NextPage } from "next";
-import Head from "next/head";
-
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-
-import Favicons from "components/head/favicons";
-import GlobalNav from "components/commons/GlobalNav";
 import { getCollectionCards } from "../../components/utils/getCollectionCards";
 
 import { ICollection } from "types";

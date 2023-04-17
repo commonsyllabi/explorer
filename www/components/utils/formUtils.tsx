@@ -146,8 +146,6 @@ export const isValidForm = (form: IFormData, attachments: IUploadAttachment[], i
 
   // check that attachments are not null
   if (attachments.length > 0) {
-    console.log(attachments);
-
     for (const att of attachments) {
       if (att.name.length < 3)
         messages.push(`Check attachments name: '${att.name}' (should be longer than 3 characters)`)
