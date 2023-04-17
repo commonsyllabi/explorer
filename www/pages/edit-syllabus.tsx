@@ -91,10 +91,6 @@ const EditSyllabus: NextPage<IEditSyllabusProps> = ({ syllabusInfo }) => {
   const [syllabusUUID, setSyllabusUUID] = useState("");
   const [parsedData, setParsedData] = useState<IParsedData>();
 
-  if (!syllabusInfo || Object.keys(syllabusInfo).length === 0) {
-    return (<NotFound />)
-  }
-
   const [formData, setFormData] = useState<IFormData>({
     institutions: syllabusInfo.institutions as IInstitution[],
     title: syllabusInfo.title,
@@ -271,6 +267,9 @@ const EditSyllabus: NextPage<IEditSyllabusProps> = ({ syllabusInfo }) => {
     return uploadedAttachments;
   };
 
+  if (!syllabusInfo || Object.keys(syllabusInfo).length === 0) {
+    return (<NotFound />)
+  }
 
   //if submitted, show progress and status confirmation
   if (status === "authenticated" && formSubmitted === true) {
