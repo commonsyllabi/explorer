@@ -40,18 +40,7 @@ import AddAcademicFieldsForm from "components/NewSyllabus/AddAcademicFieldsForm"
 import DragAndDropSyllabus from "components/NewSyllabus/DragAndDropSyllabus";
 import { kurintoSerif } from "app/layout";
 
-export const getStaticProps: GetStaticProps = async () => {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-  return {
-    props: { apiUrl: apiUrl },
-  };
-};
-
-interface INewSyllabusProps {
-  apiUrl: string;
-}
-
-const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
+const NewSyllabus: NextPage = () => {
   const { data: session, status } = useSession();
   const [validated, setValidated] = useState(false);
   const [errors, setErrors] = useState(Array);
@@ -118,14 +107,14 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
   });
 
   //Handle form submission
-  const apiUrl = props.apiUrl;
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    const form = event.currentTarget;
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL as string;
+  const handleSubmit = async (event: React.BaseSyntheticEvent) => {
+    // const form = event.currentTarget;
     event.preventDefault();
     event.stopPropagation();
-    if (form.checkValidity() === false) {
-      setValidated(true);
-    }
+    // if (form.checkValidity() === false) {
+    //   setValidated(true);
+    // }
 
     // check if user is logged in
     if (session == null || session.user == null) {
@@ -146,7 +135,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     const postHeader = new Headers();
     postHeader.append("Authorization", `Bearer ${session.user.token}`);
 
-    const res = await submitForm(formData, props.apiUrl, postHeader);
+    const res = await submitForm(formData, apiUrl, postHeader);
     setFormSubmitted(true);
     if (res.status !== 201) {
       const err = await res.text();
@@ -161,7 +150,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
 
     const instit_endpoint = new URL(
       `/syllabi/${body.uuid}/institutions`,
-      props.apiUrl
+      apiUrl
     );
     submitInstitution(institutionData, instit_endpoint, postHeader).then(
       (res) => {
@@ -179,7 +168,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
     }
     const attach_endpoint = new URL(
       `/attachments/?syllabus_id=${body.uuid}`,
-      props.apiUrl
+      apiUrl
     );
     attachmentData.map((att) => {
       submitAttachments(att, attach_endpoint, postHeader).then((res) => {
@@ -300,7 +289,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
 
 
             <div className="col-8 offset-2">
-              <form noValidate onSubmit={handleSubmit}>
+              <form noValidate>
 
                 <div className="flex flex-col my-8 gap-2">
                   <label htmlFor="title">Course Title*</label>
@@ -502,11 +491,8 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                     <option value="">—</option>
                     {generateLanguageOptions()}
                   </select>
-                  <div>
-                    The language this class is primarily taught in.
-                  </div>
                   <div className="text-sm">
-                    Please provide the language in which this course was
+                    The language in which this course was
                     taught.
                   </div>
                 </div>
@@ -640,7 +626,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                   />
                 </div>
 
-                <button type="submit" data-cy="courseSubmitButton" className="p-2 bg-gray-900 text-gray-100 border-2 rounded-md">
+                <button onClick={handleSubmit} data-cy="courseSubmitButton" className="p-2 bg-gray-900 text-gray-100 border-2 rounded-md">
                   Submit New Syllabus
                 </button>
 

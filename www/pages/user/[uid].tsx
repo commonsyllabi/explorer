@@ -168,8 +168,8 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo }) => {
           <div className="w-full md:w-8/12 mx-auto mb-4">
 
             <div className="flex my-8" data-cy="userTabs">
-              <div onClick={() => setActiveTab("syllabi")} className={`${kurintoSerif.className} text-xl mr-6 cursor-pointer ${activeTab === "syllabi" ? "font-bold" : ""}`} data-cy="syllabiTab">Syllabi</div>
-              <div onClick={() => setActiveTab("collections")} className={`${kurintoSerif.className} text-xl mr-6 cursor-pointer ${activeTab === "collections" ? "font-bold" : ""}`} data-cy="collectionsTab">Collections</div>
+              <div onClick={() => setActiveTab("syllabi")} className={`${kurintoSerif.className} text-xl mr-6 cursor-pointer ${activeTab === "syllabi" ? "font-bold underline underline-offset-4" : ""}`} data-cy="syllabiTab">Syllabi</div>
+              <div onClick={() => setActiveTab("collections")} className={`${kurintoSerif.className} text-xl mr-6 cursor-pointer ${activeTab === "collections" ? "font-bold underline underline-offset-4" : ""}`} data-cy="collectionsTab">Collections</div>
             </div>
 
             {activeTab === "syllabi" ?
@@ -238,7 +238,7 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo }) => {
                     )}
                   </div>
                 </div>
-                <div id="collections">
+                <div id="collections" className="flex flex-col gap-3">
                   {getCollectionCards(
                     filteredCollections(),
                     userInfo.name,

@@ -20,7 +20,6 @@ import removeIcon from '../../public/icons/subtract-line.svg'
 
 export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
   const collectionId = context.params!.cid;
-  console.log(collectionId);
   
   const t = await getToken({ req: context.req, secret: process.env.NEXTAUTH_SECRET })
   const token = t ? (t.user as { _id: string, token: string }).token : '';

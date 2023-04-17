@@ -8,7 +8,7 @@ describe('Create a new user', () => {
     // Start from the index page
     cy.visit('/')
 
-    cy.get('[data-cy="Login"]').click()
+    cy.get('[data-cy="Login"]').click({force: true})
   })
 
   it('should enter all user details', () => {
@@ -17,7 +17,8 @@ describe('Create a new user', () => {
       body: {}
     }).as('signUp')
 
-    cy.contains('Sign up').click({ force: true })
+    cy.get('[data-cy="Signup-tab"]').click({ force: true })
+    cy.wait(500)
 
     cy.get('[data-cy="Signup-name"]').type("Test user")
     cy.get('[data-cy="Signup-email"]').type("pierre.depaz@gmail.com")

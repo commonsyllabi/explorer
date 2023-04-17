@@ -86,7 +86,7 @@ const GlobalNav: React.FunctionComponent = () => {
             </div>
             :
             <div className="mx-2">
-              <Link href="/auth/signin" className="underline">
+              <Link href="/auth/signin" className="underline" data-cy="Login">
                 Login
               </Link>
             </div>

@@ -50,7 +50,6 @@ describe('Create a new syllabus', () => {
         cy.get('[data-cy="Login-password"]').type("12345678")
 
         cy.get('[data-cy="Login-submit"]').click()
-        cy.wait('@login')
         cy.wait(1000)
 
         cy.get('[data-cy="newSyllabusLink"]').click()
@@ -97,6 +96,8 @@ describe('Create a new syllabus', () => {
         cy.get('[data-cy="new-attachment-file"]').selectFile('cypress/fixtures/test_attachment.txt', {log: true, force: true})
         cy.get('[data-cy="attachment-add"]').click({force: true})
 
+        cy.wait(1000)
+
         cy.get('[data-cy="courseSubmitButton"').click()
 
         cy.wait('@createSyllabus')
@@ -110,7 +111,7 @@ describe('Create a new syllabus', () => {
         cy.visit(`/syllabus/${newSyllabusUUID}`)
 
         cy.get('h1').contains('Test class 1')
-        cy.get('.course-instructors').children().first().contains('Pierre Depaz')
+        cy.get('[data-cy="courseInstructors"').first().contains('Pierre Depaz')
 
         //-- check academic fields
         //-- check institution

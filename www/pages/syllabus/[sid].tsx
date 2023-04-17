@@ -145,7 +145,7 @@ const Syllabus: NextPage<ISyllabusPageProps> = ({ syllabusInfo, userCollections 
                 {syllabusInfo.title ? syllabusInfo.title : "Course Title"}
               </h1>
 
-              <Link href={`/user/${syllabusInfo.user.uuid}`} className={`${kurintoSerif.className} `}>
+              <Link href={`/user/${syllabusInfo.user.uuid}`} className={`${kurintoSerif.className} `} data-cy="courseInstructors">
                 {syllabusInfo.user ? syllabusInfo.user.name : "Course Author / Instructor"}
               </Link>
 

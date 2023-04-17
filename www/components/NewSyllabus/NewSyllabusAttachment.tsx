@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IUploadAttachment } from "types";
 
 interface INewSyllabusAttachmentProps {
@@ -68,10 +68,11 @@ const NewSyllbusAttachment: React.FunctionComponent<
     setThisAttachment({ ...thisAttachment, [t.id]: t.value });
   };
 
-  const handleAttachmentFile = (event: React.SyntheticEvent): void => {
-    event.preventDefault();
+  const handleAttachmentFile = (e: React.BaseSyntheticEvent): void => {
+    e.preventDefault();
+    e.stopPropagation()
 
-    const t = event.target as HTMLInputElement;
+    const t = e.target as HTMLInputElement;
     if (t.files == null) return;
 
     const f = t.files[0] as File;
@@ -89,7 +90,10 @@ const NewSyllbusAttachment: React.FunctionComponent<
     });
   };
 
-  const handleSubmitNewAttachment = (): void => {
+  const handleSubmitNewAttachment = (e: React.BaseSyntheticEvent): void => {
+    e.preventDefault()
+    e.stopPropagation()
+    
     setAttachmentData([...attachmentData, thisAttachment]);
   };
 
