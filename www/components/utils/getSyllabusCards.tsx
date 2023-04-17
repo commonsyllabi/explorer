@@ -86,7 +86,7 @@ export const getSyllabusCards = (
     return ({
       elements: <div className="flex flex-col gap-12" data-cy="syllabiCards">
         <h1 className="text-xl">Sorry!</h1>
-        <p>We couldn&apos;t find any syllabi matching your search filters.</p>
+        <div>We couldn&apos;t find any syllabi matching your search filters.</div>
       </div>,
       total: 0
     }

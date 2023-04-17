@@ -51,7 +51,7 @@ const Confirm: NextPage<IConfirmProps> = (props) => {
 
     <div className="flex flex-col gap-5 w-11/12 md:w-4/12 m-auto mt-8">
       <h2 className="text-2xl">Confirm your account</h2>
-      <p>{props.log}</p>
+      <div>{props.log}</div>
     </div>
 
   );

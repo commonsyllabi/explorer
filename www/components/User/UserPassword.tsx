@@ -73,7 +73,7 @@ const UserPassword: React.FunctionComponent<IPasswordReset> = ({ userEmail, hand
   const successMessage = (
     <>
       <div className="w-full text-center">
-        <p>An email was sent to {recoverEmail}</p>
+        <div>An email was sent to {recoverEmail}</div>
       </div>
     </>
   );

@@ -61,9 +61,7 @@ const PasswordRecover: NextPage = () => {
     };
 
     const noToken = (
-        <>
-            <p>This is the password reset page, which you should trigger from the login page, or your user account.</p>
-        </>
+        <div>This is the password reset page, which you should trigger from the login page, or your user account.</div>
     );
 
     const recoveryForm = (
@@ -102,12 +100,12 @@ const PasswordRecover: NextPage = () => {
     const requestStatus = (
         <div className="">
             {isSuccess === true ? (
-                <p>
+                <div>
                     Your password was changed you can now{" "}
                     <Link className="underline" href="/auth">
                         login
                     </Link>
-                </p>
+                </div>
             ) : (
                 <p className="w-full mt-3 p-2 bg-amber-200">{log}</p>
             )}

@@ -35,11 +35,11 @@ const AttachmentItemFile: React.FunctionComponent<IAttachmentItemFileProps> = ({
           <div className="my-3">
             {attachment.description ? attachment.description : 'No description.'}
           </div>
-          <p>
+          <div>
             <a href={attachment.url} target="_blank" rel="noreferrer" className="underline">
               {attachment.url}
             </a>
-          </p>
+          </div>
         </div>
         : <>
           <div className="my-3">

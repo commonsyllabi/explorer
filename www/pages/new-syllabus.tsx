@@ -245,13 +245,13 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                 institutionCreated === "created" ? (
                 <>
                   <h2>Success!</h2>
-                  <p>
+                  <div>
                     View{" "}
                     <Link href={`/syllabus/${syllabusUUID}`}>
                       {formData.title} here
                     </Link>
                     .
-                  </p>
+                  </div>
                 </>
               ) : (
                 <>
@@ -324,7 +324,7 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
                 <div className="flex items-center gap-3">
                   <label htmlFor="status" className="order-2">
                     {getPublicPrivateLabel(formData.status)}
-                  </label>                  
+                  </label>
                   <div className="relative border-2 w-6 h-6 border-gray-900 p-0.5 order-1 rounded-full">
                     <input
                       type="checkbox"
@@ -670,17 +670,11 @@ const NewSyllabus: NextPage<INewSyllabusProps> = (props) => {
   return (
     <div className="w-11/12 md:w-10/12 m-auto mt-8">
       <div className="pt-3 pb-3">
-        <div className="col-8 offset-2">
-          <h1 className={`${kurintoSerif.className} text-3xl`}>New Syllabus</h1>
-        </div>
+        <h1 className={`${kurintoSerif.className} text-3xl`}>New Syllabus</h1>
       </div>
       <div className="gap-3 pb-5">
-        <div className="col-8 offset-2">
-          <p>
-            To create a new syllabus, please{" "}
-            <Link href="/auth/signin" className="underline">log in</Link> .
-          </p>
-        </div>
+        To create a new syllabus, please{" "}
+        <Link href="/auth/signin" className="underline">log in</Link> .
       </div>
     </div>
   );
