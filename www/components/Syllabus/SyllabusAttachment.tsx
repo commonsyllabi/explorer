@@ -1,14 +1,14 @@
 import * as React from "react";
 import Link from "next/link";
 
-interface ISyllabusResourceProps {
+interface ISyllabusAttachmentProps {
   resourceTitle: string;
   resourceUrl: string;
   resourceDescription: string;
   resourceType: string;
 }
 
-const SyllabusResource: React.FunctionComponent<ISyllabusResourceProps> = ({
+const SyllabusAttachment: React.FunctionComponent<ISyllabusAttachmentProps> = ({
   resourceTitle,
   resourceUrl,
   resourceDescription,
@@ -16,12 +16,12 @@ const SyllabusResource: React.FunctionComponent<ISyllabusResourceProps> = ({
 }) => {
   const fileUrl = new URL(`static/${resourceUrl}`, process.env.NEXT_PUBLIC_API_URL)
   return (
-    <div className="course-resource mb-4">
+    <div className="course-resource my-6">
       <h3 className="font-bold">{resourceTitle}</h3>
       <div>
         <div className="flex">
-          <div className="m-0 pe-2 text-gray-600">url:</div>
-          <div className="m-0">
+          <div className="m-0 text-sm">
+            {resourceType ? resourceType + ': ' : ''}
             {resourceType === "file" ? (
               <Link href={fileUrl} target="_blank" rel="noreferrer" className="underline">
                 {resourceUrl}
@@ -33,23 +33,10 @@ const SyllabusResource: React.FunctionComponent<ISyllabusResourceProps> = ({
             )}
           </div>
         </div>
-
-        {resourceDescription.length > 0 && (
-          <div>
-            <div className="pe-2 text-gray-600">description:</div>
-            <div className="m-0">{resourceDescription}</div>
-          </div>
-        )}
-
-        {resourceType.length > 0 && (
-          <div>
-            <div className="pe-2 text-gray-600">type:</div>
-            <div className="m-0">{resourceType}</div>
-          </div>
-        )}
+        <div className="my-2">{resourceDescription}</div>
       </div>
     </div>
   );
 };
 
-export default SyllabusResource;
+export default SyllabusAttachment;

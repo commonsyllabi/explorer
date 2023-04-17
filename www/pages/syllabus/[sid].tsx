@@ -8,7 +8,7 @@ import Image from "next/image";
 import { ICollection, ISyllabus } from "types";
 
 import BreadcrumbsBar from "components/commons/BreadcrumbsBar";
-import SyllabusResources from "components/Syllabus/SyllabusResources";
+import SyllabusAttachments from "components/Syllabus/SyllabusAttachments";
 import Tags from "components/Syllabus/Tags";
 import NotFound from "components/commons/NotFound";
 import Link from "next/link";
@@ -169,7 +169,7 @@ const Syllabus: NextPage<ISyllabusPageProps> = ({ syllabusInfo, userCollections 
                   </p>
                 </div>
 
-                <SyllabusResources attachments={syllabusInfo.attachments} />
+                <SyllabusAttachments attachments={syllabusInfo.attachments} />
               </div>
             </div>
           </div>
