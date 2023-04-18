@@ -199,15 +199,17 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo }) => {
                   </div>
                 </div>
                 <div id="syllabi">
-                  {getSyllabusCards(
-                    filteredSyllabi(),
-                    default_filters,
-                    checkIfAdmin()
-                  )?.elements ? getSyllabusCards(
-                    filteredSyllabi(),
-                    default_filters,
-                    checkIfAdmin()
-                  )?.elements : "No syllabi yet."}
+                  {!userInfo.syllabi || userInfo.syllabi?.length === 0 ? "No syllabi yet." :
+                    getSyllabusCards(
+                      filteredSyllabi(),
+                      default_filters,
+                      checkIfAdmin()
+                    )?.elements ? getSyllabusCards(
+                      filteredSyllabi(),
+                      default_filters,
+                      checkIfAdmin()
+                    )?.elements : "No syllabi yet."
+                  }
                 </div>
               </div>
               :

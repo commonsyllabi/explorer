@@ -135,7 +135,8 @@ const NewSyllabus: NextPage = () => {
     const header = new Headers();
     header.append("Authorization", `Bearer ${session.user.token}`);
 
-    const res = await submitForm(formData, apiUrl, "POST", header);
+    const syll_endpoint = new URL(`/syllabi/`, apiUrl)    
+    const res = await submitForm(formData, syll_endpoint, "POST", header);
     setFormSubmitted(true);
     if (res.status !== 201) {
       const err = await res.text();
@@ -222,6 +223,12 @@ const NewSyllabus: NextPage = () => {
     return uploadedAttachments;
   };
 
+  const handleBackToCreation = (e: React.BaseSyntheticEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setFormSubmitted(false)
+  }
+
   //if submitted, show progress and status confirmation
   if (status === "authenticated" && formSubmitted === true) {
     return (
@@ -232,39 +239,35 @@ const NewSyllabus: NextPage = () => {
               {syllabusCreated === "created" &&
                 attachmentsCreated === "created" &&
                 institutionCreated === "created" ? (
-                <>
-                  <h2>Success!</h2>
+                <div className="mt-8 flex flex-col gap-3">
+                  <h2 className="text-3xl">Success!</h2>
                   <div>
                     View{" "}
-                    <Link href={`/syllabus/${syllabusUUID}`}>
-                      {formData.title} here
+                    <Link href={`/syllabus/${syllabusUUID}`} className="underline">
+                      {formData.title}
                     </Link>
                     .
                   </div>
-                </>
+                </div>
               ) : (
                 <>
                   <h1 className="h3">Creating new syllabus...</h1>
 
                   <ul>
-                    <SyllabusCreationStatus status={syllabusCreated} />
                     <li>
-                      syllabusCreated:
-                      <pre>{syllabusCreated}</pre>
+                      <SyllabusCreationStatus status={syllabusCreated} />
                     </li>
-
-                    <InstitutionCreationStatus status={institutionCreated} />
                     <li>
-                      institutionCreated:
-                      <pre>{institutionCreated}</pre>
+                      <InstitutionCreationStatus status={institutionCreated} />
                     </li>
-
-                    <AttachmentsCreationStatus status={attachmentsCreated} />
                     <li>
-                      attachmentsCreated:
-                      <pre>{attachmentsCreated}</pre>
+                      <AttachmentsCreationStatus status={attachmentsCreated} />
                     </li>
                   </ul>
+                  {syllabusCreated === "failed" ?
+                  <div className="mt-8 border border-gray-900 rounded-md w-min p-1 cursor-pointer">
+                    <button onClick={handleBackToCreation}>Back</button>
+                  </div> : <></>}
                 </>
               )}
             </div>

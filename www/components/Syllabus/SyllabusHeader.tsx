@@ -28,7 +28,7 @@ const SyllabusSchoolCodeYear: React.FunctionComponent<
       {lang ? (
         <p className="">{lang}</p>
       ) : (
-        <div className="italic">lang</div>
+        <div className="italic">no language</div>
       )}
 
       {/* {courseNumber ? (

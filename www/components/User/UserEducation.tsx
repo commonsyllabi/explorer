@@ -21,8 +21,8 @@ const UserEducation: React.FunctionComponent<IUserEducationProps> = ({
 
   const [log, setLog] = useState('')
   const [isEditing, setIsEditing] = useState(false);
-  const [education, setEducation] = useState(userEducation)
-  const [tmp, setTmp] = useState(userEducation)
+  const [education, setEducation] = useState(userEducation ? userEducation : [''])
+  const [tmp, setTmp] = useState(userEducation ? userEducation : [''])
   const { data: session } = useSession();
 
   const submitEdit = () => {
@@ -76,16 +76,6 @@ const UserEducation: React.FunctionComponent<IUserEducationProps> = ({
     setTmp([...tmp])
   }
 
-  // if no data
-  if (education === undefined || education.length === 0) {
-    return (
-      <div id="user-education" className="py-4">
-        <h3 className="h6">Education</h3>
-        <div className="text-muted">No education specified</div>
-      </div>
-    )
-  }
-
   return (
     <div id="user-education" className="py-4">
       <h3 className="text-lg">Education</h3>
@@ -119,7 +109,7 @@ const UserEducation: React.FunctionComponent<IUserEducationProps> = ({
         :
         <div className="flex justify-between mb-3">
           <ul className="list-unstyled">{education.map((item) => (
-            <li key={item}>{item}</li>
+            <li key={item}>{item !== '' ? item : 'No education yet.'}</li>
           ))}</ul>
           {isAdmin ?
             <button className="ml-8" onClick={() => setIsEditing(true)}>

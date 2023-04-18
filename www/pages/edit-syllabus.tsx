@@ -142,8 +142,7 @@ const EditSyllabus: NextPage<IEditSyllabusProps> = ({ syllabusInfo }) => {
     h.append("Authorization", `Bearer ${session.user.token}`);
 
     const syll_endpoint = new URL(`syllabi/${syllabusInfo.uuid}`, process.env.NEXT_PUBLIC_API_URL)
-
-    const res = await submitForm(formData, syll_endpoint.toString(), "PATCH", h);
+    const res = await submitForm(formData, syll_endpoint, "PATCH", h);
     setFormSubmitted(true);
     if (res.status !== 200) {
       const err = await res.text();

@@ -68,7 +68,7 @@ export const getLanguageFromCode = (_lang: string) => {
   const languages = setUpLanguages();
   let language = ""
   Object.keys(languages).map(l => {
-    if (l === _lang)
+    if (l.toLowerCase() === _lang.toLowerCase())
       language = languages[l]
   })
 
@@ -193,7 +193,7 @@ export const isValidForm = (form: IFormData, attachments: IUploadAttachment[], i
   return { errors: messages }
 }
 
-export const submitForm = async (form: IFormData, endpoint: string, method: string, h: Headers): Promise<Response> => {
+export const submitForm = async (form: IFormData, endpoint: URL, method: string, h: Headers): Promise<Response> => {
 
   let body = new FormData();
   for (let [key, value] of Object.entries(form)) {

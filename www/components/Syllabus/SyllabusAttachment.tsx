@@ -33,7 +33,7 @@ const SyllabusAttachment: React.FunctionComponent<ISyllabusAttachmentProps> = ({
             )}
           </div>
         </div>
-        <div className="my-2">{resourceDescription}</div>
+        <div className="my-2 text-sm">{resourceDescription}</div>
       </div>
     </div>
   );

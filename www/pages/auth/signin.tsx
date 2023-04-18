@@ -319,10 +319,11 @@ const SignIn: NextPage = () => {
             : <></>}
         </div>
       ) : (
-        <div>
-          <h1 data-cy="Success" className="text-xl mt-8">
-            Your account was created!
+        <div className="mt-8 flex flex-col gap-3">
+          <h1 data-cy="Success" className="text-3xl mt-8">
+            Success!
           </h1>
+          <h2 className="text-xl">Your account was created.</h2>
           <div>Please check your email address ({signupEmail}) to activate it.</div>
         </div>
       )}

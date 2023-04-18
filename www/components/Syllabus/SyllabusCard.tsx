@@ -7,6 +7,8 @@ import PubBadge from "../commons/PubBadge";
 
 import { getSyllabiUrl, getUserUrl } from "components/utils/getLinks";
 import {
+  getInstitutionCountry,
+  getInstitutionLang,
   getInstitutionName,
   getInstitutionTermInfo,
   getInstitutionYearInfo,
@@ -43,6 +45,8 @@ const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = ({
       <div>
         <SyllabusHeader
           institution={getInstitutionName(syllabusInfo.institutions)}
+          country={getInstitutionCountry(syllabusInfo.institutions)}
+          lang={getInstitutionLang(syllabusInfo.language)}
           courseNumber={syllabusInfo.course_number ? syllabusInfo.course_number : null}
           term={getInstitutionTermInfo(syllabusInfo.institutions)}
           year={getInstitutionYearInfo(syllabusInfo.institutions)}

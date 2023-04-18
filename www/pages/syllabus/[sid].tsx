@@ -91,7 +91,8 @@ const Syllabus: NextPage<ISyllabusPageProps> = ({ syllabusInfo, userCollections 
   const { data: session } = useSession()
   const [isAddingToCollection, showIsAddingToCollection] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
-  const [modalMessage, setModalMessage] = useState("")
+  console.log(syllabusInfo);
+
 
   const checkIfAdmin = () => {
     if (session != null && session.user != null) {
@@ -164,15 +165,92 @@ const Syllabus: NextPage<ISyllabusPageProps> = ({ syllabusInfo, userCollections 
               </div>
 
               <div className="flex flex-col gap-5">
-                <div>
-                  <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Course Overview</h2>
-                  <p className="course-description" style={{ whiteSpace: 'pre-wrap' }}>
-                    {syllabusInfo.description
-                      ? syllabusInfo.description
-                      : "Course description goes here..."}
-                  </p>
-                </div>
+                {syllabusInfo.description ?
+                  <div>
+                    <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Course Overview</h2>
+                    <p className="course-description" style={{ whiteSpace: 'pre-wrap' }}>
+                      {syllabusInfo.description}
+                    </p>
+                  </div>
+                  : <div>
+                    <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Course Overview</h2>
+                    <p className="text-sm text-gray-400" style={{ whiteSpace: 'pre-wrap' }}>
+                      No description.
+                    </p>
+                  </div>}
 
+                  {syllabusInfo.learning_outcomes ?
+                  <div>
+                    <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Learning outcomes</h2>
+                    <p className="course-learning-outcomes" style={{ whiteSpace: 'pre-wrap' }}>
+                      {syllabusInfo.learning_outcomes}
+                    </p>
+                  </div>
+                  : <div>
+                    <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Learning outcomes</h2>
+                    <p className="text-sm text-gray-400" style={{ whiteSpace: 'pre-wrap' }}>
+                      No learning outcomes.
+                    </p>
+                  </div>}
+
+                  {syllabusInfo.topic_outlines ?
+                  <div>
+                    <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Topics outline</h2>
+                    <p className="course-learning-outcomes" style={{ whiteSpace: 'pre-wrap' }}>
+                      {syllabusInfo.topic_outlines}
+                    </p>
+                  </div>
+                  : <div>
+                    <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Topics outline</h2>
+                    <p className="text-sm text-gray-400" style={{ whiteSpace: 'pre-wrap' }}>
+                      No topics outlined.
+                    </p>
+                  </div>}
+
+                  {syllabusInfo.readings ?
+                  <div>
+                    <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Readings</h2>
+                    <p className="course-readings" style={{ whiteSpace: 'pre-wrap' }}>
+                      {syllabusInfo.readings}
+                    </p>
+                  </div>
+                  : <div>
+                    <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Readings</h2>
+                    <p className="text-sm text-gray-400" style={{ whiteSpace: 'pre-wrap' }}>
+                      No readings assigned.
+                    </p>
+                  </div>}
+
+                  {syllabusInfo.grading_rubric ?
+                  <div>
+                    <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Grading rubric</h2>
+                    <p className="course-grading-rubric" style={{ whiteSpace: 'pre-wrap' }}>
+                      {syllabusInfo.grading_rubric}
+                    </p>
+                  </div>
+                  : <div>
+                    <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Grading rubric</h2>
+                    <p className="text-sm text-gray-400" style={{ whiteSpace: 'pre-wrap' }}>
+                      No learning outcomes.
+                    </p>
+                  </div>}
+
+                  {syllabusInfo.assignments ?
+                  <div>
+                    <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Assignments</h2>
+                    <p className="course-assignments" style={{ whiteSpace: 'pre-wrap' }}>
+                      {syllabusInfo.assignments}
+                    </p>
+                  </div>
+                  : <div>
+                    <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Assignments</h2>
+                    <p className="text-sm text-gray-400" style={{ whiteSpace: 'pre-wrap' }}>
+                      No assignments.
+                    </p>
+                  </div>}
+
+
+                <hr className="border-gray-600 my-8" />
                 <SyllabusAttachments attachments={syllabusInfo.attachments} />
               </div>
             </div>
