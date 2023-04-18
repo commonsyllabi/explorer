@@ -17,38 +17,38 @@ const PrivacyPolicy: NextPage = () => {
             <p>In this data protection declaration, we use, inter alia, the following terms:</p>
 
             <ul>
-                <li><h4>a)    Personal data</h4>
+                <li><h4>a) Personal data</h4>
                     <p>Personal data means any information relating to an identified or identifiable natural person (“data subject”). An identifiable natural person is one who can be identified, directly or indirectly, in particular by reference to an identifier such as a name, an identification number, location data, an online identifier or to one or more factors specific to the physical, physiological, genetic, mental, economic, cultural or social identity of that natural person.</p>
                 </li>
                 <li><h4>b) Data subject</h4>
                     <p>Data subject is any identified or identifiable natural person, whose personal data is processed by the controller responsible for the processing.</p>
                 </li>
-                <li><h4>c)    Processing</h4>
+                <li><h4>c) Processing</h4>
                     <p>Processing is any operation or set of operations which is performed on personal data or on sets of personal data, whether or not by automated means, such as collection, recording, organisation, structuring, storage, adaptation or alteration, retrieval, consultation, use, disclosure by transmission, dissemination or otherwise making available, alignment or combination, restriction, erasure or destruction. </p>
                 </li>
-                <li><h4>d)    Restriction of processing</h4>
+                <li><h4>d) Restriction of processing</h4>
                     <p>Restriction of processing is the marking of stored personal data with the aim of limiting their processing in the future. </p>
                 </li>
-                <li><h4>e)    Profiling</h4>
-                    <p>Profiling means any form of automated processing of personal data consisting of the use of personal data to evaluate certain personal aspects relating to a natural person, in particular to analyse or predict aspects concerning that natural person's performance at work, economic situation, health, personal preferences, interests, reliability, behaviour, location or movements. </p>
+                <li><h4>e) Profiling</h4>
+                    <p>Profiling means any form of automated processing of personal data consisting of the use of personal data to evaluate certain personal aspects relating to a natural person, in particular to analyse or predict aspects concerning that natural person&apos;s performance at work, economic situation, health, personal preferences, interests, reliability, behaviour, location or movements. </p>
                 </li>
-                <li><h4>f)     Pseudonymisation</h4>
+                <li><h4>f) Pseudonymisation</h4>
                     <p>Pseudonymisation is the processing of personal data in such a manner that the personal data can no longer be attributed to a specific data subject without the use of additional information, provided that such additional information is kept separately and is subject to technical and organisational measures to ensure that the personal data are not attributed to an identified or identifiable natural person. </p>
                 </li>
-                <li><h4>g)    Controller or controller responsible for the processing</h4>
+                <li><h4>g) Controller or controller responsible for the processing</h4>
                     <p>Controller or controller responsible for the processing is the natural or legal person, public authority, agency or other body which, alone or jointly with others, determines the purposes and means of the processing of personal data; where the purposes and means of such processing are determined by Union or Member State law, the controller or the specific criteria for its nomination may be provided for by Union or Member State law. </p>
                 </li>
-                <li><h4>h)    Processor</h4>
+                <li><h4>h) Processor</h4>
                     <p>Processor is a natural or legal person, public authority, agency or other body which processes personal data on behalf of the controller. </p>
                 </li>
-                <li><h4>i)      Recipient</h4>
+                <li><h4>i) Recipient</h4>
                     <p>Recipient is a natural or legal person, public authority, agency or another body, to which the personal data are disclosed, whether a third party or not. However, public authorities which may receive personal data in the framework of a particular inquiry in accordance with Union or Member State law shall not be regarded as recipients; the processing of those data by those public authorities shall be in compliance with the applicable data protection rules according to the purposes of the processing. </p>
                 </li>
-                <li><h4>j)      Third party</h4>
+                <li><h4>j) Third party</h4>
                     <p>Third party is a natural or legal person, public authority, agency or body other than the data subject, controller, processor and persons who, under the direct authority of the controller or processor, are authorised to process personal data.</p>
                 </li>
-                <li><h4>k)    Consent</h4>
-                    <p>Consent of the data subject is any freely given, specific, informed and unambiguous indication of the data subject's wishes by which he or she, by a statement or by a clear affirmative action, signifies agreement to the processing of personal data relating to him or her. </p>
+                <li><h4>k) Consent</h4>
+                    <p>Consent of the data subject is any freely given, specific, informed and unambiguous indication of the data subject&apos;s wishes by which he or she, by a statement or by a clear affirmative action, signifies agreement to the processing of personal data relating to him or her. </p>
                 </li>
             </ul>
 
@@ -163,9 +163,9 @@ const PrivacyPolicy: NextPage = () => {
                     <p>In order to exercise the right to object, the data subject may contact any employee of the Common Syllabi. In addition, the data subject is free in the context of the use of information society services, and notwithstanding Directive 2002/58/EC, to use his or her right to object by automated means using technical specifications.</p>
                 </li>
                 <li><h4>h) Automated individual decision-making, including profiling</h4>
-                    <p>Each data subject shall have the right granted by the European legislator not to be subject to a decision based solely on automated processing, including profiling, which produces legal effects concerning him or her, or similarly significantly affects him or her, as long as the decision (1) is not is necessary for entering into, or the performance of, a contract between the data subject and a data controller, or (2) is not authorised by Union or Member State law to which the controller is subject and which also lays down suitable measures to safeguard the data subject's rights and freedoms and legitimate interests, or (3) is not based on the data subject's explicit consent.</p>
+                    <p>Each data subject shall have the right granted by the European legislator not to be subject to a decision based solely on automated processing, including profiling, which produces legal effects concerning him or her, or similarly significantly affects him or her, as long as the decision (1) is not is necessary for entering into, or the performance of, a contract between the data subject and a data controller, or (2) is not authorised by Union or Member State law to which the controller is subject and which also lays down suitable measures to safeguard the data subject&apos;s rights and freedoms and legitimate interests, or (3) is not based on the data subject&apos;s explicit consent.</p>
 
-                    <p>If the decision (1) is necessary for entering into, or the performance of, a contract between the data subject and a data controller, or (2) it is based on the data subject's explicit consent, the Common Syllabi shall implement suitable measures to safeguard the data subject's rights and freedoms and legitimate interests, at least the right to obtain human intervention on the part of the controller, to express his or her point of view and contest the decision.</p>
+                    <p>If the decision (1) is necessary for entering into, or the performance of, a contract between the data subject and a data controller, or (2) it is based on the data subject&apos;s explicit consent, the Common Syllabi shall implement suitable measures to safeguard the data subject&apos;s rights and freedoms and legitimate interests, at least the right to obtain human intervention on the part of the controller, to express his or her point of view and contest the decision.</p>
 
                     <p>If the data subject wishes to exercise the rights concerning automated individual decision-making, he or she may, at any time, contact any employee of the Common Syllabi.</p>
 
