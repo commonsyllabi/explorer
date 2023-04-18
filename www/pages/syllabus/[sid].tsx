@@ -14,6 +14,8 @@ import NotFound from "components/commons/NotFound";
 import Link from "next/link";
 
 import {
+  getInstitutionCountry,
+  getInstitutionLang,
   getInstitutionName,
   getInstitutionTermInfo,
   getInstitutionYearInfo,
@@ -136,6 +138,8 @@ const Syllabus: NextPage<ISyllabusPageProps> = ({ syllabusInfo, userCollections 
             <div className="pt-3 pb-5 flex flex-col gap-3">
               <SyllabusHeader
                 institution={getInstitutionName(syllabusInfo.institutions)}
+                country={getInstitutionCountry(syllabusInfo.institutions)}
+                lang={getInstitutionLang(syllabusInfo.language)}
                 courseNumber={syllabusInfo.course_number}
                 level={syllabusInfo.academic_level}
                 fields={syllabusInfo.academic_fields}

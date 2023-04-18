@@ -5,6 +5,8 @@ import { inter } from "app/layout";
 
 interface ISyllabusSchoolCodeYearProps {
   institution?: string | null;
+  lang?: string | null;
+  country?: string | null;
   courseNumber?: string | null;
   level?: number | null;
   fields?: number[] | null;
@@ -14,13 +16,19 @@ interface ISyllabusSchoolCodeYearProps {
 
 const SyllabusSchoolCodeYear: React.FunctionComponent<
   ISyllabusSchoolCodeYearProps
-> = ({ institution, courseNumber, level, fields, term, year }) => {
+> = ({ institution, lang, country, courseNumber, level, fields, term, year }) => {
   return (
     <div className={`flex flex-col gap-1 md:flex-row md:gap-4 text-sm mb-4 ${inter.className} text-gray-600`}>
       {institution ? (
-        <p className="">{institution}</p>
+        <p className="">{institution}{country ? ` (${country})`: ''}</p>
       ) : (
         <div className="italic">institution</div>
+      )}
+
+      {lang ? (
+        <p className="">{lang}</p>
+      ) : (
+        <div className="italic">lang</div>
       )}
 
       {/* {courseNumber ? (
@@ -31,17 +39,9 @@ const SyllabusSchoolCodeYear: React.FunctionComponent<
         </p>
       )} */}
 
-      <div className="">
-        {term ? (
-          <p className="">{term}</p>
-        ) : (
-          <div className="italic">term</div>
-        )}
-      </div>
-
       <div>
         {year ? (
-          <p className="">{year}</p>
+          <p className="">{year}{term ? ` - ${term}` : ''}</p>
         ) : (
           <div className="italic">year</div>
         )}

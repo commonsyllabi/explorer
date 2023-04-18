@@ -40,6 +40,16 @@ export const generateCountryOptions = () => {
   return <>{elements}</>;
 };
 
+export const getCountryFromCode = (_code: number) => {
+  const countries = setUpCountries()
+  let country = ""
+  Object.keys(countries).map(c => {
+    if (parseInt(countries[c]) === _code)
+      country = c
+  })
+  return country
+}
+
 //Set up list of languages and generate language dropdown elements
 const setUpLanguages = () => {
   languages.registerLocale(
@@ -58,6 +68,19 @@ export const generateLanguageOptions = () => {
   ));
   return <>{elements}</>;
 };
+
+export const getLanguageFromCode = (_lang: string) => {
+  const languages = setUpLanguages();
+  let language = ""
+  Object.keys(languages).map(l => {
+    console.log(l, languages[l]);
+    
+    if (l === _lang)
+      language = languages[l]
+  })
+
+  return language
+}
 
 //Return <option> elemtns for ACADEMIC_FIELD data,
 //params: ACADEMIC_FIELDS_BROAD, ACADEMIC_FIELDS_NARROW or ACADEMIC_FIELDS_DETAILS
