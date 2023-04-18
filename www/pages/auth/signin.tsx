@@ -47,7 +47,7 @@ const SignIn: NextPage = () => {
     }
 
     setLog('')
-    
+
 
     signIn("credentials", {
       username: loginUsername,
@@ -292,6 +292,10 @@ const SignIn: NextPage = () => {
                       data-cy="Signup-password-conf"
                       onChange={handleSignupPasswordConf}
                     />
+                  </div>
+
+                  <div className="text-sm">
+                    By creating an account, you agree to our <Link target="_blank" className="underline" href="/terms-of-use">terms of use</Link> and to our <Link target="_blank" className="underline" href="/privacy-policy">privacy policy</Link>.
                   </div>
 
                   <button

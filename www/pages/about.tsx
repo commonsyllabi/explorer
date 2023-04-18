@@ -5,7 +5,7 @@ import Link from "next/link";
 const About: NextPage = () => {
   return (
     <div className="w-11/12 md:w-10/12 m-auto mt-8">
-      <h1 className="text-xl pt-3 mt-5 mb-5">
+      <h1 className="text-3xl pt-3 my-8">
         Cosyll is a platform for educators to publish and
         browse syllabi.
       </h1>
@@ -16,7 +16,7 @@ const About: NextPage = () => {
         Cosyll is first and foremost for educators, by educators. Whether to have a convenient place to publish your classes, to see how a similar class is being taught at another university, in another country, or to find inspiration in your peers&apos; works, Cosyll focuses on exchange between teachers. In this spirit, we encourage the sharing of documents one does not always easily find online: schedules, assignments descriptions, works cited and referenced, class wikis, etc.
       </p>
       <p>
-        <h2 className="text-lg my-3">Want to participate?</h2>
+        <h2 className="text-xl font-bold my-3">Want to participate?</h2>
       </p>
       <p>
         To get started, you can get a feeling for Cosyll&apos;s collection by browsing the <Link className="underline" href="/">home page</Link>. If you decide to contribute yourself, start by <Link className="underline" href="/auth/signin">creating an account</Link>, and then <Link className="underline" href="/new-syllabus">add your first syllabus</Link>.
@@ -26,7 +26,7 @@ const About: NextPage = () => {
       </p>
       <p>
         If you just want to keep track of the newest developments of the project, you can <a
-        className="underline"
+          className="underline"
           href="https://tinyletter.com/common-syllabi"
           target="_blank"
           rel="noopener noreferrer"
@@ -35,13 +35,21 @@ const About: NextPage = () => {
         </a>.
       </p>
       <p>
-        <h2 className="text-lg my-3">Who are we?</h2>
+        <h2 className="text-xl font-bold my-3">Who are we?</h2>
       </p>
       <p>
-        We are a group of educators, designers and developers who firmly believe that open-access and information archival is essential to improve pedagogical practices. We are open to collaborations and cooperations, do not hesitate to <a href="mailto:team@common-syllabi.org">get in touch</a>!</p>
+        We are a group of educators, designers and developers who firmly believe that open-access and information archival is essential to improve pedagogical practices. We are open to collaborations and cooperations, do not hesitate to <a href="mailto:team@common-syllabi.org">get in touch</a>!
+      </p>
+      <p>
+        <h2 className="text-xl font-bold my-3">Additional information</h2>
+      </p>
+      <p>
+        You can read our read our <Link className="underline" href="/terms-of-use">terms of use here</Link> and our <Link className="underline" href="/privacy-policy">privacy policy here</Link>.
+      </p>
 
       <div className="flex flex-col mb-5 mt-5">
-        <h2 className="text-lg my-3">Support</h2>
+        <h2 className="text-xl font-bold my-3">Support</h2>
+        <p>This project has been supported by the following grants and institutions:</p>
         <div className="flex flex-row items-center">
           <a
             href="http://prototypefund.de"
