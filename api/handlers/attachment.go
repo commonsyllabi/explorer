@@ -104,16 +104,18 @@ func CreateAttachment(c echo.Context) error {
 			return c.String(http.StatusBadRequest, "attachment can either have URL or File, not both")
 		}
 
+		updated_url := ""
 		parsed_url, err := url.Parse(weblink)
 		if err != nil {
-			zero.Error(err.Error())
-			return c.String(http.StatusBadRequest, "Error parsing weblink as URL.")
+			zero.Warn(err.Error())
+		} else {
+			updated_url = parsed_url.String()
 		}
 
 		att = models.Attachment{
 			Name:        name,
 			Description: desc,
-			URL:         parsed_url.String(),
+			URL:         updated_url,
 			Type:        "weblink",
 		}
 	}
@@ -146,6 +148,12 @@ func UpdateAttachment(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "Not a valid ID")
 	}
 
+	_, err = models.GetAttachment(uid)
+	if err != nil {
+		zero.Error(err.Error())
+		return c.String(http.StatusNotFound, "Not a valid ID")
+	}
+
 	err = sanitizeAttachment(c)
 	if err != nil {
 		zero.Error(err.Error())
@@ -158,16 +166,14 @@ func UpdateAttachment(c echo.Context) error {
 	weblink := c.FormValue("url")
 	file, err := c.FormFile("file")
 	if err != nil && weblink == "" {
-		zero.Error(err.Error())
-		return c.String(http.StatusBadRequest, "Error parsing attached File or URL.")
+		if err != nil {
+			zero.Warn(err.Error())
+		} else {
+			zero.Warn("no file or url found on updated attachment")
+		}
 	}
 
-	if weblink == "" {
-		if file == nil {
-			zero.Error("attachment must have either URL or File")
-			return c.String(http.StatusBadRequest, "Attachment must have either URL or File.")
-		}
-
+	if weblink == "" && file != nil {
 		b := make([]byte, 4)
 		rand.Read(b)
 		fname := fmt.Sprintf("%x-%s", b, filepath.Base(file.Filename))

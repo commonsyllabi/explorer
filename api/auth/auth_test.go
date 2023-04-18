@@ -68,7 +68,7 @@ func TestAuth(t *testing.T) {
 	})
 
 	t.Run("Testing authorized access", func(t *testing.T) {
-		req := httptest.NewRequest(http.MethodGet, "/dashboard", nil)
+		req := httptest.NewRequest(http.MethodGet, "/admin", nil)
 		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", token["token"]))
 
 		res := httptest.NewRecorder()
