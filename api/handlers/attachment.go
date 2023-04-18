@@ -8,7 +8,6 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
-	"reflect"
 	"strings"
 
 	"github.com/commonsyllabi/explorer/api/config"
@@ -134,6 +133,12 @@ func UpdateAttachment(c echo.Context) error {
 		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
 
+	conf, ok := c.Get("config").(config.Config)
+	if !ok {
+		zero.Error("Could not parse configuration from context")
+		return c.String(http.StatusInternalServerError, "There was an error uploading your syllabus. Please try again later.")
+	}
+
 	id := c.Param("id")
 	uid, err := uuid.Parse(id)
 	if err != nil {
@@ -147,24 +152,70 @@ func UpdateAttachment(c echo.Context) error {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
 
-	var empty = new(models.Attachment)
-	var input models.Attachment
-	err = c.Bind(&input)
-	if err != nil || reflect.DeepEqual(&input, empty) {
+	var att models.Attachment
+	name := c.FormValue("name")
+	desc := c.FormValue("description")
+	weblink := c.FormValue("url")
+	file, err := c.FormFile("file")
+	if err != nil && weblink == "" {
 		zero.Error(err.Error())
-		return c.String(http.StatusBadRequest, "There was a problem creating your attachment, please make sure all fields are valid.")
+		return c.String(http.StatusBadRequest, "Error parsing attached File or URL.")
 	}
 
-	att, err := models.GetAttachment(uid)
-	if err != nil {
-		zero.Error(err.Error())
-		return c.String(http.StatusNotFound, "We couldn't find the Attachment to update.")
-	}
+	if weblink == "" {
+		if file == nil {
+			zero.Error("attachment must have either URL or File")
+			return c.String(http.StatusBadRequest, "Attachment must have either URL or File.")
+		}
 
-	err = c.Bind(&att)
-	if err != nil {
-		zero.Error(err.Error())
-		return c.String(http.StatusBadRequest, "We could not parse the update data.")
+		b := make([]byte, 4)
+		rand.Read(b)
+		fname := fmt.Sprintf("%x-%s", b, filepath.Base(file.Filename))
+		dest := filepath.Join(conf.UploadsDir, fname)
+		src, err := file.Open()
+		if err != nil {
+			zero.Error(err.Error())
+			return c.String(http.StatusBadRequest, "Failed to open file.")
+		}
+		defer src.Close()
+
+		target, err := os.Create(dest)
+		if err != nil {
+			zero.Error(err.Error())
+			return err
+		}
+		defer target.Close()
+
+		if _, err = io.Copy(target, src); err != nil {
+			zero.Error(err.Error())
+			return c.String(http.StatusBadRequest, "Error saving File to disk.")
+		}
+
+		att = models.Attachment{
+			Name:        name,
+			Description: desc,
+			URL:         fname,
+			Type:        "file",
+		}
+
+	} else {
+		if file != nil {
+			zero.Error("Attachment can have either URL or File, not both.")
+			return c.String(http.StatusBadRequest, "attachment can either have URL or File, not both")
+		}
+
+		parsed_url, err := url.Parse(weblink)
+		if err != nil {
+			zero.Error(err.Error())
+			return c.String(http.StatusBadRequest, "Error parsing weblink as URL.")
+		}
+
+		att = models.Attachment{
+			Name:        name,
+			Description: desc,
+			URL:         parsed_url.String(),
+			Type:        "weblink",
+		}
 	}
 
 	updated, err := models.UpdateAttachment(uid, user_uuid, &att)

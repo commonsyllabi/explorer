@@ -142,7 +142,6 @@ const EditSyllabus: NextPage<IEditSyllabusProps> = ({ syllabusInfo }) => {
     h.append("Authorization", `Bearer ${session.user.token}`);
 
     const syll_endpoint = new URL(`syllabi/${syllabusInfo.uuid}`, process.env.NEXT_PUBLIC_API_URL)
-    console.log(syll_endpoint);
 
     const res = await submitForm(formData, syll_endpoint.toString(), "PATCH", h);
     setFormSubmitted(true);
@@ -316,7 +315,7 @@ const EditSyllabus: NextPage<IEditSyllabusProps> = ({ syllabusInfo }) => {
         <div className="w-11/12 md:w-10/12 m-auto mt-8">
           <div className="pt-3 pb-3">
             <div className="col-8 offset-2">
-              <h1 className={`${kurintoSerif.className} text-3xl`}>Edit Syllabus</h1>
+              <h1 className={`${kurintoSerif.className} text-3xl`}>Edit Syllabus - <Link href={`/syllabus/${syllabusInfo.uuid}`} target="_blank" className="underline">{syllabusInfo.title}</Link></h1>
             </div>
           </div>
 

@@ -8,6 +8,7 @@ import { IAttachment } from "types";
 import { signOut, useSession } from "next-auth/react";
 import Router from "next/router";
 import { useState } from "react";
+import Link from "next/link";
 
 interface IAttachmentItemEditableProps {
   attachment: IAttachment;
@@ -21,6 +22,17 @@ const AttachmentItemFile: React.FunctionComponent<IAttachmentItemEditableProps> 
   const [name, setName] = useState(attachment.name)
   const [description, setDescription] = useState(attachment.description as string)
   const [url, setUrl] = useState(attachment.url as string)
+  const [type, setType] = useState(attachment.type as string)
+
+  const [file, setFile] = useState({
+    name: attachment.url as string,
+    size: "",
+    type: "",
+  });
+  const [rawFile, setRawFile] = useState<File>()
+
+  const fileUrl = new URL(`static/${attachment.url}`, process.env.NEXT_PUBLIC_API_URL)
+
   const confirmMsg = `Do you really want to delete the attachment ${attachment.name}? This action cannot be undone.`;
 
   const handleNameChange = (e: React.BaseSyntheticEvent) => {
@@ -44,6 +56,18 @@ const AttachmentItemFile: React.FunctionComponent<IAttachmentItemEditableProps> 
     setUrl(value)
   }
 
+  const handleFileChange = (e: React.BaseSyntheticEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    const f = e.target.files[0]
+    setFile({
+      name: f.name,
+      size: (f.size * 0.000001).toFixed(2), //-- from byte to megabyte
+      type: f.type
+    })
+    setRawFile(f)
+
+  }
 
   const submitChanges = (e: React.BaseSyntheticEvent) => {
     e.preventDefault()
@@ -54,7 +78,17 @@ const AttachmentItemFile: React.FunctionComponent<IAttachmentItemEditableProps> 
     const b = new FormData()
     b.append("name", name)
     b.append("description", description)
-    b.append("url", url)
+    if (type === "weblink")
+      b.append("url", url)
+    else if (type === "file")
+      b.append("file", rawFile as Blob)
+    else {
+      console.warn("Existing attachment type unknown:", type)
+      if (url.startsWith("http"))
+        b.append("url", url)
+      else if(rawFile)
+        b.append("file", rawFile)
+    }
 
     const edit_url = new URL(`attachments/${attachment.uuid}`, process.env.NEXT_PUBLIC_API_URL)
     fetch(edit_url, {
@@ -65,9 +99,11 @@ const AttachmentItemFile: React.FunctionComponent<IAttachmentItemEditableProps> 
       .then((res) => {
         if (res.ok) {
           setLog("Success!")
+          setUrl(file.name)
           setTimeout(() => {
             setLog("")
           }, 2000)
+          return;
         } else if (res.status == 401) {
           signOut({ redirect: false }).then((result) => {
             Router.push("/auth/signin");
@@ -99,7 +135,10 @@ const AttachmentItemFile: React.FunctionComponent<IAttachmentItemEditableProps> 
     })
       .then((res) => {
         if (res.ok) {
-          Router.push("/");
+          setLog("Successfully deleted attachment!")
+          setTimeout(() => {
+            Router.reload()
+          }, 2000)
         } else if (res.status == 401) {
           signOut({ redirect: false }).then((result) => {
             Router.push("/auth/signin");
@@ -129,14 +168,27 @@ const AttachmentItemFile: React.FunctionComponent<IAttachmentItemEditableProps> 
         </div>
         : <>
           <textarea className="bg-transparent mt-2 p-1 border border-gray-900 w-1/2" rows={4} value={attachment.description} placeholder="No description" onChange={handleDescriptionChange} />
-          <div className="flex flex-col md:flex-row gap-2">
-            <p className="small">
-              <span className="font-bold">Size:</span> {attachment.size} Mb
-            </p>
-            <p className="small">
-              <span className="font-bold">Type:</span>{" "}
-              <div>{attachment.type}</div>
-            </p>
+          <div className="flex flex-col gap-2 items-start">
+            <div className="small">
+              <span className="font-bold">Filename:</span> <Link href={fileUrl} target="_blank" rel="noreferrer" className="underline">{attachment.url}</Link>
+            </div>
+            <div className="flex flex-col my-6">
+
+              <label>Replace the existing file:</label>
+              <input
+                onChange={handleFileChange}
+                type="file"
+                className="mt-2 py-1"
+                id="file"
+                data-cy={"new-attachment-file"}
+              />
+
+              <div>
+                <div>{file.type ? `Type: ${file.type}` : ''}</div>
+                <div>{file.size ? `Size: ${file.size} Mb` : ''}</div>
+              </div>
+
+            </div>
           </div>
         </>}
 

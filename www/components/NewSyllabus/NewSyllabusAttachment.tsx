@@ -158,7 +158,7 @@ const NewSyllbusAttachment: React.FunctionComponent<
         {showFileUI ? (
           <div id="uploadControlsFile" className="flex flex-col my-6">
             
-              <label>Upload your file here</label>
+              <label>Upload your file here:</label>
               <input
                 onChange={handleAttachmentFile}
                 type="file"

@@ -1,4 +1,3 @@
-import Form from "react-bootstrap/Form";
 import { IUploadAttachment, IFormData, IFormInstitution } from "types"
 
 import models from "models.json"; //import academic field codes
@@ -6,11 +5,7 @@ import modelsIsced from "models-isced.json"; //import tiered academic field code
 
 //Get public/private form label
 export const getPublicPrivateLabel = (status: string) => {
-  if (status === "unlisted") {
-    return "Private (only viewable to you)";
-  } else {
-    return "Public (anyone can view)";
-  }
+  return status === "unlisted" ? "Private (only viewable to you)" : "Public (anyone can view)";
 };
 
 //Data Libraries for Countries adn Languages
@@ -73,8 +68,6 @@ export const getLanguageFromCode = (_lang: string) => {
   const languages = setUpLanguages();
   let language = ""
   Object.keys(languages).map(l => {
-    console.log(l, languages[l]);
-    
     if (l === _lang)
       language = languages[l]
   })
