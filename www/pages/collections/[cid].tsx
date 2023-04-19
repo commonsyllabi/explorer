@@ -227,7 +227,7 @@ const Collection: NextPage<ICollectionProps> = (props) => {
           props.syllabi ?
             props.syllabi.map(s => {
               return <div key={s.uuid} className="flex gap-1">
-                {getSyllabusCards([s], default_filters, checkIfAdmin())?.elements}
+                {getSyllabusCards([s], default_filters, checkIfAdmin())}
                 <div className="border-2 border-gray-900 p-2 rounded-md flex items-center">
                   <button data-syllabusid={s.uuid} onClick={handleRemove}>
                     <Image src={removeIcon} width="24" height="24" alt="Icon to remove an element from the list" />
