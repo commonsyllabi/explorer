@@ -61,11 +61,11 @@ export const getSyllabusCards = (
   const PAGINATION_LIMIT = 15;
   let filtered = filters ? syllabiArray.filter((item) => isShown(filters as ISyllabiFilters, item)) : syllabiArray;
 
-  const paginated = (activePage != undefined) ? filtered.filter((item, index) => {
-    return (activePage - 1) * PAGINATION_LIMIT <= index && index < (activePage) * PAGINATION_LIMIT;
-  }) : filtered
+  // const paginated = (activePage != undefined) ? filtered.filter((item, index) => {
+  //   return (activePage - 1) * PAGINATION_LIMIT <= index && index < (activePage) * PAGINATION_LIMIT;
+  // }) : filtered
 
-  syllabiCards = paginated.map((item) => (
+  syllabiCards = filtered.map((item) => (
     <SyllabusCard
       key={item.uuid}
       syllabusInfo={item}

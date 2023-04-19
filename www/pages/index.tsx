@@ -35,11 +35,9 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   }
 
   const payload = await res.json();
-  const total_pages = Math.floor(payload.syllabi.length / PAGINATION_LIMIT) + 1;
   return {
     props: {
       meta: payload.meta,
-      totalPages: total_pages,
       syllabiListings: payload.syllabi,
     },
   };
@@ -47,17 +45,16 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
 interface IHomeProps {
   meta: IMetaInformation;
-  total: number;
   syllabiListings: ISyllabus[];
 }
 
-const Home: NextPage<IHomeProps> = ({ meta, total, syllabiListings }) => {
+const Home: NextPage<IHomeProps> = ({ meta, syllabiListings }) => {
   const router = useRouter();
   const [currentPath, setCurrentPath] = useState("");
   const [currentQuery, setCurrentQuery] = useState(router.query);
   const [syllabi, setSyllabi] = useState<ISyllabus[]>();
   const [syllabiCount, setSyllabiCount] = useState(syllabiListings.length);
-  const [totalPages, setTotalPages] = useState(total);
+  const [totalPages, setTotalPages] = useState(Math.floor(syllabiListings.length / PAGINATION_LIMIT) + 1);
   const [searchTerms, setSearchTerms] = useState("");
   const [filters, setFilters] = useState<ISyllabiFilters>({
     academic_level: "",
@@ -242,13 +239,12 @@ const Home: NextPage<IHomeProps> = ({ meta, total, syllabiListings }) => {
           <FiltersBar updateFilters={handleFilterChange} meta={meta} />
         </div>
       </div>
-      <div>
-        <PaginationSection
+
+        {/* <PaginationSection
           totalPages={totalPages}
           activePage={activePage}
           handlePageChange={paginationHandler}
-        />
-      </div>
+        /> */}
     </div>
   );
 };
