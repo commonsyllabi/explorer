@@ -47,7 +47,7 @@ const UserProfileSidebar: React.FunctionComponent<IUserProfileSidebarProps> = ({
         <UserLinks userLinks={props.urls as Array<string>} isAdmin={isAdmin} apiUrl={apiUrl} />
       </div>
       <UserInstitutions
-        institutions={getinstitutionNames(props.institutions)}
+        userInstitutions={props.institutions}
         isAdmin={isAdmin} apiUrl={apiUrl}
       />
       <UserEducation userEducation={props.education as Array<string>} isAdmin={isAdmin} apiUrl={apiUrl} />

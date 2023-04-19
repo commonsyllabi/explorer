@@ -62,22 +62,28 @@ const UserBio: React.FunctionComponent<IUserBioProps> = ({ userBio, isAdmin, api
       <h3 className="text-lg">Bio</h3>
       {isEditing ?
         <div>
-          <textarea value={tmp} placeholder="A few lines about you." onChange={handleChange} className="bg-transparent border border-gray-900 p-1"/>
-          <div className="py-1 mt-2">
-                        <button className="w-6" onClick={() => { setIsEditing(false); }}>
-                            <Image src={cancelIcon} width="24" height="24" alt="Icon to cancel the edit process" />
-                        </button>
-                        <button className="w-6" onClick={submitEdit}>
-                            <Image src={checkIcon} width="24" height="24" alt="Icon to save the edit process" />
-                        </button>
-                    </div>
+          <textarea value={tmp} placeholder="A few lines about you." onChange={handleChange} className="w-full bg-transparent border border-gray-900 p-1 rounded-lg" />
+          <div className="py-1 mt-2 flex flex-col lg:flex-row gap-2 justify-between">
+            <button className="flex gap-2 rounded-lg border border-1 border-gray-900 py-1 px-2 bg-red-100 hover:bg-red-300" onClick={() => { setIsEditing(false); }}>
+              <Image src={cancelIcon} width="24" height="24" alt="Icon to cancel the edit process" />
+              <div>Cancel</div>
+            </button>
+            <button className="flex gap-2 rounded-lg border border-1 border-gray-900 py-1 px-2" onClick={submitEdit}>
+              <Image src={checkIcon} width="24" height="24" alt="Icon to save the edit process" />
+              <div>Save</div>
+            </button>
+          </div>
           <div>{log}</div>
         </div>
         :
         <div className="flex justify-between">
-          <p className="text-sm">{bio.length > 0 ? bio : 'User has not written a bio.'}</p>
-          {isAdmin ?
+          {bio.length > 0 ?
+            <p className="text-sm">{bio}</p>
+            :
+            <div className="text-sm text-gray-400">User has not written a bio.</div>
+          }
 
+          {isAdmin ?
             <button onClick={() => setIsEditing(true)}>
               <Image src={editIcon} width="18" height="18" alt="Icon to edit the name" />
             </button>
