@@ -1,7 +1,7 @@
 import GlobalNav from "components/commons/GlobalNav";
 
 import localFont from '@next/font/local'
-import Head from "next/head";
+import Footer from "components/commons/Footer";
 
 export const inter = localFont({
   src: '../public/fonts/Inter-Regular.woff',
@@ -26,12 +26,11 @@ export default function RootLayout({
 }) {
   return (<>
     <div className={`h-full bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 ${inter.className}`}>
-      <div id="header-section" className="sticky">
-        <GlobalNav />
-      </div>
-      <div className="h-full container md:w-10/12 m-auto">
+      <GlobalNav />
+      <div className="h-full container md:w-10/12 m-auto mb-8">
         {children}
       </div>
+      <Footer />
     </div>
   </>
   );
