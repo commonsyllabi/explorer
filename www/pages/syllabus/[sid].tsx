@@ -91,8 +91,6 @@ const Syllabus: NextPage<ISyllabusPageProps> = ({ syllabusInfo, userCollections 
   const { data: session } = useSession()
   const [isAddingToCollection, showIsAddingToCollection] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
-  console.log(syllabusInfo);
-
 
   const checkIfAdmin = () => {
     if (session != null && session.user != null) {
@@ -156,95 +154,93 @@ const Syllabus: NextPage<ISyllabusPageProps> = ({ syllabusInfo, userCollections 
               </Link>
 
 
-              <div className="course-tags flex gap-2 mb-6">
-                {syllabusInfo.tags ? (
-                  <Tags tags={syllabusInfo.tags} />
-                ) : (
-                  <Tags tags={["tag 1", "tag 2", "tag 3"]} />
-                )}
+              <div id="course-tags" className="flex gap-2 mb-6">
+                <Tags tags={syllabusInfo.tags} />
               </div>
 
               <div className="flex flex-col gap-5">
                 {syllabusInfo.description ?
                   <div>
                     <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Course Overview</h2>
-                    <p className="course-description" style={{ whiteSpace: 'pre-wrap' }}>
+                    <p data-cy="course-description" className="whitespace-pre-wrap">
                       {syllabusInfo.description}
                     </p>
                   </div>
                   : <div>
                     <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Course Overview</h2>
-                    <p className="text-sm text-gray-400" style={{ whiteSpace: 'pre-wrap' }}>
+                    <p className="text-sm text-gray-400 whitespace-pre-wrap">
                       No description.
                     </p>
                   </div>}
 
-                  {syllabusInfo.learning_outcomes ?
+                {syllabusInfo.learning_outcomes ?
                   <div>
                     <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Learning outcomes</h2>
-                    <p className="course-learning-outcomes" style={{ whiteSpace: 'pre-wrap' }}>
+                    <p id="course-learning-outcomes" className="whitespace-pre-wrap">
                       {syllabusInfo.learning_outcomes}
                     </p>
                   </div>
                   : <div>
                     <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Learning outcomes</h2>
-                    <p className="text-sm text-gray-400" style={{ whiteSpace: 'pre-wrap' }}>
+                    <p className="text-sm text-gray-400 whitespace-pre-wrap">
                       No learning outcomes.
                     </p>
                   </div>}
 
-                  {syllabusInfo.topic_outlines ?
+                {syllabusInfo.topic_outlines ?
                   <div>
                     <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Topics outline</h2>
-                    <p className="course-learning-outcomes" style={{ whiteSpace: 'pre-wrap' }}>
+                    <p id="course-learning-outcomes" className="whitespace-pre-wrap">
                       {syllabusInfo.topic_outlines}
                     </p>
                   </div>
                   : <div>
                     <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Topics outline</h2>
-                    <p className="text-sm text-gray-400" style={{ whiteSpace: 'pre-wrap' }}>
+                    <p className="text-sm text-gray-400 whitespace-pre-wrap">
                       No topics outlined.
                     </p>
                   </div>}
 
-                  {syllabusInfo.readings ?
+                {syllabusInfo.readings ?
                   <div>
                     <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Readings</h2>
-                    <p className="course-readings" style={{ whiteSpace: 'pre-wrap' }}>
-                      {syllabusInfo.readings}
-                    </p>
+                    <ul id="course-readings" className="list-inside list-disc whitespace-pre-wrap">
+                      {syllabusInfo.readings.map((r, i) => (
+                        <li key={`readings-${i}`}>{r}</li>
+                      ))}
+                    </ul>
                   </div>
                   : <div>
                     <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Readings</h2>
-                    <p className="text-sm text-gray-400" style={{ whiteSpace: 'pre-wrap' }}>
+                    <p className="text-sm text-gray-400 whitespace-pre-wrap">
                       No readings assigned.
                     </p>
                   </div>}
 
-                  {syllabusInfo.grading_rubric ?
+                {syllabusInfo.grading_rubric ?
                   <div>
                     <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Grading rubric</h2>
-                    <p className="course-grading-rubric" style={{ whiteSpace: 'pre-wrap' }}>
+                    <p id="course-grading-rubric" className="whitespace-pre-wrap">
                       {syllabusInfo.grading_rubric}
                     </p>
                   </div>
                   : <div>
                     <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Grading rubric</h2>
-                    <p className="text-sm text-gray-400" style={{ whiteSpace: 'pre-wrap' }}>
+                    <p className="text-sm text-gray-400 whitespace-pre-wrap">
                       No learning outcomes.
                     </p>
                   </div>}
 
-                  {syllabusInfo.assignments ?
+                {syllabusInfo.assignments ?
                   <div>
                     <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Assignments</h2>
-                    <p className="course-assignments" style={{ whiteSpace: 'pre-wrap' }}>
+                    <p id="course-assignments" className="whitespace-pre-wrap">
                       {syllabusInfo.assignments}
                     </p>
                   </div>
                   : <div>
                     <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Assignments</h2>
-                    <p className="text-sm text-gray-400" style={{ whiteSpace: 'pre-wrap' }}>
+                    <p className="text-sm text-gray-400 whitespace-pre-wrap">
                       No assignments.
                     </p>
                   </div>}

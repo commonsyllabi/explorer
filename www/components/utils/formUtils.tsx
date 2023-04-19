@@ -205,6 +205,11 @@ export const submitForm = async (form: IFormData, endpoint: URL, method: string,
       for (const t of value) {
         body.append("academic_fields[]", t as string)
       }
+    else if (key == "readings")
+      for (const t of value) {
+        if(t !== "")
+          body.append("readings[]", t as string)
+      }
     else
       body.append(key, value as string);
   }

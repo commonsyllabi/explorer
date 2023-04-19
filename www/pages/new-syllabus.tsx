@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import type { NextPage } from "next";
 import { getSession, useSession } from "next-auth/react";
-import Head from "next/head";
 import Link from "next/link";
+import Image from "next/image";
 
 //Interfaces
 import {
@@ -16,9 +16,6 @@ import {
 
 //Components
 import NewSyllabusAttachment from "components/NewSyllabus/NewSyllabusAttachment";
-import InstitutionCreationStatus from "components/NewSyllabus/InstitutionCreationStatus";
-import AttachmentsCreationStatus from "components/NewSyllabus/AttachmentsCreationStatus";
-import SyllabusCreationStatus from "components/NewSyllabus/SyllabusCreationStatus";
 import AttachmentItem from "components/NewSyllabus/AttachmentItem";
 
 import {
@@ -37,8 +34,9 @@ import {
 import AddAcademicFieldsForm from "components/NewSyllabus/AddAcademicFieldsForm";
 import DragAndDropSyllabus from "components/NewSyllabus/DragAndDropSyllabus";
 import { kurintoSerif } from "app/layout";
-import { Router } from "next/router";
 import SyllabusProcessing from "components/NewSyllabus/SyllabusProcessing";
+import ReadingsFieldForm from "components/NewSyllabus/ListFieldForm";
+import ListFieldForm from "components/NewSyllabus/ListFieldForm";
 
 const NewSyllabus: NextPage = () => {
   const { data: session, status } = useSession();
@@ -50,6 +48,9 @@ const NewSyllabus: NextPage = () => {
   const [attachmentsCreated, setAttachmentsCreated] = useState("pending");
   const [syllabusUUID, setSyllabusUUID] = useState("");
   const [parsedData, setParsedData] = useState<IParsedData>();
+    const [attachmentData, setAttachmentData] = useState(
+    Array<IUploadAttachment>
+  );
 
   const [formData, setFormData] = useState<IFormData>({
     institutions: [],
@@ -172,14 +173,6 @@ const NewSyllabus: NextPage = () => {
     setInstitutionData(institutionData);
   };
 
-  const setAcadFieldsData = (acadFieldsArray: string[]) => {
-    setFormData({ ...formData, ["academic_fields"]: acadFieldsArray });
-  };
-
-  const [attachmentData, setAttachmentData] = useState(
-    Array<IUploadAttachment>
-  );
-
   //display elements for attachment
   const getUploadedAttachments = (attachmentData: IUploadAttachment[]) => {
     const uploadedAttachments = attachmentData.map((attachment) => (
@@ -192,12 +185,6 @@ const NewSyllabus: NextPage = () => {
     ));
     return uploadedAttachments;
   };
-
-  const handleBackToCreation = (e: React.BaseSyntheticEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setFormSubmitted(false)
-  }
 
   //-- if not signed in
   if (status !== "authenticated")
@@ -230,8 +217,6 @@ const NewSyllabus: NextPage = () => {
         </div>
 
         <div className="gap-3 pb-5 my-6">
-
-
           <div className="col-8 offset-2">
             <form noValidate>
 
@@ -401,7 +386,7 @@ const NewSyllabus: NextPage = () => {
                   </div> */}
 
               <AddAcademicFieldsForm
-                setAcadFieldsData={setAcadFieldsData}
+                setAcadFieldsData={(_af: string[]) => {setFormData({ ...formData, ["academic_fields"]: _af });                }}
                 academicFields={[]}
               />
 
@@ -521,17 +506,7 @@ const NewSyllabus: NextPage = () => {
                 />
               </div>
 
-              <div className="flex flex-col my-8 gap-2">
-                <label htmlFor="readings">Readings</label>
-                <textarea
-                  className="bg-transparent mt-2 p-1 border border-gray-900"
-                  id="readings"
-                  onChange={handleChange}
-                  rows={4}
-                  placeholder="Course readings..."
-                  data-cy="courseReadings"
-                />
-              </div>
+              <ListFieldForm name="Readings" data={formData.readings} setData={(_r: string[]) => { setFormData({ ...formData, ["readings"]: [..._r] }) }} />
 
               <div className="flex flex-col my-8 gap-2">
                 <label htmlFor="grading_rubric">

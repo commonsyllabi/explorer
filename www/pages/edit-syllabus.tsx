@@ -17,9 +17,6 @@ import {
 
 //Components
 import NewSyllabusAttachment from "components/NewSyllabus/NewSyllabusAttachment";
-import InstitutionCreationStatus from "components/NewSyllabus/InstitutionCreationStatus";
-import AttachmentsCreationStatus from "components/NewSyllabus/AttachmentsCreationStatus";
-import SyllabusCreationStatus from "components/NewSyllabus/SyllabusCreationStatus";
 import AttachmentItem from "components/NewSyllabus/AttachmentItem";
 
 import {
@@ -43,6 +40,7 @@ import AttachmentItemEditable from "components/NewSyllabus/AttachmentItemEditabl
 import NotFound from "components/commons/NotFound";
 import Router from "next/router";
 import SyllabusProcessing from "components/NewSyllabus/SyllabusProcessing";
+import ListFieldForm from "components/NewSyllabus/ListFieldForm";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const syllId = context.query.sid
@@ -227,10 +225,6 @@ const EditSyllabus: NextPage<IEditSyllabusProps> = ({ syllabusInfo }) => {
     const key = t.id as keyof IFormInstitution;
     institutionData[key] = t.value;
     setInstitutionData({ ...institutionData });
-  };
-
-  const setAcadFieldsData = (acadFieldsArray: string[]) => {
-    setFormData({ ...formData, ["academic_fields"]: acadFieldsArray });
   };
 
   const [attachmentData, setAttachmentData] = useState(
@@ -478,7 +472,7 @@ const EditSyllabus: NextPage<IEditSyllabusProps> = ({ syllabusInfo }) => {
 
               <AddAcademicFieldsForm
                 academicFields={formData.academic_fields}
-                setAcadFieldsData={setAcadFieldsData}
+                setAcadFieldsData={(_af: string[]) => {setFormData({ ...formData, ["academic_fields"]: _af });}}
               />
 
               <div className="mb-5">
@@ -603,18 +597,7 @@ const EditSyllabus: NextPage<IEditSyllabusProps> = ({ syllabusInfo }) => {
                 />
               </div>
 
-              <div className="flex flex-col my-8 gap-2">
-                <label htmlFor="readings">Readings</label>
-                <textarea
-                  className="bg-transparent mt-2 p-1 border border-gray-900"
-                  id="readings"
-                  onChange={handleChange}
-                  rows={4}
-                  value={formData.readings}
-                  placeholder="Course readings..."
-                  data-cy="courseReadings"
-                />
-              </div>
+              <ListFieldForm name="Readings" data={formData.readings} setData={(_r: string[]) => { setFormData({ ...formData, ["readings"]: [..._r] }) }} />
 
               <div className="flex flex-col my-8 gap-2">
                 <label htmlFor="grading_rubric">

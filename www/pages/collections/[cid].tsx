@@ -9,13 +9,13 @@ import NotFound from "components/commons/NotFound";
 import { signOut, useSession } from "next-auth/react";
 import React, { useState } from "react";
 import Router from "next/router";
+import Link from "next/link";
 import { getToken } from "next-auth/jwt";
 import { kurintoBook } from "app/layout";
 import editIcon from '../../public/icons/edit-box-line.svg'
 import cancelIcon from '../../public/icons/close-line.svg'
 import checkIcon from '../../public/icons/check-line.svg'
 import deleteIcon from '../../public/icons/delete-bin-line.svg'
-import Link from "next/link";
 import removeIcon from '../../public/icons/subtract-line.svg'
 
 export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {

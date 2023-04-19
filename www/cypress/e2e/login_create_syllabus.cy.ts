@@ -82,6 +82,9 @@ describe('Create a new syllabus', () => {
         cy.get('[data-cy="courseDurationInput"]').type('7', {force: true})
         cy.get('[data-cy="courseDescriptionInput"]').type('Lorem ipsum dolores sit descriptio nuncam sed que tantamus', {force: true})
 
+        cy.get('[data-cy="readings-add"]').click({force: true})
+        cy.get('[data-cy="readings-item"]').type('Bieguni, Olga Tokarczuk', {force: true})
+
         //-- add url attachment
         cy.get('[data-cy="new-attachment-name"]').type('Weblink test', {force: true})
         cy.get('[data-cy="new-attachment-description"]').type('This is optional', {force: true})
@@ -117,8 +120,8 @@ describe('Create a new syllabus', () => {
         //-- check institution
         //-- 
         
-        cy.get('.course-description')
-        cy.get('.course-resource').should('have.length', 2)
+        cy.get('[data-cy="course-description"]')
+        cy.get('[data-cy="course-resource"]').should('have.length', 2)
     })
 
     it('navigate to the home page and signs out', () => {

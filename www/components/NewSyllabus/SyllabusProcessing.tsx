@@ -22,7 +22,7 @@ const SyllabusProcessing: React.FunctionComponent<ISyllabusProcessingProps> = ({
                     <>
                         <h1 className="text-2xl my-8">Success!</h1>
                         <div>
-                            View your syllabus
+                            View your syllabus{" "}
                             <Link href={`/syllabus/${syllabusUUID}`} className="underline">
                                 here
                             </Link>

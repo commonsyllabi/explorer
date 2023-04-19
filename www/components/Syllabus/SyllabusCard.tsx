@@ -73,7 +73,7 @@ const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = ({
           {syllabusInfo.description}
         </div>
         <div className="mt-6 mb-2 flex gap-2">
-          {syllabusInfo.tags && <Tags tags={syllabusInfo.tags} />}
+          <Tags tags={syllabusInfo.tags} />
         </div>
       </div>
     </div>

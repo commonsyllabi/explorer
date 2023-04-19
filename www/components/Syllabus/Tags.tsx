@@ -18,7 +18,7 @@ const Tags: React.FunctionComponent<ITagsProps> = ({ tags }) => {
     return <>{tagEls}</>;
   }
 
-  return null;
+  return <></>;
 };
 
 export default Tags;
