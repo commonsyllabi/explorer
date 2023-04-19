@@ -27,7 +27,7 @@ export default function RootLayout({
   return (<>
     <div className={`h-full bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 ${inter.className}`}>
       <GlobalNav />
-      <div className="h-full container md:w-10/12 m-auto mb-8">
+      <div className="h-full container md:w-10/12 m-auto mb-16">
         {children}
       </div>
       <Footer />

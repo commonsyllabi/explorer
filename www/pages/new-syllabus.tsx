@@ -48,7 +48,7 @@ const NewSyllabus: NextPage = () => {
   const [attachmentsCreated, setAttachmentsCreated] = useState("pending");
   const [syllabusUUID, setSyllabusUUID] = useState("");
   const [parsedData, setParsedData] = useState<IParsedData>();
-    const [attachmentData, setAttachmentData] = useState(
+  const [attachmentData, setAttachmentData] = useState(
     Array<IUploadAttachment>
   );
 
@@ -63,8 +63,8 @@ const NewSyllabus: NextPage = () => {
     learning_outcomes: [],
     topic_outlines: [],
     readings: [],
-    grading_rubric: "",
     assignments: [],
+    grading_rubric: "",
     other: "",
     status: "listed",
     academic_fields: [],
@@ -85,9 +85,6 @@ const NewSyllabus: NextPage = () => {
   const handleSubmit = async (event: React.BaseSyntheticEvent) => {
     event.preventDefault();
     event.stopPropagation();
-    // if (form.checkValidity() === false) {
-    //   setValidated(true);
-    // }
 
     if (session == null || session.user == null) {
       setErrors([
@@ -386,7 +383,7 @@ const NewSyllabus: NextPage = () => {
                   </div> */}
 
               <AddAcademicFieldsForm
-                setAcadFieldsData={(_af: string[]) => {setFormData({ ...formData, ["academic_fields"]: _af });                }}
+                setAcadFieldsData={(_af: string[]) => { setFormData({ ...formData, ["academic_fields"]: _af }); }}
                 academicFields={[]}
               />
 
@@ -478,35 +475,13 @@ const NewSyllabus: NextPage = () => {
                 </div>
               </div>
 
-              <div className="flex flex-col my-8 gap-2">
-                <label htmlFor="learning_outcomes">
-                  Learning Outcomes
-                </label>
-                <textarea
-                  className="bg-transparent mt-2 p-1 border border-gray-900"
-                  id="learning_outcomes"
-                  onChange={handleChange}
-                  rows={4}
-                  placeholder="Course learning outcomes..."
-                  data-cy="courseLearningOutcomes"
-                />
-              </div>
+              <ListFieldForm name="Learning Outcomes" data={formData.learning_outcomes} setData={(_a: string[]) => { setFormData({ ...formData, ["learning_outcomes"]: [..._a] }) }} />
 
-              <div className="flex flex-col my-8 gap-2">
-                <label htmlFor="topic_outlines">
-                  Topics Outline
-                </label>
-                <textarea
-                  className="bg-transparent mt-2 p-1 border border-gray-900"
-                  id="topic_outlines"
-                  onChange={handleChange}
-                  rows={4}
-                  placeholder="Course topics outline..."
-                  data-cy="courseTopicsOutline"
-                />
-              </div>
+              <ListFieldForm name="Topic Outlines" data={formData.topic_outlines} setData={(_a: string[]) => { setFormData({ ...formData, ["topic_outlines"]: [..._a] }) }} />
 
               <ListFieldForm name="Readings" data={formData.readings} setData={(_r: string[]) => { setFormData({ ...formData, ["readings"]: [..._r] }) }} />
+
+              <ListFieldForm name="Assignments" data={formData.assignments} setData={(_a: string[]) => { setFormData({ ...formData, ["assignments"]: [..._a] }) }} />
 
               <div className="flex flex-col my-8 gap-2">
                 <label htmlFor="grading_rubric">
@@ -523,15 +498,19 @@ const NewSyllabus: NextPage = () => {
               </div>
 
               <div className="flex flex-col my-8 gap-2">
-                <label htmlFor="assignments">Assignments</label>
+                <label htmlFor="other">
+                  Other
+                </label>
                 <textarea
                   className="bg-transparent mt-2 p-1 border border-gray-900"
-                  id="assignments"
+                  id="other"
+                  onChange={handleChange}
                   rows={4}
-                  placeholder="Course assignments..."
-                  data-cy="courseAssignments"
+                  placeholder="Other comments or notes about the course..."
+                  data-cy="courseOther"
                 />
               </div>
+
 
               <hr className="my-12 border border-gray-300" />
 

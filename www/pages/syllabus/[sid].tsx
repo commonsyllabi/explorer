@@ -176,9 +176,11 @@ const Syllabus: NextPage<ISyllabusPageProps> = ({ syllabusInfo, userCollections 
                 {syllabusInfo.learning_outcomes ?
                   <div>
                     <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Learning outcomes</h2>
-                    <p id="course-learning-outcomes" className="whitespace-pre-wrap">
-                      {syllabusInfo.learning_outcomes}
-                    </p>
+                    <ul data-cy="course-learning-outcomes" className="whitespace-pre-wrap">
+                      {syllabusInfo.learning_outcomes.map((l, i) => (
+                        <li key={`learnings-${i}`}>{l}</li>
+                      ))}
+                    </ul>
                   </div>
                   : <div>
                     <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Learning outcomes</h2>
@@ -190,9 +192,11 @@ const Syllabus: NextPage<ISyllabusPageProps> = ({ syllabusInfo, userCollections 
                 {syllabusInfo.topic_outlines ?
                   <div>
                     <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Topics outline</h2>
-                    <p id="course-learning-outcomes" className="whitespace-pre-wrap">
-                      {syllabusInfo.topic_outlines}
-                    </p>
+                    <ul data-cy="course-learning-outcomes" className="whitespace-pre-wrap">
+                      {syllabusInfo.topic_outlines.map((t, i) => (
+                        <li key={`topics-${i}`}>{t}</li>
+                      ))}
+                    </ul>
                   </div>
                   : <div>
                     <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Topics outline</h2>
@@ -204,7 +208,7 @@ const Syllabus: NextPage<ISyllabusPageProps> = ({ syllabusInfo, userCollections 
                 {syllabusInfo.readings ?
                   <div>
                     <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Readings</h2>
-                    <ul id="course-readings" className="list-inside list-disc whitespace-pre-wrap">
+                    <ul data-cy="course-readings" className="list-inside list-disc whitespace-pre-wrap">
                       {syllabusInfo.readings.map((r, i) => (
                         <li key={`readings-${i}`}>{r}</li>
                       ))}
@@ -220,28 +224,44 @@ const Syllabus: NextPage<ISyllabusPageProps> = ({ syllabusInfo, userCollections 
                 {syllabusInfo.grading_rubric ?
                   <div>
                     <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Grading rubric</h2>
-                    <p id="course-grading-rubric" className="whitespace-pre-wrap">
+                    <p data-cy="course-grading-rubric" className="whitespace-pre-wrap">
                       {syllabusInfo.grading_rubric}
                     </p>
                   </div>
                   : <div>
                     <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Grading rubric</h2>
                     <p className="text-sm text-gray-400 whitespace-pre-wrap">
-                      No learning outcomes.
+                      No grading rubric.
                     </p>
                   </div>}
 
                 {syllabusInfo.assignments ?
                   <div>
                     <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Assignments</h2>
-                    <p id="course-assignments" className="whitespace-pre-wrap">
-                      {syllabusInfo.assignments}
-                    </p>
+                    <ul data-cy="course-assignments" className="whitespace-pre-wrap">
+                      {syllabusInfo.assignments.map((r, i) => (
+                        <li key={`assignments-${i}`}>{r}</li>
+                      ))}
+                    </ul>
                   </div>
                   : <div>
                     <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Assignments</h2>
                     <p className="text-sm text-gray-400 whitespace-pre-wrap">
                       No assignments.
+                    </p>
+                  </div>}
+
+                  {syllabusInfo.other ?
+                  <div>
+                    <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Other</h2>
+                    <p data-cy="course-other" className="whitespace-pre-wrap">
+                      {syllabusInfo.other}
+                    </p>
+                  </div>
+                  : <div>
+                    <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Other</h2>
+                    <p className="text-sm text-gray-400 whitespace-pre-wrap">
+                      No other coment.
                     </p>
                   </div>}
 

@@ -82,8 +82,19 @@ describe('Create a new syllabus', () => {
         cy.get('[data-cy="courseDurationInput"]').type('7', {force: true})
         cy.get('[data-cy="courseDescriptionInput"]').type('Lorem ipsum dolores sit descriptio nuncam sed que tantamus', {force: true})
 
+        cy.get('[data-cy="learning_outcomes-add"]').click({force: true})
+        cy.get('[data-cy="learning_outcomes-item"]').type('Learn how to face it', {force: true})
+
+        cy.get('[data-cy="topic_outlines-add"]').click({force: true})
+        cy.get('[data-cy="topic_outlines-item"]').first().type('Travel', {force: true})
+        cy.get('[data-cy="topic_outlines-add"]').click({force: true})
+        cy.get('[data-cy="topic_outlines-item"]').last().type('Death', {force: true})
+
         cy.get('[data-cy="readings-add"]').click({force: true})
         cy.get('[data-cy="readings-item"]').type('Bieguni, Olga Tokarczuk', {force: true})
+
+        cy.get('[data-cy="assignments-add"]').click({force: true})
+        cy.get('[data-cy="assignments-item"]').type('Be a middle-age woman', {force: true})
 
         //-- add url attachment
         cy.get('[data-cy="new-attachment-name"]').type('Weblink test', {force: true})

@@ -195,23 +195,19 @@ export const isValidForm = (form: IFormData, attachments: IUploadAttachment[], i
 
 export const submitForm = async (form: IFormData, endpoint: URL, method: string, h: Headers): Promise<Response> => {
 
+  const arrayFields = ["readings", "tags", "academic_fields", "learning_outcomes", "topic_outlines", "assignments"]
+
   let body = new FormData();
   for (let [key, value] of Object.entries(form)) {
-    if (key == "tags")
+    if (arrayFields.includes(key)) {
       for (const t of value) {
-        body.append("tags[]", t as string)
+        if (t !== "") {
+          body.append(`${key}[]`, t as string)
+        }
       }
-    else if (key == "academic_fields")
-      for (const t of value) {
-        body.append("academic_fields[]", t as string)
-      }
-    else if (key == "readings")
-      for (const t of value) {
-        if(t !== "")
-          body.append("readings[]", t as string)
-      }
-    else
+    } else {
       body.append(key, value as string);
+    }
   }
 
   const res = await fetch(endpoint, {

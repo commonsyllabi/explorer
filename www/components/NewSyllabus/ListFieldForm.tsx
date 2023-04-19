@@ -12,7 +12,7 @@ interface IListFieldFormProps {
 const ListFieldForm: React.FunctionComponent<IListFieldFormProps> = ({ name, data, setData }) => {
 
     const [tmp, setTmp] = useState(data ? data : [''])
-
+    const nameKey = name.split(' ').join('_').toLowerCase()
     useEffect(() => {
         setData(tmp)
     }, [tmp])
@@ -43,19 +43,19 @@ const ListFieldForm: React.FunctionComponent<IListFieldFormProps> = ({ name, dat
 
     return (
         <div className="flex flex-col my-8 gap-2">
-            <label htmlFor={name.toLowerCase()}>{name}</label>
+            <label htmlFor={nameKey}>{name}</label>
             <ul>
                 {tmp.map((r, _index) => (
-                    <li className="flex gap-2" key={`${name.toLowerCase()}-${_index}`} >
+                    <li className="flex gap-2" key={`${nameKey}-${_index}`} >
                         <textarea className="w-full bg-transparent mt-2 p-1 border border-gray-900" data-index={_index} onChange={handleChange} 
-                        data-cy={`${name.toLowerCase()}-item`} value={r} placeholder={`Add a new ${name.toLowerCase()}`} />
+                        data-cy={`${nameKey}-item`} value={r} placeholder={`Add a new item`} />
                         <button data-index={_index} onClick={remove} >
                             <Image src={removeIcon} width="24" height="24" alt="Icon to remove an element from the list" />
                         </button>
                     </li>)
                 )}
             </ul>
-            <button className="w-max text-sm cursor-pointer hover:underline flex items-center gap-2" onClick={add} data-cy={`${name.toLowerCase()}-add`}>
+            <button className="w-max text-sm cursor-pointer hover:underline flex items-center gap-2" onClick={add} data-cy={`${nameKey}-add`}>
                 <Image src={addIcon} width="24" height="24" alt="Icon to add an element to the list" />
                 <div>Add a new item</div>
             </button>
