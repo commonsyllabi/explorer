@@ -172,7 +172,7 @@ const Home: NextPage<IHomeProps> = ({ meta, total, syllabiListings }) => {
     fetch(url)
       .then((res) => {
         if (res.ok) return res.json();
-        else console.warn("Problem with search!");
+        else console.warn("Problem with search!", res.statusText);
       })
       .then((data) => {
         setSyllabi(data.syllabi);

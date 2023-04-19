@@ -21,62 +21,88 @@ const UserInstitutions: React.FunctionComponent<IUserInstitutionsProps> = ({
 }) => {
   const [log, setLog] = useState('')
   const [isEditing, setIsEditing] = useState(false);
-  const [institutions, setEducation] = useState(userInstitutions ? userInstitutions : [])
+  const [institutions, setInstitutions] = useState(userInstitutions ? userInstitutions : [])
   const [tmp, setTmp] = useState(userInstitutions ? userInstitutions : [])
+  const [toDelete, setToDelete] = useState<string[]>([])
   const { data: session } = useSession();
 
-  const submitEdit = () => {
+  const submitEdit = async () => {
+    setLog("saving...")
     const h = new Headers();
     h.append("Authorization", `Bearer ${session?.user.token}`);
 
-    console.warn("change the endpoint to reach user institutions",institutions)
-    return
-
-    let b = new FormData()
-
-    fetch(apiUrl, {
-      method: 'PATCH',
-      headers: h,
-      body: b
+    toDelete.forEach(async (uuid) => {
+      const res = await fetch(`${apiUrl}/institutions/${uuid}`, {
+        method: 'DELETE',
+        headers: h
+      })
+      if(!res.ok){
+        setLog(`error deleting: ${uuid}`)
+        return
+      }
     })
-      .then((res) => {
-        if (res.ok) {
-          setIsEditing(false)
-          setEducation(tmp)
-          setLog('')
-        } else if (res.status == 401) {
-          signOut({ redirect: false }).then((result) => {
-            Router.push("/auth/signin");
-          })
-          return res.text()
-        } else {
-          return res.text()
-        }
+
+    let results: IInstitution[] = [];
+    for (const t of tmp) {
+      let b = new FormData()
+      b.append("name", t.name)
+
+      let m
+      if (t.uuid == undefined)
+        m = "POST"
+      else if (t.uuid.length > 0)
+        m = "PATCH"
+      else {
+        console.warn("Uncaught type of operation:", t)
+      }
+
+      const res = await fetch(`${apiUrl}/institutions${t.uuid ? '/'+t.uuid : ''}`, {
+        method: m,
+        headers: h,
+        body: b
       })
-      .then(body => {
+
+      if (res.status == 401) {
+        signOut({ redirect: false }).then((result) => {
+          Router.push("/auth/signin");
+        })
+        return;
+      } if (!res.ok) {
+        const body = await res.text()
         setLog(`An error occured while saving: ${body}`)
-      })
+        return;
+      }
+
+      const data = await res.json()
+      results = data.institutions;
+    }
+
+    setIsEditing(false)
+    if(results)
+      setInstitutions([...results])
+    setLog('')
   }
 
   const handleChange = (e: React.BaseSyntheticEvent) => {
     e.preventDefault()
     const t = e.target;
-    tmp[t.dataset.index] = t.value;
+    tmp[t.dataset.index].name = t.value;
     setTmp(tmp)
   }
 
   const add = () => {
     setTmp([...tmp, {} as IInstitution])
-  }
+  }  
 
   const remove = (e: React.BaseSyntheticEvent) => {
-    const i = e.target.dataset.index
+    const i = e.target.dataset.index    
+    if (tmp[i].uuid)
+      setToDelete([...toDelete, tmp[i].uuid])
     tmp.splice(i, 1)
-
     setTmp([...tmp])
   }
-  
-  return(
+
+  return (
     <div id="user-education" className="py-4">
       <h3 className="text-lg">Institutions</h3>
 
@@ -87,7 +113,7 @@ const UserInstitutions: React.FunctionComponent<IUserInstitutionsProps> = ({
               <li key={`${item.name}-${_index}`}>
                 <input type="text" defaultValue={item.name} data-index={_index} onChange={handleChange} className="w-11/12 bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"></input>
                 <button data-index={_index} onClick={remove}>
-                  <Image src={removeIcon} width="24" height="24" alt="Icon to remove an element from the list" />
+                  <Image data-index={_index} src={removeIcon} width="24" height="24" alt="Icon to remove an element from the list" />
                 </button>
               </li>
             ))}
@@ -112,13 +138,13 @@ const UserInstitutions: React.FunctionComponent<IUserInstitutionsProps> = ({
         <div className="flex justify-between mb-3">
           <ul className="list-unstyled">
             {institutions.length === 0 ?
-            <div className="text-sm text-gray-400">No affiliations yet.</div>
-            :
-            <></>
+              <div className="text-sm text-gray-400">No affiliations yet.</div>
+              :
+              <></>
             }
             {institutions.map((item) => (
-            <li key={item.name}>{item.name !== '' ? item.name : 'No education yet.'}</li>
-          ))}</ul>
+              <li key={item.name}>{item.name !== '' ? item.name : 'No education yet.'}</li>
+            ))}</ul>
           {isAdmin ?
             <button className="ml-8" onClick={() => setIsEditing(true)}>
               <Image src={editIcon} width="18" height="18" alt="Icon to edit the name" />

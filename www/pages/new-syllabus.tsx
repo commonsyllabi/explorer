@@ -87,10 +87,7 @@ const NewSyllabus: NextPage = () => {
     event.stopPropagation();
 
     if (session == null || session.user == null) {
-      setErrors([
-        `It seems you have been logged out. Please log in and try again.`,
-      ]);
-      console.warn("No session found!");
+      setErrors(['It seems you have been logged out. Please log in and try again.']);
       return;
     }
 

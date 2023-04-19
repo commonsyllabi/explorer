@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/biter777/countries"
@@ -29,14 +28,14 @@ type Date struct {
 
 func (i *Institution) BeforeCreate(tx *gorm.DB) (err error) {
 	if countries.ByNumeric(i.Country) == countries.Unknown {
-		return fmt.Errorf("country is unknown, skipping create")
+		// return fmt.Errorf("country is unknown, skipping create")
 	}
 	return nil
 }
 
 func (i *Institution) BeforeUpdate(tx *gorm.DB) (err error) {
 	if countries.ByNumeric(i.Country) == countries.Unknown {
-		return fmt.Errorf("country is unknown, skipping update")
+		// return fmt.Errorf("country is unknown, skipping update")
 	}
 	return nil
 }

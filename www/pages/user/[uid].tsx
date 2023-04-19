@@ -40,12 +40,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
     let full_syllabi = []
     for (const syll of userInfo.syllabi) {
-      const r = await fetch(new URL(`syllabi/${syll.uuid}`, apiUrl), { headers: h })
-      if (r.ok) {
-        const s = await r.json()
+      const res = await fetch(new URL(`syllabi/${syll.uuid}`, apiUrl), { headers: h })
+      if (res.ok) {
+        const s = await res.json()
         full_syllabi.push(s)
-      } else {
-        console.log('could not get syllabus', r.status);
       }
     }
     userInfo.syllabi = full_syllabi

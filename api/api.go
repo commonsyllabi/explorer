@@ -110,6 +110,7 @@ func SetupRouter() *echo.Echo {
 		users.DELETE("/:id", handlers.DeleteUser)
 
 		users.POST("/:id/institutions", handlers.AddUserInstitution)
+		users.PATCH("/:id/institutions/:inst_id", handlers.EditUserInstitution)
 		users.DELETE("/:id/institutions/:inst_id", handlers.RemoveUserInstitution)
 	}
 
