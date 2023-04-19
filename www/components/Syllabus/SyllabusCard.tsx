@@ -54,14 +54,14 @@ const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = ({
           fields={syllabusInfo.academic_fields}
         />
         <div>
-          <div className="flex justify-between w-full mt-6 mb-2">
-            <Link href={getSyllabiUrl(syllabusInfo.uuid)} className={`text-xl font-bold hover:underline ${kurintoBook.className}`}>
+          <div className="flex justify-between w-full mt-8 mb-4">
+            <Link href={getSyllabiUrl(syllabusInfo.uuid)} className={`text-2xl w-full font-bold hover:underline ${kurintoBook.className}`}>
               {syllabusInfo.title}
             </Link>
             {isAdmin ?
-              <div className="flex flex-col items-end">
+              <div className="flex flex-col justify-end items-end">
                 <PubBadge isPublic={getVisbility(syllabusInfo.status)} />
-                <div className="text-sm text-gray-500">{syllabusInfo.uuid}</div>
+                <div className="text-xs sm:text-sm text-gray-500 text-right">{syllabusInfo.uuid}</div>
               </div>
               : null}
           </div>

@@ -119,9 +119,10 @@ const Home: NextPage<IHomeProps> = ({ meta, total, syllabiListings }) => {
     // paginationHandler(1)
     const s = getSyllabusCards(syllabi, filters, false, 1);
     if (s === undefined) return;
+    const total = s.length;
 
-    setTotalPages(Math.ceil(s.total / PAGINATION_LIMIT));
-    setSyllabiCount(s.total);
+    setTotalPages(Math.ceil(total / PAGINATION_LIMIT));
+    setSyllabiCount(total);
   }, [syllabi, filters]);
 
   useEffect(() => {
@@ -155,8 +156,8 @@ const Home: NextPage<IHomeProps> = ({ meta, total, syllabiListings }) => {
 
   const getAllSyllabi = () => {
     if (activePage > totalPages || activePage < 1)
-      return getSyllabusCards(syllabi, filters, false, 1)?.elements;
-    else return getSyllabusCards(syllabi, filters, false, activePage)?.elements;
+      return getSyllabusCards(syllabi, filters, false, 1)
+    else return getSyllabusCards(syllabi, filters, false, activePage)
   };
 
   const handleSearchChange = (e: React.BaseSyntheticEvent) => {
@@ -209,7 +210,7 @@ const Home: NextPage<IHomeProps> = ({ meta, total, syllabiListings }) => {
     <div className="flex flex-col w-11/12 sm:w-full lg:w-10/12 m-auto">
 
       {/* SEARCH BAR */}
-      <div className="w-11/12 m-auto md:w-full mt-3 mb-3 flex justify-between">
+      <div className="w-11/12 m-auto md:w-full my-8 flex justify-between">
         <div className="w-full mt-3 mb-3 flex flex-row items-center">
           <input
             className="w-full bg-transparent border-b-2 border-b-gray-900"
@@ -234,7 +235,7 @@ const Home: NextPage<IHomeProps> = ({ meta, total, syllabiListings }) => {
       </div>
 
       <div className="flex flex-col-reverse md:flex-row justify-between">
-        <div className="w-11/12 m-auto md:m-0 md:w-7/12 pt-3 pb-5 flex flex-col">
+        <div className="w-11/12 m-auto md:m-0 md:w-7/12 pt-3 pb-5 flex flex-col gap-6">
           {getAllSyllabi()}
         </div>
         <div className="w-11/12 md:w-4/12 m-auto md:m-0 pb-3 border-bottom border-lg-bottom-0">

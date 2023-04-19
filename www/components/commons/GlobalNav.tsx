@@ -1,21 +1,26 @@
 import * as React from "react";
 import { useSession, signOut } from "next-auth/react";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 import Link from "next/link";
 import Image from "next/image";
 
 import menuOpenIcon from '../../public/icons/menu-line.svg'
 import menuCloseIcon from '../../public/icons/close-line.svg'
 import logoImage from '../../public/cosyll_black_on_white.png'
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { kurintoBook, kurintoSerif } from "app/layout";
 
 const GlobalNav: React.FunctionComponent = () => {
   const { data: session, status } = useSession();
+  const {pathname} = useRouter()
   const [isMenuDisplayed, setMenuDisplay] = useState(false)
   const toggleMenu = () => {
     setMenuDisplay(!isMenuDisplayed)
   }
+
+  useEffect(() => {
+    setMenuDisplay(false)
+  }, [pathname])
 
   return (
     <div
@@ -40,10 +45,10 @@ const GlobalNav: React.FunctionComponent = () => {
         </div>
 
         {/* DESKTOP */}
-        <div className="hidden md:flex items-center">
+        <div className="hidden md:flex items-center gap-4">
           <Link
             href="/new-syllabus"
-            className="mx-2 border rounded-md border-gray-900 dark:border-gray-100 p-2 hover:underline"
+            className="p-2 bg-gray-900 text-gray-100 border-2 rounded-md"
             data-cy="newSyllabusLink"
           >
             + New Syllabus
@@ -51,7 +56,7 @@ const GlobalNav: React.FunctionComponent = () => {
 
           <Link
             href="/about"
-            className="mx-2"
+            className="mx-2 hover:underline"
             data-cy="aboutlink"
           >
             About
@@ -64,7 +69,7 @@ const GlobalNav: React.FunctionComponent = () => {
             >
               <Link
                 href={`/user/${session.user._id}`}
-                className="py-2 mx-2"
+                className="py-2 mx-2 hover:underline"
                 data-cy="accountLink"
               >
                 My Account
@@ -73,7 +78,7 @@ const GlobalNav: React.FunctionComponent = () => {
 
               <Link
                 href="#"
-                className="py-2 mx-2"
+                className="py-2 mx-2 hover:underline"
                 data-cy="signOut"
                 onClick={() =>
                   signOut({ redirect: false }).then((result) => {
@@ -97,10 +102,10 @@ const GlobalNav: React.FunctionComponent = () => {
       {/* MOBILE MENU */}
       <div>
         {isMenuDisplayed ?
-          <div className="flex flex-col items-end pb-3">
+          <div className="flex flex-col items-end pb-3 mr-2 gap-3">
             <Link
               href="/new-syllabus"
-              className="mx-2 border rounded-md border-gray-900 dark:border-gray-100 p-2 mb-4 hover:underline"
+              className="p-2 bg-gray-900 text-gray-100 border-2 rounded-md"
               data-cy="newSyllabusLink"
             >
               + New Syllabus

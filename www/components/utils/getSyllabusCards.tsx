@@ -11,7 +11,7 @@ export const getSyllabusCards = (
   let syllabiCards;
 
   if (!syllabiArray || syllabiArray.length === 0) {
-    return({elements: [], total: 0});
+    return [];
   }
 
   const isShown = (filters: ISyllabiFilters, item: ISyllabus): boolean => {
@@ -73,18 +73,6 @@ export const getSyllabusCards = (
     />
   )) as JSX.Element[];
 
-  if (syllabiCards !== undefined && syllabiCards.length > 0)
-    return {
-      elements: <div className="flex flex-col gap-12" data-cy="syllabiCards">{syllabiCards}</div>,
-      total: filtered.length
-    };
-  else
-    return ({
-      elements: <div className="flex flex-col gap-12" data-cy="syllabiCards">
-        <h1 className="text-xl">Sorry!</h1>
-        <div>We couldn&apos;t find any syllabi matching your search filters.</div>
-      </div>,
-      total: 0
-    }
-    );
+
+    return syllabiCards;
 };

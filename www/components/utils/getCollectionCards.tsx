@@ -17,5 +17,5 @@ export const getCollectionCards = (
     />
   ));
 
-  return <>{collectionCards}</>;
+  return collectionCards;
 };
