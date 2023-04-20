@@ -24,7 +24,7 @@ const FiltersBar: React.FunctionComponent<syllabiFiltersProps> = ({ updateFilter
 
   React.useEffect(() => {
     updateFilters(filters)
-  }, [filters, updateFilters])
+  }, [filters])
 
   //-- todo : generate the options dropdown html given the meta props (might be annoying to deal with fields and levels)
 
