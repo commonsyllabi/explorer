@@ -20,9 +20,11 @@ const AddAcademicFieldsForm: React.FunctionComponent<
   const [detailedField, setDetailedField] = useState<string>("");
 
   useEffect(() => {
-    setBroadField(academicFields.length > 0 ? academicFields[0].length == 1 ? `0${academicFields[0]}` : academicFields[0] : "")
-    setNarrowField(academicFields.length > 1 ? academicFields[1] : "")
-    setDetailedField(academicFields.length > 2 ? academicFields[2] : "")
+    if(academicFields){
+      setBroadField(academicFields.length > 0 ? academicFields[0].length == 1 ? `0${academicFields[0]}` : academicFields[0] : "")
+      setNarrowField(academicFields.length > 1 ? academicFields[1] : "")
+      setDetailedField(academicFields.length > 2 ? academicFields[2] : "")
+    }
   }, [academicFields])
 
   const handleBroadFieldChange = (event: React.SyntheticEvent) => {
@@ -56,7 +58,7 @@ const AddAcademicFieldsForm: React.FunctionComponent<
     }
 
     setAcadFieldsData(acadFieldsArray);
-  }, [broadField, narrowField, detailedField, setAcadFieldsData]);
+  }, [broadField, narrowField, detailedField]);
 
   return (
     <div className="mb-5">

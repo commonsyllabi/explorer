@@ -15,7 +15,7 @@ const ListFieldForm: React.FunctionComponent<IListFieldFormProps> = ({ name, dat
     const nameKey = name.split(' ').join('_').toLowerCase()
     useEffect(() => {
         setData(tmp)
-    }, [tmp, setData])
+    }, [tmp])
 
     const handleChange = (e: React.BaseSyntheticEvent) => {
         e.preventDefault()
