@@ -69,7 +69,7 @@ const AddAcademicFieldsForm: React.FunctionComponent<
         </p>
       </label>
       <div
-        className="flex flex-col md:flex-row w-full gap-2 mb-3"
+        className="flex flex-col md:flex-row items-baseline w-full gap-2 my-3"
         id="academicFieldsInputSection"
         data-cy="academicFieldsInputSection"
       >

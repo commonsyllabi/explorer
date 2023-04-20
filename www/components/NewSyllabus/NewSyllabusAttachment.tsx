@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { IUploadAttachment } from "types";
 
 interface INewSyllabusAttachmentProps {
@@ -10,7 +10,7 @@ const NewSyllbusAttachment: React.FunctionComponent<
   INewSyllabusAttachmentProps
 > = ({ attachmentData, setAttachmentData }) => {
   // Set up file data
-
+  const fileRef = useRef<HTMLInputElement>(null)
   const blankAttachment: IUploadAttachment = {
     id: '0',
     name: "",
@@ -35,6 +35,8 @@ const NewSyllbusAttachment: React.FunctionComponent<
       currentGreatestId = 0;
     }
     setThisAttachment({ ...blankAttachment, id: currentGreatestId.toString() });
+    if(fileRef.current)
+      fileRef.current.value = ""
   };
 
   // For togging between file and url upload UI
@@ -158,6 +160,7 @@ const NewSyllbusAttachment: React.FunctionComponent<
               <input
                 onChange={handleAttachmentFile}
                 type="file"
+                ref={fileRef}
                 className="mt-2 py-1"
                 id="file"
                 data-cy={"new-attachment-file"}
