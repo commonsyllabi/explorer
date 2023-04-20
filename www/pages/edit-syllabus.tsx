@@ -119,7 +119,7 @@ const EditSyllabus: NextPage<IEditSyllabusProps> = ({ syllabusInfo }) => {
       date_year: syllabusInfo.institutions && syllabusInfo.institutions.length > 0 ? syllabusInfo.institutions[0].date.year : "",
       date_term: syllabusInfo.institutions && syllabusInfo.institutions.length > 0 ? syllabusInfo.institutions[0].date.term as string : "",
     })
-  }, [])
+  }, [syllabusInfo])
 
   //Handle form submission
   const handleSubmit = async (event: React.BaseSyntheticEvent) => {
