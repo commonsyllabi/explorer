@@ -199,14 +199,16 @@ export const submitForm = async (form: IFormData, endpoint: URL, method: string,
 
   let body = new FormData();
   for (let [key, value] of Object.entries(form)) {
-    if (arrayFields.includes(key)) {
-      for (const t of value) {
-        if (t !== "") {
-          body.append(`${key}[]`, t as string)
+    if (value !== null) {
+      if (arrayFields.includes(key)) {
+        for (const t of value) {
+          if (t !== "") {
+            body.append(`${key}[]`, t as string)
+          }
         }
+      } else {
+        body.append(key, value as string);
       }
-    } else {
-      body.append(key, value as string);
     }
   }
 
