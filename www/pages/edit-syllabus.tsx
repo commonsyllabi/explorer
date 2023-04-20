@@ -127,10 +127,6 @@ const EditSyllabus: NextPage<IEditSyllabusProps> = ({ syllabusInfo }) => {
     }
   }, [syllabusInfo]);
 
-  useEffect(() => {
-
-  }, [syllabusInfo])
-
   //Handle form submission
   const handleSubmit = async (event: React.BaseSyntheticEvent) => {
     event.preventDefault();

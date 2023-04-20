@@ -25,7 +25,7 @@ const AddAcademicFieldsForm: React.FunctionComponent<
       setNarrowField(academicFields.length > 1 ? academicFields[1] : "")
       setDetailedField(academicFields.length > 2 ? academicFields[2] : "")
     }
-  }, [academicFields])
+  }, [])
 
   const handleBroadFieldChange = (event: React.SyntheticEvent) => {
     const t = event.target as HTMLInputElement;
