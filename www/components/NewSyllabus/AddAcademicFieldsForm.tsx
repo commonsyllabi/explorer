@@ -15,9 +15,15 @@ const AddAcademicFieldsForm: React.FunctionComponent<
   IAddAcademicFieldsFormProps
 > = ({ setAcadFieldsData, academicFields }) => {
 
-  const [broadField, setBroadField] = useState(academicFields.length > 0 ? academicFields[0].length == 1 ? `0${academicFields[0]}` : academicFields[0] : "");
-  const [narrowField, setNarrowField] = useState(academicFields.length > 1 ? academicFields[1] : "");
-  const [detailedField, setDetailedField] = useState(academicFields.length > 2 ? academicFields[2] : "");
+  const [broadField, setBroadField] = useState<string>("");
+  const [narrowField, setNarrowField] = useState<string>("");
+  const [detailedField, setDetailedField] = useState<string>("");
+
+  useEffect(() => {
+    setBroadField(academicFields.length > 0 ? academicFields[0].length == 1 ? `0${academicFields[0]}` : academicFields[0] : "")
+    setNarrowField(academicFields.length > 1 ? academicFields[1] : "")
+    setDetailedField(academicFields.length > 2 ? academicFields[2] : "")
+  }, [academicFields])
 
   const handleBroadFieldChange = (event: React.SyntheticEvent) => {
     const t = event.target as HTMLInputElement;

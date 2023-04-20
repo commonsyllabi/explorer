@@ -93,38 +93,42 @@ const EditSyllabus: NextPage<IEditSyllabusProps> = ({ syllabusInfo }) => {
   console.log(syllabusInfo)
 
   const [formData, setFormData] = useState<IFormData>({} as IFormData)
-  useEffect(() => {
-    setFormData({
-      institutions: syllabusInfo.institutions as IInstitution[],
-      title: syllabusInfo.title,
-      course_number: syllabusInfo.course_number as string,
-      description: syllabusInfo.description,
-      attachments: syllabusInfo.attachments as IAttachment[],
-      tags: syllabusInfo.tags as string[],
-      language: syllabusInfo.language,
-      learning_outcomes: syllabusInfo.learning_outcomes as string[],
-      topic_outlines: syllabusInfo.topic_outlines as string[],
-      readings: syllabusInfo.readings as string[],
-      grading_rubric: syllabusInfo.grading_rubric as string,
-      assignments: syllabusInfo.assignments as string[],
-      other: syllabusInfo.other as string,
-      status: syllabusInfo.status,
-      academic_fields: syllabusInfo.academic_fields.map(ac => { return ac.toString() }),
-      academic_level: syllabusInfo.academic_level as number,
-      duration: syllabusInfo.duration as number
-    })
-  }, [syllabusInfo]);
-
   const [institutionData, setInstitutionData] = useState<IFormInstitution>({} as IFormInstitution);
   useEffect(() => {
-    if (syllabusInfo && syllabusInfo.institutions)
-      setInstitutionData({
-        name: syllabusInfo.institutions && syllabusInfo.institutions.length > 0 ? syllabusInfo.institutions[0].name : "",
-        country: syllabusInfo.institutions && syllabusInfo.institutions.length > 0 ? syllabusInfo.institutions[0].country as unknown as string : "",
-        url: syllabusInfo.institutions && syllabusInfo.institutions.length > 0 ? syllabusInfo.institutions[0].url as string : "",
-        date_year: syllabusInfo.institutions && syllabusInfo.institutions.length > 0 ? syllabusInfo.institutions[0].date.year : "",
-        date_term: syllabusInfo.institutions && syllabusInfo.institutions.length > 0 ? syllabusInfo.institutions[0].date.term as string : "",
+    if (syllabusInfo) {
+
+      setFormData({
+        institutions: syllabusInfo.institutions as IInstitution[],
+        title: syllabusInfo.title,
+        course_number: syllabusInfo.course_number as string,
+        description: syllabusInfo.description,
+        attachments: syllabusInfo.attachments as IAttachment[],
+        tags: syllabusInfo.tags as string[],
+        language: syllabusInfo.language,
+        learning_outcomes: syllabusInfo.learning_outcomes as string[],
+        topic_outlines: syllabusInfo.topic_outlines as string[],
+        readings: syllabusInfo.readings as string[],
+        grading_rubric: syllabusInfo.grading_rubric as string,
+        assignments: syllabusInfo.assignments as string[],
+        other: syllabusInfo.other as string,
+        status: syllabusInfo.status,
+        academic_fields: syllabusInfo.academic_fields.map(ac => { return ac.toString() }),
+        academic_level: syllabusInfo.academic_level as number,
+        duration: syllabusInfo.duration as number
       })
+      if (syllabusInfo.institutions)
+        setInstitutionData({
+          name: syllabusInfo.institutions && syllabusInfo.institutions.length > 0 ? syllabusInfo.institutions[0].name : "",
+          country: syllabusInfo.institutions && syllabusInfo.institutions.length > 0 ? syllabusInfo.institutions[0].country as unknown as string : "",
+          url: syllabusInfo.institutions && syllabusInfo.institutions.length > 0 ? syllabusInfo.institutions[0].url as string : "",
+          date_year: syllabusInfo.institutions && syllabusInfo.institutions.length > 0 ? syllabusInfo.institutions[0].date.year : "",
+          date_term: syllabusInfo.institutions && syllabusInfo.institutions.length > 0 ? syllabusInfo.institutions[0].date.term as string : "",
+        })
+    }
+  }, [syllabusInfo]);
+
+  useEffect(() => {
+
   }, [syllabusInfo])
 
   //Handle form submission
@@ -234,7 +238,7 @@ const EditSyllabus: NextPage<IEditSyllabusProps> = ({ syllabusInfo }) => {
   };
 
   const [attachmentData, setAttachmentData] = useState(
-    syllabusInfo.attachments ? syllabusInfo.attachments.map((att, i) => {
+    syllabusInfo && syllabusInfo.attachments ? syllabusInfo.attachments.map((att, i) => {
       att.id = i.toString()
       att.type = att.url ? att.url.startsWith("http") ? "url" : "file" : "file"
       return att
