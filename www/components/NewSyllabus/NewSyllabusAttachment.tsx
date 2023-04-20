@@ -97,14 +97,10 @@ const NewSyllbusAttachment: React.FunctionComponent<
     setAttachmentData([...attachmentData, thisAttachment]);
   };
 
-  //After new attachment is added to attachmentData, reset form
-  useEffect(() => {
-    resetForm();
-  }, [attachmentData]);
-
-  const resetForm = (): void => {
-    setNewId();
-  };
+    //After new attachment is added to attachmentData, reset form
+    useEffect(() => {
+      setNewId();
+    }, [attachmentData]);
 
   return (
     <>

@@ -90,25 +90,30 @@ const EditSyllabus: NextPage<IEditSyllabusProps> = ({ syllabusInfo }) => {
   const [syllabusUUID, setSyllabusUUID] = useState("");
   const [parsedData, setParsedData] = useState<IParsedData>();
 
-  const [formData, setFormData] = useState<IFormData>({
-    institutions: syllabusInfo.institutions as IInstitution[],
-    title: syllabusInfo.title,
-    course_number: syllabusInfo.course_number as string,
-    description: syllabusInfo.description,
-    attachments: syllabusInfo.attachments as IAttachment[],
-    tags: syllabusInfo.tags as string[],
-    language: syllabusInfo.language,
-    learning_outcomes: syllabusInfo.learning_outcomes as string[],
-    topic_outlines: syllabusInfo.topic_outlines as string[],
-    readings: syllabusInfo.readings as string[],
-    grading_rubric: syllabusInfo.grading_rubric as string,
-    assignments: syllabusInfo.assignments as string[],
-    other: syllabusInfo.other as string,
-    status: syllabusInfo.status,
-    academic_fields: syllabusInfo.academic_fields.map(ac => { return ac.toString() }),
-    academic_level: syllabusInfo.academic_level as number,
-    duration: syllabusInfo.duration as number,
-  });
+  console.log(syllabusInfo)
+
+  const [formData, setFormData] = useState<IFormData>({} as IFormData)
+  useEffect(() => {
+    setFormData({
+      institutions: syllabusInfo.institutions as IInstitution[],
+      title: syllabusInfo.title,
+      course_number: syllabusInfo.course_number as string,
+      description: syllabusInfo.description,
+      attachments: syllabusInfo.attachments as IAttachment[],
+      tags: syllabusInfo.tags as string[],
+      language: syllabusInfo.language,
+      learning_outcomes: syllabusInfo.learning_outcomes as string[],
+      topic_outlines: syllabusInfo.topic_outlines as string[],
+      readings: syllabusInfo.readings as string[],
+      grading_rubric: syllabusInfo.grading_rubric as string,
+      assignments: syllabusInfo.assignments as string[],
+      other: syllabusInfo.other as string,
+      status: syllabusInfo.status,
+      academic_fields: syllabusInfo.academic_fields.map(ac => { return ac.toString() }),
+      academic_level: syllabusInfo.academic_level as number,
+      duration: syllabusInfo.duration as number
+    })
+  }, [syllabusInfo]);
 
   const [institutionData, setInstitutionData] = useState<IFormInstitution>({} as IFormInstitution);
   useEffect(() => {
@@ -503,7 +508,7 @@ const EditSyllabus: NextPage<IEditSyllabusProps> = ({ syllabusInfo }) => {
                   id="language"
                   onChange={handleChange}
                   data-cy="courseLanguageInput"
-                  value={formData.language.toUpperCase()}
+                  value={formData.language ? formData.language.toUpperCase() : ""}
                 >
                   <option value="">—</option>
                   {generateLanguageOptions()}
@@ -524,7 +529,7 @@ const EditSyllabus: NextPage<IEditSyllabusProps> = ({ syllabusInfo }) => {
                     type="text"
                     id="duration"
                     onChange={handleChange}
-                    value={formData.duration}
+                    value={formData ? formData.duration : ""}
                     placeholder="e.g. 14 weeks"
                     data-cy="courseDurationInput"
                   />
@@ -540,7 +545,7 @@ const EditSyllabus: NextPage<IEditSyllabusProps> = ({ syllabusInfo }) => {
                   required
                   id="tags"
                   onChange={handleChange}
-                  value={formData.tags.join(", ")}
+                  value={formData.tags ? formData.tags.join(", ") : ""}
                   placeholder="introductory, sociology, methodology"
                   data-cy="courseTagsInput"
                 />

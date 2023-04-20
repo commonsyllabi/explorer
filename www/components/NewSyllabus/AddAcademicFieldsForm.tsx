@@ -50,7 +50,7 @@ const AddAcademicFieldsForm: React.FunctionComponent<
     }
 
     setAcadFieldsData(acadFieldsArray);
-  }, [broadField, narrowField, detailedField]);
+  }, [broadField, narrowField, detailedField, setAcadFieldsData]);
 
   return (
     <div className="mb-5">
