@@ -112,13 +112,14 @@ const EditSyllabus: NextPage<IEditSyllabusProps> = ({ syllabusInfo }) => {
 
   const [institutionData, setInstitutionData] = useState<IFormInstitution>({} as IFormInstitution);
   useEffect(() => {
-    setInstitutionData({
-      name: syllabusInfo.institutions && syllabusInfo.institutions.length > 0 ? syllabusInfo.institutions[0].name : "",
-      country: syllabusInfo.institutions && syllabusInfo.institutions.length > 0 ? syllabusInfo.institutions[0].country as unknown as string : "",
-      url: syllabusInfo.institutions && syllabusInfo.institutions.length > 0 ? syllabusInfo.institutions[0].url as string : "",
-      date_year: syllabusInfo.institutions && syllabusInfo.institutions.length > 0 ? syllabusInfo.institutions[0].date.year : "",
-      date_term: syllabusInfo.institutions && syllabusInfo.institutions.length > 0 ? syllabusInfo.institutions[0].date.term as string : "",
-    })
+    if (syllabusInfo && syllabusInfo.institutions)
+      setInstitutionData({
+        name: syllabusInfo.institutions && syllabusInfo.institutions.length > 0 ? syllabusInfo.institutions[0].name : "",
+        country: syllabusInfo.institutions && syllabusInfo.institutions.length > 0 ? syllabusInfo.institutions[0].country as unknown as string : "",
+        url: syllabusInfo.institutions && syllabusInfo.institutions.length > 0 ? syllabusInfo.institutions[0].url as string : "",
+        date_year: syllabusInfo.institutions && syllabusInfo.institutions.length > 0 ? syllabusInfo.institutions[0].date.year : "",
+        date_term: syllabusInfo.institutions && syllabusInfo.institutions.length > 0 ? syllabusInfo.institutions[0].date.term as string : "",
+      })
   }, [syllabusInfo])
 
   //Handle form submission
@@ -170,7 +171,7 @@ const EditSyllabus: NextPage<IEditSyllabusProps> = ({ syllabusInfo }) => {
       );
       method = 'PATCH'
     } else {
-      console.warn("Unexpected number of institutions:", syllabusInfo.institutions)
+      console.warn("Unexpected number of institutions:", syllabusInfo)
       setInstitutionCreated("failed")
       return;
     }
