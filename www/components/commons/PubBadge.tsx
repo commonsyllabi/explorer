@@ -6,9 +6,9 @@ interface IPubBadgeProps {
 
 const PubBadge: React.FunctionComponent<IPubBadgeProps> = ({ isPublic }) => {
   if (isPublic === false) {
-    return <span className="badge bg-secondary ms-2">Private</span>;
+    return <div className="badge bg-secondary ms-2">Private</div>;
   } else if (isPublic === true) {
-    return <span className="badge bg-success ms-2">Public</span>;
+    return <div className="badge bg-success ms-2">Public</div>;
   } else {
     return null;
   }

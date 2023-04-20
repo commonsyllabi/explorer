@@ -48,8 +48,6 @@ const SignIn: NextPage = () => {
 
     setLog('')
 
-    console.log('here');
-    
 
     signIn("credentials", {
       username: loginUsername,
@@ -173,15 +171,15 @@ const SignIn: NextPage = () => {
       {!isCreated ? (
         <div>
           <div className="flex my-8">
-            <div onClick={() => setActiveTab("Login")} className={`text-xl mr-6 cursor-pointer ${activeTab === "Login" ? "font-bold" : ""}`}>Login</div>
-            <div onClick={() => setActiveTab("Sign up")} className={`text-xl mr-6 cursor-pointer ${activeTab === "Sign up" ? "font-bold" : ""}`}>Sign up</div>
+            <div data-cy="Login-tab" onClick={() => setActiveTab("Login")} className={`text-xl mr-6 cursor-pointer ${activeTab === "Login" ? "font-bold" : ""}`}>Login</div>
+            <div data-cy="Signup-tab" onClick={() => setActiveTab("Sign up")} className={`text-xl mr-6 cursor-pointer ${activeTab === "Sign up" ? "font-bold" : ""}`}>Sign up</div>
           </div>
           <div id="tab">
             {activeTab === "Login" ?
               <div className="flex" title="Login">
-                <form className="w-full mt-2">
+                <form className="w-full mt-2" onSubmit={handleLogin}>
                   <div className="flex flex-col mb-3">
-                    <label>Email address</label>
+                    <label htmlFor="username">Email address</label>
                     <input
                       className="w-full bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
                       required
@@ -199,7 +197,7 @@ const SignIn: NextPage = () => {
                   <div
                     className="mb-3 flex flex-col "
                   >
-                    <label>Password</label>
+                    <label htmlFor="password">Password</label>
                     <input
                       className="w-full bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
                       required
@@ -212,7 +210,7 @@ const SignIn: NextPage = () => {
                   </div>
 
                   <button
-                    onClick={handleLogin}
+                    type="submit"
                     className="mt-4 p-2 bg-gray-900 text-gray-100 border-2 rounded-md"
                     data-cy="Login-submit"
                   >
@@ -224,10 +222,11 @@ const SignIn: NextPage = () => {
               <div className="flex" title="Sign up" data-cy="Sign up">
                 <form className="w-full mt-2">
                   <div className="mb-8 flex flex-col">
-                    <label>Name</label>
+                    <label htmlFor="name">Name</label>
                     <input
                       className="w-full bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
                       type="text"
+                      name="name"
                       placeholder="Enter name"
                       data-cy="Signup-name"
                       onChange={handleSignupName}
@@ -236,10 +235,11 @@ const SignIn: NextPage = () => {
 
                   <div className="mb-8 flex flex-col">
                     <div className="mb-3">
-                      <label>Email address</label>
+                      <label htmlFor="signup-email">Email address</label>
                       <input
                         className="w-full bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
                         type="email"
+                        name="signup-email"
                         placeholder="Enter email"
                         data-cy="Signup-email"
                         onChange={handleSignupEmail}
@@ -249,10 +249,11 @@ const SignIn: NextPage = () => {
                     <div
                       className="mb-3 flex flex-col "
                     >
-                      <label>Confirm email address</label>
+                      <label htmlFor="signup-email-conf">Confirm email address</label>
                       <input
                         className="w-full bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
                         type="email"
+                        name="signup-email-conf"
                         placeholder="Confirm email"
                         data-cy="Signup-email-conf"
                         onChange={handleSignupEmailConf}
@@ -267,10 +268,11 @@ const SignIn: NextPage = () => {
                     className="mb-3 flex flex-col"
 
                   >
-                    <label>Password</label>
+                    <label htmlFor="signup-password">Password</label>
                     <input
                       className="w-full bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
                       type="password"
+                      name="signup-password"
                       placeholder="Password"
                       data-cy="Signup-password"
                       onChange={handleSignupPassword}
@@ -281,14 +283,19 @@ const SignIn: NextPage = () => {
                     className="mb-3 flex flex-col"
 
                   >
-                    <label>Confirm password</label>
+                    <label htmlFor="signup-password-conf">Confirm password</label>
                     <input
                       className="w-full bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
                       type="password"
+                      name="signup-password-conf"
                       placeholder="Confirm password"
                       data-cy="Signup-password-conf"
                       onChange={handleSignupPasswordConf}
                     />
+                  </div>
+
+                  <div className="text-sm">
+                    By creating an account, you agree to our <Link target="_blank" className="underline" href="/terms-of-use">terms of use</Link> and to our <Link target="_blank" className="underline" href="/privacy-policy">privacy policy</Link>.
                   </div>
 
                   <button
@@ -316,10 +323,11 @@ const SignIn: NextPage = () => {
             : <></>}
         </div>
       ) : (
-        <div>
-          <h1 data-cy="Success" className="text-xl mt-8">
-            Your account was created!
+        <div className="mt-8 flex flex-col gap-3">
+          <h1 data-cy="Success" className="text-3xl mt-8">
+            Success!
           </h1>
+          <h2 className="text-xl">Your account was created.</h2>
           <div>Please check your email address ({signupEmail}) to activate it.</div>
         </div>
       )}

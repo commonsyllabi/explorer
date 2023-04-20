@@ -5,6 +5,8 @@ import { inter } from "app/layout";
 
 interface ISyllabusSchoolCodeYearProps {
   institution?: string | null;
+  lang?: string | null;
+  country?: string | null;
   courseNumber?: string | null;
   level?: number | null;
   fields?: number[] | null;
@@ -14,16 +16,24 @@ interface ISyllabusSchoolCodeYearProps {
 
 const SyllabusSchoolCodeYear: React.FunctionComponent<
   ISyllabusSchoolCodeYearProps
-> = ({ institution, courseNumber, level, fields, term, year }) => {
+> = ({ institution, lang, country, courseNumber, level, fields, term, year }) => {
   return (
-    <div className={`flex flex-col gap-1 md:flex-row md:gap-4 text-sm mb-4 ${inter.className} text-gray-600`}>
-      {institution ? (
-        <p className="">{institution}</p>
-      ) : (
-        <div className="italic">institution</div>
-      )}
+    <div className={`flex flex-col md:flex-row gap-4 text-sm mb-4 ${inter.className} text-gray-600`}>
+      <div className="flex flex-row justify-between md:gap-4">
+        <div className="flex flex-col sm:flex-row justify-between md:gap-4">
+          {institution ? (
+            <div className="">{institution}{country ? ` (${country})` : ''}</div>
+          ) : (
+            <div className="italic">No institution</div>
+          )}
 
-      {/* {courseNumber ? (
+          {lang ? (
+            <div className="">{lang}</div>
+          ) : (
+            <div className="italic">No language</div>
+          )}
+        </div>
+        {/* {courseNumber ? (
         <p className="">{courseNumber}</p>
       ) : (
         <p className="">
@@ -31,36 +41,29 @@ const SyllabusSchoolCodeYear: React.FunctionComponent<
         </p>
       )} */}
 
-      <div className="">
-        {term ? (
-          <p className="">{term}</p>
-        ) : (
-          <div className="italic">term</div>
-        )}
-      </div>
+        <div className="flex flex-col sm:flex-row justify-between md:gap-4">
+          {year ? (
+            <div className="">{term ? `${term} ` : ''}{year}</div>
+          ) : (
+            <div className="italic">No date</div>
+          )}
 
-      <div>
-        {year ? (
-          <p className="">{year}</p>
-        ) : (
-          <div className="italic">year</div>
-        )}
+          {level != null ? (
+            <div className="">{getAcademicLevelText(level)}</div>
+          ) : (
+            <div className="">
+              <em>No academic level</em>
+            </div>
+          )}
+        </div>
       </div>
-
-      {level != null ? (
-        <p className="">{getAcademicLevelText(level)}</p>
-      ) : (
-        <p className="">
-          <em>no academic level</em>
-        </p>
-      )}
 
       {fields != null ? (
-        <p className="">{getAcademicFieldsText(fields).join(" | ")}</p>
+        <div className="">{getAcademicFieldsText(fields).join(" | ")}</div>
       ) : (
-        <p className="">
-          <em>no academic fields</em>
-        </p>
+        <div className="">
+          <em>No academic fields</em>
+        </div>
       )}
     </div>
   );

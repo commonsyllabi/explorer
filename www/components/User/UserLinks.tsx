@@ -27,18 +27,18 @@ const UserLinks: React.FunctionComponent<IUserLinksProps> = ({ userLinks, isAdmi
     const h = new Headers();
     h.append("Authorization", `Bearer ${session?.user.token}`);
 
-    let malformedURL = '';
+    let malformedURL: string[] = [];
     tmp.forEach(t => {
       try {
         new URL(t)
       } catch (error) {
         console.log(error);
-        malformedURL = t
+        malformedURL.push(t)
       }
     })
 
-    if (malformedURL !== '') {
-      setLog(`${malformedURL} does not seem to be a URL!`)
+    if (malformedURL.length > 0) {
+      setLog(`${malformedURL.join(", ")} do not seem to be a URL!`)
       return
     }
 
@@ -109,23 +109,32 @@ const UserLinks: React.FunctionComponent<IUserLinksProps> = ({ userLinks, isAdmi
               </li>
             ))}
           </ul>
-          <button onClick={add}>
+          <button onClick={add} className="flex">
             <Image src={addIcon} width="24" height="24" alt="Icon to add an element to the list" />
+            <div>Add URL</div>
           </button>
 
-          <div className="py-1 mt-2">
-            <button className="w-6" onClick={() => { setIsEditing(false); }}>
+          <div className="py-1 mt-4 flex flex-col lg:flex-row gap-2 justify-between">
+            <button className="flex gap-2 rounded-lg border border-1 border-gray-900 py-1 px-2 bg-red-100 hover:bg-red-300" onClick={() => { setIsEditing(false); }}>
               <Image src={cancelIcon} width="24" height="24" alt="Icon to cancel the edit process" />
+              <div>Cancel</div>
             </button>
-            <button className="w-6" onClick={submitEdit}>
+            <button className="flex gap-2 rounded-lg border border-1 border-gray-900 py-1 px-2" onClick={submitEdit}>
               <Image src={checkIcon} width="24" height="24" alt="Icon to save the edit process" />
+              <div>Save</div>
             </button>
           </div>
           <div>{log}</div>
         </div>
         :
         <div className="flex justify-between mb-3">
-          <ul className="list-unstyled">{links.map((link) => (
+          <ul className="list-unstyled">
+          {links.length === 0 ?
+            <div className="text-sm text-gray-400">No links yet.</div>
+            :
+            <></>
+            }
+            {links.map((link) => (
             <li key={link}>
               <Link href={link} target="_blank" rel="noreferrer" className="underline">
                 {link}

@@ -81,14 +81,16 @@ const UserEmail: React.FunctionComponent<IUserEmailProps> = ({ userEmail, apiUrl
         <h3 className="text-lg">Email</h3>
         {isEditing ?
             <div>
-                <input type="text" placeholder="Enter your email" onChange={handleChange}></input>
-                <input type="text" placeholder="Confirm your email" onChange={handleChangeConf}></input>
-                <div className="py-1 mt-2">
-                    <button className="w-6" onClick={() => { setIsEditing(false); }}>
+                <input type="text" placeholder="Enter your new email" className="w-11/12 bg-transparent mt-2 py-1 border-b-2 border-b-gray-900" onChange={handleChange}></input>
+                <input type="text" placeholder="Confirm your new email" className="w-11/12 bg-transparent mt-2 py-1 border-b-2 border-b-gray-900" onChange={handleChangeConf}></input>
+                <div className="py-1 mt-4 flex flex-col lg:flex-row gap-2 justify-between">
+                    <button className="flex gap-2 rounded-lg border border-1 border-gray-900 py-1 px-2 bg-red-100 hover:bg-red-300" onClick={() => { setIsEditing(false); }}>
                         <Image src={cancelIcon} width="24" height="24" alt="Icon to cancel the edit process" />
+                        <div>Cancel</div>
                     </button>
-                    <button className="w-6" onClick={submitEdit}>
+                    <button className="flex gap-2 rounded-lg border border-1 border-gray-900 py-1 px-2" onClick={submitEdit}>
                         <Image src={checkIcon} width="24" height="24" alt="Icon to save the edit process" />
+                        <div>Save</div>
                     </button>
                 </div>
                 <div>{log}</div>

@@ -113,7 +113,7 @@ func AddCollectionSyllabus(c echo.Context) error {
 	coll, err := models.AddSyllabusToCollection(coll_uid, syll_uid, user_uuid)
 	if err != nil {
 		zero.Error(err.Error())
-		c.String(http.StatusInternalServerError, "We couldn't add the Syllabus to the Collection.")
+		return c.String(http.StatusInternalServerError, "We couldn't add the Syllabus to the Collection.")
 	}
 
 	return c.JSON(http.StatusOK, coll)

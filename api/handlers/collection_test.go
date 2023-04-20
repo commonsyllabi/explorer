@@ -227,7 +227,7 @@ func TestCollectionHandler(t *testing.T) {
 
 	t.Run("Test add syllabus to collection", func(t *testing.T) {
 		f := make(url.Values)
-		f.Set("syllabus_id", syllabusID.String())
+		f.Set("syllabus_id", syllabusOtherID.String())
 
 		res := httptest.NewRecorder()
 		req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(f.Encode()))
@@ -243,7 +243,7 @@ func TestCollectionHandler(t *testing.T) {
 		var coll models.Collection
 		err := json.Unmarshal(res.Body.Bytes(), &coll)
 		require.Nil(t, err)
-		assert.Equal(t, 1, len(coll.Syllabi))
+		assert.Equal(t, 2, len(coll.Syllabi))
 	})
 
 	t.Run("Test get all syllabi from collection", func(t *testing.T) {
@@ -261,7 +261,7 @@ func TestCollectionHandler(t *testing.T) {
 		var sylls = make([]models.Syllabus, 0)
 		err := json.Unmarshal(res.Body.Bytes(), &sylls)
 		require.Nil(t, err)
-		assert.Equal(t, 1, len(sylls))
+		assert.Equal(t, 2, len(sylls))
 	})
 
 	t.Run("Test get syllabus from collection", func(t *testing.T) {
@@ -293,10 +293,10 @@ func TestCollectionHandler(t *testing.T) {
 		handlers.RemoveCollectionSyllabus(c)
 		assert.Equal(t, http.StatusOK, res.Code)
 
-		var syll models.Syllabus
-		err := json.Unmarshal(res.Body.Bytes(), &syll)
+		var coll models.Collection
+		err := json.Unmarshal(res.Body.Bytes(), &coll)
 		require.Nil(t, err)
-		assert.Equal(t, syllabusID, syll.UUID)
+		assert.Equal(t, collectionID, coll.UUID)
 	})
 
 	t.Run("Test delete collection", func(t *testing.T) {

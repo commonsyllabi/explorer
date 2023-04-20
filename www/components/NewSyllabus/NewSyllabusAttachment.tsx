@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IUploadAttachment } from "types";
 
 interface INewSyllabusAttachmentProps {
@@ -12,7 +12,7 @@ const NewSyllbusAttachment: React.FunctionComponent<
   // Set up file data
 
   const blankAttachment: IUploadAttachment = {
-    id: 0,
+    id: '0',
     name: "",
     description: "",
     file: undefined,
@@ -30,11 +30,11 @@ const NewSyllbusAttachment: React.FunctionComponent<
   const setNewId = () => {
     let currentGreatestId;
     if (attachmentData.length) {
-      currentGreatestId = attachmentData[attachmentData.length - 1].id + 1;
+      currentGreatestId = parseInt(attachmentData[attachmentData.length - 1].id) + 1;
     } else {
       currentGreatestId = 0;
     }
-    setThisAttachment({ ...blankAttachment, id: currentGreatestId });
+    setThisAttachment({ ...blankAttachment, id: currentGreatestId.toString() });
   };
 
   // For togging between file and url upload UI
@@ -68,10 +68,11 @@ const NewSyllbusAttachment: React.FunctionComponent<
     setThisAttachment({ ...thisAttachment, [t.id]: t.value });
   };
 
-  const handleAttachmentFile = (event: React.SyntheticEvent): void => {
-    event.preventDefault();
+  const handleAttachmentFile = (e: React.BaseSyntheticEvent): void => {
+    e.preventDefault();
+    e.stopPropagation()
 
-    const t = event.target as HTMLInputElement;
+    const t = e.target as HTMLInputElement;
     if (t.files == null) return;
 
     const f = t.files[0] as File;
@@ -89,7 +90,10 @@ const NewSyllbusAttachment: React.FunctionComponent<
     });
   };
 
-  const handleSubmitNewAttachment = (): void => {
+  const handleSubmitNewAttachment = (e: React.BaseSyntheticEvent): void => {
+    e.preventDefault()
+    e.stopPropagation()
+    
     setAttachmentData([...attachmentData, thisAttachment]);
   };
 
@@ -152,9 +156,9 @@ const NewSyllbusAttachment: React.FunctionComponent<
           <label htmlFor="attachmentType">URL</label>
         </div>
         {showFileUI ? (
-          <div id="uploadControlsFile">
-            <div>
-              <label>Upload your file here</label>
+          <div id="uploadControlsFile" className="flex flex-col my-6">
+            
+              <label>Upload your file here:</label>
               <input
                 onChange={handleAttachmentFile}
                 type="file"
@@ -162,7 +166,7 @@ const NewSyllbusAttachment: React.FunctionComponent<
                 id="file"
                 data-cy={"new-attachment-file"}
               />
-            </div>
+            
           </div>
         ) : (
           <div id="uploadControlsUrl">
@@ -173,6 +177,7 @@ const NewSyllbusAttachment: React.FunctionComponent<
                 type="url"
                 className="bg-transparent mt-2 py-1 border-b-2 border-b-gray-900 w-full"
                 id="url"
+                value={thisAttachment.url}
                 data-cy={"new-attachment-url"}
               />
             </div>

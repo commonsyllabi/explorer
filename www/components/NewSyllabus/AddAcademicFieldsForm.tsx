@@ -1,27 +1,26 @@
 import React, { useState, useEffect } from "react";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
 
-import { generateAcadFieldsBroad } from "components/utils/formUtils";
+import { generateAcadFieldsBroad, generateAcadFieldsDetailed, generateAcadFieldsNarrow } from "components/utils/formUtils";
 
 import AcadFieldsChildren from "./AcadFieldsChildren";
 import modelsIsced from "models-isced.json"; //import tiered academic field codes
+import { getSingleAcademicFieldText } from "components/utils/getAcademicFields";
 
 interface IAddAcademicFieldsFormProps {
   setAcadFieldsData: Function;
+  academicFields: string[]
 }
 
 const AddAcademicFieldsForm: React.FunctionComponent<
   IAddAcademicFieldsFormProps
-> = ({ setAcadFieldsData }) => {
-  const [broadField, setBroadField] = useState("");
-  const [narrowField, setNarrowField] = useState("");
-  const [detailedField, setDetailedField] = useState("");
+> = ({ setAcadFieldsData, academicFields }) => {
 
-  // handle form changes
+  const [broadField, setBroadField] = useState(academicFields.length > 0 ? academicFields[0].length == 1 ? `0${academicFields[0]}` : academicFields[0] : "");
+  const [narrowField, setNarrowField] = useState(academicFields.length > 1 ? academicFields[1] : "");
+  const [detailedField, setDetailedField] = useState(academicFields.length > 2 ? academicFields[2] : "");
+
   const handleBroadFieldChange = (event: React.SyntheticEvent) => {
     const t = event.target as HTMLInputElement;
-    // console.log(`${[t.id]}: ${t.value}`);
     setBroadField(t.value);
     setNarrowField("");
     setDetailedField("");
@@ -29,18 +28,14 @@ const AddAcademicFieldsForm: React.FunctionComponent<
 
   const handleNarrowFieldChange = (event: React.SyntheticEvent) => {
     const t = event.target as HTMLInputElement;
-    // console.log(`${[t.id]}: ${t.value}`);
     setNarrowField(t.value);
     setDetailedField("");
   };
 
   const handleDetailedFieldChange = (event: React.SyntheticEvent) => {
     const t = event.target as HTMLInputElement;
-    // console.log(`${[t.id]}: ${t.value}`);
     setDetailedField(t.value);
   };
-
-  //TODO: capture broad, narrow and detailed states as array and set parent form.
 
   useEffect(() => {
     let acadFieldsArray = [];
@@ -53,7 +48,7 @@ const AddAcademicFieldsForm: React.FunctionComponent<
     if (detailedField.length > 0) {
       acadFieldsArray.push(detailedField);
     }
-    
+
     setAcadFieldsData(acadFieldsArray);
   }, [broadField, narrowField, detailedField]);
 
@@ -73,8 +68,9 @@ const AddAcademicFieldsForm: React.FunctionComponent<
         <div className="w-full">
           <p className="text-sm text-muted mb-0">BROAD</p>
           <select
-          className="bg-transparent mt-2 p-1 border-2 border-gray-900 w-full"
+            className="bg-transparent mt-2 p-1 border-2 border-gray-900 w-full"
             id="academic_field_broad"
+            value={broadField}
             onChange={handleBroadFieldChange}
           >
             <option value="">–</option>
@@ -85,36 +81,33 @@ const AddAcademicFieldsForm: React.FunctionComponent<
         <div className="w-full">
           <p className="text-sm text-muted mb-0">NARROW</p>
           <select
-          className="bg-transparent mt-2 p-1 border-2 border-gray-900 w-full"
+            className="bg-transparent mt-2 p-1 border-2 border-gray-900 w-full"
             id="academic_field_narrow"
             onChange={handleNarrowFieldChange}
+            value={narrowField}
           >
-            <AcadFieldsChildren
-              parentFieldCode={
-                broadField as keyof typeof modelsIsced["NARROW_FIELDS"]
-              }
-              fieldLabel="Narrow"
-            />
+            <option value="">–</option>
+            {generateAcadFieldsNarrow(
+              broadField as keyof typeof modelsIsced["NARROW_FIELDS"]
+            )}
           </select>
         </div>
 
         <div className="w-full">
           <p className="small text-muted mb-0">DETAILED</p>
           <select
-          className="bg-transparent mt-2 p-1 border-2 border-gray-900 w-full"
+            className="bg-transparent mt-2 p-1 border-2 border-gray-900 w-full"
             id="academic_field_detailed"
             onChange={handleDetailedFieldChange}
+            value={detailedField}
           >
-            <AcadFieldsChildren
-              parentFieldCode={
-                narrowField as keyof typeof modelsIsced["DETAILED_FIELDS"]
-              }
-              fieldLabel="Detailed"
-            />
+            <option value="">–</option>
+            {generateAcadFieldsDetailed(
+              narrowField as keyof typeof modelsIsced["DETAILED_FIELDS"]
+            )}
           </select>
         </div>
       </div>
-      {/* <Button variant="secondary">Add another category</Button> */}
     </div>
   );
 };

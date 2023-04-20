@@ -195,6 +195,21 @@ func AddInstitutionToUser(uuid uuid.UUID, user_uuid uuid.UUID, inst *Institution
 	return updated, err
 }
 
+func EditInstitutionToUser(uuid uuid.UUID, inst_uuid uuid.UUID, updated *Institution) (Institution, error) {
+	var existing Institution
+	result := db.Where("uuid = ?", inst_uuid).First(&existing)
+	if result.Error != nil {
+		return existing, result.Error
+	}
+
+	err := db.Model(&existing).Updates(updated).Error
+	if err != nil {
+		return existing, err
+	}
+
+	return *updated, err
+}
+
 func RemoveInstitutionFromUser(uuid uuid.UUID, inst_uuid uuid.UUID, user_uuid uuid.UUID) (User, error) {
 	var user User
 	result := db.Where("uuid = ? AND uuid = ?", uuid, user_uuid).First(&user)

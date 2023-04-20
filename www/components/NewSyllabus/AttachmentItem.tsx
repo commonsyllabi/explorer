@@ -10,16 +10,14 @@ interface IAttachmentItemFileProps {
   setAttachmentData: Function;
 }
 
-const AttachmentItemFile: React.FunctionComponent<IAttachmentItemFileProps> = ({
+const AttachmentItem: React.FunctionComponent<IAttachmentItemFileProps> = ({
   attachment,
   attachmentData,
   setAttachmentData,
 }) => {
-  const removeAttachment = (event: React.SyntheticEvent) => {    
-    const t = event.target as HTMLInputElement;
-
-    let keepTheseAttachments = attachmentData.filter((attachment) => {
-      return attachment.id != parseInt(t.id);
+  const removeAttachment = () => {    
+    let keepTheseAttachments = attachmentData.filter((att) => {
+      return att.id != attachment.id;
     });
     setAttachmentData(keepTheseAttachments);
   };
@@ -27,7 +25,7 @@ const AttachmentItemFile: React.FunctionComponent<IAttachmentItemFileProps> = ({
   return (
     <div className="my-3 p-3 rounded-md bg-gray-100 border-gray-400 border-2">
       <div className="font-bold">
-        #{attachment.id + 1} - {attachment.name}
+        #{parseInt(attachment.id) + 1} - {attachment.name}
       </div>
 
       {attachment.type === "url" ?
@@ -35,11 +33,11 @@ const AttachmentItemFile: React.FunctionComponent<IAttachmentItemFileProps> = ({
           <div className="my-3">
             {attachment.description ? attachment.description : 'No description.'}
           </div>
-          <p>
+          <div>
             <a href={attachment.url} target="_blank" rel="noreferrer" className="underline">
               {attachment.url}
             </a>
-          </p>
+          </div>
         </div>
         : <>
           <div className="my-3">
@@ -69,4 +67,4 @@ const AttachmentItemFile: React.FunctionComponent<IAttachmentItemFileProps> = ({
 
 };
 
-export default AttachmentItemFile;
+export default AttachmentItem;

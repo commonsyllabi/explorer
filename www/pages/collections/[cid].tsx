@@ -9,18 +9,17 @@ import NotFound from "components/commons/NotFound";
 import { signOut, useSession } from "next-auth/react";
 import React, { useState } from "react";
 import Router from "next/router";
+import Link from "next/link";
 import { getToken } from "next-auth/jwt";
 import { kurintoBook } from "app/layout";
 import editIcon from '../../public/icons/edit-box-line.svg'
 import cancelIcon from '../../public/icons/close-line.svg'
 import checkIcon from '../../public/icons/check-line.svg'
 import deleteIcon from '../../public/icons/delete-bin-line.svg'
-import Link from "next/link";
 import removeIcon from '../../public/icons/subtract-line.svg'
 
 export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
   const collectionId = context.params!.cid;
-  console.log(collectionId);
   
   const t = await getToken({ req: context.req, secret: process.env.NEXTAUTH_SECRET })
   const token = t ? (t.user as { _id: string, token: string }).token : '';
@@ -228,7 +227,7 @@ const Collection: NextPage<ICollectionProps> = (props) => {
           props.syllabi ?
             props.syllabi.map(s => {
               return <div key={s.uuid} className="flex gap-1">
-                {getSyllabusCards([s], default_filters, undefined, props.user.name)?.elements}
+                {getSyllabusCards([s], default_filters, checkIfAdmin())}
                 <div className="border-2 border-gray-900 p-2 rounded-md flex items-center">
                   <button data-syllabusid={s.uuid} onClick={handleRemove}>
                     <Image src={removeIcon} width="24" height="24" alt="Icon to remove an element from the list" />

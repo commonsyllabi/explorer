@@ -50,7 +50,6 @@ describe('Create a new syllabus', () => {
         cy.get('[data-cy="Login-password"]').type("12345678")
 
         cy.get('[data-cy="Login-submit"]').click()
-        cy.wait('@login')
         cy.wait(1000)
 
         cy.get('[data-cy="newSyllabusLink"]').click()
@@ -83,6 +82,20 @@ describe('Create a new syllabus', () => {
         cy.get('[data-cy="courseDurationInput"]').type('7', {force: true})
         cy.get('[data-cy="courseDescriptionInput"]').type('Lorem ipsum dolores sit descriptio nuncam sed que tantamus', {force: true})
 
+        cy.get('[data-cy="learning_outcomes-add"]').click({force: true})
+        cy.get('[data-cy="learning_outcomes-item"]').type('Learn how to face it', {force: true})
+
+        cy.get('[data-cy="topic_outlines-add"]').click({force: true})
+        cy.get('[data-cy="topic_outlines-item"]').first().type('Travel', {force: true})
+        cy.get('[data-cy="topic_outlines-add"]').click({force: true})
+        cy.get('[data-cy="topic_outlines-item"]').last().type('Death', {force: true})
+
+        cy.get('[data-cy="readings-add"]').click({force: true})
+        cy.get('[data-cy="readings-item"]').type('Bieguni, Olga Tokarczuk', {force: true})
+
+        cy.get('[data-cy="assignments-add"]').click({force: true})
+        cy.get('[data-cy="assignments-item"]').type('Be a middle-age woman', {force: true})
+
         //-- add url attachment
         cy.get('[data-cy="new-attachment-name"]').type('Weblink test', {force: true})
         cy.get('[data-cy="new-attachment-description"]').type('This is optional', {force: true})
@@ -97,6 +110,8 @@ describe('Create a new syllabus', () => {
         cy.get('[data-cy="new-attachment-file"]').selectFile('cypress/fixtures/test_attachment.txt', {log: true, force: true})
         cy.get('[data-cy="attachment-add"]').click({force: true})
 
+        cy.wait(1000)
+
         cy.get('[data-cy="courseSubmitButton"').click()
 
         cy.wait('@createSyllabus')
@@ -110,14 +125,14 @@ describe('Create a new syllabus', () => {
         cy.visit(`/syllabus/${newSyllabusUUID}`)
 
         cy.get('h1').contains('Test class 1')
-        cy.get('.course-instructors').children().first().contains('Pierre Depaz')
+        cy.get('[data-cy="courseInstructors"').first().contains('Pierre Depaz')
 
         //-- check academic fields
         //-- check institution
         //-- 
         
-        cy.get('.course-description')
-        cy.get('.course-resource').should('have.length', 2)
+        cy.get('[data-cy="course-description"]')
+        cy.get('[data-cy="course-resource"]').should('have.length', 2)
     })
 
     it('navigate to the home page and signs out', () => {

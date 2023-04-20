@@ -8,7 +8,6 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
-	"reflect"
 	"strings"
 
 	"github.com/commonsyllabi/explorer/api/config"
@@ -105,16 +104,18 @@ func CreateAttachment(c echo.Context) error {
 			return c.String(http.StatusBadRequest, "attachment can either have URL or File, not both")
 		}
 
+		updated_url := ""
 		parsed_url, err := url.Parse(weblink)
 		if err != nil {
-			zero.Error(err.Error())
-			return c.String(http.StatusBadRequest, "Error parsing weblink as URL.")
+			zero.Warn(err.Error())
+		} else {
+			updated_url = parsed_url.String()
 		}
 
 		att = models.Attachment{
 			Name:        name,
 			Description: desc,
-			URL:         parsed_url.String(),
+			URL:         updated_url,
 			Type:        "weblink",
 		}
 	}
@@ -134,11 +135,23 @@ func UpdateAttachment(c echo.Context) error {
 		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
 
+	conf, ok := c.Get("config").(config.Config)
+	if !ok {
+		zero.Error("Could not parse configuration from context")
+		return c.String(http.StatusInternalServerError, "There was an error uploading your syllabus. Please try again later.")
+	}
+
 	id := c.Param("id")
 	uid, err := uuid.Parse(id)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusBadRequest, "Not a valid ID")
+	}
+
+	_, err = models.GetAttachment(uid)
+	if err != nil {
+		zero.Error(err.Error())
+		return c.String(http.StatusNotFound, "Not a valid ID")
 	}
 
 	err = sanitizeAttachment(c)
@@ -147,24 +160,68 @@ func UpdateAttachment(c echo.Context) error {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
 
-	var empty = new(models.Attachment)
-	var input models.Attachment
-	err = c.Bind(&input)
-	if err != nil || reflect.DeepEqual(&input, empty) {
-		zero.Error(err.Error())
-		return c.String(http.StatusBadRequest, "There was a problem creating your attachment, please make sure all fields are valid.")
+	var att models.Attachment
+	name := c.FormValue("name")
+	desc := c.FormValue("description")
+	weblink := c.FormValue("url")
+	file, err := c.FormFile("file")
+	if err != nil && weblink == "" {
+		if err != nil {
+			zero.Warn(err.Error())
+		} else {
+			zero.Warn("no file or url found on updated attachment")
+		}
 	}
 
-	att, err := models.GetAttachment(uid)
-	if err != nil {
-		zero.Error(err.Error())
-		return c.String(http.StatusNotFound, "We couldn't find the Attachment to update.")
-	}
+	if weblink == "" && file != nil {
+		b := make([]byte, 4)
+		rand.Read(b)
+		fname := fmt.Sprintf("%x-%s", b, filepath.Base(file.Filename))
+		dest := filepath.Join(conf.UploadsDir, fname)
+		src, err := file.Open()
+		if err != nil {
+			zero.Error(err.Error())
+			return c.String(http.StatusBadRequest, "Failed to open file.")
+		}
+		defer src.Close()
 
-	err = c.Bind(&att)
-	if err != nil {
-		zero.Error(err.Error())
-		return c.String(http.StatusBadRequest, "We could not parse the update data.")
+		target, err := os.Create(dest)
+		if err != nil {
+			zero.Error(err.Error())
+			return err
+		}
+		defer target.Close()
+
+		if _, err = io.Copy(target, src); err != nil {
+			zero.Error(err.Error())
+			return c.String(http.StatusBadRequest, "Error saving File to disk.")
+		}
+
+		att = models.Attachment{
+			Name:        name,
+			Description: desc,
+			URL:         fname,
+			Type:        "file",
+		}
+
+	} else {
+		if file != nil {
+			zero.Error("Attachment can have either URL or File, not both.")
+			return c.String(http.StatusBadRequest, "attachment can either have URL or File, not both")
+		}
+
+		parsed_url, err := url.Parse(weblink)
+		if err != nil {
+			zero.Error(err.Error())
+			return c.String(http.StatusBadRequest, "Error parsing weblink as URL.")
+		}
+
+		att = models.Attachment{
+			Name:        name,
+			Description: desc,
+			URL:         parsed_url.String(),
+			Type:        "weblink",
+		}
 	}
 
 	updated, err := models.UpdateAttachment(uid, user_uuid, &att)
@@ -224,8 +281,10 @@ func DeleteAttachment(c echo.Context) error {
 }
 
 func sanitizeAttachment(c echo.Context) error {
-	if len(c.FormValue("name")) < 5 || len(c.FormValue("name")) > 150 {
-		return fmt.Errorf("the name of the Attachment should be between 10 and 50 characters: %d", len(c.FormValue("name")))
+	min := 4
+	max := 100
+	if len(c.FormValue("name")) < min || len(c.FormValue("name")) > max {
+		return fmt.Errorf("the name of the Attachment should be between %d and %d characters: %d", min, max, len(c.FormValue("name")))
 	}
 
 	return nil

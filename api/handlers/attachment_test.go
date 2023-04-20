@@ -86,7 +86,7 @@ func TestAttachmentHandler(t *testing.T) {
 		c.Set("config", conf)
 
 		handlers.CreateAttachment(c)
-		t.Log(res.Body.String())
+
 		assert.Equal(t, http.StatusCreated, res.Code)
 		var att models.Attachment
 		err := json.Unmarshal(res.Body.Bytes(), &att)
@@ -206,6 +206,7 @@ func TestAttachmentHandler(t *testing.T) {
 		c := echo.New().NewContext(req, res)
 		c.SetParamNames("id")
 		c.SetParamValues(attachmentID.String())
+		c.Set("config", conf)
 
 		handlers.UpdateAttachment(c)
 		assert.Equal(t, http.StatusOK, res.Code)
@@ -227,8 +228,10 @@ func TestAttachmentHandler(t *testing.T) {
 		c := echo.New().NewContext(req, res)
 		c.SetParamNames("id")
 		c.SetParamValues("wrong")
+		c.Set("config", conf)
 
 		handlers.UpdateAttachment(c)
+		t.Log(res.Body.String())
 		assert.Equal(t, http.StatusBadRequest, res.Code)
 	})
 
@@ -243,6 +246,7 @@ func TestAttachmentHandler(t *testing.T) {
 		c := echo.New().NewContext(req, res)
 		c.SetParamNames("id")
 		c.SetParamValues(attachmentID.String())
+		c.Set("config", conf)
 
 		handlers.UpdateAttachment(c)
 		assert.Equal(t, http.StatusBadRequest, res.Code)
@@ -259,7 +263,8 @@ func TestAttachmentHandler(t *testing.T) {
 		c := echo.New().NewContext(req, res)
 		c.SetParamNames("id")
 		c.SetParamValues(attachmentUnknownID.String())
-
+		c.Set("config", conf)
+		t.Log(res.Body.String())
 		handlers.UpdateAttachment(c)
 		assert.Equal(t, http.StatusNotFound, res.Code)
 	})
@@ -275,6 +280,7 @@ func TestAttachmentHandler(t *testing.T) {
 		c := echo.New().NewContext(req, res)
 		c.SetParamNames("id")
 		c.SetParamValues(attachmentID.String())
+		c.Set("config", conf)
 
 		handlers.UpdateAttachment(c)
 		assert.Equal(t, http.StatusBadRequest, res.Code)

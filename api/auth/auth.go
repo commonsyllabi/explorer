@@ -243,11 +243,37 @@ func Recover(c echo.Context) error {
 	return c.JSON(http.StatusPartialContent, updated)
 }
 
-func Dashboard(c echo.Context) error {
+func Admin(c echo.Context) error {
 	uuid, err := Authenticate(c)
 	if err != nil {
 		return c.String(http.StatusUnauthorized, "unauthorized")
 	}
 
-	return c.JSON(http.StatusOK, uuid)
+	params := make(map[string]any, 0)
+	params["page"] = 0
+	params["fields"] = "%"
+	params["keywords"] = "%"
+	params["languages"] = "%"
+	params["levels"] = "%"
+	params["tags"] = "%"
+
+	syll, err := models.GetSyllabi(params, uuid)
+	if err != nil {
+		zero.Error(err.Error())
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
+
+	coll, err := models.GetAllCollections(uuid)
+	if err != nil {
+		zero.Error(err.Error())
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
+
+	users, err := models.GetAllUsers()
+	if err != nil {
+		zero.Error(err.Error())
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, echo.Map{"syllabi": syll, "collections": coll, "users": users})
 }

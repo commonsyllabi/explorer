@@ -106,21 +106,13 @@ const PAGINATION_LIMIT = 15
 
 func GetSyllabus(uuid uuid.UUID, user_uuid uuid.UUID) (Syllabus, error) {
 	var syll Syllabus
-	result := db.Preload("User").Preload("Attachments").Where("uuid = ? AND (status = 'listed' OR user_uuid = ?)", uuid, user_uuid).First(&syll)
+	result := db.Preload("User").Preload("Attachments").Preload("Institutions").Where("uuid = ? AND (status = 'listed' OR user_uuid = ?)", uuid, user_uuid).First(&syll)
 	if result.Error != nil {
 		return syll, result.Error
 	}
 
-	var insts []Institution
-	err := db.Model(&syll).Association("Institutions").Find(&insts)
-	if err != nil {
-		return syll, err
-	}
-
-	syll.Institutions = append(syll.Institutions, insts...)
-
 	var colls []Collection
-	err = db.Model(&syll).Association("Collections").Find(&colls)
+	err := db.Model(&syll).Association("Collections").Find(&colls)
 	if err != nil {
 		return syll, err
 	}
@@ -313,6 +305,21 @@ func AddInstitutionToSyllabus(syll_uuid uuid.UUID, user_uuid uuid.UUID, inst *In
 	}
 
 	return syll, err
+}
+
+func EditInstitutionToSyllabus(uuid uuid.UUID, inst_uuid uuid.UUID, updated *Institution) (Institution, error) {
+	var existing Institution
+	result := db.Where("uuid = ?", inst_uuid).First(&existing)
+	if result.Error != nil {
+		return existing, result.Error
+	}
+
+	err := db.Model(&existing).Updates(updated).Error
+	if err != nil {
+		return existing, err
+	}
+
+	return *updated, err
 }
 
 func RemoveInstitutionFromSyllabus(syll_uuid uuid.UUID, inst_uuid uuid.UUID, user_uuid uuid.UUID) (Syllabus, error) {

@@ -3,27 +3,19 @@ import CollectionCard from "components/Collection/CollectionCard";
 
 export const getCollectionCards = (
   collectionArray: ICollection[] | undefined,
-  userName?: string,
   isAdmin?: boolean
 ) => {
   if (!collectionArray || collectionArray.length === 0) {
     return null;
   }
 
-  const collectionCards = collectionArray.map((item) => (
+  const collectionCards = collectionArray.map((c) => (
     <CollectionCard
-      key={item.uuid}
-      userName={userName ? userName : "Netochka Nezvanova"}
-      uuid={item.uuid}
-      name={item.name}
-      status={item.status}
-      description={item.description}
-      tags={item.tags}
-      userUuid={item.user_uuid}
-      syllabiCount={item.syllabi ? item.syllabi.length : 0}
+      key={c.uuid}
+      collection={c}
       isAdmin={isAdmin ? isAdmin : false}
     />
   ));
 
-  return <div className="flex flex-col gap-3">{collectionCards}</div>;
+  return collectionCards;
 };

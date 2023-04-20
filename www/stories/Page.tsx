@@ -21,18 +21,18 @@ export const Page: React.VFC = () => {
 
       <section>
         <h2>Pages in Storybook</h2>
-        <p>
+        <div>
           We recommend building UIs with a{' '}
           <a href="https://componentdriven.org" target="_blank" rel="noopener noreferrer">
             <strong>component-driven</strong>
           </a>{' '}
           process starting with atomic components and ending with pages.
-        </p>
-        <p>
+        </div>
+        <div>
           Render pages with mock data. This makes it easy to build and review page states without
           needing to navigate to them in your app. Here are some handy patterns for managing page
           data in Storybook:
-        </p>
+        </div>
         <ul>
           <li>
             Use a higher-level connected component. Storybook helps you compose such data from the
@@ -43,7 +43,7 @@ export const Page: React.VFC = () => {
             using Storybook.
           </li>
         </ul>
-        <p>
+        <div>
           Get a guided tutorial on component-driven development at{' '}
           <a href="https://storybook.js.org/tutorials/" target="_blank" rel="noopener noreferrer">
             Storybook tutorials
@@ -53,7 +53,7 @@ export const Page: React.VFC = () => {
             docs
           </a>
           .
-        </p>
+        </div>
         <div className="tip-wrapper">
           <span className="tip">Tip</span> Adjust the width of the canvas with the{' '}
           <svg width="10" height="10" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">

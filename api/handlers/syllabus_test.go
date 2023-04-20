@@ -21,6 +21,7 @@ import (
 
 var (
 	syllabusID        uuid.UUID
+	syllabusOtherID   uuid.UUID
 	syllabusSlug      string
 	syllabusDeleteID  uuid.UUID
 	syllabusUnknownID uuid.UUID
@@ -48,6 +49,7 @@ var (
 func setup(t *testing.T) func(t *testing.T) {
 	os.Setenv("API_MODE", "test")
 	syllabusID = uuid.MustParse("46de6a2b-aacb-4c24-b1e1-3495821f846a")
+	syllabusOtherID = uuid.MustParse("46de6a2b-aacb-4c24-b1e1-3495821f8469")
 	syllabusSlug = "ungewohnt-46de6a2b"
 	syllabusDeleteID = uuid.MustParse("46de6a2b-aacb-4c24-b1e1-3495821f8469")
 	syllabusUnknownID = uuid.New()

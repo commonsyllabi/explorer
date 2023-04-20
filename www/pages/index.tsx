@@ -35,11 +35,9 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   }
 
   const payload = await res.json();
-  const total_pages = Math.floor(payload.syllabi.length / PAGINATION_LIMIT) + 1;
   return {
     props: {
       meta: payload.meta,
-      totalPages: total_pages,
       syllabiListings: payload.syllabi,
     },
   };
@@ -47,17 +45,16 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
 interface IHomeProps {
   meta: IMetaInformation;
-  total: number;
   syllabiListings: ISyllabus[];
 }
 
-const Home: NextPage<IHomeProps> = ({ meta, total, syllabiListings }) => {
+const Home: NextPage<IHomeProps> = ({ meta, syllabiListings }) => {
   const router = useRouter();
   const [currentPath, setCurrentPath] = useState("");
   const [currentQuery, setCurrentQuery] = useState(router.query);
   const [syllabi, setSyllabi] = useState<ISyllabus[]>();
   const [syllabiCount, setSyllabiCount] = useState(syllabiListings.length);
-  const [totalPages, setTotalPages] = useState(total);
+  const [totalPages, setTotalPages] = useState(Math.floor(syllabiListings.length / PAGINATION_LIMIT) + 1);
   const [searchTerms, setSearchTerms] = useState("");
   const [filters, setFilters] = useState<ISyllabiFilters>({
     academic_level: "",
@@ -117,11 +114,12 @@ const Home: NextPage<IHomeProps> = ({ meta, total, syllabiListings }) => {
   //-- it resets the activePage to 1, then updates the cards, totals and pages
   useEffect(() => {
     // paginationHandler(1)
-    const s = getSyllabusCards(syllabi, filters, 1);
+    const s = getSyllabusCards(syllabi, filters, false, 1);
     if (s === undefined) return;
+    const total = s.length;
 
-    setTotalPages(Math.ceil(s.total / PAGINATION_LIMIT));
-    setSyllabiCount(s.total);
+    setTotalPages(Math.ceil(total / PAGINATION_LIMIT));
+    setSyllabiCount(total);
   }, [syllabi, filters]);
 
   useEffect(() => {
@@ -155,8 +153,8 @@ const Home: NextPage<IHomeProps> = ({ meta, total, syllabiListings }) => {
 
   const getAllSyllabi = () => {
     if (activePage > totalPages || activePage < 1)
-      return getSyllabusCards(syllabi, filters, 1)?.elements;
-    else return getSyllabusCards(syllabi, filters, activePage)?.elements;
+      return getSyllabusCards(syllabi, filters, false, 1)
+    else return getSyllabusCards(syllabi, filters, false, activePage)
   };
 
   const handleSearchChange = (e: React.BaseSyntheticEvent) => {
@@ -172,7 +170,7 @@ const Home: NextPage<IHomeProps> = ({ meta, total, syllabiListings }) => {
     fetch(url)
       .then((res) => {
         if (res.ok) return res.json();
-        else console.warn("Problem with search!");
+        else console.warn("Problem with search!", res.statusText);
       })
       .then((data) => {
         setSyllabi(data.syllabi);
@@ -209,7 +207,7 @@ const Home: NextPage<IHomeProps> = ({ meta, total, syllabiListings }) => {
     <div className="flex flex-col w-11/12 sm:w-full lg:w-10/12 m-auto">
 
       {/* SEARCH BAR */}
-      <div className="w-11/12 m-auto md:w-full mt-3 mb-3 flex justify-between">
+      <div className="w-11/12 m-auto md:w-full my-8 flex justify-between">
         <div className="w-full mt-3 mb-3 flex flex-row items-center">
           <input
             className="w-full bg-transparent border-b-2 border-b-gray-900"
@@ -234,20 +232,19 @@ const Home: NextPage<IHomeProps> = ({ meta, total, syllabiListings }) => {
       </div>
 
       <div className="flex flex-col-reverse md:flex-row justify-between">
-        <div className="w-11/12 m-auto md:m-0 md:w-7/12 pt-3 pb-5 flex flex-col">
+        <div className="w-11/12 m-auto md:m-0 md:w-7/12 pt-3 pb-5 flex flex-col gap-6">
           {getAllSyllabi()}
         </div>
         <div className="w-11/12 md:w-4/12 m-auto md:m-0 pb-3 border-bottom border-lg-bottom-0">
           <FiltersBar updateFilters={handleFilterChange} meta={meta} />
         </div>
       </div>
-      <div>
-        <PaginationSection
+
+        {/* <PaginationSection
           totalPages={totalPages}
           activePage={activePage}
           handlePageChange={paginationHandler}
-        />
-      </div>
+        /> */}
     </div>
   );
 };

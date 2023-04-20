@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 
+	zero "github.com/commonsyllabi/explorer/api/logger"
 	"github.com/commonsyllabi/explorer/api/models"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
@@ -69,18 +70,21 @@ func ParseSyllabusFile(c echo.Context) error {
 	// Make sure the user is authenticated
 	userUuid := mustGetUser(c)
 	if userUuid == uuid.Nil {
+		zero.Error("missing user")
 		return c.String(http.StatusUnauthorized, "Unauthorized")
 	}
 
 	// Get the file from the request
 	file, err := c.FormFile("file")
 	if err != nil {
+		zero.Error(err.Error())
 		return c.String(http.StatusBadRequest, "Please make sure to use the correct file format")
 	}
 
 	// Open the file
 	fileContent, err := file.Open()
 	if err != nil {
+		zero.Error(err.Error())
 		return c.String(http.StatusInternalServerError, "Error opening file")
 	}
 	defer fileContent.Close()
@@ -88,31 +92,41 @@ func ParseSyllabusFile(c echo.Context) error {
 	// Read the file contents into a byte slice
 	fileBytes, err := io.ReadAll(fileContent)
 	if err != nil {
+		zero.Error(err.Error())
 		return c.String(http.StatusInternalServerError, "Error reading file")
 	}
 
 	// Send the file to the external API
 	apiUrl := os.Getenv("OPENSYLLABUS_PARSER_API_URL")
 	token := os.Getenv("OPENSYLLABUS_PARSER_API_TOKEN")
+
+	if apiUrl == "" || token == "" {
+		zero.Error("Missing env variables")
+		return c.String(http.StatusUnauthorized, "Error creating request to OS parser.")
+	}
 	req, err := http.NewRequest("POST", apiUrl, bytes.NewReader(fileBytes))
 	if err != nil {
-		return c.String(http.StatusInternalServerError, "Error creating request")
+		zero.Error(err.Error())
+		return c.String(http.StatusInternalServerError, "Error creating request to OS parser.")
 	}
 	req.Header.Set("Authorization", fmt.Sprintf("Token %s", token))
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
+		zero.Error(err.Error())
 		return c.String(http.StatusInternalServerError, "Error sending request")
 	}
 	defer resp.Body.Close()
 
 	// Check if the API response was successful
 	if resp.StatusCode != http.StatusOK {
+		zero.Error(err.Error())
 		return c.String(http.StatusInternalServerError, "Error processing file")
 	}
 
 	// Read the response body
 	responseBody, err := io.ReadAll(resp.Body)
 	if err != nil {
+		zero.Error(err.Error())
 		return c.String(http.StatusInternalServerError, "Error reading response body")
 	}
 
@@ -120,6 +134,7 @@ func ParseSyllabusFile(c echo.Context) error {
 	var jsonResponse interface{}
 	err = json.Unmarshal(responseBody, &jsonResponse)
 	if err != nil {
+		zero.Error(err.Error())
 		return c.String(http.StatusInternalServerError, "Error parsing response body as JSON")
 	}
 
@@ -128,9 +143,11 @@ func ParseSyllabusFile(c echo.Context) error {
 
 	syllabusProbability, err := getProbability(jsonResponse)
 	if err != nil {
+		zero.Error(err.Error())
 		return c.String(http.StatusInternalServerError, "Error getting syllabus probability")
 	}
 	if syllabusProbability < tresholdSyllabusProbability {
+		zero.Errorf("uploaded file did not pass the probability threshold: %d", syllabusProbability)
 		return c.String(http.StatusBadRequest, "The provided document does not look like a syllabus!")
 	}
 
@@ -144,6 +161,7 @@ func ParseSyllabusFile(c echo.Context) error {
 	fmt.Println(openSyllabus)
 
 	if err != nil {
+		zero.Error(err.Error())
 		return c.String(http.StatusInternalServerError, "Error parsing response body as JSON")
 	}
 

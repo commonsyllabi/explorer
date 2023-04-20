@@ -72,7 +72,7 @@ func SetupRouter() *echo.Echo {
 	r.GET("/ping", handlePing)
 
 	r.POST("/login", auth.Login)
-	r.GET("/dashboard", auth.Dashboard)
+	r.GET("/admin", auth.Admin)
 
 	a := r.Group("/auth")
 	{
@@ -91,6 +91,7 @@ func SetupRouter() *echo.Echo {
 		syllabi.DELETE("/:id", handlers.DeleteSyllabus)
 
 		syllabi.POST("/:id/institutions", handlers.AddSyllabusInstitution)
+		syllabi.PATCH("/:id/institutions/:inst_id", handlers.EditSyllabusInstitution)
 		syllabi.DELETE("/:id/institutions/:inst_id", handlers.RemoveSyllabusInstitution)
 
 		syllabi.POST("/:id/attachments", handlers.AddSyllabusAttachment)
@@ -109,6 +110,7 @@ func SetupRouter() *echo.Echo {
 		users.DELETE("/:id", handlers.DeleteUser)
 
 		users.POST("/:id/institutions", handlers.AddUserInstitution)
+		users.PATCH("/:id/institutions/:inst_id", handlers.EditUserInstitution)
 		users.DELETE("/:id/institutions/:inst_id", handlers.RemoveUserInstitution)
 	}
 

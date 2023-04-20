@@ -20,7 +20,7 @@ describe('Browses a user profile', () => {
     })
 
     it('should browse the user page', () => {
-        cy.get('[data-cy="userSyllabiListing"]').children().should('have.length', 18)
+        cy.get('[data-cy="syllabusCard"]').should('have.length', 18)
 
         cy.get('[data-cy="userTabs"]').contains('Collections').click({ force: true })
     })
@@ -44,12 +44,11 @@ describe('Browses its own user profile', () => {
         cy.get('[data-cy="Login-password"]').type("12345678")
 
         cy.get('[data-cy="Login-submit"]').click()
-        cy.wait('@login')
         cy.wait(1000)
 
         cy.get('[data-cy="loggedUser"]').click()
         cy.get('[data-cy="accountLink"]').click()
-        cy.contains('Syllabi by you')
+        cy.contains('Syllabi')
         cy.get('[data-cy="newSyllabusLink"]')
     })
 })

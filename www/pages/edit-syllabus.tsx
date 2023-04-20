@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-import type { NextPage } from "next";
+import React, { useState, useEffect, FormEvent } from "react";
+import type { GetServerSidePropsContext, GetStaticProps, NextPage } from "next";
 import { getSession, useSession } from "next-auth/react";
+import Head from "next/head";
 import Link from "next/link";
-import Image from "next/image";
 
 //Interfaces
 import {
@@ -11,7 +11,8 @@ import {
   IUploadAttachment,
   IInstitution,
   IFormInstitution,
-  IFormDataOptional,
+  IParsedData,
+  ISyllabus,
 } from "types";
 
 //Components
@@ -34,10 +35,51 @@ import {
 import AddAcademicFieldsForm from "components/NewSyllabus/AddAcademicFieldsForm";
 import DragAndDropSyllabus from "components/NewSyllabus/DragAndDropSyllabus";
 import { kurintoSerif } from "app/layout";
+import { getToken } from "next-auth/jwt";
+import AttachmentItemEditable from "components/NewSyllabus/AttachmentItemEditable";
+import NotFound from "components/commons/NotFound";
+import Router from "next/router";
 import SyllabusProcessing from "components/NewSyllabus/SyllabusProcessing";
 import ListFieldForm from "components/NewSyllabus/ListFieldForm";
 
-const NewSyllabus: NextPage = () => {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const syllId = context.query.sid
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  const t = await getToken({ req: context.req, secret: process.env.NEXTAUTH_SECRET })
+
+  const token = t ? (t.user as { _id: string, token: string }).token : '';
+  const user_uuid = t ? (t.user as { _id: string, token: string })._id : '';
+  const url = new URL(`syllabi/${syllId}`, apiUrl);
+
+  const h = new Headers();
+  if (t)
+    h.append("Authorization", `Bearer ${token}`);
+
+  const res = await fetch(url, { headers: h });
+  if (res.ok) {
+    const info = await res.json();
+
+    if (info.user_uuid !== user_uuid)
+      return { props: {} }
+
+    return {
+      props: {
+        syllabusInfo: info
+      }
+    };
+  } else {
+    return {
+      props: {},
+    };
+  }
+
+};
+
+interface IEditSyllabusProps {
+  syllabusInfo: ISyllabus
+}
+
+const EditSyllabus: NextPage<IEditSyllabusProps> = ({ syllabusInfo }) => {
   const { data: session, status } = useSession();
   const [validated, setValidated] = useState(false);
   const [errors, setErrors] = useState(Array);
@@ -46,80 +88,62 @@ const NewSyllabus: NextPage = () => {
   const [institutionCreated, setInstitutionCreated] = useState("pending");
   const [attachmentsCreated, setAttachmentsCreated] = useState("pending");
   const [syllabusUUID, setSyllabusUUID] = useState("");
-  const [parsedData, setParsedData] = useState<IFormDataOptional>();
-  const [parsedFile, setParsedFile] = useState<File>();
-  const [attachmentData, setAttachmentData] = useState(
-    Array<IUploadAttachment>
-  );
-
-  useEffect(() => {
-    if (parsedData) {
-      console.log(parsedData);
-  
-      setFormData((prevFormData) => {
-        const newData = { ...prevFormData };
-        for (const key in parsedData) {
-          if (Object.prototype.hasOwnProperty.call(parsedData, key) && key in newData) {
-            // newData[key] = parsedData[key]; //-- type error?
-          }
-        }
-        return newData;
-      });
-    }
-  }, [parsedData]);
+  const [parsedData, setParsedData] = useState<IParsedData>();
 
   const [formData, setFormData] = useState<IFormData>({
-    institutions: [],
-    title: "",
-    course_number: "",
-    description: "",
-    attachments: [],
-    tags: [],
-    language: "",
-    learning_outcomes: [],
-    topic_outlines: [],
-    readings: [],
-    assignments: [],
-    grading_rubric: "",
-    other: "",
-    status: "listed",
-    academic_fields: [],
-    academic_level: 0,
-    duration: 0,
+    institutions: syllabusInfo.institutions as IInstitution[],
+    title: syllabusInfo.title,
+    course_number: syllabusInfo.course_number as string,
+    description: syllabusInfo.description,
+    attachments: syllabusInfo.attachments as IAttachment[],
+    tags: syllabusInfo.tags as string[],
+    language: syllabusInfo.language,
+    learning_outcomes: syllabusInfo.learning_outcomes as string[],
+    topic_outlines: syllabusInfo.topic_outlines as string[],
+    readings: syllabusInfo.readings as string[],
+    grading_rubric: syllabusInfo.grading_rubric as string,
+    assignments: syllabusInfo.assignments as string[],
+    other: syllabusInfo.other as string,
+    status: syllabusInfo.status,
+    academic_fields: syllabusInfo.academic_fields.map(ac => { return ac.toString() }),
+    academic_level: syllabusInfo.academic_level as number,
+    duration: syllabusInfo.duration as number,
   });
 
-  const [institutionData, setInstitutionData] = useState<IFormInstitution>({
-    name: "",
-    country: "",
-    url: "",
-    date_year: "",
-    date_term: "",
-  });
+  const [institutionData, setInstitutionData] = useState<IFormInstitution>({} as IFormInstitution);
+  useEffect(() => {
+    setInstitutionData({
+      name: syllabusInfo.institutions && syllabusInfo.institutions.length > 0 ? syllabusInfo.institutions[0].name : "",
+      country: syllabusInfo.institutions && syllabusInfo.institutions.length > 0 ? syllabusInfo.institutions[0].country as unknown as string : "",
+      url: syllabusInfo.institutions && syllabusInfo.institutions.length > 0 ? syllabusInfo.institutions[0].url as string : "",
+      date_year: syllabusInfo.institutions && syllabusInfo.institutions.length > 0 ? syllabusInfo.institutions[0].date.year : "",
+      date_term: syllabusInfo.institutions && syllabusInfo.institutions.length > 0 ? syllabusInfo.institutions[0].date.term as string : "",
+    })
+  }, [])
 
   //Handle form submission
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL as string;
   const handleSubmit = async (event: React.BaseSyntheticEvent) => {
     event.preventDefault();
     event.stopPropagation();
 
     if (session == null || session.user == null) {
-      setErrors(['It seems you have been logged out. Please log in and try again.']);
+      Router.push("/auth/signin")
       return;
     }
 
-    const validForm = isValidForm(formData, attachmentData, institutionData);
+    const validForm = isValidForm(formData, newAttachmentData, institutionData);
     if (validForm.errors.length > 0) {
       setErrors(validForm.errors);
       return;
     }
 
-    const header = new Headers();
-    header.append("Authorization", `Bearer ${session.user.token}`);
+    const h = new Headers();
+    h.append("Authorization", `Bearer ${session.user.token}`);
 
-    const syll_endpoint = new URL(`/syllabi/`, apiUrl)
-    const res = await submitForm(formData, syll_endpoint, "POST", header);
+    const syll_endpoint = new URL(`syllabi/${syllabusInfo.uuid}`, process.env.NEXT_PUBLIC_API_URL)
+    const res = await submitForm(formData, syll_endpoint, "PATCH", h);
     setFormSubmitted(true);
-    if (res.status !== 201) {
+    if (res.status !== 200) {
       const err = await res.text();
       setErrors([err]);
       setSyllabusCreated("failed");
@@ -130,11 +154,28 @@ const NewSyllabus: NextPage = () => {
     setSyllabusCreated("created");
     setSyllabusUUID(body.uuid);
 
-    const instit_endpoint = new URL(
-      `/syllabi/${body.uuid}/institutions`,
-      apiUrl
-    );
-    submitInstitution(institutionData, instit_endpoint, "POST", header).then(
+    //-- if the syllabus has no institutions, add one
+    //-- otherwise, edit the existing one
+    let instit_endpoint, method: string = '';
+    if (syllabusInfo && syllabusInfo.institutions && syllabusInfo.institutions.length === 0) {
+      instit_endpoint = new URL(
+        `/syllabi/${body.uuid}/institutions`,
+        process.env.NEXT_PUBLIC_API_URL
+      );
+      method = 'POST'
+    } else if (syllabusInfo && syllabusInfo.institutions && syllabusInfo.institutions.length === 1) {
+      instit_endpoint = new URL(
+        `/syllabi/${body.uuid}/institutions/${syllabusInfo.institutions[0].uuid}`,
+        process.env.NEXT_PUBLIC_API_URL
+      );
+      method = 'PATCH'
+    } else {
+      console.warn("Unexpected number of institutions:", syllabusInfo.institutions)
+      setInstitutionCreated("failed")
+      return;
+    }
+
+    submitInstitution(institutionData, instit_endpoint, method, h).then(
       (res) => {
         if (res.status === 200) {
           setInstitutionCreated("created");
@@ -144,16 +185,19 @@ const NewSyllabus: NextPage = () => {
       }
     );
 
-    if (attachmentData.length === 0) {
+
+    //-- edits to existing attachments are handled separately. here we add new attachments only
+    //-- todo: currently, existing attachments are being recreated
+    if (newAttachmentData.length === 0) {
       setAttachmentsCreated("created");
       return;
     }
     const attach_endpoint = new URL(
       `/attachments/?syllabus_id=${body.uuid}`,
-      apiUrl
+      process.env.NEXT_PUBLIC_API_URL
     );
-    attachmentData.map((att) => {
-      submitAttachments(att, attach_endpoint, "POST", header).then((res) => {
+    newAttachmentData.map((att) => {
+      submitAttachments(att, attach_endpoint, "POST", h).then((res) => {
         if (res.status === 201) {
           setAttachmentsCreated("created");
         } else {
@@ -180,23 +224,46 @@ const NewSyllabus: NextPage = () => {
     const t = event.target as HTMLInputElement;
     const key = t.id as keyof IFormInstitution;
     institutionData[key] = t.value;
-    setInstitutionData(institutionData);
+    setInstitutionData({ ...institutionData });
   };
 
+  const [attachmentData, setAttachmentData] = useState(
+    syllabusInfo.attachments ? syllabusInfo.attachments.map((att, i) => {
+      att.id = i.toString()
+      att.type = att.url ? att.url.startsWith("http") ? "url" : "file" : "file"
+      return att
+    }) : []
+  );
+
+  const [newAttachmentData, setNewAttachmentData] = useState<IAttachment[]>([])
+
   //display elements for attachment
-  const getUploadedAttachments = (attachmentData: IUploadAttachment[]) => {
+  const getExistingAttachments = (attachmentData: IAttachment[]) => {
     const uploadedAttachments = attachmentData.map((attachment) => (
-      <AttachmentItem
-        key={`attachment-${attachment.id}`}
+      <AttachmentItemEditable
+        key={`attachment-editable-${attachment.id}`}
         attachment={attachment}
-        attachmentData={attachmentData}
-        setAttachmentData={setAttachmentData}
       />
     ));
     return uploadedAttachments;
   };
 
-  //-- if not signed in
+  const getNewAttachments = (attachmentData: IAttachment[]) => {
+    const uploadedAttachments = attachmentData.map((attachment) => (
+      <AttachmentItem
+        key={`attachment-new-${attachment.id}`}
+        attachment={attachment}
+        attachmentData={newAttachmentData}
+        setAttachmentData={setNewAttachmentData}
+      />
+    ));
+    return uploadedAttachments;
+  };
+
+  if (!syllabusInfo || Object.keys(syllabusInfo).length === 0) {
+    return (<NotFound />)
+  }
+
   if (status !== "authenticated")
     return (
       <div className="w-11/12 md:w-10/12 m-auto mt-8">
@@ -204,29 +271,31 @@ const NewSyllabus: NextPage = () => {
           <h1 className={`${kurintoSerif.className} text-3xl`}>New Syllabus</h1>
         </div>
         <div className="gap-3 pb-5">
-          To create a new syllabus, please{" "}
+          To edit this syllabus, please{" "}
           <Link href="/auth/signin" className="underline">log in</Link> .
         </div>
       </div>
     );
 
-  //-- if submitted
-  if (formSubmitted) {
+  //if submitted, show progress and status confirmation
+  if (formSubmitted)
     return (
       <SyllabusProcessing syllabusCreated={syllabusCreated} attachmentsCreated={attachmentsCreated} institutionCreated={institutionCreated} syllabusUUID={syllabusUUID} handleClick={() => setFormSubmitted(false)} />
     );
-  }
 
   return (
     <>
+
       <div className="w-11/12 md:w-10/12 m-auto mt-8">
         <div className="pt-3 pb-3">
           <div className="col-8 offset-2">
-            <h1 className={`${kurintoSerif.className} text-3xl`}>New Syllabus</h1>
+            <h1 className={`${kurintoSerif.className} text-3xl`}>Edit Syllabus - <Link href={`/syllabus/${syllabusInfo.uuid}`} target="_blank" className="underline">{syllabusInfo.title}</Link></h1>
           </div>
         </div>
 
         <div className="gap-3 pb-5 my-6">
+
+
           <div className="col-8 offset-2">
             <form noValidate>
 
@@ -242,7 +311,6 @@ const NewSyllabus: NextPage = () => {
                   onChange={handleChange}
                   value={formData.title}
                   data-cy="courseTitleInput"
-                // defaultValue={parsedData?.data?.title || ""} -- // TODO: we cannot have both defaultValue and value props. parsedData should set formData.title, instead?
                 />
                 <div className="text-sm">
                   Please provide a valid course title.
@@ -275,7 +343,7 @@ const NewSyllabus: NextPage = () => {
                     New
                   </span>
                 </h4>
-                <DragAndDropSyllabus session={session} setParsedData={setParsedData} setParsedFile={setParsedFile}/>
+                <DragAndDropSyllabus session={session} onSyllabusUpload={setParsedData} />
               </div>
 
               <hr className="my-12 border border-gray-300" />
@@ -292,6 +360,8 @@ const NewSyllabus: NextPage = () => {
                       type="text"
                       required
                       id="name"
+                      name="name"
+                      value={institutionData.name}
                       placeholder="e.g. Open University"
                       onChange={handleInstitutionChange}
                       data-cy="institutionNameInput"
@@ -308,6 +378,8 @@ const NewSyllabus: NextPage = () => {
                   <select
                     className="w-full bg-transparent mt-2 p-1 border-2 border-gray-900"
                     id="country"
+                    name="country"
+                    value={institutionData.country}
                     onChange={handleInstitutionChange}
                     data-cy="institutionCountryInput"
                   >
@@ -328,6 +400,7 @@ const NewSyllabus: NextPage = () => {
                       className="w-full bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
                       type="url"
                       id="url"
+                      value={institutionData.url}
                       placeholder="e.g. https://open.university"
                       onChange={handleInstitutionChange}
                       data-cy="institutionUrlInput"
@@ -345,6 +418,7 @@ const NewSyllabus: NextPage = () => {
                         required
                         id="date_year"
                         placeholder="e.g. 2021"
+                        value={institutionData.date_year}
                         type="number"
                         min="1800"
                         max={new Date().getFullYear()}
@@ -366,6 +440,7 @@ const NewSyllabus: NextPage = () => {
                         type="text"
                         required
                         id="date_term"
+                        value={institutionData.date_term}
                         placeholder="e.g. Spring"
                         onChange={handleInstitutionChange}
                         data-cy="institutionTermInput"
@@ -396,8 +471,8 @@ const NewSyllabus: NextPage = () => {
                   </div> */}
 
               <AddAcademicFieldsForm
+                academicFields={formData.academic_fields}
                 setAcadFieldsData={(_af: string[]) => { setFormData({ ...formData, ["academic_fields"]: _af }); }}
-                academicFields={[]}
               />
 
               <div className="mb-5">
@@ -427,6 +502,7 @@ const NewSyllabus: NextPage = () => {
                   id="language"
                   onChange={handleChange}
                   data-cy="courseLanguageInput"
+                  value={formData.language.toUpperCase()}
                 >
                   <option value="">—</option>
                   {generateLanguageOptions()}
@@ -447,6 +523,7 @@ const NewSyllabus: NextPage = () => {
                     type="text"
                     id="duration"
                     onChange={handleChange}
+                    value={formData.duration}
                     placeholder="e.g. 14 weeks"
                     data-cy="courseDurationInput"
                   />
@@ -462,6 +539,7 @@ const NewSyllabus: NextPage = () => {
                   required
                   id="tags"
                   onChange={handleChange}
+                  value={formData.tags.join(", ")}
                   placeholder="introductory, sociology, methodology"
                   data-cy="courseTagsInput"
                 />
@@ -480,6 +558,7 @@ const NewSyllabus: NextPage = () => {
                   id="description"
                   onChange={handleChange}
                   rows={4}
+                  value={formData.description}
                   placeholder="Course outline..."
                   data-cy="courseDescriptionInput"
                 />
@@ -505,6 +584,7 @@ const NewSyllabus: NextPage = () => {
                   id="grading_rubric"
                   onChange={handleChange}
                   rows={4}
+                  value={formData.grading_rubric as string}
                   placeholder="Course grading rubric..."
                   data-cy="courseGradingRubric"
                 />
@@ -524,22 +604,22 @@ const NewSyllabus: NextPage = () => {
                 />
               </div>
 
-
               <hr className="my-12 border border-gray-300" />
 
               <div className="mb-5">
                 <h2 className="text-xl">
                   Attachments ({attachmentData.length})
                 </h2>
-                {getUploadedAttachments(attachmentData)}
+                {getExistingAttachments(attachmentData)}
+                {getNewAttachments(newAttachmentData)}
                 <NewSyllabusAttachment
-                  attachmentData={attachmentData}
-                  setAttachmentData={setAttachmentData}
+                  attachmentData={newAttachmentData}
+                  setAttachmentData={setNewAttachmentData}
                 />
               </div>
 
               <button onClick={handleSubmit} data-cy="courseSubmitButton" className="p-2 bg-gray-900 text-gray-100 border-2 rounded-md">
-                Submit New Syllabus
+                Save changes
               </button>
 
               {errors.length > 0 ? (
@@ -564,4 +644,4 @@ const NewSyllabus: NextPage = () => {
   );
 };
 
-export default NewSyllabus;
+export default EditSyllabus;

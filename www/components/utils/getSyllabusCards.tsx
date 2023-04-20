@@ -1,20 +1,17 @@
 import SyllabusCard from "components/Syllabus/SyllabusCard";
-import { useEffect, useState } from "react";
 
 import { ISyllabiFilters, ISyllabus } from "types";
 
 export const getSyllabusCards = (
   syllabiArray: ISyllabus[] | undefined,
-  filters: ISyllabiFilters,
+  filters: ISyllabiFilters | undefined,
+  isAdmin: boolean | false,
   activePage?: number,
-  userName?: string | "anonymous",
-  isAdmin?: boolean
 ) => {
-  // const [syllabiCards, setSyllabiCards] = useState<JSX.Element[]>()
   let syllabiCards;
 
   if (!syllabiArray || syllabiArray.length === 0) {
-    return;
+    return [];
   }
 
   const isShown = (filters: ISyllabiFilters, item: ISyllabus): boolean => {
@@ -62,33 +59,20 @@ export const getSyllabusCards = (
   };
 
   const PAGINATION_LIMIT = 15;
-  const filtered = syllabiArray.filter((item) => isShown(filters, item));
+  let filtered = filters ? syllabiArray.filter((item) => isShown(filters as ISyllabiFilters, item)) : syllabiArray;
 
-  const paginated = (activePage != undefined) ? filtered.filter((item, index) => {
-    return (activePage - 1) * PAGINATION_LIMIT <= index && index < (activePage) * PAGINATION_LIMIT;
-  }) : filtered
+  // const paginated = (activePage != undefined) ? filtered.filter((item, index) => {
+  //   return (activePage - 1) * PAGINATION_LIMIT <= index && index < (activePage) * PAGINATION_LIMIT;
+  // }) : filtered
 
-  syllabiCards = paginated.map((item) => (
+  syllabiCards = filtered.map((item) => (
     <SyllabusCard
       key={item.uuid}
-      userName={userName}
       syllabusInfo={item}
-      isAdmin={isAdmin ? isAdmin : false}
+      isAdmin={isAdmin}
     />
   )) as JSX.Element[];
 
-  if (syllabiCards !== undefined && syllabiCards.length > 0)
-    return {
-      elements: <div className="flex flex-col gap-12" data-cy="syllabiCards">{syllabiCards}</div>,
-      total: filtered.length
-    };
-  else
-    return ({
-      elements: <div className="flex flex-col gap-12" data-cy="syllabiCards">
-        <h1 className="text-xl">Sorry!</h1>
-        <p>We couldn&apos;t find any syllabi matching your search filters.</p>
-      </div>,
-      total: 0
-    }
-    );
+
+    return syllabiCards;
 };

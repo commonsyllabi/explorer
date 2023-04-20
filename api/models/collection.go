@@ -97,7 +97,7 @@ func GetCollectionBySlug(slug string, user_uuid uuid.UUID) (Collection, error) {
 
 func GetAllCollections(user_uuid uuid.UUID) ([]Collection, error) {
 	coll := make([]Collection, 0)
-	result := db.Preload("User").Where("status = 'listed' OR user_uuid = ?", user_uuid).Find(&coll)
+	result := db.Preload("User").Preload("Syllabi").Where("status = 'listed' OR user_uuid = ?", user_uuid).Find(&coll)
 	return coll, result.Error
 }
 

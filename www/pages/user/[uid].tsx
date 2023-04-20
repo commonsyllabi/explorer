@@ -40,12 +40,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
     let full_syllabi = []
     for (const syll of userInfo.syllabi) {
-      const r = await fetch(new URL(`syllabi/${syll.uuid}`, apiUrl), { headers: h })
-      if (r.ok) {
-        const s = await r.json()
+      const res = await fetch(new URL(`syllabi/${syll.uuid}`, apiUrl), { headers: h })
+      if (res.ok) {
+        const s = await res.json()
         full_syllabi.push(s)
-      } else {
-        console.log('could not get syllabus', r.status);
       }
     }
     userInfo.syllabi = full_syllabi
@@ -73,7 +71,7 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo }) => {
   const router = useRouter();
   const { data: session, status } = useSession();
   const focusedTab = router.query["tab"]
-  const [activeTab, setActiveTab] = useState(focusedTab ? focusedTab : "syllabi")
+  const [activeTab, setActiveTab] = useState(focusedTab ? focusedTab as string : "syllabi")
   const [syllFilter, setSyllFilter] = useState("");
   const [collFilter, setCollFilter] = useState("");
   const [isCreatingCollection, setIsCreatingCollection] = useState(false)
@@ -96,10 +94,10 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo }) => {
 
   const handleFilterChange = (event: React.SyntheticEvent) => {
     const t = event.target as HTMLInputElement;
-    if (t.id === "collFilter") {
+    if (t.id === "collections") {
       setCollFilter(t.value);
     }
-    if (t.id === "syllFilter") {
+    if (t.id === "syllabus") {
       setSyllFilter(t.value);
     }
     return;
@@ -166,89 +164,60 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo }) => {
           </div>
 
           <div className="w-full md:w-8/12 mx-auto mb-4">
+            <div className="w-full flex flex-col sm:flex-row items-baseline mt-3 my-8" data-cy="userTabs">
 
-            <div className="flex my-8" data-cy="userTabs">
-              <div onClick={() => setActiveTab("syllabi")} className={`${kurintoSerif.className} text-xl mr-6 cursor-pointer ${activeTab === "syllabi" ? "font-bold" : ""}`} data-cy="syllabiTab">Syllabi</div>
-              <div onClick={() => setActiveTab("collections")} className={`${kurintoSerif.className} text-xl mr-6 cursor-pointer ${activeTab === "collections" ? "font-bold" : ""}`} data-cy="collectionsTab">Collections</div>
+              <div className="flex justify-between md:justify-normal gap-6">
+                <div onClick={() => setActiveTab("syllabi")} className={`${kurintoSerif.className} text-3xl cursor-pointer ${activeTab === "syllabi" ? "font-bold underline underline-offset-4" : ""}`} data-cy="syllabiTab">Syllabi</div>
+                <div onClick={() => setActiveTab("collections")} className={`${kurintoSerif.className} text-3xl cursor-pointer ${activeTab === "collections" ? "font-bold underline underline-offset-4" : ""}`} data-cy="collectionsTab">Collections</div>
+              </div>
+
+              <div className="hidden sm:flex flex w-full justify-end items-center content-end">
+                <div className="flex w-full items-baseline gap-2 mb-3 justify-end">
+                  <input
+                    id={activeTab}
+                    type="text"
+                    className="w-1/2 bg-transparent border-b-2 border-b-gray-900"
+                    placeholder={`Search ${activeTab}...`}
+                    aria-label="Filter"
+                    value={activeTab === "syllabus" ? syllFilter : collFilter}
+                    onChange={handleFilterChange}
+                  />
+
+                  {activeTab === "syllabi" ? (
+                    <Link href="/new-syllabus" className=" w-2/3 md:w-3/12 text-center mt-4 py-1 bg-gray-900 text-gray-100 border-2 rounded-md" aria-label="New Syllabus" data-cy="newSyllabusLink">+ New Syllabus</Link>
+                  ) : (
+                    <button className="w-2/3 md:w-3/12 mt-4 py-1 bg-gray-900 text-gray-100 border-2 rounded-md" aria-label="New Collection" onClick={() => { setIsCreatingCollection(true) }}>
+                      + New Collection
+                    </button>
+                  )}
+
+                </div>
+              </div>
             </div>
 
             {activeTab === "syllabi" ?
-              <div title="Syllabi" data-cy="syllabiTab">
-                <div className="flex justify-end items-baseline py-2 content-end">
-                  <div className="flex w-12/12 md:w-10/12 gap-2 mb-8 justify-end">
-                    <input
-                      id="syllFilter"
-                      type="text"
-                      className="w-4/6 bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
-                      placeholder="Search syllabi..."
-                      aria-label="Filter"
-                      value={syllFilter}
-                      onChange={handleFilterChange}
-                    />
-
-                    {checkIfAdmin() ? (
-                      <Link href="/new-syllabus" className=" w-2/3 md:w-3/12 text-center mt-4 py-2 bg-gray-900 text-gray-100 border-2 rounded-md" aria-label="New Syllabus" data-cy="newSyllabusLink">
-
-                        + New Syllabus
-
-                      </Link>
-                    ) : (
-                      <></>
-                    )}
-
-                  </div>
-                </div>
-                <div id="syllabi">
-                  {getSyllabusCards(
+              <div title="Syllabi" data-cy="syllabiTab" id="syllabi" className="flex flex-col gap-3">
+                {!userInfo.syllabi || userInfo.syllabi?.length === 0 ? "No syllabi yet." :
+                  getSyllabusCards(
                     filteredSyllabi(),
                     default_filters,
-                    undefined,
-                    userInfo.name,
                     checkIfAdmin()
-                  )?.elements ? getSyllabusCards(
+                  ) ? getSyllabusCards(
                     filteredSyllabi(),
                     default_filters,
-                    undefined,
-                    userInfo.name,
                     checkIfAdmin()
-                  )?.elements : "No syllabi yet."}
-                </div>
+                  ) : "No syllabi yet."
+                }
               </div>
               :
-              <div title="Collections" data-cy="collectionsTab">
-                <div className="flex justify-end items-baseline py-2">
-
-                  <div className="flex w-12/12 md:w-10/12 gap-2 mb-8 justify-end">
-                    <input
-                      id="collFilter"
-                      type="text"
-                      className="w-4/6 bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
-                      placeholder="Search collections..."
-                      aria-label="Filter"
-                      value={collFilter}
-                      onChange={handleFilterChange}
-                    />
-
-                    {checkIfAdmin() ? (
-                      <button className="w-2/3 md:w-3/12 mt-4 py-2 bg-gray-900 text-gray-100 border-2 rounded-md" aria-label="New Collection" onClick={() => { setIsCreatingCollection(true) }}>
-                        + New Collection
-                      </button>
-                    ) : (
-                      <></>
-                    )}
-                  </div>
-                </div>
-                <div id="collections">
-                  {getCollectionCards(
-                    filteredCollections(),
-                    userInfo.name,
-                    checkIfAdmin()
-                  ) ? getCollectionCards(
-                    filteredCollections(),
-                    userInfo.name,
-                    checkIfAdmin()
-                  ) : "No collections yet."}
-                </div>
+              <div title="Collections" data-cy="collectionsTab" id="collections" className="flex flex-col gap-3">
+                {getCollectionCards(
+                  filteredCollections(),
+                  checkIfAdmin()
+                ) ? getCollectionCards(
+                  filteredCollections(),
+                  checkIfAdmin()
+                ) : "No collections yet."}
               </div>
             }
           </div>
