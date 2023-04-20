@@ -59,7 +59,14 @@ const UserBio: React.FunctionComponent<IUserBioProps> = ({ userBio, isAdmin, api
 
   return (
     <div className="mt-5 flex flex-col">
-      <h3 className="text-lg">Bio</h3>
+      <div className="flex justify-between">
+        <h3 className="text-lg">Bio</h3>
+        {isAdmin && !isEditing ?
+          <button onClick={() => setIsEditing(true)}>
+            <Image src={editIcon} width="18" height="18" alt="Icon to edit the name" />
+          </button>
+          : <></>}
+      </div>
       {isEditing ?
         <div>
           <textarea value={tmp} placeholder="A few lines about you." onChange={handleChange} className="w-full bg-transparent border border-gray-900 p-1 rounded-lg" />
@@ -76,18 +83,8 @@ const UserBio: React.FunctionComponent<IUserBioProps> = ({ userBio, isAdmin, api
           <div>{log}</div>
         </div>
         :
-        <div className="flex justify-between">
-          {bio.length > 0 ?
-            <p className="text-sm">{bio}</p>
-            :
-            <div className="text-sm text-gray-400">User has not written a bio.</div>
-          }
-
-          {isAdmin ?
-            <button onClick={() => setIsEditing(true)}>
-              <Image src={editIcon} width="18" height="18" alt="Icon to edit the name" />
-            </button>
-            : <></>}
+        <div className={`text-sm whitespace-pre-wrap ${bio.length == 0 ? `text-gray-400` : ''}`}>
+          {bio.length > 0 ? bio : 'User has not written a bio.'}
         </div>
       }
     </div>

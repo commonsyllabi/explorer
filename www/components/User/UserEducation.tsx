@@ -78,7 +78,14 @@ const UserEducation: React.FunctionComponent<IUserEducationProps> = ({
 
   return (
     <div id="user-education" className="py-4">
-      <h3 className="text-lg">Education</h3>
+      <div className="flex justify-between">
+        <h3 className="text-lg">Education</h3>
+        {isAdmin && !isEditing ?
+          <button className="ml-8" onClick={() => setIsEditing(true)}>
+            <Image src={editIcon} width="18" height="18" alt="Icon to edit the name" />
+          </button>
+          : <></>}
+      </div>
 
       {isEditing ?
         <div>
@@ -120,11 +127,6 @@ const UserEducation: React.FunctionComponent<IUserEducationProps> = ({
             {education.map((item) => (
               <li key={item}>{item !== '' ? item : 'No education yet.'}</li>
             ))}</ul>
-          {isAdmin ?
-            <button className="ml-8" onClick={() => setIsEditing(true)}>
-              <Image src={editIcon} width="18" height="18" alt="Icon to edit the name" />
-            </button>
-            : <></>}
         </div>
       }
 

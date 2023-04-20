@@ -36,7 +36,7 @@ const UserInstitutions: React.FunctionComponent<IUserInstitutionsProps> = ({
         method: 'DELETE',
         headers: h
       })
-      if(!res.ok){
+      if (!res.ok) {
         setLog(`error deleting: ${uuid}`)
         return
       }
@@ -56,7 +56,7 @@ const UserInstitutions: React.FunctionComponent<IUserInstitutionsProps> = ({
         console.warn("Uncaught type of operation:", t)
       }
 
-      const res = await fetch(`${apiUrl}/institutions${t.uuid ? '/'+t.uuid : ''}`, {
+      const res = await fetch(`${apiUrl}/institutions${t.uuid ? '/' + t.uuid : ''}`, {
         method: m,
         headers: h,
         body: b
@@ -78,7 +78,7 @@ const UserInstitutions: React.FunctionComponent<IUserInstitutionsProps> = ({
     }
 
     setIsEditing(false)
-    if(results)
+    if (results)
       setInstitutions([...results])
     setLog('')
   }
@@ -92,10 +92,10 @@ const UserInstitutions: React.FunctionComponent<IUserInstitutionsProps> = ({
 
   const add = () => {
     setTmp([...tmp, {} as IInstitution])
-  }  
+  }
 
   const remove = (e: React.BaseSyntheticEvent) => {
-    const i = e.target.dataset.index    
+    const i = e.target.dataset.index
     if (tmp[i].uuid)
       setToDelete([...toDelete, tmp[i].uuid])
     tmp.splice(i, 1)
@@ -104,7 +104,15 @@ const UserInstitutions: React.FunctionComponent<IUserInstitutionsProps> = ({
 
   return (
     <div id="user-education" className="py-4">
-      <h3 className="text-lg">Institutions</h3>
+      
+      <div className="flex justify-between">
+        <h3 className="text-lg">Institutions</h3>
+        {isAdmin && !isEditing ?
+          <button className="ml-8" onClick={() => setIsEditing(true)}>
+            <Image src={editIcon} width="18" height="18" alt="Icon to edit the name" />
+          </button>
+          : <></>}
+      </div>
 
       {isEditing ?
         <div>
@@ -145,11 +153,6 @@ const UserInstitutions: React.FunctionComponent<IUserInstitutionsProps> = ({
             {institutions.map((item) => (
               <li key={item.name}>{item.name !== '' ? item.name : 'No education yet.'}</li>
             ))}</ul>
-          {isAdmin ?
-            <button className="ml-8" onClick={() => setIsEditing(true)}>
-              <Image src={editIcon} width="18" height="18" alt="Icon to edit the name" />
-            </button>
-            : <></>}
         </div>
       }
 
