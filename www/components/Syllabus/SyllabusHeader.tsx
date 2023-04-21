@@ -1,22 +1,41 @@
 import { getAcademicLevelText } from "components/utils/getAcademicLevel";
 import { getAcademicFieldsText } from "components/utils/getAcademicFields";
-import * as React from "react";
+
 import { inter } from "app/layout";
+import { useEffect, useState } from "react";
+import { ISyllabus } from "types";
+import { getInstitutionName, getInstitutionCountry, getInstitutionLang, getInstitutionYearInfo, getInstitutionTermInfo } from "components/utils/getInstitutionInfo";
 
 interface ISyllabusSchoolCodeYearProps {
-  institution?: string | null;
-  lang?: string | null;
-  country?: string | null;
-  courseNumber?: string | null;
-  level?: number | null;
-  fields?: number[] | null;
-  term?: string | null;
-  year?: string | null;
+  syllabusInfo: ISyllabus
 }
 
 const SyllabusSchoolCodeYear: React.FunctionComponent<
   ISyllabusSchoolCodeYearProps
-> = ({ institution, lang, country, courseNumber, level, fields, term, year }) => {
+> = ({ syllabusInfo }) => {
+  const [institution, setInstitution] = useState<string>()
+  const [lang, setLang] = useState<string>()
+  const [country, setCountry] = useState<string>()
+  const [courseNumber, setCourseNumber] = useState<string>()
+  const [level, setLevel] = useState<string>()
+  const [fields, setFields] = useState<string[]>()
+  const [term, setTerm] = useState<string>()
+  const [year, setYear] = useState<string>()  
+
+  useEffect(() => {
+    if (!syllabusInfo) return
+
+    setInstitution(getInstitutionName(syllabusInfo.institutions) as string)
+    setCountry(getInstitutionCountry(syllabusInfo.institutions) as string)
+    setYear(getInstitutionYearInfo(syllabusInfo.institutions) as string)
+    setTerm(getInstitutionTermInfo(syllabusInfo.institutions) as string)
+
+    setLang(getInstitutionLang(syllabusInfo.language))
+    setCourseNumber(syllabusInfo.course_number)
+    setLevel(getAcademicLevelText(syllabusInfo.academic_level) as string)
+    setFields(getAcademicFieldsText(syllabusInfo.academic_fields))
+  }, [syllabusInfo])
+
   return (
     <div className={`flex flex-col md:flex-row gap-4 text-sm mb-4 ${inter.className} text-gray-600`}>
       <div className="flex flex-row justify-between md:gap-4">
@@ -49,7 +68,7 @@ const SyllabusSchoolCodeYear: React.FunctionComponent<
           )}
 
           {level != null ? (
-            <div className="">{getAcademicLevelText(level)}</div>
+            <div className="">{level}</div>
           ) : (
             <div className="">
               <em>No academic level</em>
@@ -59,7 +78,7 @@ const SyllabusSchoolCodeYear: React.FunctionComponent<
       </div>
 
       {fields != null ? (
-        <div className="">{getAcademicFieldsText(fields).join(" | ")}</div>
+        <div className="">{fields.join(" | ")}</div>
       ) : (
         <div className="">
           <em>No academic fields</em>
