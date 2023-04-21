@@ -22,7 +22,6 @@ const InstitutionMeta: React.FunctionComponent<IInstitutionMetaProps> = ({ insti
         setLiteralCountry(getInstitutionCountry(institutions) as string)
         setLiteralYear(getInstitutionYearInfo(institutions) as string)
         setLiteralTerm(getInstitutionTermInfo(institutions) as string)
-
     }, [institutions])
 
     return (<>

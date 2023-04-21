@@ -381,6 +381,7 @@ const NewSyllabus: NextPage = () => {
                 academicFields={[]}
               />
 
+              {/* TODO: replace this with component */}
               <div className="flex flex-col md:flex-row items-baseline justify-between gap-6 my-8">
                 <div className="w-full md:w-1/3">
                   <label htmlFor="academic_level">
@@ -400,6 +401,7 @@ const NewSyllabus: NextPage = () => {
                   </select>
                 </div>
 
+                {/* TODO: replace this with component */}
                 <div className="w-full md:w-1/3 flex flex-col">
                   <label htmlFor="language">Language*</label>
                   <select

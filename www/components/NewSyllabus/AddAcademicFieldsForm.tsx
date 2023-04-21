@@ -20,7 +20,7 @@ const AddAcademicFieldsForm: React.FunctionComponent<
   const [detailedField, setDetailedField] = useState<string>("");
 
   useEffect(() => {
-    if(academicFields){
+    if (academicFields) {
       setBroadField(academicFields.length > 0 ? academicFields[0].length == 1 ? `0${academicFields[0]}` : academicFields[0] : "")
       setNarrowField(academicFields.length > 1 ? academicFields[1] : "")
       setDetailedField(academicFields.length > 2 ? academicFields[2] : "")
@@ -63,20 +63,19 @@ const AddAcademicFieldsForm: React.FunctionComponent<
   return (
     <div className="mb-5">
       <label htmlFor="academic_fields">
-        Academic Field{" "}
-        <p className="text-sm text-muted mb-1">
-          <em>ISCED Fields of Education and Training</em>
-        </p>
+        Academic Field{" - "}
+        <span className="text-xs">
+          <em><a href="https://isced.uis.unesco.org/about/" className="underline" target="_blank" rel="noopener noreferrer">ISCED</a></em>
+        </span>
       </label>
       <div
-        className="flex flex-col md:flex-row items-baseline w-full gap-2 my-3"
+        className="flex flex-col md:flex-row items-baseline w-full gap-2 mt-2"
         id="academicFieldsInputSection"
         data-cy="academicFieldsInputSection"
       >
         <div className="w-full">
-          <p className="text-sm text-muted mb-0">BROAD</p>
           <select
-            className="bg-transparent mt-2 p-1 border-2 border-gray-900 w-full"
+            className="bg-transparent p-1 border-2 border-gray-900 w-full"
             id="academic_field_broad"
             value={broadField}
             onChange={handleBroadFieldChange}
@@ -84,12 +83,12 @@ const AddAcademicFieldsForm: React.FunctionComponent<
             <option value="">–</option>
             {generateAcadFieldsBroad()}
           </select>
+          <p className="text-sm text-gray-800 mb-0">BROAD</p>
         </div>
 
         <div className="w-full">
-          <p className="text-sm text-muted mb-0">NARROW</p>
           <select
-            className="bg-transparent mt-2 p-1 border-2 border-gray-900 w-full"
+            className="bg-transparent p-1 border-2 border-gray-900 w-full"
             id="academic_field_narrow"
             onChange={handleNarrowFieldChange}
             value={narrowField}
@@ -99,12 +98,12 @@ const AddAcademicFieldsForm: React.FunctionComponent<
               broadField as keyof typeof modelsIsced["NARROW_FIELDS"]
             )}
           </select>
+          <p className="text-sm text-gray-800 mb-0">NARROW</p>
         </div>
 
         <div className="w-full">
-          <p className="small text-muted mb-0">DETAILED</p>
           <select
-            className="bg-transparent mt-2 p-1 border-2 border-gray-900 w-full"
+            className="bg-transparent p-1 border-2 border-gray-900 w-full"
             id="academic_field_detailed"
             onChange={handleDetailedFieldChange}
             value={detailedField}
@@ -114,6 +113,7 @@ const AddAcademicFieldsForm: React.FunctionComponent<
               narrowField as keyof typeof modelsIsced["DETAILED_FIELDS"]
             )}
           </select>
+          <p className="small text-gray-800 mb-0">DETAILED</p>
         </div>
       </div>
     </div>
