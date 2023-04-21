@@ -33,7 +33,7 @@ const GlobalNav: React.FunctionComponent = () => {
           <div className="flex">
             <Link href="/">
               <div className={`${kurintoBook.className} text-2xl md:text-xl`}>Cosyll</div>
-              <div className={`${kurintoSerif.className} hidden md:flex text-sm text-gray-600`}>Browse and publish Syllabi</div>
+              <div className={`${kurintoSerif.className} hidden md:flex text-sm text-gray-600`}>Archive and browse Syllabi</div>
             </Link>
           </div>
         </div>

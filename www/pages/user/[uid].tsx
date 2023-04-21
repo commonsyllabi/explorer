@@ -171,7 +171,7 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo }) => {
                 <div onClick={() => setActiveTab("collections")} className={`${kurintoSerif.className} text-3xl cursor-pointer ${activeTab === "collections" ? "font-bold underline underline-offset-4" : ""}`} data-cy="collectionsTab">Collections</div>
               </div>
 
-              <div className="hidden sm:flex flex w-full justify-end items-center content-end">
+              <div className="hidden sm:flex w-full justify-end items-center content-end">
                 <div className="flex w-full items-baseline gap-2 mb-3 justify-end">
                   <input
                     id={activeTab}

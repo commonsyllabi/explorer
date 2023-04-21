@@ -29,6 +29,7 @@ import editIcon from '../../public/icons/edit-box-line.svg'
 import { kurintoSerif } from "app/layout";
 import SyllabusDelete from "components/Syllabus/SyllabusDelete";
 import Modal from "components/commons/Modal";
+import SyllabusTitle from "components/Syllabus/SyllabusTitle";
 
 export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
   const syllabusId = context.params!.sid;
@@ -91,6 +92,8 @@ const Syllabus: NextPage<ISyllabusPageProps> = ({ syllabusInfo, userCollections 
   const { data: session } = useSession()
   const [isAddingToCollection, showIsAddingToCollection] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const apiUrl = new URL(`/syllabi/${syllabusInfo.uuid}`, process.env.NEXT_PUBLIC_API_URL)
+
 
   const checkIfAdmin = () => {
     if (session != null && session.user != null) {
@@ -145,11 +148,10 @@ const Syllabus: NextPage<ISyllabusPageProps> = ({ syllabusInfo, userCollections 
                 year={getInstitutionYearInfo(syllabusInfo.institutions)}
                 term={getInstitutionTermInfo(syllabusInfo.institutions)}
               />
-              <h1 className={`${kurintoSerif.className} text-3xl p-0 m-0`}>
-                {syllabusInfo.title ? syllabusInfo.title : "Course Title"}
-              </h1>
 
-              <Link href={`/user/${syllabusInfo.user.uuid}`} className={`${kurintoSerif.className} `} data-cy="courseInstructors">
+              <SyllabusTitle syllabusTitle={syllabusInfo.title} isAdmin={checkIfAdmin()} apiUrl={apiUrl} />
+
+              <Link href={`/user/${syllabusInfo.user.uuid}`} className={`${kurintoSerif.className} hover:underline`} data-cy="courseInstructors">
                 {syllabusInfo.user ? syllabusInfo.user.name : "Course Author / Instructor"}
               </Link>
 
@@ -251,7 +253,7 @@ const Syllabus: NextPage<ISyllabusPageProps> = ({ syllabusInfo, userCollections 
                     </p>
                   </div>}
 
-                  {syllabusInfo.other ?
+                {syllabusInfo.other ?
                   <div>
                     <h2 className={`${kurintoSerif.className} font-bold text-lg mb-2`}>Other</h2>
                     <p data-cy="course-other" className="whitespace-pre-wrap">
