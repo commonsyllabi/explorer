@@ -43,16 +43,7 @@ const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = ({
     <div data-cy="syllabusCard" className="border-2 border-gray-600 rounded-lg p-3">
 
       <div>
-        <SyllabusHeader
-          institution={getInstitutionName(syllabusInfo.institutions)}
-          country={getInstitutionCountry(syllabusInfo.institutions)}
-          lang={getInstitutionLang(syllabusInfo.language)}
-          courseNumber={syllabusInfo.course_number ? syllabusInfo.course_number : null}
-          term={getInstitutionTermInfo(syllabusInfo.institutions)}
-          year={getInstitutionYearInfo(syllabusInfo.institutions)}
-          level={syllabusInfo.academic_level}
-          fields={syllabusInfo.academic_fields}
-        />
+        <SyllabusHeader syllabusInfo={syllabusInfo} isAdmin={false}/>
         <div>
           <div className="flex justify-between w-full mt-8 mb-4">
             <Link href={getSyllabiUrl(syllabusInfo.uuid)} className={`text-2xl w-full font-bold hover:underline ${kurintoBook.className}`}>

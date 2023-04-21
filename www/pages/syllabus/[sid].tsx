@@ -13,11 +13,10 @@ import NotFound from "components/commons/NotFound";
 import Link from "next/link";
 
 import SyllabusHeader from "components/Syllabus/SyllabusHeader";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddToCollection from "components/Collection/AddToCollection";
 import addCircleIcon from '../../public/icons/add-circle-line.svg'
 import deleteIcon from '../../public/icons/delete-bin-line.svg'
-import editIcon from '../../public/icons/edit-box-line.svg'
 import { kurintoSerif } from "app/layout";
 import SyllabusDelete from "components/Syllabus/SyllabusDelete";
 import Modal from "components/commons/Modal";
@@ -25,6 +24,7 @@ import SyllabusTitle from "components/Syllabus/SyllabusTitle";
 import SyllabusTags from "components/Syllabus/SyllabusTags";
 import SyllabusListFormField from "components/Syllabus/SyllabusListFormField";
 import SyllabusTextFormField from "components/Syllabus/SyllabusTextFormField";
+import { Session } from "next-auth";
 
 export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
   const syllabusId = context.params!.sid;
@@ -88,13 +88,21 @@ const Syllabus: NextPage<ISyllabusPageProps> = ({ syllabusInfo, userCollections 
   const [isAddingToCollection, showIsAddingToCollection] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const apiUrl = new URL(`/syllabi/${syllabusInfo.uuid}`, process.env.NEXT_PUBLIC_API_URL)
+  const [isOwner, setIsOwner] = useState(false)
 
-  const checkIfAdmin = () => {
-    if (session != null && session.user != null) {
-      return session.user._id === syllabusInfo.user_uuid;
+  const checkIfOwner = (_session: Session, _uuid: string) => {
+    if (_session.user != null) {
+      return _session.user._id === _uuid;
     }
     return false
   };
+
+  useEffect(() => {  
+    if (!syllabusInfo || !session) return
+    const o = checkIfOwner(session, syllabusInfo.user_uuid)
+    
+    setIsOwner(o)
+  }, [session, syllabusInfo])
 
   const getDate = (_d: string) => {
     const d = new Date(_d)
@@ -136,40 +144,40 @@ const Syllabus: NextPage<ISyllabusPageProps> = ({ syllabusInfo, userCollections 
 
         <div className="flex mt-8">
           <div className="w-full pt-3 pb-5 flex flex-col gap-3">
-            <SyllabusHeader syllabusInfo={syllabusInfo} />
+            <SyllabusHeader syllabusInfo={syllabusInfo} isAdmin={isOwner} />
 
-            <SyllabusTitle syllabusTitle={syllabusInfo.title} isAdmin={checkIfAdmin()} apiUrl={apiUrl} />
+            <SyllabusTitle syllabusTitle={syllabusInfo.title} isAdmin={isOwner} apiUrl={apiUrl} />
 
             <div className="text-sm">Uploaded by <Link href={`/user/${syllabusInfo.user.uuid}`} className={`${kurintoSerif.className} text-base hover:underline`} data-cy="courseInstructors">
               {syllabusInfo.user ? syllabusInfo.user.name : "Course Author / Instructor"}
             </Link> on {getDate(syllabusInfo.created_at)}
             </div>
 
-            <SyllabusTags syllabusTags={syllabusInfo.tags as string[]} apiUrl={apiUrl} isAdmin={checkIfAdmin()} />
+            <SyllabusTags syllabusTags={syllabusInfo.tags as string[]} apiUrl={apiUrl} isAdmin={isOwner} />
 
             <div className="flex flex-col gap-5">
-              <SyllabusTextFormField label="Description" info={syllabusInfo.description} apiUrl={apiUrl} isAdmin={checkIfAdmin()} />
+              <SyllabusTextFormField label="Description" info={syllabusInfo.description} apiUrl={apiUrl} isAdmin={isOwner} />
 
-              <SyllabusListFormField label="Learning Outcomes" info={syllabusInfo.learning_outcomes as string[]} apiUrl={apiUrl} isAdmin={checkIfAdmin()} />
+              <SyllabusListFormField label="Learning Outcomes" info={syllabusInfo.learning_outcomes as string[]} apiUrl={apiUrl} isAdmin={isOwner} />
 
-              <SyllabusListFormField label="Topic Outlines" info={syllabusInfo.topic_outlines as string[]} apiUrl={apiUrl} isAdmin={checkIfAdmin()} />
+              <SyllabusListFormField label="Topic Outlines" info={syllabusInfo.topic_outlines as string[]} apiUrl={apiUrl} isAdmin={isOwner} />
 
-              <SyllabusListFormField label="Readings" info={syllabusInfo.readings as string[]} apiUrl={apiUrl} isAdmin={checkIfAdmin()} />
+              <SyllabusListFormField label="Readings" info={syllabusInfo.readings as string[]} apiUrl={apiUrl} isAdmin={isOwner} />
 
-              <SyllabusTextFormField label="Grading Rubric" info={syllabusInfo.grading_rubric as string} apiUrl={apiUrl} isAdmin={checkIfAdmin()} />
+              <SyllabusTextFormField label="Grading Rubric" info={syllabusInfo.grading_rubric as string} apiUrl={apiUrl} isAdmin={isOwner} />
 
-              <SyllabusListFormField label="Assignments" info={syllabusInfo.assignments as string[]} apiUrl={apiUrl} isAdmin={checkIfAdmin()} />
+              <SyllabusListFormField label="Assignments" info={syllabusInfo.assignments as string[]} apiUrl={apiUrl} isAdmin={isOwner} />
 
-              <SyllabusTextFormField label="Other" info={syllabusInfo.other as string} apiUrl={apiUrl} isAdmin={checkIfAdmin()} />
+              <SyllabusTextFormField label="Other" info={syllabusInfo.other as string} apiUrl={apiUrl} isAdmin={isOwner} />
 
               <hr className="border-gray-600 my-8" />
-              
+
               <SyllabusAttachments attachments={syllabusInfo.attachments} />
             </div>
           </div>
         </div>
 
-        <div className="flex gap-2 items-baseline">
+        <div className="flex gap-2 items-baseline justify-between">
           {session ?
             <button onClick={() => showIsAddingToCollection(true)} className="p-2 border border-gray-900 rounded-md flex gap-3">
               <Image src={addCircleIcon} width="24" height="24" alt="Icon to add a syllabus to a collection" />
@@ -178,17 +186,11 @@ const Syllabus: NextPage<ISyllabusPageProps> = ({ syllabusInfo, userCollections 
             :
             <></>
           }
-          {checkIfAdmin() ?
-            <>
-              <Link href={`/edit-syllabus?sid=${syllabusInfo.uuid}`} className="mt-3 flex p-2 rounded-md gap-3 border border-gray-900" >
-                <Image src={editIcon} width="24" height="24" alt="Icon to edit the name" />
-                <div>Edit syllabus</div>
-              </Link>
-              <button onClick={() => setShowDeleteModal(true)} className="mt-3 flex p-2 bg-red-400 hover:bg-red-500 text-white rounded-md gap-3" >
-                <Image src={deleteIcon} width="24" height="24" alt="Icon to delete the syllabus" />
-                <div>Delete syllabus</div>
-              </button>
-            </>
+          {isOwner ?
+            <button onClick={() => setShowDeleteModal(true)} className="flex p-2 bg-red-400 hover:bg-red-500 text-white rounded-md gap-3" >
+              <Image src={deleteIcon} width="24" height="24" alt="Icon to delete the syllabus" />
+              <div>Delete syllabus</div>
+            </button>
             : <></>}
         </div>
         {isAddingToCollection ?

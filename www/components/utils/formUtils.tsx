@@ -65,7 +65,9 @@ export const generateLanguageOptions = () => {
 };
 
 export const getLanguageFromCode = (_lang: string) => {
+  if(!_lang) return ""
   const languages = setUpLanguages();
+
   let language = ""
   Object.keys(languages).map(l => {
     if (l.toLowerCase() === _lang.toLowerCase())

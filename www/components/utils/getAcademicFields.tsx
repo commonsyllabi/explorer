@@ -1,6 +1,8 @@
 export const getAcademicFieldsText = (_fields: number[]) => {
     let fields: string[] = [];
 
+    if(!_fields) return ["Default"]
+
     for (const field of _fields) {
         switch (field) {
             case 0:
