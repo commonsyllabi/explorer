@@ -9,17 +9,9 @@ import { ICollection, ISyllabus } from "types";
 
 import BreadcrumbsBar from "components/commons/BreadcrumbsBar";
 import SyllabusAttachments from "components/Syllabus/SyllabusAttachments";
-import Tags from "components/Syllabus/Tags";
 import NotFound from "components/commons/NotFound";
 import Link from "next/link";
 
-import {
-  getInstitutionCountry,
-  getInstitutionLang,
-  getInstitutionName,
-  getInstitutionTermInfo,
-  getInstitutionYearInfo,
-} from "components/utils/getInstitutionInfo";
 import SyllabusHeader from "components/Syllabus/SyllabusHeader";
 import { useState } from "react";
 import AddToCollection from "components/Collection/AddToCollection";
@@ -31,6 +23,8 @@ import SyllabusDelete from "components/Syllabus/SyllabusDelete";
 import Modal from "components/commons/Modal";
 import SyllabusTitle from "components/Syllabus/SyllabusTitle";
 import SyllabusTags from "components/Syllabus/SyllabusTags";
+import SyllabusListFormField from "components/Syllabus/SyllabusListFormField";
+import SyllabusTextFormField from "components/Syllabus/SyllabusTextFormField";
 
 export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
   const syllabusId = context.params!.sid;
@@ -141,7 +135,7 @@ const Syllabus: NextPage<ISyllabusPageProps> = ({ syllabusInfo, userCollections 
           : <></>}
 
         <div className="flex mt-8">
-          <div className="pt-3 pb-5 flex flex-col gap-3">
+          <div className="w-full pt-3 pb-5 flex flex-col gap-3">
             <SyllabusHeader syllabusInfo={syllabusInfo} />
 
             <SyllabusTitle syllabusTitle={syllabusInfo.title} isAdmin={checkIfAdmin()} apiUrl={apiUrl} />
@@ -151,119 +145,25 @@ const Syllabus: NextPage<ISyllabusPageProps> = ({ syllabusInfo, userCollections 
             </Link> on {getDate(syllabusInfo.created_at)}
             </div>
 
-
-
             <SyllabusTags syllabusTags={syllabusInfo.tags as string[]} apiUrl={apiUrl} isAdmin={checkIfAdmin()} />
 
             <div className="flex flex-col gap-5">
-              {syllabusInfo.description ?
-                <div>
-                  <h2 className={`${kurintoSerif.className} font-bold text-lg mb-2`}>Course Overview</h2>
-                  <p data-cy="course-description" className="whitespace-pre-wrap">
-                    {syllabusInfo.description}
-                  </p>
-                </div>
-                : <div>
-                  <h2 className={`${kurintoSerif.className} font-bold text-lg mb-2`}>Course Overview</h2>
-                  <p className="text-sm text-gray-400 whitespace-pre-wrap">
-                    No description.
-                  </p>
-                </div>}
+              <SyllabusTextFormField label="Description" info={syllabusInfo.description} apiUrl={apiUrl} isAdmin={checkIfAdmin()} />
 
-              {syllabusInfo.learning_outcomes ?
-                <div>
-                  <h2 className={`${kurintoSerif.className} font-bold text-lg mb-2`}>Learning outcomes</h2>
-                  <ul data-cy="course-learning-outcomes" className="whitespace-pre-wrap">
-                    {syllabusInfo.learning_outcomes.map((l, i) => (
-                      <li key={`learnings-${i}`}>{l}</li>
-                    ))}
-                  </ul>
-                </div>
-                : <div>
-                  <h2 className={`${kurintoSerif.className} font-bold text-lg mb-2`}>Learning outcomes</h2>
-                  <p className="text-sm text-gray-400 whitespace-pre-wrap">
-                    No learning outcomes.
-                  </p>
-                </div>}
+              <SyllabusListFormField label="Learning Outcomes" info={syllabusInfo.learning_outcomes as string[]} apiUrl={apiUrl} isAdmin={checkIfAdmin()} />
 
-              {syllabusInfo.topic_outlines ?
-                <div>
-                  <h2 className={`${kurintoSerif.className} font-bold text-lg mb-2`}>Topics outline</h2>
-                  <ul data-cy="course-learning-outcomes" className="whitespace-pre-wrap">
-                    {syllabusInfo.topic_outlines.map((t, i) => (
-                      <li key={`topics-${i}`}>{t}</li>
-                    ))}
-                  </ul>
-                </div>
-                : <div>
-                  <h2 className={`${kurintoSerif.className} font-bold text-lg mb-2`}>Topics outline</h2>
-                  <p className="text-sm text-gray-400 whitespace-pre-wrap">
-                    No topics outlined.
-                  </p>
-                </div>}
+              <SyllabusListFormField label="Topic Outlines" info={syllabusInfo.topic_outlines as string[]} apiUrl={apiUrl} isAdmin={checkIfAdmin()} />
 
-              {syllabusInfo.readings ?
-                <div>
-                  <h2 className={`${kurintoSerif.className} font-bold text-lg mb-2`}>Readings</h2>
-                  <ul data-cy="course-readings" className="list-inside list-disc whitespace-pre-wrap">
-                    {syllabusInfo.readings.map((r, i) => (
-                      <li key={`readings-${i}`}>{r}</li>
-                    ))}
-                  </ul>
-                </div>
-                : <div>
-                  <h2 className={`${kurintoSerif.className} font-bold text-lg mb-2`}>Readings</h2>
-                  <p className="text-sm text-gray-400 whitespace-pre-wrap">
-                    No readings assigned.
-                  </p>
-                </div>}
+              <SyllabusListFormField label="Readings" info={syllabusInfo.readings as string[]} apiUrl={apiUrl} isAdmin={checkIfAdmin()} />
 
-              {syllabusInfo.grading_rubric ?
-                <div>
-                  <h2 className={`${kurintoSerif.className} font-bold text-lg mb-2`}>Grading rubric</h2>
-                  <p data-cy="course-grading-rubric" className="whitespace-pre-wrap">
-                    {syllabusInfo.grading_rubric}
-                  </p>
-                </div>
-                : <div>
-                  <h2 className={`${kurintoSerif.className} font-bold text-lg mb-2`}>Grading rubric</h2>
-                  <p className="text-sm text-gray-400 whitespace-pre-wrap">
-                    No grading rubric.
-                  </p>
-                </div>}
+              <SyllabusTextFormField label="Grading Rubric" info={syllabusInfo.grading_rubric as string} apiUrl={apiUrl} isAdmin={checkIfAdmin()} />
 
-              {syllabusInfo.assignments ?
-                <div>
-                  <h2 className={`${kurintoSerif.className} font-bold text-lg mb-2`}>Assignments</h2>
-                  <ul data-cy="course-assignments" className="whitespace-pre-wrap">
-                    {syllabusInfo.assignments.map((r, i) => (
-                      <li key={`assignments-${i}`}>{r}</li>
-                    ))}
-                  </ul>
-                </div>
-                : <div>
-                  <h2 className={`${kurintoSerif.className} font-bold text-lg mb-2`}>Assignments</h2>
-                  <p className="text-sm text-gray-400 whitespace-pre-wrap">
-                    No assignments.
-                  </p>
-                </div>}
+              <SyllabusListFormField label="Assignments" info={syllabusInfo.assignments as string[]} apiUrl={apiUrl} isAdmin={checkIfAdmin()} />
 
-              {syllabusInfo.other ?
-                <div>
-                  <h2 className={`${kurintoSerif.className} font-bold text-lg mb-2`}>Other</h2>
-                  <p data-cy="course-other" className="whitespace-pre-wrap">
-                    {syllabusInfo.other}
-                  </p>
-                </div>
-                : <div>
-                  <h2 className={`${kurintoSerif.className} font-bold text-lg mb-2`}>Other</h2>
-                  <p className="text-sm text-gray-400 whitespace-pre-wrap">
-                    No other coment.
-                  </p>
-                </div>}
-
+              <SyllabusTextFormField label="Other" info={syllabusInfo.other as string} apiUrl={apiUrl} isAdmin={checkIfAdmin()} />
 
               <hr className="border-gray-600 my-8" />
+              
               <SyllabusAttachments attachments={syllabusInfo.attachments} />
             </div>
           </div>
