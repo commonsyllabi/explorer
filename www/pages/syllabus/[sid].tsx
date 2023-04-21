@@ -30,6 +30,7 @@ import { kurintoSerif } from "app/layout";
 import SyllabusDelete from "components/Syllabus/SyllabusDelete";
 import Modal from "components/commons/Modal";
 import SyllabusTitle from "components/Syllabus/SyllabusTitle";
+import SyllabusTags from "components/Syllabus/SyllabusTags";
 
 export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
   const syllabusId = context.params!.sid;
@@ -156,9 +157,7 @@ const Syllabus: NextPage<ISyllabusPageProps> = ({ syllabusInfo, userCollections 
               </Link>
 
 
-              <div id="course-tags" className="flex gap-2 mb-6">
-                <Tags tags={syllabusInfo.tags} />
-              </div>
+            <SyllabusTags syllabusTags={syllabusInfo.tags as string[]} apiUrl={apiUrl} isAdmin={checkIfAdmin()}/>
 
               <div className="flex flex-col gap-5">
                 {syllabusInfo.description ?
