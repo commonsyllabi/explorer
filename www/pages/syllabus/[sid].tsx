@@ -148,7 +148,7 @@ const Syllabus: NextPage<ISyllabusPageProps> = ({ syllabusInfo, userCollections 
             <SyllabusTitle syllabusTitle={syllabusInfo.title} isAdmin={isOwner} apiUrl={apiUrl} />
 
             <div className="text-sm">Uploaded by <Link href={`/user/${syllabusInfo.user.uuid}`} className={`${kurintoSerif.className} text-base hover:underline`} data-cy="courseInstructors">
-              {syllabusInfo.user ? syllabusInfo.user.name : "Course Author / Instructor"}
+              {isOwner ? 'you' : syllabusInfo.user ? syllabusInfo.user.name : "Course Author / Instructor"}
             </Link> on {getDate(syllabusInfo.created_at)}
             </div>
 

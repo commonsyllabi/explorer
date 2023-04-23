@@ -11,10 +11,12 @@ interface IAddAcademicFieldsFormProps {
   academicFields: string[]
 }
 
+// TODO: the way the values are being left-padded before retrieval doesn't scale
+// write a helper function to do the conversion?
+
 const AddAcademicFieldsForm: React.FunctionComponent<
   IAddAcademicFieldsFormProps
-> = ({ setAcadFieldsData, academicFields }) => {
-
+> = ({ setAcadFieldsData, academicFields }) => {  
   const [broadField, setBroadField] = useState<string>("");
   const [narrowField, setNarrowField] = useState<string>("");
   const [detailedField, setDetailedField] = useState<string>("");
@@ -47,13 +49,13 @@ const AddAcademicFieldsForm: React.FunctionComponent<
 
   useEffect(() => {
     let acadFieldsArray = [];
-    if (broadField.length > 0) {
+    if (broadField != "") {
       acadFieldsArray.push(broadField);
     }
-    if (narrowField.length > 0) {
+    if (narrowField != "") {
       acadFieldsArray.push(narrowField);
     }
-    if (detailedField.length > 0) {
+    if (detailedField != "") {
       acadFieldsArray.push(detailedField);
     }
 
@@ -61,7 +63,7 @@ const AddAcademicFieldsForm: React.FunctionComponent<
   }, [broadField, narrowField, detailedField]);
 
   return (
-    <div className="mb-5">
+    <div className="w-max">
       <label htmlFor="academic_fields">
         Academic Field{" - "}
         <span className="text-xs">
@@ -69,11 +71,11 @@ const AddAcademicFieldsForm: React.FunctionComponent<
         </span>
       </label>
       <div
-        className="flex flex-col md:flex-row items-baseline w-full gap-2 mt-2"
+        className="flex flex-col md:flex-row items-baseline gap-2 mt-2"
         id="academicFieldsInputSection"
         data-cy="academicFieldsInputSection"
       >
-        <div className="w-full">
+        <div className="w-1/3">
           <select
             className="bg-transparent p-1 border-2 border-gray-900 w-full"
             id="academic_field_broad"
@@ -86,12 +88,12 @@ const AddAcademicFieldsForm: React.FunctionComponent<
           <p className="text-sm text-gray-800 mb-0">BROAD</p>
         </div>
 
-        <div className="w-full">
+        <div className="w-1/3">
           <select
             className="bg-transparent p-1 border-2 border-gray-900 w-full"
             id="academic_field_narrow"
             onChange={handleNarrowFieldChange}
-            value={narrowField}
+            value={narrowField.length == 1 ? `00${narrowField}` : narrowField.length == 2 ? `0${narrowField}` : narrowField}
           >
             <option value="">–</option>
             {generateAcadFieldsNarrow(
@@ -101,16 +103,16 @@ const AddAcademicFieldsForm: React.FunctionComponent<
           <p className="text-sm text-gray-800 mb-0">NARROW</p>
         </div>
 
-        <div className="w-full">
+        <div className="w-1/3">
           <select
             className="bg-transparent p-1 border-2 border-gray-900 w-full"
             id="academic_field_detailed"
             onChange={handleDetailedFieldChange}
-            value={detailedField}
+            value={detailedField.length == 1 ? `0${detailedField}` : detailedField.length == 2 ? `00${detailedField}` : detailedField}
           >
             <option value="">–</option>
             {generateAcadFieldsDetailed(
-              narrowField as keyof typeof modelsIsced["DETAILED_FIELDS"]
+              (narrowField.length == 1 ? `00${narrowField}` : narrowField.length == 2 ? `0${narrowField}` : narrowField) as keyof typeof modelsIsced["DETAILED_FIELDS"]
             )}
           </select>
           <p className="small text-gray-800 mb-0">DETAILED</p>

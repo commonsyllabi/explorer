@@ -78,7 +78,7 @@ const SyllabusTextFormField: React.FunctionComponent<ISyllabusTextFormFieldProps
                     : <></>}
             </div>
             {isEditing ?
-                <div className="w-2/3 flex flex-col justify-between">
+                <div className="md:w-2/3 flex flex-col justify-between">
                     <textarea className={`p-0 m-0 w-full bg-transparent pb-1 border-b-2 border-b-gray-900`} rows={8} value={tmp} onChange={handleChange} />
 
                     <div className="py-1 mt-2 flex flex-col lg:flex-row gap-2 justify-between">

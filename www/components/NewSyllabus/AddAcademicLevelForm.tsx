@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface IAddAcademicLevelFormProps {
     level: string,
@@ -6,7 +6,11 @@ interface IAddAcademicLevelFormProps {
 }
 
 const AddAcademicLevelForm: React.FunctionComponent<IAddAcademicLevelFormProps> = ({ level, setLevelData }) => {
-    const [tmp, setTmp] = useState<string>(level)
+    const [tmp, setTmp] = useState<string>('0')
+    useEffect(() => {
+        setTmp(level)
+    }, [level])
+    
     const handleChange = (e: React.BaseSyntheticEvent) => {
         e.preventDefault()
         e.stopPropagation()
@@ -15,7 +19,7 @@ const AddAcademicLevelForm: React.FunctionComponent<IAddAcademicLevelFormProps> 
         setLevelData(e.target.value)
     }
     return (
-        <div className="w-full md:w-1/3">
+        <div className="md:w-1/4">
             <label htmlFor="academic_level">
                 Academic Level
             </label>

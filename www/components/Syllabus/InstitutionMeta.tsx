@@ -122,7 +122,7 @@ const InstitutionMeta: React.FunctionComponent<IInstitutionMetaProps> = ({ insti
     return (<>
         {!isEditing ?
             <div className="flex flex-col gap-2">
-                <div className="flex gap-4">
+                <div className="flex justify-between gap-4">
                     <div className={`${literalName ? '' : 'italic'}`}>{literalName ? literalName : 'No name'}</div>
                     <div className={`${literalCountry ? '' : 'italic'}`}>{literalCountry ? literalCountry : 'No country'}</div>
                     <div className={`${literalTerm ? '' : 'italic'}`}>{literalTerm ? literalTerm : 'No term'}</div>

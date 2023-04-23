@@ -89,13 +89,13 @@ const SyllabusListFormField: React.FunctionComponent<ISyllabusListFormFieldProps
                     : <></>}
             </div>
             {isEditing ?
-                <div className="w-2/3 flex flex-col justify-between">
+                <div className="md:w-2/3 flex flex-col justify-between">
                     <ul className="mb-2">
                         {tmp.map((item, _index) => (
-                            <li key={`${item}-${_index}`}>
+                            <li key={`${item}-${_index}`} className="flex gap-2">
                                 <input type="text" defaultValue={item} data-index={_index} onChange={handleChange} className="w-11/12 bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"></input>
-                                <button data-index={_index} onClick={remove}>
-                                    <Image src={removeIcon} width="24" height="24" alt="Icon to remove an element from the list" />
+                                <button data-index={_index} onClick={remove} className="flex items-stretch gap-2 bg-gray-200 rounded-md w-max p-1">
+                                    <Image src={removeIcon} width="24" height="24" alt="Icon to remove an element from the list" className="m-auto" />
                                 </button>
                             </li>
                         ))}

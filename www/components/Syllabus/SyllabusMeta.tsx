@@ -81,26 +81,28 @@ const SyllabusMeta: React.FunctionComponent<ISyllabusMetaProps> = ({ lang, level
     return (<>
         {!isEditing ?
             <div className="flex flex-col gap-2">
-                <div className="flex gap-4">
+                <div className="flex md:flex-row justify-between gap-4">
                     <div className={`${literalLanguage ? '' : 'italic'}`}>{literalLanguage ? literalLanguage : 'No language'}</div>
                     <div className={`${literalLevel ? '' : 'italic'}`}>{literalLevel ? literalLevel : 'No academic level'}</div>
-                    <div className={`${literalFields ? '' : 'italic'}`}>{literalFields ? literalFields.join(" | ") : 'No academic fields'}</div>
+                    <div className={`flex flex-col items-end md:flex-row gap-0 md:gap-2 ${literalFields ? '' : 'italic'}`}>{literalFields ? literalFields.map((l) => {
+                        return(<div className="text-right">{l}</div>)
+                    }) : <div>No academic fields</div>}</div>
                 </div>
                 {isAdmin && !isEditing ?
-                    <button className={`flex gap-2 opacity-70 border ${isShowingTooltip ? '' : 'opacity-40'} rounded-md border-gray-700 w-max p-1`} onClick={() => setIsEditing(true)} onMouseEnter={() => {setShowTooltip(true)}} onMouseLeave={() => {setShowTooltip(false)}}>
+                    <button className={`flex gap-2 opacity-70 border ${isShowingTooltip ? '' : 'opacity-40'} rounded-md border-gray-700 w-max p-1`} onClick={() => setIsEditing(true)} onMouseEnter={() => { setShowTooltip(true) }} onMouseLeave={() => { setShowTooltip(false) }}>
                         <Image src={editIcon} width="24" height="24" className="h-4" alt="Icon to edit the list" />
                         <div className={`${isShowingTooltip ? '' : 'hidden'} text-sm`}>Edit</div>
                     </button>
                     : <></>}
             </div>
             :
-            <div>
+            <div className="w-2/3">
                 <div className="flex flex-col md:flex-row items-baseline justify-between gap-6 my-4">
                     <AddLanguageForm lang={lang} setLanguage={(_lang: string) => setTmpLanguage(_lang)} />
-                    <AddAcademicLevelForm level={'0'} setLevelData={(_lvl: string) => { setTmpLevel(_lvl) }} />
+                    <AddAcademicLevelForm level={level.toString()} setLevelData={(_lvl: string) => { setTmpLevel(_lvl) }} />
                     <AddAcademicFieldsForm
                         setAcadFieldsData={(_af: string[]) => { setTmpFields(_af); }}
-                        academicFields={[]}
+                        academicFields={fields.map((af) => { return af.toString() })}
                     />
                 </div>
                 <div className="py-1 mt-4 flex flex-col lg:flex-row gap-2 justify-between">
