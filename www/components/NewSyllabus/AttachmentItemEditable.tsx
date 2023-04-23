@@ -101,7 +101,7 @@ const AttachmentItemFile: React.FunctionComponent<IAttachmentItemEditableProps> 
     })
 
     if (res.ok) {
-      setLog("Success!")
+      setLog("Changes saved!")
       setUrl(file.name)
       setTimeout(() => {
         setLog("")
@@ -113,9 +113,10 @@ const AttachmentItemFile: React.FunctionComponent<IAttachmentItemEditableProps> 
         Router.push("/auth/signin");
       })
       return;
+    }else{
+      const body = await res.text()
+      setLog(`An error occured while saving edits: ${body}`)
     }
-    const body = await res.text()
-    setLog(`An error occured while saving edits: ${body}`)
 
   }
 
@@ -167,7 +168,7 @@ const AttachmentItemFile: React.FunctionComponent<IAttachmentItemEditableProps> 
           </div>
         </div>
         : <>
-          <textarea className="bg-transparent mt-2 p-1 border border-gray-900 w-1/2" rows={4} value={attachment.description} placeholder="No description" onChange={handleDescriptionChange} />
+          <textarea className="bg-transparent mt-2 p-1 border border-gray-900 w-1/2" rows={4} value={description} placeholder="No description" onChange={handleDescriptionChange} />
           <div className="flex flex-col gap-2 items-start">
             <div className="small">
               <span className="font-bold">Filename:</span> <Link href={fileUrl} target="_blank" rel="noreferrer" className="underline">{attachment.url}</Link>

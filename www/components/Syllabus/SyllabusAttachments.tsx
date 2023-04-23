@@ -119,7 +119,7 @@ const SyllabusAttachments: React.FunctionComponent<ISyllabusAttachmentsProps> = 
             key={`attachment-editable-${att.uuid}`}
             attachment={att}
             onDelete={(_uuid: string) => { setAttachmentData(attachmentData.filter(_a => _a.uuid !== _uuid)) }}
-            onEdit={(_att: IAttachment) => { setAttachmentData([...attachmentData, att]) }}
+            onEdit={(_att: IAttachment) => { setAttachmentData(attachmentData.map(_a => { return _a.uuid == _att.uuid ? _att : _a })) }}
           />
         ))}
 
