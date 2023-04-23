@@ -30,14 +30,16 @@ const SyllabusSchoolCodeYear: React.FunctionComponent<
   }, [syllabusInfo])
 
   return (
-    <div className={`flex flex-col gap-2 text-sm mb-4 ${inter.className} text-gray-600`}>
+    <div className={`w-max flex flex-col gap-2 text-sm mb-4 ${inter.className} text-gray-600`}>
       <div data-cy="institution-info" className="flex flex-col sm:flex-row justify-start md:gap-4">
 
-      <InstitutionMeta institutions={institutions} apiUrl={apiUrl as URL} isAdmin={isAdmin}/>
+      <InstitutionMeta institutions={institutions} apiUrl={apiUrl as URL} isAdmin={isAdmin} onSuccess={(_i: IInstitution) => setInstitutions([_i])}/>
 
       </div>
       <div data-cy="syllabus-meta" className="flex flex-col sm:flex-row justify-start md:gap-4">
-        <SyllabusMeta lang={lang as string} level={level as number} fields={fields as number[]} apiUrl={apiUrl as URL} isAdmin={isAdmin}/>
+        <SyllabusMeta lang={lang as string} level={level as number} fields={fields as number[]} apiUrl={apiUrl as URL} isAdmin={isAdmin} onSuccess={(_u: ISyllabus) => {
+          setLang(_u.language); setFields(_u.academic_fields); setLevel(_u.academic_level)
+        }}/>
       </div>
     </div>
   );
