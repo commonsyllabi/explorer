@@ -247,6 +247,8 @@ const EditSyllabus: NextPage<IEditSyllabusProps> = ({ syllabusInfo }) => {
       <AttachmentItemEditable
         key={`attachment-editable-${attachment.id}`}
         attachment={attachment}
+        onDelete={(_uuid: string) => {}}
+        onEdit={(_att: IAttachment) => {}}
       />
     ));
     return uploadedAttachments;

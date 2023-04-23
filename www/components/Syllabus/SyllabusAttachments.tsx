@@ -11,6 +11,7 @@ import { kurintoSerif } from "app/layout";
 import { signOut, useSession } from "next-auth/react";
 import NewSyllbusAttachment from "components/NewSyllabus/NewSyllabusAttachment";
 import Router from "next/router";
+import AttachmentItemEditable from "components/NewSyllabus/AttachmentItemEditable";
 
 interface ISyllabusAttachmentsProps {
   attachments?: IAttachment[];
@@ -113,6 +114,14 @@ const SyllabusAttachments: React.FunctionComponent<ISyllabusAttachmentsProps> = 
       <div className="full flex flex-col justify-between">
 
         {/* either edit/delete */}
+        {attachmentData.map((att) => (
+          <AttachmentItemEditable
+            key={`attachment-editable-${att.uuid}`}
+            attachment={att}
+            onDelete={(_uuid: string) => { setAttachmentData(attachmentData.filter(_a => _a.uuid !== _uuid)) }}
+            onEdit={(_att: IAttachment) => { setAttachmentData([...attachmentData, att]) }}
+          />
+        ))}
 
         <NewSyllbusAttachment
           attachmentData={newAttachmentData}
