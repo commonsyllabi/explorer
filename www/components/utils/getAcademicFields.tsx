@@ -77,7 +77,7 @@ export const getAcademicFieldsText = (_fields: number[]) => {
                 fields.push("Literature and linguistics");
                 break
 
-            case 300:
+            case 3:
                 fields.push("Social sciences, journalism and information");
                 break
             case 31:
@@ -105,7 +105,7 @@ export const getAcademicFieldsText = (_fields: number[]) => {
                 fields.push("Library, information and archival studies");
                 break
 
-            case 400:
+            case 4:
                 fields.push("Business, Administration and law");
                 break
             case 41:
@@ -139,7 +139,7 @@ export const getAcademicFieldsText = (_fields: number[]) => {
                 fields.push("Law");
                 break
 
-            case 500:
+            case 5:
                 fields.push("Natural sciences, mathematics and statistics");
                 break
             case 51:
@@ -182,7 +182,7 @@ export const getAcademicFieldsText = (_fields: number[]) => {
                 fields.push("Statistics");
                 break
 
-            case 600:
+            case 6:
                 fields.push("Information and communication technologies");
                 break
             case 61:
@@ -198,7 +198,7 @@ export const getAcademicFieldsText = (_fields: number[]) => {
                 fields.push("Software and application development and anaysis");
                 break
 
-            case 700:
+            case 7:
                 fields.push("Engineering, manufacturing and construction");
                 break
             case 71:
@@ -247,7 +247,7 @@ export const getAcademicFieldsText = (_fields: number[]) => {
                 fields.push("Building and civil engineering");
                 break
 
-            case 800:
+            case 8:
                 fields.push("Agriculture, forestry, fisheries and veterinary");
                 break
             case 81:
@@ -278,7 +278,7 @@ export const getAcademicFieldsText = (_fields: number[]) => {
                 fields.push("Veterinary");
                 break
 
-            case 900:
+            case 9:
                 fields.push("Health and Welfare");
                 break
             case 91:
@@ -306,7 +306,7 @@ export const getAcademicFieldsText = (_fields: number[]) => {
                 fields.push("Traditional and complementary medicine and therapy");
                 break
 
-            case 1000:
+            case 10:
                 fields.push("Services");
                 break
             case 101:
@@ -404,7 +404,7 @@ export const getSingleAcademicFieldText = (_field: number) => {
             return ("Language acquisition");
         case 232:
             return ("Literature and linguistics");
-        case 300:
+        case 3:
             return ("Social sciences, journalism and information");
         case 31:
             return ("Social and behavioural sciences");
@@ -422,7 +422,7 @@ export const getSingleAcademicFieldText = (_field: number) => {
             return ("Journalism and reporting");
         case 322:
             return ("Library, information and archival studies");
-        case 400:
+        case 4:
             return ("Business, Administration and law");
         case 41:
             return ("Business and administration");
@@ -444,7 +444,7 @@ export const getSingleAcademicFieldText = (_field: number) => {
             return ("Law");
         case 421:
             return ("Law");
-        case 500:
+        case 5:
             return ("Natural sciences, mathematics and statistics");
         case 51:
             return ("Biological and related sciences");
@@ -472,7 +472,7 @@ export const getSingleAcademicFieldText = (_field: number) => {
             return ("Mathematics");
         case 542:
             return ("Statistics");
-        case 600:
+        case 6:
             return ("Information and communication technologies");
         case 61:
             return ("Information and Communication Technologies");
@@ -482,7 +482,7 @@ export const getSingleAcademicFieldText = (_field: number) => {
             return ("Database and network design and administration");
         case 613:
             return ("Software and application development and anaysis");
-        case 700:
+        case 7:
             return ("Engineering, manufacturing and construction");
         case 71:
             return ("Engineering and engineering trades");
@@ -514,7 +514,7 @@ export const getSingleAcademicFieldText = (_field: number) => {
             return ("Architecture and town planning");
         case 732:
             return ("Building and civil engineering");
-        case 800:
+        case 8:
             return ("Agriculture, forestry, fisheries and veterinary");
         case 81:
             return ("Agriculture");
@@ -534,7 +534,7 @@ export const getSingleAcademicFieldText = (_field: number) => {
             return ("Veterinary");
         case 841:
             return ("Veterinary");
-        case 900:
+        case 9:
             return ("Health and Welfare");
         case 91:
             return ("Health");
@@ -552,7 +552,7 @@ export const getSingleAcademicFieldText = (_field: number) => {
             return ("Pharmacy");
         case 917:
             return ("Traditional and complementary medicine and therapy");
-        case 1000:
+        case 10:
             return ("Services");
         case 101:
             return ("Personal services");

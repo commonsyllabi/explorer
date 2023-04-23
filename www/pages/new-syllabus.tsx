@@ -267,7 +267,7 @@ const NewSyllabus: NextPage = () => {
                   <label htmlFor="name" className="mb-0">
                     Institution*
                   </label>
-                  <div className="col-10">
+                  <div>
                     <input
                       className="w-full bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
                       type="text"

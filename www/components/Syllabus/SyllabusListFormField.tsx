@@ -104,11 +104,11 @@ const SyllabusListFormField: React.FunctionComponent<ISyllabusListFormFieldProps
                     </button>
 
                     <div className="py-1 mt-2 flex flex-col lg:flex-row gap-2 justify-between">
-                        <button className="flex gap-2 rounded-lg border border-1 border-gray-900 py-1 px-2 bg-red-100 hover:bg-red-300" onClick={() => { setIsEditing(false); }}>
+                        <button className="flex items-center gap-2 rounded-lg border border-1 border-gray-900 py-1 px-2 bg-red-100 hover:bg-red-300" onClick={() => { setIsEditing(false); }}>
                             <Image src={cancelIcon} width="24" height="24" alt="Icon to cancel the edit process" />
                             <div>Cancel</div>
                         </button>
-                        <button className="flex gap-2 rounded-lg border border-1 border-gray-900 py-1 px-2" onClick={submitEdit}>
+                        <button className="flex items-center gap-2 rounded-lg border border-1 border-gray-900 py-1 px-2" onClick={submitEdit}>
                             <Image src={checkIcon} width="24" height="24" alt="Icon to save the edit process" />
                             <div>Save</div>
                         </button>

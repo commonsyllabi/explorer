@@ -90,8 +90,6 @@ const EditSyllabus: NextPage<IEditSyllabusProps> = ({ syllabusInfo }) => {
   const [syllabusUUID, setSyllabusUUID] = useState("");
   const [parsedData, setParsedData] = useState<IParsedData>();
 
-  console.log(syllabusInfo)
-
   const [formData, setFormData] = useState<IFormData>({} as IFormData)
   const [institutionData, setInstitutionData] = useState<IFormInstitution>({} as IFormInstitution);
   useEffect(() => {

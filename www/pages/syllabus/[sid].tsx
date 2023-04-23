@@ -83,7 +83,6 @@ interface ISyllabusPageProps {
 }
 
 const Syllabus: NextPage<ISyllabusPageProps> = ({ syllabusInfo, userCollections }) => {
-  const router = useRouter();
   const { data: session } = useSession()
   const [isAddingToCollection, showIsAddingToCollection] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
