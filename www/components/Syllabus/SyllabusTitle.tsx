@@ -64,7 +64,7 @@ const SyllabusTitle: React.FunctionComponent<ISyllabusTitleProps> = ({ syllabusT
     }
 
     return (
-        <div className="md:w-1/2 mt-5 mb-8 flex flex-col">
+        <div className="md:w-1/2 my-5 flex flex-col">
             {isEditing ?
                 <div className="flex flex-col justify-between">
                     <input type="text" className={`${kurintoSerif.className} text-3xl p-0 m-0 w-full bg-transparent pb-1 border-b-2 border-b-gray-900`} value={tmp} onChange={handleChange}></input>

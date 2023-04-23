@@ -14,7 +14,9 @@ const SyllabusAttachment: React.FunctionComponent<ISyllabusAttachmentProps> = ({
   resourceDescription,
   resourceType,
 }) => {
-  const fileUrl = new URL(`static/${resourceUrl}`, process.env.NEXT_PUBLIC_API_URL)
+  const fileUrl = process.env.NODE_ENV === "production" ?
+    new URL(`uploads/${resourceUrl}`, process.env.NEXT_PUBLIC_STORAGE_URL) : new URL(`static/${resourceUrl}`, process.env.NEXT_PUBLIC_API_URL)
+
   return (
     <div data-cy="course-resource" className="my-6">
       <h3 className="font-bold">{resourceTitle}</h3>

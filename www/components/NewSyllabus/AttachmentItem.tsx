@@ -43,14 +43,14 @@ const AttachmentItem: React.FunctionComponent<IAttachmentItemFileProps> = ({
           <div className="my-3">
             {attachment.description ? attachment.description : 'No description.'}
           </div>
-          <div className="flex flex-col md:flex-row gap-2">
-            <p className="small">
+          <div className="flex flex-col gap-2">
+            <div className="small">
               <span className="font-bold">Size:</span> {attachment.size} Mb
-            </p>
-            <p className="small">
+            </div>
+            <div className="small">
               <span className="font-bold">Type:</span>{" "}
-              <div>{attachment.type}</div>
-            </p>
+              <span>{attachment.type}</span>
+            </div>
           </div>
         </>}
 
