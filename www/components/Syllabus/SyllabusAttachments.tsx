@@ -12,6 +12,7 @@ import { signOut, useSession } from "next-auth/react";
 import NewSyllbusAttachment from "components/NewSyllabus/NewSyllabusAttachment";
 import Router from "next/router";
 import AttachmentItemEditable from "components/NewSyllabus/AttachmentItemEditable";
+import SyllabusResource from "./SyllabusResource";
 
 interface ISyllabusAttachmentsProps {
   attachments?: IAttachment[];
@@ -32,7 +33,6 @@ const SyllabusAttachments: React.FunctionComponent<ISyllabusAttachmentsProps> = 
     }) : []
   );
   const [log, setLog] = useState('')
-  const [isEditing, setIsEditing] = useState(false);
   const { data: session } = useSession();
 
 
@@ -73,7 +73,7 @@ const SyllabusAttachments: React.FunctionComponent<ISyllabusAttachmentsProps> = 
     if (res.ok) {
       const newData: IAttachment = await res.json()
       setAttachmentData([...attachmentData, newData])
-      setIsEditing(false)
+      setNewAttachmentData([] as IAttachment[])
     } else if (res.status == 401) {
       signOut({ redirect: false }).then((result) => {
         Router.push("/auth/signin");
@@ -84,64 +84,25 @@ const SyllabusAttachments: React.FunctionComponent<ISyllabusAttachmentsProps> = 
     }
   }
 
-  if (attachments === undefined || attachments.length < 1) {
-    return <p className="text-gray-600">No attachments to show.</p>;
-  }
-
   return <div className="syllabus-resources">
     <div className="flex gap-2 items-center mb-2">
       <h2 className={`${kurintoSerif.className} font-bold text-lg`}>Course Resources</h2>
-      {isAdmin && !isEditing ?
-        <button className="ml-8" onClick={() => setIsEditing(true)}>
-          <Image src={editIcon} width="24" height="24" alt="Icon to edit the title" />
-        </button>
-        : <></>}
     </div>
-    {!isEditing ?
+
+    <div className="flex flex-col gap-8">
       <div>
-        {attachmentData.map((att) => (
-          <SyllabusAttachment
-            resourceTitle={att.name}
-            resourceUrl={att.url ? att.url : ""}
-            resourceDescription={att.description ? att.description : ""}
-            resourceType={att.type}
-            key={att.uuid}
-          />
-        ))}
-
-      </div>
-      :
-      <div className="full flex flex-col justify-between">
-
-        {/* either edit/delete */}
-        {attachmentData.map((att) => (
-          <AttachmentItemEditable
-            key={`attachment-editable-${att.uuid}`}
-            attachment={att}
+        {attachmentData.length > 0 ? attachmentData.map((att) => (
+          <SyllabusResource att={att}
             onDelete={(_uuid: string) => { setAttachmentData(attachmentData.filter(_a => _a.uuid !== _uuid)) }}
-            onEdit={(_att: IAttachment) => { setAttachmentData(attachmentData.map(_a => { return _a.uuid == _att.uuid ? _att : _a })) }}
-          />
-        ))}
-
-        <NewSyllbusAttachment
-          attachmentData={newAttachmentData}
-          setAttachmentData={(_att: IAttachment[]) => createAttachment(_att)}
-        />
-
-        <div className="py-1 mt-2 flex flex-col lg:flex-row gap-2 justify-between">
-          <button className="flex items-center gap-2 rounded-lg border border-1 border-gray-900 py-1 px-2 bg-red-100 hover:bg-red-300" onClick={() => { setIsEditing(false); }}>
-            <Image src={cancelIcon} width="24" height="24" alt="Icon to cancel the edit process" />
-            <div>Cancel</div>
-          </button>
-          <button className="flex items-center gap-2 rounded-lg border border-1 border-gray-900 py-1 px-2">
-            <Image src={checkIcon} width="24" height="24" alt="Icon to save the edit process" />
-            <div>Save</div>
-          </button>
-        </div>
-
-        <div>{log}</div>
-      </div>}
-
+            onEdit={(_att: IAttachment) => { setAttachmentData(attachmentData.map(_a => { return _a.uuid == _att.uuid ? _att : _a })) }} isAdmin={isAdmin} />
+        )) : <div className="text-sm text-gray-400">No resources to show.</div>}
+      </div>
+      {isAdmin ?
+        <NewSyllbusAttachment attachmentData={newAttachmentData} setAttachmentData={(_att: IAttachment[]) => createAttachment(_att)} />
+        :
+        <></>
+      }
+    </div>
   </div>;
 };
 
