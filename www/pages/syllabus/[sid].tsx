@@ -171,7 +171,7 @@ const Syllabus: NextPage<ISyllabusPageProps> = ({ syllabusInfo, userCollections 
 
               <hr className="border-gray-600 my-8" />
 
-              <SyllabusAttachments attachments={syllabusInfo.attachments} />
+              <SyllabusAttachments attachments={syllabusInfo.attachments} apiUrl={apiUrl} syllabusID={syllabusInfo.uuid} isAdmin={isOwner} />
             </div>
           </div>
         </div>

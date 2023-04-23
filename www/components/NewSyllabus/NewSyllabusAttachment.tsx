@@ -106,9 +106,9 @@ const NewSyllbusAttachment: React.FunctionComponent<
 
   return (
     <>
-      <div className="p-3 mb-3 gap-3 border-2 rounded-lg bg-gray-200">
-        <div className="mb-1">
-          <label>Attachment Name*</label>
+      <div className="flex flex-col p-3 mb-3 gap-4 border-2 rounded-lg bg-gray-200">
+        <div>
+          <label>Name*</label>
           <input
             onChange={handleChange}
             type="text"
@@ -134,7 +134,7 @@ const NewSyllbusAttachment: React.FunctionComponent<
         </div>
 
         <div className="flex pt-3 pb-2 gap-3">
-          <label>Attachment Type:</label>
+          <label>Type:</label>
           <input
             type="radio"
             id="typeFile"
@@ -185,7 +185,7 @@ const NewSyllbusAttachment: React.FunctionComponent<
         <button
           onClick={handleSubmitNewAttachment}
           data-cy="attachment-add"
-          className="mt-6 mb-2 p-1 bg-gray-50 text-gray-900 border-2 border-gray-900 rounded-md"
+          className="mt-6 mb-2 p-2 bg-gray-50 text-gray-900 border border-gray-900 rounded-md"
         >
           Add attachment
         </button>
