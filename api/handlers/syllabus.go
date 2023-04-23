@@ -124,29 +124,6 @@ func AddSyllabusAttachment(c echo.Context) error {
 	return c.JSON(http.StatusOK, syll)
 }
 
-func AddSyllabusInstitution(c echo.Context) error {
-	user_uuid := mustGetUser(c)
-	if user_uuid == uuid.Nil {
-		return c.String(http.StatusUnauthorized, "unauthorized")
-	}
-
-	uid := parseUUIDParam(c, "id")
-	if uid == uuid.Nil {
-		return c.String(http.StatusBadRequest, "Not a valid ID.")
-	}
-
-	var inst models.Institution
-	c.Bind(&inst)
-
-	syll, err := models.AddInstitutionToSyllabus(uid, user_uuid, &inst)
-	if err != nil {
-		zero.Error(err.Error())
-		return c.String(http.StatusNotFound, "There was an error adding the Institution to the Syllabus.")
-	}
-
-	return c.JSON(http.StatusOK, syll)
-}
-
 func GetSyllabusAttachments(c echo.Context) error {
 	// authenticating to return unlisted but owned syllabi
 	user_uuid := mustGetUser(c)
@@ -284,6 +261,29 @@ func RemoveSyllabusAttachment(c echo.Context) error {
 	return c.JSON(http.StatusOK, syll)
 }
 
+func AddSyllabusInstitution(c echo.Context) error {
+	user_uuid := mustGetUser(c)
+	if user_uuid == uuid.Nil {
+		return c.String(http.StatusUnauthorized, "unauthorized")
+	}
+
+	uid := parseUUIDParam(c, "id")
+	if uid == uuid.Nil {
+		return c.String(http.StatusBadRequest, "Not a valid ID.")
+	}
+
+	var inst models.Institution
+	c.Bind(&inst)
+
+	inst, err := models.AddInstitutionToSyllabus(uid, user_uuid, &inst)
+	if err != nil {
+		zero.Error(err.Error())
+		return c.String(http.StatusNotFound, "There was an error adding the Institution to the Syllabus.")
+	}
+
+	return c.JSON(http.StatusOK, inst)
+}
+
 func EditSyllabusInstitution(c echo.Context) error {
 	user_uuid := mustGetUser(c)
 	if user_uuid == uuid.Nil {
@@ -311,13 +311,13 @@ func EditSyllabusInstitution(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "We had a problem binding your information, please check it again.")
 	}
 
-	syll, err := models.EditInstitutionToSyllabus(owner_uuid, inst_uid, &inst)
+	updated, err := models.EditInstitutionToSyllabus(owner_uuid, inst_uid, &inst)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusInternalServerError, "We had a problem adding the Institution to the User profile.")
 	}
 
-	return c.JSON(http.StatusOK, syll)
+	return c.JSON(http.StatusOK, updated)
 }
 
 func RemoveSyllabusInstitution(c echo.Context) error {
