@@ -3,7 +3,7 @@ import Router from "next/router";
 import * as React from "react";
 import { useState } from "react";
 import Image from "next/image";
-import editIcon from '../../public/icons/edit-box-line.svg'
+import editIcon from '../../public/icons/edit-line.svg'
 import cancelIcon from '../../public/icons/close-line.svg'
 import checkIcon from '../../public/icons/check-line.svg'
 import addIcon from '../../public/icons/add-line.svg'
@@ -21,6 +21,7 @@ const SyllabusListFormField: React.FunctionComponent<ISyllabusListFormFieldProps
 
     const [log, setLog] = useState('')
     const [isEditing, setIsEditing] = useState(false);
+    const [isShowingTooltip, setShowTooltip] = useState(false)
     const [learningOutcomes, setLearningOutcomes] = useState(info ? info : [''])
     const [tmp, setTmp] = useState(learningOutcomes)
     const { data: session } = useSession();
@@ -78,11 +79,12 @@ const SyllabusListFormField: React.FunctionComponent<ISyllabusListFormFieldProps
 
     return (
         <div className="w-full mt-5 mb-8 flex flex-col">
-            <div className="flex gap-2 items-center mb-2">
+            <div className="flex flex-col gap-2 mb-2">
                 <h2 className={`${kurintoSerif.className} font-bold text-lg`}>{label}</h2>
                 {isAdmin && !isEditing ?
-                    <button className="ml-8" onClick={() => setIsEditing(true)}>
+                    <button className={`flex gap-2 opacity-70 border ${isShowingTooltip ? '' : 'opacity-40'} rounded-md border-gray-700 w-max p-1`} onClick={() => setIsEditing(true)} onMouseEnter={() => {setShowTooltip(true)}} onMouseLeave={() => {setShowTooltip(false)}}>
                         <Image src={editIcon} width="24" height="24" alt="Icon to edit the list" />
+                        <div className={`${isShowingTooltip ? '' : 'hidden'} text-sm`}>Edit</div>
                     </button>
                     : <></>}
             </div>

@@ -4,7 +4,7 @@ import { getInstitutionLang } from "components/utils/getInstitutionInfo"
 import { signOut, useSession } from "next-auth/react"
 import React, { useEffect, useState } from "react"
 import Image from "next/image";
-import editIcon from '../../public/icons/edit-box-line.svg'
+import editIcon from '../../public/icons/edit-line.svg'
 import cancelIcon from '../../public/icons/close-line.svg'
 import checkIcon from '../../public/icons/check-line.svg'
 import AddAcademicFieldsForm from "components/NewSyllabus/AddAcademicFieldsForm"
@@ -34,6 +34,7 @@ const SyllabusMeta: React.FunctionComponent<ISyllabusMetaProps> = ({ lang, level
 
     const [log, setLog] = useState('')
     const [isEditing, setIsEditing] = useState(false);
+    const [isShowingTooltip, setShowTooltip] = useState(false)
     const { data: session } = useSession();
 
     useEffect(() => {
@@ -79,19 +80,18 @@ const SyllabusMeta: React.FunctionComponent<ISyllabusMetaProps> = ({ lang, level
 
     return (<>
         {!isEditing ?
-            <div className="flex gap-4">
+            <div className="flex flex-col gap-2">
                 <div className="flex gap-4">
                     <div className={`${literalLanguage ? '' : 'italic'}`}>{literalLanguage ? literalLanguage : 'No language'}</div>
                     <div className={`${literalLevel ? '' : 'italic'}`}>{literalLevel ? literalLevel : 'No academic level'}</div>
                     <div className={`${literalFields ? '' : 'italic'}`}>{literalFields ? literalFields.join(" | ") : 'No academic fields'}</div>
                 </div>
-                {isAdmin ?
-                    <button className="ml-8" onClick={() => setIsEditing(true)}>
-                        <Image src={editIcon} width="18" height="18" alt="Icon to edit the field" />
+                {isAdmin && !isEditing ?
+                    <button className={`flex gap-2 opacity-70 border ${isShowingTooltip ? '' : 'opacity-40'} rounded-md border-gray-700 w-max p-1`} onClick={() => setIsEditing(true)} onMouseEnter={() => {setShowTooltip(true)}} onMouseLeave={() => {setShowTooltip(false)}}>
+                        <Image src={editIcon} width="24" height="24" className="h-4" alt="Icon to edit the list" />
+                        <div className={`${isShowingTooltip ? '' : 'hidden'} text-sm`}>Edit</div>
                     </button>
-                    : <></>
-                }
-
+                    : <></>}
             </div>
             :
             <div>

@@ -36,14 +36,14 @@ describe('Browses its own user profile', () => {
 
         cy.visit('/')
         cy.get('[data-cy="syllabusCard"]').should('have.length.greaterThan', 1)
-        cy.get('[data-cy="Login"]').click()
+        cy.get('[data-cy="signin-button"]').click()
 
-        cy.get('[data-cy="Login"]').click()
+        cy.get('[data-cy="signin-button"]').click()
 
-        cy.get('[data-cy="Login-email"]').type("pierre.depaz@gmail.com")
-        cy.get('[data-cy="Login-password"]').type("12345678")
+        cy.get('[data-cy="signin-button-email"]').type("pierre.depaz@gmail.com")
+        cy.get('[data-cy="signin-button-password"]').type("12345678")
 
-        cy.get('[data-cy="Login-submit"]').click()
+        cy.get('[data-cy="signin-button-submit"]').click()
         cy.wait(1000)
 
         cy.get('[data-cy="loggedUser"]').click()

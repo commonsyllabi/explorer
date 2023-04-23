@@ -171,7 +171,7 @@ const SignIn: NextPage = () => {
       {!isCreated ? (
         <div>
           <div className="flex my-8">
-            <div data-cy="Login-tab" onClick={() => setActiveTab("Login")} className={`text-xl mr-6 cursor-pointer ${activeTab === "Login" ? "font-bold" : ""}`}>Login</div>
+            <div data-cy="signin-button-tab" onClick={() => setActiveTab("Login")} className={`text-xl mr-6 cursor-pointer ${activeTab === "Login" ? "font-bold" : ""}`}>Login</div>
             <div data-cy="Signup-tab" onClick={() => setActiveTab("Sign up")} className={`text-xl mr-6 cursor-pointer ${activeTab === "Sign up" ? "font-bold" : ""}`}>Sign up</div>
           </div>
           <div id="tab">
@@ -186,7 +186,7 @@ const SignIn: NextPage = () => {
                       name="username"
                       type="email"
                       placeholder="Enter email"
-                      data-cy="Login-email"
+                      data-cy="signin-button-email"
                       onChange={handleLoginUsername}
                     />
                     <div className="text-sm">
@@ -204,7 +204,7 @@ const SignIn: NextPage = () => {
                       name="password"
                       type="password"
                       placeholder="Password"
-                      data-cy="Login-password"
+                      data-cy="signin-button-password"
                       onChange={handleLoginPassword}
                     />
                   </div>
@@ -212,7 +212,7 @@ const SignIn: NextPage = () => {
                   <button
                     type="submit"
                     className="mt-4 p-2 bg-gray-900 text-gray-100 border-2 rounded-md"
-                    data-cy="Login-submit"
+                    data-cy="signin-button-submit"
                   >
                     Login
                   </button>

@@ -3,7 +3,7 @@ import { signOut, useSession } from "next-auth/react"
 import React, { useEffect, useState } from "react"
 import { IInstitution, ISyllabus } from "types"
 import Image from "next/image";
-import editIcon from '../../public/icons/edit-box-line.svg'
+import editIcon from '../../public/icons/edit-line.svg'
 import cancelIcon from '../../public/icons/close-line.svg'
 import checkIcon from '../../public/icons/check-line.svg'
 import { generateCountryOptions } from "components/utils/formUtils";
@@ -30,6 +30,7 @@ const InstitutionMeta: React.FunctionComponent<IInstitutionMetaProps> = ({ insti
 
     const [log, setLog] = useState('')
     const [isEditing, setIsEditing] = useState(false);
+    const [isShowingTooltip, setShowTooltip] = useState(false)
     const { data: session } = useSession();
 
     useEffect(() => {
@@ -120,19 +121,19 @@ const InstitutionMeta: React.FunctionComponent<IInstitutionMetaProps> = ({ insti
 
     return (<>
         {!isEditing ?
-            <div className="flex gap-4">
+            <div className="flex flex-col gap-2">
                 <div className="flex gap-4">
                     <div className={`${literalName ? '' : 'italic'}`}>{literalName ? literalName : 'No name'}</div>
                     <div className={`${literalCountry ? '' : 'italic'}`}>{literalCountry ? literalCountry : 'No country'}</div>
                     <div className={`${literalTerm ? '' : 'italic'}`}>{literalTerm ? literalTerm : 'No term'}</div>
                     <div className={`${literalYear ? '' : 'italic'}`}>{literalYear ? literalYear : 'No term'}</div>
                 </div>
-                {isAdmin ?
-                    <button className="ml-8" onClick={() => setIsEditing(true)}>
-                        <Image src={editIcon} width="18" height="18" alt="Icon to edit the field" />
+                {isAdmin && !isEditing ?
+                    <button className={`flex items-center gap-2 opacity-70 border ${isShowingTooltip ? '' : 'opacity-40'} rounded-md border-gray-700 w-max p-1`} onClick={() => setIsEditing(true)} onMouseEnter={() => {setShowTooltip(true)}} onMouseLeave={() => {setShowTooltip(false)}}>
+                        <Image src={editIcon} width="24" height="24" className="h-4" alt="Icon to edit the list" />
+                        <div className={`${isShowingTooltip ? '' : 'hidden'} text-xs`}>Edit</div>
                     </button>
-                    : <></>
-                }
+                    : <></>}
             </div>
             :
             <div>

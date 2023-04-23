@@ -8,7 +8,7 @@ describe('Create a new user', () => {
     // Start from the index page
     cy.visit('/')
 
-    cy.get('[data-cy="Login"]').click({force: true})
+    cy.get('[data-cy="signin-button"]').click({force: true})
   })
 
   it('should enter all user details', () => {
@@ -39,7 +39,7 @@ describe('Login an existing user', () => {
   it('should navigate to the home page', () => {
     cy.visit('/')
 
-    cy.get('[data-cy="Login"]').click()
+    cy.get('[data-cy="signin-button"]').click()
   })
 
   it('should enter all login details', () => {
@@ -51,13 +51,13 @@ describe('Login an existing user', () => {
 
     cy.contains('Login').click({ force: true })
 
-    cy.get('[data-cy="Login-email"]').type("pierre.depaz@gmail.com")
-    cy.get('[data-cy="Login-password"]').type("12345678")
+    cy.get('[data-cy="signin-button-email"]').type("pierre.depaz@gmail.com")
+    cy.get('[data-cy="signin-button-password"]').type("12345678")
 
-    cy.get('[data-cy="Login-submit"]').click()
+    cy.get('[data-cy="signin-button-submit"]').click()
     cy.wait('@login')
 
-    // cy.get('[data-cy="Logged user"]')
+    cy.get('[data-cy="libraryLink"]')
   })
 })
 

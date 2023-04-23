@@ -102,7 +102,7 @@ const NewCollection: React.FunctionComponent<INewCollectionProps> = ({ syllabusU
 
     return (
         <>
-            <h1 className="text-xl mb-8">Create new Collection</h1>
+            <h1 className="text-xl mb-8">Create new collection</h1>
             <form className="flex flex-col">
                 <label htmlFor="name">Name</label>
                 <input name="name" type="text" placeholder="Name of your new collection" onChange={handleNameChange} className="bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"></input>

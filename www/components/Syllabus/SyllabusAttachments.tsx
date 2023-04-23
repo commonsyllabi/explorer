@@ -89,7 +89,7 @@ const SyllabusAttachments: React.FunctionComponent<ISyllabusAttachmentsProps> = 
       <h2 className={`${kurintoSerif.className} font-bold text-lg`}>Course Resources</h2>
     </div>
 
-    <div className="flex flex-col gap-8">
+    <div className="lg:w-1/2 flex flex-col gap-8">
       <div>
         {attachmentData.length > 0 ? attachmentData.map((att) => (
           <SyllabusResource att={att}

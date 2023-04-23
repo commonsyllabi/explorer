@@ -15,6 +15,7 @@ import { getCollectionCards } from "components/utils/getCollectionCards";
 import NotFound from "components/commons/NotFound";
 import NewCollection from "components/Collection/NewCollection";
 import { kurintoSerif } from "app/layout";
+import Modal from "components/commons/Modal";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const userId = context.params!.uid;
@@ -225,7 +226,9 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo }) => {
       </div>
 
       {isCreatingCollection ?
-        <NewCollection syllabusUUID="" handleClose={() => setIsCreatingCollection(false)} />
+        <Modal>
+          <NewCollection syllabusUUID="" handleClose={() => setIsCreatingCollection(false)} />
+        </Modal>
         :
         <></>
       }

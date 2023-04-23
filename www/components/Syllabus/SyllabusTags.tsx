@@ -3,7 +3,7 @@ import Router from "next/router";
 import * as React from "react";
 import { useState } from "react";
 import Image from "next/image";
-import editIcon from '../../public/icons/edit-box-line.svg'
+import editIcon from '../../public/icons/edit-line.svg'
 import cancelIcon from '../../public/icons/close-line.svg'
 import checkIcon from '../../public/icons/check-line.svg'
 import { kurintoSerif } from "app/layout";
@@ -19,6 +19,7 @@ const SyllabusTags: React.FunctionComponent<ISyllabusTagsProps> = ({ syllabusTag
 
     const [log, setLog] = useState('')
     const [isEditing, setIsEditing] = useState(false);
+    const [isShowingTooltip, setShowTooltip] = useState(false)
     const [tags, setTags] = useState(syllabusTags ? syllabusTags as string[] : [''])
     const [tmp, setTmp] = useState(tags.join(", "))
     const { data: session } = useSession();
@@ -84,13 +85,14 @@ const SyllabusTags: React.FunctionComponent<ISyllabusTagsProps> = ({ syllabusTag
                     <div>{log}</div>
                 </div>
                 :
-                <div className="flex gap-2">
+                <div className="flex flex-col gap-2">
                     <div id="course-tags" className="flex gap-2">
                         <Tags tags={tags} />
                     </div>
                     {isAdmin ?
-                        <button className="ml-8" onClick={() => setIsEditing(true)}>
-                            <Image src={editIcon} width="24" height="24" alt="Icon to edit the title" />
+                        <button className={`flex gap-2 opacity-70 border ${isShowingTooltip ? '' : 'opacity-40'} rounded-md border-gray-700 w-max p-1`} onClick={() => setIsEditing(true)} onMouseEnter={() => { setShowTooltip(true) }} onMouseLeave={() => { setShowTooltip(false) }}>
+                            <Image src={editIcon} width="22" height="22" alt="Icon to edit the list" />
+                            <div className={`${isShowingTooltip ? '' : 'hidden'} text-sm`}>Edit</div>
                         </button>
                         : <></>}
                 </div>

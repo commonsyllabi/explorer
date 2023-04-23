@@ -3,7 +3,7 @@ import { useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import Router from "next/router";
 import Image from "next/image";
-import editIcon from '../../public/icons/edit-box-line.svg'
+import editIcon from '../../public/icons/edit-line.svg'
 import cancelIcon from '../../public/icons/close-line.svg'
 import checkIcon from '../../public/icons/check-line.svg'
 import addIcon from '../../public/icons/add-line.svg'

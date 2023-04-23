@@ -2,7 +2,7 @@ import { signOut, useSession } from "next-auth/react";
 import Router from "next/router";
 import { useState } from "react";
 import Image from "next/image";
-import editIcon from '../../public/icons/edit-box-line.svg'
+import editIcon from '../../public/icons/edit-line.svg'
 import cancelIcon from '../../public/icons/close-line.svg'
 import checkIcon from '../../public/icons/check-line.svg'
 
@@ -78,7 +78,15 @@ const UserEmail: React.FunctionComponent<IUserEmailProps> = ({ userEmail, apiUrl
     }
 
     return (<div id="user-email">
-        <h3 className="text-lg">Email</h3>
+        <div className="flex justify-between">
+
+            <h3 className="text-lg">Email</h3>
+            {!isEditing ?
+                <button className="ml-8" onClick={() => setIsEditing(true)}>
+                    <Image src={editIcon} width="18" height="18" alt="Icon to edit the name" />
+                </button>
+                : <></>}
+        </div>
         {isEditing ?
             <div>
                 <input type="text" placeholder="Enter your new email" className="w-11/12 bg-transparent mt-2 py-1 border-b-2 border-b-gray-900" onChange={handleChange}></input>
@@ -98,9 +106,7 @@ const UserEmail: React.FunctionComponent<IUserEmailProps> = ({ userEmail, apiUrl
             :
             <div className="flex justify-between">
                 <div className="underline">{email}</div>
-                <button className="ml-8" onClick={() => setIsEditing(true)}>
-                    <Image src={editIcon} width="18" height="18" alt="Icon to edit the name" />
-                </button>
+
             </div>
         }
     </div>)

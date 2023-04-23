@@ -106,7 +106,7 @@ const NewSyllbusAttachment: React.FunctionComponent<
 
   return (
     <>
-      <div className="flex flex-col p-3 mb-3 gap-4 border-2 rounded-lg bg-gray-200">
+      <div className="flex flex-col p-3 mb-3 gap-4 border-2 rounded-lg bg-gray-100">
         <div>
           <label>Name*</label>
           <input
@@ -154,7 +154,7 @@ const NewSyllbusAttachment: React.FunctionComponent<
           <label htmlFor="attachmentType">URL</label>
         </div>
         {showFileUI ? (
-          <div id="uploadControlsFile" className="flex flex-col my-6">
+          <div id="uploadControlsFile" className="flex flex-col my-2">
             
               <label>Upload your file here:</label>
               <input
