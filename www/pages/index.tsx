@@ -114,7 +114,7 @@ const Home: NextPage<IHomeProps> = ({ meta, syllabiListings }) => {
   //-- it resets the activePage to 1, then updates the cards, totals and pages
   useEffect(() => {
     // paginationHandler(1)
-    const s = getSyllabusCards(syllabi, filters, false, 1);
+    const s = getSyllabusCards(syllabi, filters, 1);
     if (s === undefined) return;
     const total = s.length;
 
@@ -153,8 +153,8 @@ const Home: NextPage<IHomeProps> = ({ meta, syllabiListings }) => {
 
   const getAllSyllabi = () => {
     if (activePage > totalPages || activePage < 1)
-      return getSyllabusCards(syllabi, filters, false, 1)
-    else return getSyllabusCards(syllabi, filters, false, activePage)
+      return getSyllabusCards(syllabi, filters, 1)
+    else return getSyllabusCards(syllabi, filters, activePage)
   };
 
   const handleSearchChange = (e: React.BaseSyntheticEvent) => {
