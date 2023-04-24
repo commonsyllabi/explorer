@@ -231,7 +231,7 @@ const NewSyllabus: NextPage = () => {
               </div>
 
               <div className="flex items-center gap-3">
-                <label htmlFor="status" className="order-2">
+                <label htmlFor="status" className="order-2" data-cy="courseStatusLabel">
                   {getPublicPrivateLabel(formData.status)}
                 </label>
                 <div className="relative border-2 w-6 h-6 border-gray-900 p-0.5 order-1 rounded-full">

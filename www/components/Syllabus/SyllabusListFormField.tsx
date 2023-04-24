@@ -25,7 +25,7 @@ const SyllabusListFormField: React.FunctionComponent<ISyllabusListFormFieldProps
     const [learningOutcomes, setLearningOutcomes] = useState(info ? info : [''])
     const [tmp, setTmp] = useState(learningOutcomes)
     const { data: session } = useSession();
-    const keyLabel = label.toLowerCase().split(" ").join("_")
+    const keyLabel = label.toLowerCase().split(" ").join("-")
 
     const handleChange = (e: React.BaseSyntheticEvent) => {
         e.preventDefault()
@@ -119,7 +119,7 @@ const SyllabusListFormField: React.FunctionComponent<ISyllabusListFormFieldProps
                     <div>{log}</div>
                 </div>
                 :
-                <ul className="">
+                <ul data-cy={`course-${keyLabel}`}>
                     {learningOutcomes.map((lo, i) => (
                         <li key={`outcome-${i}`} className={`${lo.length == 0 ? 'text-sm text-gray-400' : ''} whitespace-pre-wrap`}>
                             {lo.length == 0 ? `No ${label.toLowerCase()}.` : lo}

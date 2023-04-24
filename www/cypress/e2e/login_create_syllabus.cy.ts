@@ -1,8 +1,49 @@
 /* eslint-disable */
 // Disable ESLint to prevent failing linting inside the Next.js repo.
 
+let stub = {
+    title: "Intro to studies",
+    public: true,
+    institution: {
+        name: "Khartum Jamiyat",
+        country: "Sudan",
+        url: "https://khartum.jamiyat",
+        term: "Fall",
+        year: "2002"
+    },
+    academic_fields: ['01 - Education', '011 - Education', '0111 - Education science'],
+    academic_level: {
+        code: 'Master',
+        literal: 'Master\'s'
+    },
+    language: {
+        code: 'FR',
+        literal: 'French'
+    },
+    duration: 7,
+    tags: ['intro', 'education', 'development'],
+    description: 'This is a description of a non-existing course. I made ChatGPT write a description, but it was too cringe.',
+    learning_outcomes: ['You will learn to learn', 'You will learn not to use ChatGPT'],
+    topic_outlines: ['Education sciences', 'Non-algorithmic sciences'],
+    readings: ['Culture Numérique, Dominique Cardon, Presses de Sciences Po, 2019.', 'The Ignorant Schoolmaster: Five Lessons in Intellectual Emancipation. By JACQUES RANCIÈRE. Translated with an introduction by KRISTIN ROSS. Stanford University Press, 1991.148pp.'],
+    assignments: ['Learn something new and unexpected', 'Teach something new and unexpected'],
+    grading_rubric: 'Everybody passes as long as they show up',
+    other: "This course has involved me in teaching as well as in learning. The best classes happen when I do the least.",
+    attachments: [
+        {
+            name: "yoo.ooo",
+            url: "http://yoo.ooo/",
+            description: "Here is an example of one of the greatest webpages out there. We shall all strive to attain this level of purity."
+        },
+        {
+            name: 'Text File',
+            description: 'One could argue that all is, ultimately, a text file. This file here is a starting point.',
+            url: 'test_attachment.txt'
+        }
+    ]
+}
 
-let newSyllabusUUID : String
+let newSyllabusUUID: String
 describe('Create a new syllabus', () => {
 
     it('navigates to the home page', () => {
@@ -14,103 +55,118 @@ describe('Create a new syllabus', () => {
     })
 
     it('logs in and creates a syllabus', () => {
-        cy.intercept('GET', '/auth/signin',(req) => {
+        cy.intercept('GET', '/auth/signin', (req) => {
             req.continue((res) => {
-              if(res.statusCode != 200) throw new Error(`[cypress] error logging inthe user (${res.statusMessage})`)
+                if (res.statusCode != 200) throw new Error(`[cypress] error logging inthe user (${res.statusMessage})`)
             })
-          }).as('login')
+        }).as('login')
 
         cy.intercept('POST', '/syllabi/', (req) => {
             req.continue((res) => {
                 console.log('[cypress] created syllabus', res);
-                if(res.statusCode == 201){
+                if (res.statusCode == 201) {
                     newSyllabusUUID = res.body.uuid
-                }                
+                }
             })
         }).as('createSyllabus')
 
         cy.intercept('POST', '/syllabi/*/institutions', (req) => {
             req.continue((res) => {
-                if(res.statusCode == 200) console.log('[cypress] created institution', res.body);
+                if (res.statusCode == 200) console.log('[cypress] created institution', res.body);
                 else throw new Error('[cypress] failed to create institution')
             })
         }).as('createInstitution')
 
         cy.intercept('POST', '/attachments/*', (req) => {
             req.continue((res) => {
-                if(res.statusCode == 201) console.log('[cypress] created attachment',   res.body);
+                if (res.statusCode == 201) console.log('[cypress] created attachment', res.body);
                 else throw new Error('[cypress] failed to create attachment')
-                
+
             })
         }).as('createAttachment')
 
         cy.get('[data-cy="signin-button"]').click()
-
         cy.get('[data-cy="signin-button-email"]').type("pierre.depaz@gmail.com")
         cy.get('[data-cy="signin-button-password"]').type("12345678")
-
         cy.get('[data-cy="signin-button-submit"]').click()
-        cy.wait(1000)
-
+        cy.wait(500)
         cy.get('[data-cy="newSyllabusLink"]').click()
+        cy.wait(500)
 
-        cy.get('[data-cy="courseTitleInput"]').type("Test class 1", {force: true})
+        //-- BEGIN SYLLABUS INPUT
+
+        cy.get('[data-cy="courseTitleInput"]').type(stub.title, { force: true })
 
         //-- click twice to check that toggle works and make sure it is set to listed
-        cy.get('[data-cy="courseStatusInput"]').click({force: true})
-        cy.get('[data-cy="courseStatusInput"]').click({force: true})
+        cy.get('[data-cy="courseStatusInput"]').click({ force: true })
+        cy.get('[data-cy="courseStatusLabel"]').contains("Private")
+        cy.get('[data-cy="courseStatusInput"]').click({ force: true })
+        cy.get('[data-cy="courseStatusLabel"]').contains("Public")
 
         //-- add institution
-        cy.get('[data-cy="institutionNameInput"]').type('Khartum Jamiyat', {force: true})
+        cy.get('[data-cy="institutionNameInput"]').type(stub.institution.name, { force: true })
         cy.wait(500)
-        cy.get('[data-cy="institutionCountryInput"]').select('Sudan', {force: true})
+        cy.get('[data-cy="institutionCountryInput"]').select(stub.institution.country, { force: true })
         cy.wait(500)
-        cy.get('[data-cy="institutionYearInput"]').type('2022', {force: true})
+        cy.get('[data-cy="institutionYearInput"]').type(stub.institution.year, { force: true })
         cy.wait(500)
-        cy.get('[data-cy="institutionTermInput"]').type('Summer', {force: true})
+        cy.get('[data-cy="institutionUrlInput"]').type(stub.institution.url, { force: true })
+        cy.wait(500)
+        cy.get('[data-cy="institutionTermInput"]').type(stub.institution.term, { force: true })
         cy.wait(500)
 
-        
+
         //-- add academic fields and check academic fields
-        cy.get('#academic_field_broad').select('02 - Arts and humanities', {force: true})
-        cy.get('#academic_field_narrow').select('021 - Arts', {force: true})
-        cy.get('#academic_field_detailed').select('0214 - Handicrafts', {force: true})
+        cy.get('#academic_field_broad').select(stub.academic_fields[0], { force: true })
+        cy.get('#academic_field_narrow').select(stub.academic_fields[1], { force: true })
+        cy.get('#academic_field_detailed').select(stub.academic_fields[2], { force: true })
+        cy.get('[data-cy="academicLevelInput"]').select(stub.academic_level.code, { force: true })
+        cy.get('[data-cy="courseLanguageInput"]').select(stub.language.code, { force: true })
+        cy.get('[data-cy="courseDurationInput"]').type(stub.duration.toString(), { force: true })
 
-        // cy.get('[data-cy="courseCodeInput"]').type("IMANY-UH-1001", {force: true})
-        cy.get('[data-cy="academicLevelInput"]').select('Master', {force:true})
-        cy.get('[data-cy="courseLanguageInput"]').select('FR', {force: true})
-        cy.get('[data-cy="courseDurationInput"]').type('7', {force: true})
-        cy.get('[data-cy="courseDescriptionInput"]').type('Lorem ipsum dolores sit descriptio nuncam sed que tantamus', {force: true})
+        cy.get('[data-cy="courseTagsInput"]').type(stub.tags.join(", "), { force: true })
 
-        cy.get('[data-cy="learning_outcomes-add"]').click({force: true})
-        cy.get('[data-cy="learning_outcomes-item"]').type('Learn how to face it', {force: true})
+        cy.get('[data-cy="courseDescriptionInput"]').type(stub.description, { force: true })
 
-        cy.get('[data-cy="topic_outlines-add"]').click({force: true})
-        cy.get('[data-cy="topic_outlines-item"]').first().type('Travel', {force: true})
-        cy.get('[data-cy="topic_outlines-add"]').click({force: true})
-        cy.get('[data-cy="topic_outlines-item"]').last().type('Death', {force: true})
+        cy.get('[data-cy="learning_outcomes-add"]').click({ force: true })
+        cy.get('[data-cy="learning_outcomes-item"]').last().type(stub.learning_outcomes[0], { force: true })
+        cy.get('[data-cy="learning_outcomes-add"]').click({ force: true })
+        cy.get('[data-cy="learning_outcomes-item"]').last().type(stub.learning_outcomes[1], { force: true })
 
-        cy.get('[data-cy="readings-add"]').click({force: true})
-        cy.get('[data-cy="readings-item"]').type('Bieguni, Olga Tokarczuk', {force: true})
+        cy.get('[data-cy="topic_outlines-add"]').click({ force: true })
+        cy.get('[data-cy="topic_outlines-item"]').last().type(stub.topic_outlines[0], { force: true })
+        cy.get('[data-cy="topic_outlines-add"]').click({ force: true })
+        cy.get('[data-cy="topic_outlines-item"]').last().type(stub.topic_outlines[1], { force: true })
 
-        cy.get('[data-cy="assignments-add"]').click({force: true})
-        cy.get('[data-cy="assignments-item"]').type('Be a middle-age woman', {force: true})
+        cy.get('[data-cy="readings-add"]').click({ force: true })
+        cy.get('[data-cy="readings-item"]').last().type(stub.readings[0], { force: true })
+        cy.get('[data-cy="readings-add"]').click({ force: true })
+        cy.get('[data-cy="readings-item"]').last().type(stub.readings[1], { force: true })
+
+        cy.get('[data-cy="assignments-add"]').click({ force: true })
+        cy.get('[data-cy="assignments-item"]').last().type(stub.assignments[0], { force: true })
+        cy.get('[data-cy="assignments-add"]').click({ force: true })
+        cy.get('[data-cy="assignments-item"]').last().type(stub.assignments[1], { force: true })
+
+        cy.get('[data-cy="courseGradingRubric"]').type(stub.grading_rubric, { force: true })
+
+        cy.get('[data-cy="courseOther"]').type(stub.other, { force: true })
 
         //-- add url attachment
-        cy.get('[data-cy="new-attachment-name"]').type('Weblink test', {force: true})
-        cy.get('[data-cy="new-attachment-description"]').type('This is optional', {force: true})
-        cy.get('[data-cy="new-attachment-type-url"]').click({force: true})
-        cy.get('[data-cy="new-attachment-url"]').type('https://test.enframed.net', {force: true})
-        cy.get('[data-cy="attachment-add"]').click({force: true})
+        cy.get('[data-cy="new-attachment-name"]').type(stub.attachments[0].name, { force: true })
+        cy.get('[data-cy="new-attachment-description"]').type(stub.attachments[0].description, { force: true })
+        cy.get('[data-cy="new-attachment-type-url"]').click({ force: true })
+        cy.get('[data-cy="new-attachment-url"]').type(stub.attachments[0].url, { force: true })
+        cy.get('[data-cy="attachment-add"]').click({ force: true })
 
         //-- add file attachment
-        cy.get('[data-cy="new-attachment-name"]').type('File test', {force: true})
-        cy.get('[data-cy="new-attachment-description"]').type('This is also optional', {force: true})
-        cy.get('[data-cy="new-attachment-type-file"]').click({force: true})
-        cy.get('[data-cy="new-attachment-file"]').selectFile('cypress/fixtures/test_attachment.txt', {log: true, force: true})
-        cy.get('[data-cy="attachment-add"]').click({force: true})
+        cy.get('[data-cy="new-attachment-name"]').type(stub.attachments[1].name, { force: true })
+        cy.get('[data-cy="new-attachment-description"]').type(stub.attachments[1].description, { force: true })
+        cy.get('[data-cy="new-attachment-type-file"]').click({ force: true })
+        cy.get('[data-cy="new-attachment-file"]').selectFile(`cypress/fixtures/${stub.attachments[1].url}`, { log: true, force: true })
+        cy.get('[data-cy="attachment-add"]').click({ force: true })
 
-        cy.wait(1000)
+        cy.wait(200)
 
         cy.get('[data-cy="courseSubmitButton"').click()
 
@@ -120,24 +176,51 @@ describe('Create a new syllabus', () => {
     })
 
     it('navigate to the syllabus page', () => {
-        if(!newSyllabusUUID) throw new Error(`incorrect newSyllabusUUID: ${newSyllabusUUID}`)
-        
+        if (!newSyllabusUUID) throw new Error(`incorrect newSyllabusUUID: ${newSyllabusUUID}`)
+
         cy.visit(`/syllabus/${newSyllabusUUID}`)
 
-        cy.get('h1').contains('Test class 1')
-        cy.get('[data-cy="courseInstructors"').first().contains('Pierre Depaz')
+        cy.wait(2000)
 
-        //-- check academic fields
-        //-- check institution
-        //-- 
+        cy.get('[data-cy="course-title"]').contains(stub.title)
+        cy.get('[data-cy="courseInstructors"').first().contains('Pierre Depaz')
+        cy.get('[data-cy="course-tag"]').should('have.length', stub.tags.length)
+
         
-        cy.get('[data-cy="course-description"]')
+        cy.get('[data-cy="course-language"]').contains(stub.language.literal)
+        cy.get('[data-cy="course-level"]').contains(stub.academic_level.literal)
+        cy.get('[data-cy="course-fields"]').children().should('have.length', 3)
+        
+        cy.get('[data-cy="course-institution-name"]').contains(stub.institution.name)
+        cy.get('[data-cy="course-institution-country"]').contains(stub.institution.country)
+        cy.get('[data-cy="course-institution-term"]').contains(stub.institution.term)
+        cy.get('[data-cy="course-institution-year"]').contains(stub.institution.year)
+
+        cy.get('[data-cy="course-description"]').contains(stub.description)
+
+        cy.get('[data-cy="course-learning-outcomes"]').children().should('have.length', stub.learning_outcomes.length)
+        cy.get('[data-cy="course-learning-outcomes"]').children().first().contains(stub.learning_outcomes[0])
+        cy.get('[data-cy="course-learning-outcomes"]').children().last().contains(stub.learning_outcomes[1])
+
+        cy.get('[data-cy="course-topic-outlines"]').children().should('have.length', stub.topic_outlines.length)
+        cy.get('[data-cy="course-topic-outlines"]').children().first().contains(stub.topic_outlines[0])
+        cy.get('[data-cy="course-topic-outlines"]').children().last().contains(stub.topic_outlines[1])
+
+        cy.get('[data-cy="course-readings"]').children().should('have.length', stub.readings.length)
+        cy.get('[data-cy="course-readings"]').children().first().contains(stub.readings[0])
+        cy.get('[data-cy="course-readings"]').children().last().contains(stub.readings[1])
+        cy.get('[data-cy="course-assignments"]').children().should('have.length', stub.learning_outcomes.length)
+        cy.get('[data-cy="course-assignments"]').children().first().contains(stub.assignments[0])
+        cy.get('[data-cy="course-assignments"]').children().last().contains(stub.assignments[1])
+
+        cy.get('[data-cy="course-grading-rubric"]').contains(stub.grading_rubric)
+        cy.get('[data-cy="course-other"]').contains(stub.other)
         cy.get('[data-cy="course-resource"]').should('have.length', 2)
     })
 
     it('navigate to the home page and signs out', () => {
         cy.visit('/')
-        cy.get('[data-cy="newSyllabusLink"]').click({force: true})
+        cy.get('[data-cy="newSyllabusLink"]').click({ force: true })
         cy.contains('log in').click()
     })
 })

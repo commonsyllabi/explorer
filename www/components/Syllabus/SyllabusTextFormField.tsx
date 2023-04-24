@@ -23,7 +23,7 @@ const SyllabusTextFormField: React.FunctionComponent<ISyllabusTextFormFieldProps
     const [original, setOriginal] = useState(info ? info as string : '')
     const [tmp, setTmp] = useState(original)
     const { data: session } = useSession();
-    const keyLabel = label.toLowerCase().split(" ").join("_")
+    const keyLabel = label.toLowerCase().split(" ").join("-")
 
     const handleChange = (e: React.BaseSyntheticEvent) => {
         e.preventDefault()
@@ -96,7 +96,7 @@ const SyllabusTextFormField: React.FunctionComponent<ISyllabusTextFormFieldProps
                 </div>
                 :
                 <div className="flex gap-2">
-                    <div className={`${original.length == 0 ? 'text-sm text-gray-400' : ''} whitespace-pre-wrap`}>
+                    <div className={`${original.length == 0 ? 'text-sm text-gray-400' : ''} whitespace-pre-wrap`} data-cy={`course-${keyLabel}`}>
                         {original.length == 0 ? `No ${label.toLowerCase()}.` : original}
                     </div>
                 </div>

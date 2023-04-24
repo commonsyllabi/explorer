@@ -49,9 +49,9 @@ describe('Login an existing user', () => {
       })
     }).as('login')
 
-    cy.contains('Login').click({ force: true })
+    cy.get('[data-cy="signin-button"]').click({ force: true })
 
-    cy.get('[data-cy="signin-button-email"]').type("pierre.depaz@gmail.com")
+    cy.get('[data-cy="signin-button-email"]').type("pierre.depaz@gmail.com", {force: true})
     cy.get('[data-cy="signin-button-password"]').type("12345678")
 
     cy.get('[data-cy="signin-button-submit"]').click()

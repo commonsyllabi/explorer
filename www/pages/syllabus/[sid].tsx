@@ -1,5 +1,4 @@
 import type { GetServerSideProps, GetServerSidePropsContext, NextPage } from "next";
-import { useRouter } from "next/router";
 import Head from "next/head";
 import { getToken } from "next-auth/jwt";
 import { useSession } from "next-auth/react";

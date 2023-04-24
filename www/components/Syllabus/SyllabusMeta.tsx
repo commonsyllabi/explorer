@@ -82,9 +82,9 @@ const SyllabusMeta: React.FunctionComponent<ISyllabusMetaProps> = ({ lang, level
         {!isEditing ?
             <div className="flex flex-col gap-2">
                 <div className="flex md:flex-row justify-between gap-4">
-                    <div className={`${literalLanguage ? '' : 'italic'}`}>{literalLanguage ? literalLanguage : 'No language'}</div>
-                    <div className={`${literalLevel ? '' : 'italic'}`}>{literalLevel ? literalLevel : 'No academic level'}</div>
-                    <div className={`flex flex-col items-end md:flex-row gap-0 md:gap-2 ${literalFields ? '' : 'italic'}`}>{literalFields ? literalFields.map((l) => {
+                    <div data-cy="course-language" className={`${literalLanguage ? '' : 'italic'}`}>{literalLanguage ? literalLanguage : 'No language'}</div>
+                    <div data-cy="course-level" className={`${literalLevel ? '' : 'italic'}`}>{literalLevel ? literalLevel : 'No academic level'}</div>
+                    <div data-cy="course-fields" className={`flex flex-col items-end md:flex-row gap-0 md:gap-2 ${literalFields ? '' : 'italic'}`}>{literalFields ? literalFields.map((l) => {
                         return(<div className="text-right">{l}</div>)
                     }) : <div>No academic fields</div>}</div>
                 </div>
