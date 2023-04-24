@@ -1,6 +1,9 @@
 run:
 	godotenv -f ".env,.secrets" go run cmd/api/main.go
 
+run-test:
+	godotenv -f ".env.test,.secrets" go run cmd/api/main.go
+
 docker-run:
 	docker compose down --volumes
 	docker compose up

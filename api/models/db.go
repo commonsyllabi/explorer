@@ -26,6 +26,7 @@ var (
 func InitDB(url string) (*gorm.DB, error) {
 	var err error
 
+	zero.Infof("db connecting to %s", url)
 	conf := &gorm.Config{}
 	if os.Getenv("API_MODE") == "release" {
 		conf.Logger = logger.Default.LogMode(logger.Silent)
