@@ -114,24 +114,33 @@ const AddToCollection: React.FunctionComponent<IAddCollectionProps> = ({ collect
                 <h2 className={`text-xl mb-8`}>Add syllabus to one of your collections:</h2>
                 <div>
                     <div className="flex flex-col gap-3">
-                        {collections.map(c => {
-                            if (checkIfSyllabusInCollection(c, syllabusInfo))
-                                return <button onClick={removeSyllabusFromCollection} data-collectionid={c.uuid} key={c.uuid} className="flex gap-2">
-                                    <Image src={removeIcon} width="24" height="24" alt="Icon to remove the syllabus from the collection" />
-                                    <div><span className={`${kurintoSerif.className} text-lg`}>{c.name}</span> - <PubBadge isPublic={c.status === "listed"} /></div>
-                                </button>
-                            else
-                                return <button onClick={addSyllabusToCollection} data-collectionid={c.uuid} key={c.uuid} className="flex gap-2">
-                                    <Image src={addIcon} width="24" height="24" alt="Icon to add the syllabus to a collection" />
-                                    <div><span className={`${kurintoSerif.className} text-lg`}>{c.name}</span>  - <PubBadge isPublic={c.status === "listed"} /></div>
-                                </button>
-                        })}
+                        <div className="md:w-2/3 flex flex-col justify-start gap-2">
+                            {collections.map(c => {
+                                return (<div className="flex gap-2">
+                                    <div className="w-full flex flex-col border border-gray-900 rounded-md p-1">
+                                        <div className={`${kurintoSerif.className} text-lg`}>{c.name}</div>
+                                        <PubBadge isPublic={c.status === "listed"} />
+                                    </div>
+                                    {checkIfSyllabusInCollection(c, syllabusInfo) ?
+                                        <button onClick={removeSyllabusFromCollection} data-collectionid={c.uuid} key={c.uuid} className="flex gap-2 items-center border border-gray-900 rounded-md p-1">
+                                            <Image src={removeIcon} width="24" height="24" alt="Icon to remove the syllabus from the collection" />
+                                            
+                                        </button>
+                                        :
+                                        <button onClick={addSyllabusToCollection} data-collectionid={c.uuid} key={c.uuid} className="flex gap-2 items-center border border-gray-900 rounded-md p-1">
+                                            <Image src={addIcon} width="24" height="24" alt="Icon to add the syllabus to a collection" />
+                                            
+                                        </button>
+                                    }
+                                </div>)
+                            })}
+                        </div>
                     </div>
 
 
-                    <button aria-label="New Collection" onClick={() => { setIsCreatingCollection(true) }} className="flex mt-8 gap-2 border border-gray-900 rounded-md p-1">
+                    <button aria-label="New Collection" onClick={() => { setIsCreatingCollection(true) }} className="md:w-max flex mt-8 gap-2 border border-gray-900 rounded-md p-1">
                         <Image src={addCircleIcon} width="24" height="24" alt="Icon to add the syllabus to a collection" />
-                        <div>Add to new collection</div>
+                        <div>Create new collection</div>
                     </button>
                     <div>{log}</div>
                 </div>
