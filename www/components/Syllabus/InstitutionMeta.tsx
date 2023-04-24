@@ -1,6 +1,6 @@
 import { getInstitutionCountry, getInstitutionName, getInstitutionTermInfo, getInstitutionYearInfo } from "components/utils/getInstitutionInfo"
 import { signOut, useSession } from "next-auth/react"
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { IInstitution, ISyllabus } from "types"
 import Image from "next/image";
 import editIcon from '../../public/icons/edit-line.svg'
@@ -8,16 +8,16 @@ import cancelIcon from '../../public/icons/close-line.svg'
 import checkIcon from '../../public/icons/check-line.svg'
 import { generateCountryOptions } from "components/utils/formUtils";
 import Router from "next/router";
+import { EditContext } from "context/EditContext";
 
 interface IInstitutionMetaProps {
     institutions: IInstitution[],
     apiUrl: URL,
-    isAdmin: boolean,
     onSuccess: Function,
 }
 
-const InstitutionMeta: React.FunctionComponent<IInstitutionMetaProps> = ({ institutions, isAdmin, apiUrl, onSuccess }) => {
-
+const InstitutionMeta: React.FunctionComponent<IInstitutionMetaProps> = ({ institutions, apiUrl, onSuccess }) => {
+    const ctx = useContext(EditContext)
     const [literalName, setLiteralName] = useState<string>('')
     const [literalCountry, setLiteralCountry] = useState<string>('')
     const [literalYear, setLiteralYear] = useState<string>('')
@@ -128,7 +128,7 @@ const InstitutionMeta: React.FunctionComponent<IInstitutionMetaProps> = ({ insti
                     <div data-cy="course-institution-term" className={`${literalTerm ? '' : 'italic'}`}>{literalTerm ? literalTerm : 'No term'}</div>
                     <div data-cy="course-institution-year" className={`${literalYear ? '' : 'italic'}`}>{literalYear ? literalYear : 'No term'}</div>
                 </div>
-                {isAdmin && !isEditing ?
+                {ctx.isOwner && !isEditing ?
                     <button className={`flex items-center gap-2 opacity-70 border ${isShowingTooltip ? '' : 'opacity-40'} rounded-md border-gray-700 w-max p-1`} onClick={() => setIsEditing(true)} onMouseEnter={() => {setShowTooltip(true)}} onMouseLeave={() => {setShowTooltip(false)}}>
                         <Image src={editIcon} width="24" height="24" className="h-4" alt="Icon to edit the list" />
                         <div className={`${isShowingTooltip ? '' : 'hidden'} text-xs`}>Edit</div>

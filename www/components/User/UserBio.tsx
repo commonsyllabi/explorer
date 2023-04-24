@@ -1,20 +1,20 @@
 import { signOut, useSession } from "next-auth/react";
 import Router from "next/router";
 import * as React from "react";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Image from "next/image";
 import editIcon from '../../public/icons/edit-line.svg'
 import cancelIcon from '../../public/icons/close-line.svg'
 import checkIcon from '../../public/icons/check-line.svg'
+import { EditContext } from "context/EditContext";
 
 interface IUserBioProps {
   userBio: string | undefined,
-  isAdmin: boolean,
   apiUrl: string,
 }
 
-const UserBio: React.FunctionComponent<IUserBioProps> = ({ userBio, isAdmin, apiUrl }) => {
-
+const UserBio: React.FunctionComponent<IUserBioProps> = ({ userBio, apiUrl }) => {
+  const ctx = useContext(EditContext)
   const [log, setLog] = useState('')
   const [isEditing, setIsEditing] = useState(false);
   const [bio, setBio] = useState(userBio ? userBio as string : '')
@@ -61,7 +61,7 @@ const UserBio: React.FunctionComponent<IUserBioProps> = ({ userBio, isAdmin, api
     <div className="mt-5 flex flex-col">
       <div className="flex justify-between">
         <h3 className="text-lg">Bio</h3>
-        {isAdmin && !isEditing ?
+        {ctx.isOwner && !isEditing ?
           <button onClick={() => setIsEditing(true)}>
             <Image src={editIcon} width="18" height="18" alt="Icon to edit the name" />
           </button>

@@ -68,13 +68,13 @@ const AdminPanel: React.FunctionComponent<IAdminPanelProps> = ({
                 <div>
                     <h1 className={`${kurintoSerif.className} text-2xl p-0 my-4 hover:underline cursor-pointer`} onClick={() => setShowSyllabi(!showSyllabi)}>Syllabi ({syllabi.length})</h1>
                     <div className="flex flex-col gap-3">
-                        {showSyllabi ? getSyllabusCards(syllabi, undefined, true, 1) : <></>}
+                        {showSyllabi ? getSyllabusCards(syllabi, undefined, 1) : <></>}
                     </div>
                 </div>
                 <div>
                     <h1 className={`${kurintoSerif.className} text-2xl p-0 my-4 hover:underline cursor-pointer`} onClick={() => setShowCollections(!showCollections)}>Collections ({collections.length})</h1>
                     <div className="flex flex-col gap-3">
-                        {showCollections ? getCollectionCards(collections, false) : <></>}
+                        {showCollections ? getCollectionCards(collections) : <></>}
                         
                     </div>
                 </div>

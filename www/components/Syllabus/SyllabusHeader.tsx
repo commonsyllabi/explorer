@@ -6,12 +6,11 @@ import { inter } from "app/layout";
 
 interface ISyllabusSchoolCodeYearProps {
   syllabusInfo: ISyllabus,
-  isAdmin: boolean,
 }
 
 const SyllabusSchoolCodeYear: React.FunctionComponent<
   ISyllabusSchoolCodeYearProps
-> = ({ syllabusInfo, isAdmin }) => {
+> = ({ syllabusInfo }) => {
   const [institutions, setInstitutions] = useState<IInstitution[]>([] as IInstitution[])
   const [lang, setLang] = useState<string>()
   const [level, setLevel] = useState<number>()
@@ -33,11 +32,11 @@ const SyllabusSchoolCodeYear: React.FunctionComponent<
     <div className={`md:w-full flex flex-col gap-6 md:gap-2 md:text-sm mb-4 ${inter.className} text-gray-600`}>
       <div data-cy="institution-info" className="flex flex-col sm:flex-row justify-start md:gap-4">
 
-      <InstitutionMeta institutions={institutions} apiUrl={apiUrl as URL} isAdmin={isAdmin} onSuccess={(_i: IInstitution) => setInstitutions([_i])}/>
+      <InstitutionMeta institutions={institutions} apiUrl={apiUrl as URL} onSuccess={(_i: IInstitution) => setInstitutions([_i])}/>
 
       </div>
       <div data-cy="w-full syllabus-meta" className="flex flex-col sm:flex-row justify-start md:gap-4">
-        <SyllabusMeta lang={lang as string} level={level as number} fields={fields as number[]} apiUrl={apiUrl as URL} isAdmin={isAdmin} onSuccess={(_u: ISyllabus) => {
+        <SyllabusMeta lang={lang as string} level={level as number} fields={fields as number[]} apiUrl={apiUrl as URL}  onSuccess={(_u: ISyllabus) => {
           setLang(_u.language); setFields(_u.academic_fields); setLevel(_u.academic_level)
         }}/>
       </div>

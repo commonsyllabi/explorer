@@ -1,6 +1,6 @@
 import { signOut, useSession } from "next-auth/react";
 import Router from "next/router";
-import React, { useState } from "react";
+import { useState } from "react";
 import { ISyllabus } from "types";
 import Image from "next/image";
 import cancelIcon from '../../public/icons/close-line.svg'
@@ -11,7 +11,6 @@ interface ISyllabusDeleteProps {
 }
 
 const SyllabusDelete: React.FunctionComponent<ISyllabusDeleteProps> = ({ syllabusInfo, handleClose }) => {
-
   const { data: session } = useSession()
   const [log, setLog] = useState('')
   const handleCloseButton = (e: React.BaseSyntheticEvent) => {

@@ -1,7 +1,6 @@
 import { signOut, useSession } from "next-auth/react";
 import Router from "next/router";
-import * as React from "react";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Image from "next/image";
 import editIcon from '../../public/icons/edit-line.svg'
 import cancelIcon from '../../public/icons/close-line.svg'
@@ -9,16 +8,16 @@ import checkIcon from '../../public/icons/check-line.svg'
 import addIcon from '../../public/icons/add-line.svg'
 import removeIcon from '../../public/icons/subtract-line.svg'
 import { kurintoSerif } from "app/layout";
+import { EditContext } from "context/EditContext";
 
 interface ISyllabusListFormFieldProps {
     info: string[],
     label: string,
-    isAdmin: boolean,
     apiUrl: URL,
 }
 
-const SyllabusListFormField: React.FunctionComponent<ISyllabusListFormFieldProps> = ({ info, label, isAdmin, apiUrl }) => {
-
+const SyllabusListFormField: React.FunctionComponent<ISyllabusListFormFieldProps> = ({ info, label, apiUrl }) => {
+    const ctx = useContext(EditContext)
     const [log, setLog] = useState('')
     const [isEditing, setIsEditing] = useState(false);
     const [isShowingTooltip, setShowTooltip] = useState(false)
@@ -81,7 +80,7 @@ const SyllabusListFormField: React.FunctionComponent<ISyllabusListFormFieldProps
         <div className="w-full mt-5 mb-8 flex flex-col">
             <div className="flex flex-col gap-2 mb-2">
                 <h2 className={`${kurintoSerif.className} font-bold text-lg`}>{label}</h2>
-                {isAdmin && !isEditing ?
+                {ctx.isOwner && !isEditing ?
                     <button className={`flex gap-2 opacity-70 border ${isShowingTooltip ? '' : 'opacity-40'} rounded-md border-gray-700 w-max p-1`} onClick={() => setIsEditing(true)} onMouseEnter={() => {setShowTooltip(true)}} onMouseLeave={() => {setShowTooltip(false)}}>
                         <Image src={editIcon} width="24" height="24" alt="Icon to edit the list" />
                         <div className={`${isShowingTooltip ? '' : 'hidden'} text-sm`}>Edit</div>

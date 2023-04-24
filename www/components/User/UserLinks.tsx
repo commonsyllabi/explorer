@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import Router from "next/router";
 import Image from "next/image";
@@ -8,15 +8,15 @@ import cancelIcon from '../../public/icons/close-line.svg'
 import checkIcon from '../../public/icons/check-line.svg'
 import addIcon from '../../public/icons/add-line.svg'
 import removeIcon from '../../public/icons/subtract-line.svg'
+import { EditContext } from "context/EditContext";
 
 interface IUserLinksProps {
   userLinks: string[],
-  isAdmin: boolean,
   apiUrl: string,
 }
 
-const UserLinks: React.FunctionComponent<IUserLinksProps> = ({ userLinks, isAdmin, apiUrl }) => {
-
+const UserLinks: React.FunctionComponent<IUserLinksProps> = ({ userLinks, apiUrl }) => {
+  const ctx = useContext(EditContext)
   const [log, setLog] = useState('')
   const [isEditing, setIsEditing] = useState(false);
   const [links, setLinks] = useState(userLinks)
@@ -98,7 +98,7 @@ const UserLinks: React.FunctionComponent<IUserLinksProps> = ({ userLinks, isAdmi
     <div id="user-links" className="mt-5">
       <div className="flex justify-between">
       <h3 className="text-lg">Links</h3>
-      {isAdmin && !isEditing ?
+      {ctx.isOwner && !isEditing ?
             <button className="ml-8" onClick={() => setIsEditing(true)}>
               <Image src={editIcon} width="18" height="18" alt="Icon to edit the name" />
             </button>

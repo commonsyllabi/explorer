@@ -1,6 +1,5 @@
 import Link from "next/link";
 import * as React from "react";
-import Button from "react-bootstrap/Button";
 
 interface ITagsProps {
   tags: string[] | undefined;

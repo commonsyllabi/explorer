@@ -1,6 +1,6 @@
 import { signOut, useSession } from "next-auth/react";
 import Router from "next/router";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Image from "next/image";
 import editIcon from '../../public/icons/edit-line.svg'
 import cancelIcon from '../../public/icons/close-line.svg'
@@ -8,17 +8,17 @@ import checkIcon from '../../public/icons/check-line.svg'
 import addIcon from '../../public/icons/add-line.svg'
 import removeIcon from '../../public/icons/subtract-line.svg'
 import { IInstitution } from "types";
+import { EditContext } from "context/EditContext";
 
 interface IUserInstitutionsProps {
   userInstitutions: IInstitution[] | undefined,
-  isAdmin: boolean,
   apiUrl: string,
 }
 
 const UserInstitutions: React.FunctionComponent<IUserInstitutionsProps> = ({
-  userInstitutions,
-  isAdmin, apiUrl
+  userInstitutions, apiUrl
 }) => {
+  const ctx = useContext(EditContext)
   const [log, setLog] = useState('')
   const [isEditing, setIsEditing] = useState(false);
   const [institutions, setInstitutions] = useState(userInstitutions ? userInstitutions : [])
@@ -107,7 +107,7 @@ const UserInstitutions: React.FunctionComponent<IUserInstitutionsProps> = ({
       
       <div className="flex justify-between">
         <h3 className="text-lg">Institutions</h3>
-        {isAdmin && !isEditing ?
+        {ctx.isOwner && !isEditing ?
           <button className="ml-8" onClick={() => setIsEditing(true)}>
             <Image src={editIcon} width="18" height="18" alt="Icon to edit the name" />
           </button>

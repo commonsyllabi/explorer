@@ -1,22 +1,21 @@
 import { signOut, useSession } from "next-auth/react";
 import Router from "next/router";
-import * as React from "react";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Image from "next/image";
 import editIcon from '../../public/icons/edit-line.svg'
 import cancelIcon from '../../public/icons/close-line.svg'
 import checkIcon from '../../public/icons/check-line.svg'
 import { kurintoSerif } from "app/layout";
 import Tags from "./Tags";
+import { EditContext } from "context/EditContext";
 
 interface ISyllabusTagsProps {
     syllabusTags: string[],
-    isAdmin: boolean,
     apiUrl: URL,
 }
 
-const SyllabusTags: React.FunctionComponent<ISyllabusTagsProps> = ({ syllabusTags, isAdmin, apiUrl }) => {
-
+const SyllabusTags: React.FunctionComponent<ISyllabusTagsProps> = ({ syllabusTags, apiUrl }) => {
+    const ctx = useContext(EditContext)
     const [log, setLog] = useState('')
     const [isEditing, setIsEditing] = useState(false);
     const [isShowingTooltip, setShowTooltip] = useState(false)
@@ -89,7 +88,7 @@ const SyllabusTags: React.FunctionComponent<ISyllabusTagsProps> = ({ syllabusTag
                     <div id="course-tags" className="flex gap-2">
                         <Tags tags={tags} />
                     </div>
-                    {isAdmin ?
+                    {ctx.isOwner ?
                         <button className={`flex gap-2 opacity-70 border ${isShowingTooltip ? '' : 'opacity-40'} rounded-md border-gray-700 w-max p-1`} onClick={() => setIsEditing(true)} onMouseEnter={() => { setShowTooltip(true) }} onMouseLeave={() => { setShowTooltip(false) }}>
                             <Image src={editIcon} width="22" height="22" alt="Icon to edit the list" />
                             <div className={`${isShowingTooltip ? '' : 'hidden'} text-sm`}>Edit</div>

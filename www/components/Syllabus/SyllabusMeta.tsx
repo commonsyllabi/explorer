@@ -2,7 +2,7 @@ import { getAcademicFieldsText } from "components/utils/getAcademicFields"
 import { getAcademicLevelText } from "components/utils/getAcademicLevel"
 import { getInstitutionLang } from "components/utils/getInstitutionInfo"
 import { signOut, useSession } from "next-auth/react"
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import Image from "next/image";
 import editIcon from '../../public/icons/edit-line.svg'
 import cancelIcon from '../../public/icons/close-line.svg'
@@ -12,18 +12,18 @@ import AddAcademicLevelForm from "components/NewSyllabus/AddAcademicLevelForm"
 import AddLanguageForm from "components/NewSyllabus/AddLanguage"
 import Router from "next/router"
 import { ISyllabus } from "types"
+import { EditContext } from "context/EditContext"
 
 interface ISyllabusMetaProps {
     lang: string,
     level: number,
     fields: number[],
     apiUrl: URL,
-    isAdmin: boolean,
     onSuccess: Function,
 }
 
-const SyllabusMeta: React.FunctionComponent<ISyllabusMetaProps> = ({ lang, level, fields, isAdmin, apiUrl, onSuccess }) => {
-
+const SyllabusMeta: React.FunctionComponent<ISyllabusMetaProps> = ({ lang, level, fields, apiUrl, onSuccess }) => {
+    const ctx = useContext(EditContext)
     const [literalLevel, setLiteralLevel] = useState<string>('')
     const [literalFields, setLiteralFields] = useState<string[]>([])
     const [literalLanguage, setLiteralLanguage] = useState<string>('')
@@ -84,11 +84,11 @@ const SyllabusMeta: React.FunctionComponent<ISyllabusMetaProps> = ({ lang, level
                 <div className="flex md:flex-row justify-between gap-4">
                     <div data-cy="course-language" className={`${literalLanguage ? '' : 'italic'}`}>{literalLanguage ? literalLanguage : 'No language'}</div>
                     <div data-cy="course-level" className={`${literalLevel ? '' : 'italic'}`}>{literalLevel ? literalLevel : 'No academic level'}</div>
-                    <div data-cy="course-fields" className={`flex flex-col items-end md:flex-row gap-0 md:gap-2 ${literalFields ? '' : 'italic'}`}>{literalFields ? literalFields.map((l) => {
-                        return(<div className="text-right">{l}</div>)
+                    <div data-cy="course-fields" className={`flex flex-col items-end md:flex-row gap-0 md:gap-2 ${literalFields ? '' : 'italic'}`}>{literalFields ? literalFields.map((l, i) => {
+                        return(<div className="text-right" key={`field-${i}`}>{l}</div>)
                     }) : <div>No academic fields</div>}</div>
                 </div>
-                {isAdmin && !isEditing ?
+                {ctx.isOwner && !isEditing ?
                     <button className={`flex gap-2 opacity-70 border ${isShowingTooltip ? '' : 'opacity-40'} rounded-md border-gray-700 w-max p-1`} onClick={() => setIsEditing(true)} onMouseEnter={() => { setShowTooltip(true) }} onMouseLeave={() => { setShowTooltip(false) }}>
                         <Image src={editIcon} width="24" height="24" className="h-4" alt="Icon to edit the list" />
                         <div className={`${isShowingTooltip ? '' : 'hidden'} text-sm`}>Edit</div>

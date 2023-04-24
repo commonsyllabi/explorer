@@ -1,29 +1,23 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 
-import { IAttachment, ISyllabus } from "types";
-
-import SyllabusAttachment from "components/Syllabus/SyllabusAttachment";
-import Image from "next/image";
-import editIcon from '../../public/icons/edit-box-line.svg'
-import cancelIcon from '../../public/icons/close-line.svg'
-import checkIcon from '../../public/icons/check-line.svg'
+import { IAttachment } from "types";
 import { kurintoSerif } from "app/layout";
 import { signOut, useSession } from "next-auth/react";
 import NewSyllbusAttachment from "components/NewSyllabus/NewSyllabusAttachment";
 import Router from "next/router";
-import AttachmentItemEditable from "components/NewSyllabus/AttachmentItemEditable";
 import SyllabusResource from "./SyllabusResource";
+import { EditContext } from "context/EditContext";
 
 interface ISyllabusAttachmentsProps {
   attachments?: IAttachment[];
   apiUrl: URL,
-  syllabusID: string,
-  isAdmin: boolean
+  syllabusID: string
 }
 
 const SyllabusAttachments: React.FunctionComponent<ISyllabusAttachmentsProps> = ({
-  attachments, apiUrl, syllabusID, isAdmin
+  attachments, apiUrl, syllabusID
 }) => {
+  const ctx = useContext(EditContext)
   const [newAttachmentData, setNewAttachmentData] = useState<IAttachment[]>([])
   const [attachmentData, setAttachmentData] = useState(
     attachments ? attachments.map((att, i) => {
@@ -92,12 +86,12 @@ const SyllabusAttachments: React.FunctionComponent<ISyllabusAttachmentsProps> = 
     <div className="lg:w-1/2 flex flex-col gap-8">
       <div>
         {attachmentData.length > 0 ? attachmentData.map((att) => (
-          <SyllabusResource att={att}
+          <SyllabusResource att={att} key={`att-${att.uuid}`}
             onDelete={(_uuid: string) => { setAttachmentData(attachmentData.filter(_a => _a.uuid !== _uuid)) }}
-            onEdit={(_att: IAttachment) => { setAttachmentData(attachmentData.map(_a => { return _a.uuid == _att.uuid ? _att : _a })) }} isAdmin={isAdmin} />
+            onEdit={(_att: IAttachment) => { setAttachmentData(attachmentData.map(_a => { return _a.uuid == _att.uuid ? _att : _a })) }} />
         )) : <div className="text-sm text-gray-400">No resources to show.</div>}
       </div>
-      {isAdmin ?
+      {ctx.isOwner ?
         <NewSyllbusAttachment attachmentData={newAttachmentData} setAttachmentData={(_att: IAttachment[]) => createAttachment(_att)} />
         :
         <></>

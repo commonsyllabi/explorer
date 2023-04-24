@@ -115,8 +115,8 @@ const AddToCollection: React.FunctionComponent<IAddCollectionProps> = ({ collect
                 <div>
                     <div className="flex flex-col gap-3">
                         <div className="md:w-2/3 flex flex-col justify-start gap-2">
-                            {collections.map(c => {
-                                return (<div className="flex gap-2">
+                            {collections.map((c, i) => {
+                                return (<div className="flex gap-2" key={`coll-${i}`}>
                                     <div className="w-full flex flex-col border border-gray-900 rounded-md p-1">
                                         <div className={`${kurintoSerif.className} text-lg`}>{c.name}</div>
                                         <PubBadge isPublic={c.status === "listed"} />

@@ -1,20 +1,21 @@
 import AttachmentItemEditable from "components/NewSyllabus/AttachmentItemEditable";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { IAttachment } from "types";
 import SyllabusAttachment from "./SyllabusAttachment";
 import Image from "next/image";
 import editIcon from '../../public/icons/edit-line.svg'
 import cancelIcon from '../../public/icons/close-line.svg'
 import checkIcon from '../../public/icons/check-line.svg'
+import { EditContext } from "context/EditContext";
 
 interface ISyllabusResourceProps {
     att: IAttachment,
     onDelete: Function,
     onEdit: Function,
-    isAdmin: boolean
 }
 
-const SyllabusResource: React.FunctionComponent<ISyllabusResourceProps> = ({ att, onDelete, onEdit, isAdmin }) => {    
+const SyllabusResource: React.FunctionComponent<ISyllabusResourceProps> = ({ att, onDelete, onEdit }) => {    
+    const ctx = useContext(EditContext)
     const [isEditing, setIsEditing] = useState(false);
 
     return (<>
@@ -27,7 +28,7 @@ const SyllabusResource: React.FunctionComponent<ISyllabusResourceProps> = ({ att
                     resourceType={att.type}
                     key={att.uuid}
                 />
-                {isAdmin && !isEditing ?
+                {ctx.isOwner && !isEditing ?
                     <button className="flex items-stretch gap-2 border rounded-md border-gray-700 w-max p-1 pr-4" onClick={() => setIsEditing(true)}>
                         <Image src={editIcon} width="24" height="24" alt="Icon to edit the title" />
                         <div className="text-sm m-auto">Edit</div>

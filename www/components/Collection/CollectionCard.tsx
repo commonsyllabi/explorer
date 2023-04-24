@@ -1,19 +1,20 @@
-import * as React from "react";
 import Link from "next/link";
 import PubBadge from "../commons/PubBadge";
 import { getIsPublic } from "components/utils/getIsPublic";
 import Tags from "../Syllabus/Tags";
 import { getUserUrl } from "../utils/getLinks";
 import { ICollection } from "types";
+import { EditContext } from "context/EditContext";
+import { useContext } from "react";
 
 interface ICollectionCardProps {
   collection: ICollection
-  isAdmin: boolean;
 }
 
 const CollectionCard: React.FunctionComponent<ICollectionCardProps> = (
-  {collection, isAdmin}
+  { collection }
 ) => {
+  const ctx = useContext(EditContext)
   return (
     <div data-cy="syllabusCard" className="border-2 border-gray-600 rounded-lg p-3">
       <div>
@@ -21,14 +22,14 @@ const CollectionCard: React.FunctionComponent<ICollectionCardProps> = (
           <Link href={`/collections/${collection.uuid}`} className="text-xl font-bold hover:underline">
             {collection.name}
           </Link>
-          {isAdmin ? (
+          {ctx.isOwner ? (
             <PubBadge isPublic={getIsPublic(collection.status)} />
           ) : null}
         </div>
         <p className="collection-meta text-sm">
           collection by{" "}
           <Link href={getUserUrl(collection.user_uuid)} className="underline">{collection.user.name}</Link> |
-          contains {`${collection.syllabi.length === 1 ? '1 syllabus' : collection.syllabi.length + ' syllabi'} `} 
+          contains {`${collection.syllabi.length === 1 ? '1 syllabus' : collection.syllabi.length + ' syllabi'} `}
         </p>
         <div className="collection-description">
           {collection.description}

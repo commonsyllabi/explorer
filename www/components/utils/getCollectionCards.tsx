@@ -3,7 +3,6 @@ import CollectionCard from "components/Collection/CollectionCard";
 
 export const getCollectionCards = (
   collectionArray: ICollection[] | undefined,
-  isAdmin?: boolean
 ) => {
   if (!collectionArray || collectionArray.length === 0) {
     return null;
@@ -13,7 +12,6 @@ export const getCollectionCards = (
     <CollectionCard
       key={c.uuid}
       collection={c}
-      isAdmin={isAdmin ? isAdmin : false}
     />
   ));
 

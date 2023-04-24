@@ -1,4 +1,3 @@
-import * as React from "react";
 import Link from "next/link";
 
 import SyllabusHeader from "components/Syllabus/SyllabusHeader";
@@ -6,28 +5,20 @@ import Tags from "./Tags";
 import PubBadge from "../commons/PubBadge";
 
 import { getSyllabiUrl, getUserUrl } from "components/utils/getLinks";
-import {
-  getInstitutionCountry,
-  getInstitutionLang,
-  getInstitutionName,
-  getInstitutionTermInfo,
-  getInstitutionYearInfo,
-} from "components/utils/getInstitutionInfo";
-
 import { ISyllabus } from "types";
 import { kurintoBook, kurintoSerif } from "app/layout";
+import { useContext } from "react";
+import { EditContext } from "context/EditContext";
 
 
 interface ISyllabusCardProps {
   syllabusInfo: ISyllabus;
-  isAdmin: boolean;
 }
 
 const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = ({
   syllabusInfo,
-  isAdmin,
 }) => {
-
+  const ctx = useContext(EditContext)
 
   const getVisbility = (status: string) => {
     if (status === "unlisted") {
@@ -43,13 +34,13 @@ const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = ({
     <div data-cy="syllabusCard" className="border-2 border-gray-600 rounded-lg p-3">
 
       <div>
-        <SyllabusHeader syllabusInfo={syllabusInfo} isAdmin={false}/>
+        <SyllabusHeader syllabusInfo={syllabusInfo}/>
         <div>
           <div className="flex justify-between w-full mt-8 mb-4">
             <Link href={getSyllabiUrl(syllabusInfo.uuid)} className={`text-2xl w-full font-bold hover:underline ${kurintoBook.className}`}>
               {syllabusInfo.title}
             </Link>
-            {isAdmin ?
+            {ctx.isOwner ?
               <div className="flex flex-col justify-end items-end">
                 <PubBadge isPublic={getVisbility(syllabusInfo.status)} />
                 <div className="text-xs sm:text-sm text-gray-500 text-right">{syllabusInfo.uuid}</div>
