@@ -16,7 +16,7 @@ interface IAddAcademicFieldsFormProps {
 
 const AddAcademicFieldsForm: React.FunctionComponent<
   IAddAcademicFieldsFormProps
-> = ({ setAcadFieldsData, academicFields }) => {  
+> = ({ setAcadFieldsData, academicFields }) => {
   const [broadField, setBroadField] = useState<string>("");
   const [narrowField, setNarrowField] = useState<string>("");
   const [detailedField, setDetailedField] = useState<string>("");
@@ -63,7 +63,7 @@ const AddAcademicFieldsForm: React.FunctionComponent<
   }, [broadField, narrowField, detailedField]);
 
   return (
-    <div className="w-max">
+    <div className="">
       <label htmlFor="academic_fields">
         Academic Field{" - "}
         <span className="text-xs">

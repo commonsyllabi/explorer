@@ -376,10 +376,12 @@ const NewSyllabus: NextPage = () => {
                     </div>
                   </div> */}
 
-              <AddAcademicFieldsForm
-                setAcadFieldsData={(_af: string[]) => { setFormData({ ...formData, ["academic_fields"]: _af }); }}
-                academicFields={[]}
-              />
+              <div className="w-full">
+                <AddAcademicFieldsForm
+                  setAcadFieldsData={(_af: string[]) => { setFormData({ ...formData, ["academic_fields"]: _af }); }}
+                  academicFields={[]}
+                />
+              </div>
 
               {/* TODO: replace this with component */}
               <div className="flex flex-col md:flex-row items-baseline justify-between gap-6 my-8">
