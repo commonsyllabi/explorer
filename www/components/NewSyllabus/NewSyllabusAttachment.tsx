@@ -35,7 +35,7 @@ const NewSyllbusAttachment: React.FunctionComponent<
       currentGreatestId = 0;
     }
     setThisAttachment({ ...blankAttachment, id: currentGreatestId.toString() });
-    if(fileRef.current)
+    if (fileRef.current)
       fileRef.current.value = ""
   };
 
@@ -81,13 +81,13 @@ const NewSyllbusAttachment: React.FunctionComponent<
     setThisAttachment({
       ...thisAttachment,
       file: f,
-      size: (f.size * 0.000001).toFixed(2), //-- from byte to megabyte});
+      size: (f.size * 0.00001).toFixed(2), //-- from byte to megabyte});
       type: f.type,
     });
 
     setFileData({
       name: f.name,
-      size: (f.size * 0.000001).toFixed(2), //-- from byte to megabyte
+      size: (f.size * 0.00001).toFixed(2), //-- from byte to megabyte
       type: f.type,
     });
   };
@@ -95,14 +95,14 @@ const NewSyllbusAttachment: React.FunctionComponent<
   const handleSubmitNewAttachment = (e: React.BaseSyntheticEvent): void => {
     e.preventDefault()
     e.stopPropagation()
-    
+
     setAttachmentData([...attachmentData, thisAttachment]);
   };
 
-    //After new attachment is added to attachmentData, reset form
-    useEffect(() => {
-      setNewId();
-    }, [attachmentData]);
+  //After new attachment is added to attachmentData, reset form
+  useEffect(() => {
+    setNewId();
+  }, [attachmentData]);
 
   return (
     <>
@@ -154,18 +154,37 @@ const NewSyllbusAttachment: React.FunctionComponent<
           <label htmlFor="attachmentType">URL</label>
         </div>
         {showFileUI ? (
-          <div id="uploadControlsFile" className="flex flex-col my-2">
-            
-              <label>Upload your file here:</label>
-              <input
-                onChange={handleAttachmentFile}
-                type="file"
-                ref={fileRef}
-                className="mt-2 py-1"
-                id="file"
-                data-cy={"new-attachment-file"}
-              />
-            
+          <div id="uploadControlsFile" className="w-full flex flex-col my-2 bg-gray-200 rounded-md">
+
+            <label data-cy={"new-attachment-file"} htmlFor="file" className={`cursor-pointer p-2`}>
+              {thisAttachment.file ?
+                <div>
+                  <div className="flex gap-2">
+                    Current file: <div className={`${thisAttachment.file ? 'font-bold' : ''}`}>
+                      {thisAttachment.file?.name}</div>
+                  </div>
+                  <div  className="flex gap-2">
+                    Current size: <div className={`${thisAttachment.file ? 'font-bold' : ''}`}>
+                      {thisAttachment.size}Mb</div>
+                  </div>
+                  <div  className="flex gap-2">
+                    Current type: <div className={`${thisAttachment.file ? 'font-bold' : ''}`}>
+                      {thisAttachment.type}</div>
+                  </div>
+                </div>
+                :
+                <div>
+                  Upload file
+                </div>}
+            </label>
+            <input
+              onChange={handleAttachmentFile}
+              type="file"
+              ref={fileRef}
+              className="hidden appearance-none"
+              id="file"
+            />
+
           </div>
         ) : (
           <div id="uploadControlsUrl">
