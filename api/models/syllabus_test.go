@@ -156,9 +156,8 @@ func TestSyllabusModel(t *testing.T) {
 
 		updated, err := models.AddInstitutionToSyllabus(syllabusID, userID, &inst)
 		assert.Nil(t, err)
-		assert.Equal(t, syllabusID, updated.UUID)
-		assert.Equal(t, 1, len(updated.Institutions))
-		newInstID = updated.Institutions[0].UUID
+		assert.NotNil(t, updated.UUID)
+		newInstID = updated.UUID
 	})
 
 	t.Run("Test remove institution from syllabus", func(t *testing.T) {

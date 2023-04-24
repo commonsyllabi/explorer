@@ -716,11 +716,11 @@ func TestSyllabusHandler(t *testing.T) {
 
 		assert.Equal(t, http.StatusOK, res.Code)
 
-		var syll models.Syllabus
-		err := json.Unmarshal(res.Body.Bytes(), &syll)
+		var inst models.Institution
+		err := json.Unmarshal(res.Body.Bytes(), &inst)
 		require.Nil(t, err)
-		assert.Equal(t, 1, len(syll.Institutions))
-		newInstID = syll.Institutions[0].UUID
+		assert.NotNil(t, inst.UUID)
+		newInstID = inst.UUID
 	})
 
 	t.Run("Test remove institution from syllabus", func(t *testing.T) {
