@@ -39,6 +39,8 @@ type User struct {
 
 	Collections []Collection `gorm:"foreignKey:UserUUID;references:UUID" json:"collections"`
 	Syllabi     []Syllabus   `gorm:"foreignKey:UserUUID;references:UUID" json:"syllabi"`
+
+	IsNewsletterSubscribed bool `gorm:"default:false" json:"is_newsletter_subscribed" form:"is_newsletter_subscribed"`
 }
 
 func (u *User) BeforeCreate(tx *gorm.DB) (err error) {

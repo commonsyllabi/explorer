@@ -26,6 +26,8 @@ describe('Create a new user', () => {
     cy.get('[data-cy="Signup-password"]').type("87654321")
     cy.get('[data-cy="Signup-password-conf"]').type("87654321")
 
+    cy.get('[data-cy="terms-toggle"]').click()
+
     cy.get('[data-cy="Signup-submit"]').click()
 
     cy.wait('@signUp').then((res) => {
@@ -50,6 +52,7 @@ describe('Login an existing user', () => {
     }).as('login')
 
     cy.get('[data-cy="signin-button"]').click({ force: true })
+    cy.wait(1000)
 
     cy.get('[data-cy="signin-button-email"]').type("pierre.depaz@gmail.com", {force: true})
     cy.get('[data-cy="signin-button-password"]').type("12345678")
