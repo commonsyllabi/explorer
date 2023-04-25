@@ -21,10 +21,9 @@ import { Session } from "next-auth";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const userId = context.params!.uid;
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   const t = await getToken({ req: context.req, secret: process.env.NEXTAUTH_SECRET })
   const token = t ? (t.user as { _id: string, token: string }).token : '';
-  const url = new URL(`users/${userId}`, apiUrl);
+  const url = new URL(`users/${userId}`, process.env.NEXT_PUBLIC_API_URL);
 
   const h = new Headers();
   if (t)
@@ -43,7 +42,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
     let full_syllabi = []
     for (const syll of userInfo.syllabi) {
-      const res = await fetch(new URL(`syllabi/${syll.uuid}`, apiUrl), { headers: h })
+      const res = await fetch(new URL(`syllabi/${syll.uuid}`, process.env.NEXT_PUBLIC_API_URL), { headers: h })
       if (res.ok) {
         const s = await res.json()
         full_syllabi.push(s)
@@ -167,12 +166,12 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo }) => {
         />
       </Head>
 
-      <EditContext.Provider value={{ isOwner: isOwner }}>
+      <EditContext.Provider value={{ isOwner: isOwner, userUUID: userInfo.uuid }}>
         <div>
           <div className="flex flex-col md:flex-row w-11/12 sm:w-full lg:w-10/12 m-auto mt-4 justify-between">
 
             <div className="w-full md:w-3/12 p-3">
-              <UserProfileSidebar props={userInfo} apiUrl={`${process.env.NEXT_PUBLIC_API_URL}/users/${userInfo.uuid}`} />
+              <UserProfileSidebar userInfo={userInfo} />
             </div>
 
             <div className="w-full md:w-8/12 mx-auto mb-4">

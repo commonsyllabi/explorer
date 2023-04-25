@@ -44,12 +44,11 @@ import ListFieldForm from "components/NewSyllabus/ListFieldForm";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const syllId = context.query.sid
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   const t = await getToken({ req: context.req, secret: process.env.NEXTAUTH_SECRET })
 
   const token = t ? (t.user as { _id: string, token: string }).token : '';
   const user_uuid = t ? (t.user as { _id: string, token: string })._id : '';
-  const url = new URL(`syllabi/${syllId}`, apiUrl);
+  const url = new URL(`syllabi/${syllId}`, process.env.NEXT_PUBLIC_API_URL);
 
   const h = new Headers();
   if (t)

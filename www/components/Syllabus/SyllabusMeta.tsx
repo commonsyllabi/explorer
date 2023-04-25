@@ -2,7 +2,7 @@ import { getAcademicFieldsText } from "components/utils/getAcademicFields"
 import { getAcademicLevelText } from "components/utils/getAcademicLevel"
 import { getInstitutionLang } from "components/utils/getInstitutionInfo"
 import { signOut, useSession } from "next-auth/react"
-import React, { useContext, useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import Image from "next/image";
 import editIcon from '../../public/icons/edit-line.svg'
 import cancelIcon from '../../public/icons/close-line.svg'
@@ -18,11 +18,10 @@ interface ISyllabusMetaProps {
     lang: string,
     level: number,
     fields: number[],
-    apiUrl: URL,
     onSuccess: Function,
 }
 
-const SyllabusMeta: React.FunctionComponent<ISyllabusMetaProps> = ({ lang, level, fields, apiUrl, onSuccess }) => {
+const SyllabusMeta: React.FunctionComponent<ISyllabusMetaProps> = ({ lang, level, fields, onSuccess }) => {
     const ctx = useContext(EditContext)
     const [literalLevel, setLiteralLevel] = useState<string>('')
     const [literalFields, setLiteralFields] = useState<string[]>([])
@@ -54,7 +53,8 @@ const SyllabusMeta: React.FunctionComponent<ISyllabusMetaProps> = ({ lang, level
         b.append("language", tmpLanguage)
         b.append("academic_level", tmpLevel)
 
-        const res = await fetch(apiUrl, {
+        const endpoint = new URL(`/syllabi/${ctx.syllabusUUID}`, process.env.NEXT_PUBLIC_API_URL)
+        const res = await fetch(endpoint, {
             method: 'PATCH',
             headers: h,
             body: b

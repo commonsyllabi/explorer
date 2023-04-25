@@ -13,10 +13,9 @@ import { EditContext } from "context/EditContext";
 interface ISyllabusListFormFieldProps {
     info: string[],
     label: string,
-    apiUrl: URL,
 }
 
-const SyllabusListFormField: React.FunctionComponent<ISyllabusListFormFieldProps> = ({ info, label, apiUrl }) => {
+const SyllabusListFormField: React.FunctionComponent<ISyllabusListFormFieldProps> = ({ info, label }) => {
     const ctx = useContext(EditContext)
     const [log, setLog] = useState('')
     const [isEditing, setIsEditing] = useState(false);
@@ -52,7 +51,8 @@ const SyllabusListFormField: React.FunctionComponent<ISyllabusListFormFieldProps
         for (const t of tmp)
             b.append(`${keyLabel}[]`, t)
 
-        fetch(apiUrl, {
+        const endpoint = new URL(`/syllabi/${ctx.syllabusUUID}`, process.env.NEXT_PUBLIC_API_URL)
+        fetch(endpoint, {
             method: 'PATCH',
             headers: h,
             body: b
@@ -81,7 +81,7 @@ const SyllabusListFormField: React.FunctionComponent<ISyllabusListFormFieldProps
             <div className="flex flex-col gap-2 mb-2">
                 <h2 className={`${kurintoSerif.className} font-bold text-lg`}>{label}</h2>
                 {ctx.isOwner && !isEditing ?
-                    <button className={`flex gap-2 opacity-70 border ${isShowingTooltip ? '' : 'opacity-40'} rounded-md border-gray-700 w-max p-1`} onClick={() => setIsEditing(true)} onMouseEnter={() => {setShowTooltip(true)}} onMouseLeave={() => {setShowTooltip(false)}}>
+                    <button className={`flex gap-2 opacity-70 border ${isShowingTooltip ? '' : 'opacity-40'} rounded-md border-gray-700 w-max p-1`} onClick={() => setIsEditing(true)} onMouseEnter={() => { setShowTooltip(true) }} onMouseLeave={() => { setShowTooltip(false) }}>
                         <Image src={editIcon} width="24" height="24" alt="Icon to edit the list" />
                         <div className={`${isShowingTooltip ? '' : 'hidden'} text-sm`}>Edit</div>
                     </button>

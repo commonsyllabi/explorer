@@ -10,11 +10,10 @@ import Tags from "./Tags";
 import { EditContext } from "context/EditContext";
 
 interface ISyllabusTagsProps {
-    syllabusTags: string[],
-    apiUrl: URL,
+    syllabusTags: string[]
 }
 
-const SyllabusTags: React.FunctionComponent<ISyllabusTagsProps> = ({ syllabusTags, apiUrl }) => {
+const SyllabusTags: React.FunctionComponent<ISyllabusTagsProps> = ({ syllabusTags }) => {
     const ctx = useContext(EditContext)
     const [log, setLog] = useState('')
     const [isEditing, setIsEditing] = useState(false);
@@ -42,7 +41,8 @@ const SyllabusTags: React.FunctionComponent<ISyllabusTagsProps> = ({ syllabusTag
         for (const t of _tags)
             b.append("tags[]", t)
 
-        fetch(apiUrl, {
+        const endpoint = new URL(`/syllabi/${ctx.syllabusUUID}`, process.env.NEXT_PUBLIC_API_URL)
+        fetch(endpoint, {
             method: 'PATCH',
             headers: h,
             body: b

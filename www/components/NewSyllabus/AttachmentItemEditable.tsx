@@ -93,8 +93,8 @@ const AttachmentItemFile: React.FunctionComponent<IAttachmentItemEditableProps> 
         b.append("file", rawFile)
     }
 
-    const edit_url = new URL(`attachments/${attachment.uuid}`, process.env.NEXT_PUBLIC_API_URL)
-    const res = await fetch(edit_url, {
+    const endpoint = new URL(`attachments/${attachment.uuid}`, process.env.NEXT_PUBLIC_API_URL)
+    const res = await fetch(endpoint, {
       method: 'PATCH',
       headers: h,
       body: b,
@@ -130,8 +130,8 @@ const AttachmentItemFile: React.FunctionComponent<IAttachmentItemEditableProps> 
     const h = new Headers();
     h.append("Authorization", `Bearer ${session?.user.token}`);
 
-    const url = new URL(`attachments/${attachment.uuid}`, process.env.NEXT_PUBLIC_API_URL)
-    const res = await fetch(url, {
+    const endpoint = new URL(`attachments/${attachment.uuid}`, process.env.NEXT_PUBLIC_API_URL)
+    const res = await fetch(endpoint, {
       method: 'DELETE',
       headers: h,
     })

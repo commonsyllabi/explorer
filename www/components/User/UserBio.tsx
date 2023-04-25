@@ -9,11 +9,10 @@ import checkIcon from '../../public/icons/check-line.svg'
 import { EditContext } from "context/EditContext";
 
 interface IUserBioProps {
-  userBio: string | undefined,
-  apiUrl: string,
+  userBio: string | undefined
 }
 
-const UserBio: React.FunctionComponent<IUserBioProps> = ({ userBio, apiUrl }) => {
+const UserBio: React.FunctionComponent<IUserBioProps> = ({ userBio }) => {
   const ctx = useContext(EditContext)
   const [log, setLog] = useState('')
   const [isEditing, setIsEditing] = useState(false);
@@ -33,7 +32,8 @@ const UserBio: React.FunctionComponent<IUserBioProps> = ({ userBio, apiUrl }) =>
     let b = new FormData()
     b.append("bio", tmp)
 
-    fetch(apiUrl, {
+    const endpoint = new URL(`/users/${ctx.userUUID}`, process.env.NEXT_PUBLIC_API_URL)
+    fetch(endpoint, {
       method: 'PATCH',
       headers: h,
       body: b

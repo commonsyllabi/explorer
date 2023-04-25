@@ -12,11 +12,10 @@ import { EditContext } from "context/EditContext";
 
 interface IInstitutionMetaProps {
     institutions: IInstitution[],
-    apiUrl: URL,
     onSuccess: Function,
 }
 
-const InstitutionMeta: React.FunctionComponent<IInstitutionMetaProps> = ({ institutions, apiUrl, onSuccess }) => {
+const InstitutionMeta: React.FunctionComponent<IInstitutionMetaProps> = ({ institutions, onSuccess }) => {
     const ctx = useContext(EditContext)
     const [literalName, setLiteralName] = useState<string>('')
     const [literalCountry, setLiteralCountry] = useState<string>('')
@@ -81,10 +80,10 @@ const InstitutionMeta: React.FunctionComponent<IInstitutionMetaProps> = ({ insti
         let _endpoint: URL;
         let _method: string;
         if (!institutions || institutions.length === 0) {
-            _endpoint = new URL(`${apiUrl}/institutions`)
+            _endpoint = new URL(`/syllabi/${ctx.syllabusUUID}/institutions`, process.env.NEXT_PUBLIC_API_URL)
             _method = 'POST'
         } else {
-            _endpoint = new URL(`${apiUrl}/institutions/${institutions[0].uuid}`)
+            _endpoint = new URL(`/syllabi/${ctx.syllabusUUID}/institutions/${institutions[0].uuid}`, process.env.NEXT_PUBLIC_API_URL)
             _method = 'PATCH'
         }
 
@@ -150,7 +149,7 @@ const InstitutionMeta: React.FunctionComponent<IInstitutionMetaProps> = ({ insti
                             onChange={handleChange}
                             data-cy="institutionCountryInput"
                         >
-                            <option> – </option>
+                            <option> — </option>
                             {generateCountryOptions()}
                         </select>
                     </div>

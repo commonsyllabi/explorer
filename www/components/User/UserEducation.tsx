@@ -10,12 +10,11 @@ import removeIcon from '../../public/icons/subtract-line.svg'
 import { EditContext } from "context/EditContext";
 
 interface IUserEducationProps {
-  userEducation: string[],
-  apiUrl: string,
+  userEducation: string[]
 }
 
 const UserEducation: React.FunctionComponent<IUserEducationProps> = ({
-  userEducation, apiUrl
+  userEducation
 }) => {
   const ctx = useContext(EditContext)
   const [log, setLog] = useState('')
@@ -32,8 +31,8 @@ const UserEducation: React.FunctionComponent<IUserEducationProps> = ({
     tmp.forEach(e => {
       b.append("education[]", e)
     })
-
-    fetch(apiUrl, {
+    const endpoint = new URL(`/users/${ctx.userUUID}`, process.env.NEXT_PUBLIC_API_URL)
+    fetch(endpoint, {
       method: 'PATCH',
       headers: h,
       body: b

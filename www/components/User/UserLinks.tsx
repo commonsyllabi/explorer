@@ -12,10 +12,9 @@ import { EditContext } from "context/EditContext";
 
 interface IUserLinksProps {
   userLinks: string[],
-  apiUrl: string,
 }
 
-const UserLinks: React.FunctionComponent<IUserLinksProps> = ({ userLinks, apiUrl }) => {
+const UserLinks: React.FunctionComponent<IUserLinksProps> = ({ userLinks }) => {
   const ctx = useContext(EditContext)
   const [log, setLog] = useState('')
   const [isEditing, setIsEditing] = useState(false);
@@ -48,7 +47,8 @@ const UserLinks: React.FunctionComponent<IUserLinksProps> = ({ userLinks, apiUrl
       b.append("urls[]", e)
     })
 
-    fetch(apiUrl, {
+    const endpoint = new URL(`/users/${ctx.userUUID}`, process.env.NEXT_PUBLIC_API_URL)
+    fetch(endpoint, {
       method: 'PATCH',
       headers: h,
       body: b

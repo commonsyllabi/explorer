@@ -1,6 +1,5 @@
 import { signOut, useSession } from "next-auth/react";
 import Router from "next/router";
-import * as React from "react";
 import { useContext, useState } from "react";
 import Image from "next/image";
 import editIcon from '../../public/icons/edit-line.svg'
@@ -10,11 +9,10 @@ import { kurintoSerif } from "app/layout";
 import { EditContext } from "context/EditContext";
 
 interface ISyllabusTitleProps {
-    syllabusTitle: string,
-    apiUrl: URL,
+    syllabusTitle: string
 }
 
-const SyllabusTitle: React.FunctionComponent<ISyllabusTitleProps> = ({ syllabusTitle, apiUrl }) => {
+const SyllabusTitle: React.FunctionComponent<ISyllabusTitleProps> = ({ syllabusTitle }) => {
     const ctx = useContext(EditContext)
     const [log, setLog] = useState('')
     const [isEditing, setIsEditing] = useState(false);
@@ -40,7 +38,8 @@ const SyllabusTitle: React.FunctionComponent<ISyllabusTitleProps> = ({ syllabusT
         let b = new FormData()
         b.append("title", tmp)
 
-        fetch(apiUrl, {
+        const endpoint = new URL(`/syllabi/${ctx.syllabusUUID}`, process.env.NEXT_PUBLIC_API_URL)
+        fetch(endpoint, {
             method: 'PATCH',
             headers: h,
             body: b

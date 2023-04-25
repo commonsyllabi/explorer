@@ -1,25 +1,24 @@
+import { EditContext } from "context/EditContext";
 import { signOut, useSession } from "next-auth/react";
 import Router from "next/router";
-import { useState } from "react";
+import { useContext, useState } from "react";
 
-interface IUserDeleteProps {
-    apiUrl: string,
-}
-
-const UserDelete: React.FunctionComponent<IUserDeleteProps> = ({ apiUrl }) => {
+const UserDelete: React.FunctionComponent = () => {
+    const ctx = useContext(EditContext)
     const [log, setLog] = useState('')
     const { data: session } = useSession();
     const confirmMsg = "Do you really want to delete your account, all your syllabi and collections? This action cannot be undone.";
 
 
     const submitDelete = () => {
-        if (!window.confirm(confirmMsg))
+        if (!ctx.userUUID || !window.confirm(confirmMsg))
             return
 
         const h = new Headers();
         h.append("Authorization", `Bearer ${session?.user.token}`);
 
-        fetch(apiUrl, {
+        const endpoint = new URL(`/users/${ctx.userUUID}`, process.env.NEXT_PUBLIC_API_URL)
+        fetch(endpoint, {
             method: 'DELETE',
             headers: h,
         })

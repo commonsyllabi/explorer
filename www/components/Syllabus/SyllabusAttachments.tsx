@@ -10,12 +10,10 @@ import { EditContext } from "context/EditContext";
 
 interface ISyllabusAttachmentsProps {
   attachments?: IAttachment[];
-  apiUrl: URL,
-  syllabusID: string
 }
 
 const SyllabusAttachments: React.FunctionComponent<ISyllabusAttachmentsProps> = ({
-  attachments, apiUrl, syllabusID
+  attachments
 }) => {
   const ctx = useContext(EditContext)
   const [newAttachmentData, setNewAttachmentData] = useState<IAttachment[]>([])
@@ -52,11 +50,11 @@ const SyllabusAttachments: React.FunctionComponent<ISyllabusAttachmentsProps> = 
     b.append("url", att.url ? att.url : "")
 
     const _endpoint = new URL(`/attachments/`, process.env.NEXT_PUBLIC_API_URL)
-    if (syllabusID == "") {
+    if (ctx.syllabusUUID == "") {
       setLog("Something went wrong, please reload the page.")
-      console.warn("missing syllabus ID", syllabusID)
+      console.warn("missing syllabus ID", ctx.syllabusUUID)
     }
-    _endpoint.searchParams.append("syllabus_id", syllabusID)
+    _endpoint.searchParams.append("syllabus_id", ctx.syllabusUUID as string)
 
     const res = await fetch(_endpoint, {
       method: "POST",

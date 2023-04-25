@@ -12,11 +12,10 @@ import { EditContext } from "context/EditContext";
 
 interface IUserInstitutionsProps {
   userInstitutions: IInstitution[] | undefined,
-  apiUrl: string,
 }
 
 const UserInstitutions: React.FunctionComponent<IUserInstitutionsProps> = ({
-  userInstitutions, apiUrl
+  userInstitutions
 }) => {
   const ctx = useContext(EditContext)
   const [log, setLog] = useState('')
@@ -32,7 +31,8 @@ const UserInstitutions: React.FunctionComponent<IUserInstitutionsProps> = ({
     h.append("Authorization", `Bearer ${session?.user.token}`);
 
     toDelete.forEach(async (uuid) => {
-      const res = await fetch(`${apiUrl}/institutions/${uuid}`, {
+      const endpoint = new URL(`/users/${ctx.userUUID}/institutions/${uuid}`, process.env.NEXT_PUBLIC_API_URL)
+      const res = await fetch(endpoint, {
         method: 'DELETE',
         headers: h
       })
@@ -44,6 +44,7 @@ const UserInstitutions: React.FunctionComponent<IUserInstitutionsProps> = ({
 
     let results: IInstitution[] = [];
     for (const t of tmp) {
+      const endpoint = new URL(`/users/${ctx.userUUID}/institutions/${t.uuid}`, process.env.NEXT_PUBLIC_API_URL)
       let b = new FormData()
       b.append("name", t.name)
 
@@ -56,7 +57,7 @@ const UserInstitutions: React.FunctionComponent<IUserInstitutionsProps> = ({
         console.warn("Uncaught type of operation:", t)
       }
 
-      const res = await fetch(`${apiUrl}/institutions${t.uuid ? '/' + t.uuid : ''}`, {
+      const res = await fetch(endpoint, {
         method: m,
         headers: h,
         body: b

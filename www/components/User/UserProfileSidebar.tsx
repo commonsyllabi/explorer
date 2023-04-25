@@ -15,12 +15,10 @@ import { EditContext } from "context/EditContext";
 
 interface IUserProfileSidebarProps {
   userInfo: IUser;
-  apiUrl: string;
 }
 
 const UserProfileSidebar: React.FunctionComponent<IUserProfileSidebarProps> = ({
   userInfo,
-  apiUrl,
 }) => {
   const ctx = useContext(EditContext)
   const [isShowingPasswordRecovery, setShowPasswordRecovery] = useState(false)
@@ -28,19 +26,18 @@ const UserProfileSidebar: React.FunctionComponent<IUserProfileSidebarProps> = ({
 
     <div id="user-profile" className="">
       <div id="user-description" className="pb-4">
-        <UserName userName={userInfo.name} apiUrl={apiUrl} />
-        <UserBio userBio={userInfo.bio} apiUrl={apiUrl} />
-        <UserLinks userLinks={userInfo.urls as Array<string>} apiUrl={apiUrl} />
+        <UserName userName={userInfo.name} />
+        <UserBio userBio={userInfo.bio} />
+        <UserLinks userLinks={userInfo.urls as Array<string>} />
       </div>
       <UserInstitutions
         userInstitutions={userInfo.institutions}
-       apiUrl={apiUrl}
       />
-      <UserEducation userEducation={userInfo.education as Array<string>} apiUrl={apiUrl} />
+      <UserEducation userEducation={userInfo.education as Array<string>} />
 
       {ctx.isOwner ?
         <div>
-          <UserEmail userEmail={userInfo.email} apiUrl={apiUrl} />
+          <UserEmail userEmail={userInfo.email} />
           <div className=" mt-5">
             {isShowingPasswordRecovery ?
               <UserPassword userEmail={userInfo.email} handleClose={() => setShowPasswordRecovery(false)} />
@@ -48,7 +45,7 @@ const UserProfileSidebar: React.FunctionComponent<IUserProfileSidebarProps> = ({
               <button onClick={() => setShowPasswordRecovery(true)} className="w-full border border-gray-900 rounded-lg">Reset password</button>
             }
           </div>
-          <UserDelete apiUrl={apiUrl} />
+          <UserDelete />
         </div>
         :
         <></>}

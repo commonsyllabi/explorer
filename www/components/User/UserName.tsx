@@ -11,10 +11,9 @@ import { EditContext } from "context/EditContext";
 
 interface IUserNameProps {
     userName: string,
-    apiUrl: string,
 }
 
-const UserName: React.FunctionComponent<IUserNameProps> = ({ userName, apiUrl }) => {
+const UserName: React.FunctionComponent<IUserNameProps> = ({ userName }) => {
     const ctx = useContext(EditContext)
     const [log, setLog] = useState('')
     const [isEditing, setIsEditing] = useState(false);
@@ -39,7 +38,8 @@ const UserName: React.FunctionComponent<IUserNameProps> = ({ userName, apiUrl })
         let b = new FormData()
         b.append("name", tmp)
 
-        fetch(apiUrl, {
+        const endpoint = new URL(`/users/${ctx.userUUID}`, process.env.NEXT_PUBLIC_API_URL)
+        fetch(endpoint, {
             method: 'PATCH',
             headers: h,
             body: b

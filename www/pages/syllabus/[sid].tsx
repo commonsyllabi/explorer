@@ -39,9 +39,8 @@ export const getServerSideProps: GetServerSideProps = async (context: GetServerS
   if (t)
     h.append("Authorization", `Bearer ${token}`);
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-  const syllUrl = new URL(`syllabi/${syllabusId}`, apiUrl);
-  const userUrl = new URL(`users/${userId}`, apiUrl);
+  const syllUrl = new URL(`syllabi/${syllabusId}`, process.env.NEXT_PUBLIC_API_URL);
+  const userUrl = new URL(`users/${userId}`, process.env.NEXT_PUBLIC_API_URL);
 
   //-- get syllabus info
   const syll_res = await fetch(syllUrl, { headers: h });
@@ -86,7 +85,6 @@ const Syllabus: NextPage<ISyllabusPageProps> = ({ syllabusInfo, userCollections 
   const { data: session } = useSession()
   const [isAddingToCollection, showIsAddingToCollection] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
-  const apiUrl = new URL(`/syllabi/${syllabusInfo.uuid}`, process.env.NEXT_PUBLIC_API_URL)
   const [isOwner, setIsOwner] = useState(false)
 
   const checkIfOwner = (_session: Session, _uuid: string) => {
@@ -135,7 +133,7 @@ const Syllabus: NextPage<ISyllabusPageProps> = ({ syllabusInfo, userCollections 
           pageTitle={syllabusInfo.title}
         />
 
-      <EditContext.Provider value={{isOwner: isOwner}}>
+      <EditContext.Provider value={{isOwner: isOwner, syllabusUUID: syllabusInfo.uuid}}>
         {showDeleteModal ?
           <Modal>
             <SyllabusDelete syllabusInfo={syllabusInfo} handleClose={() => setShowDeleteModal(false)} />
@@ -146,33 +144,33 @@ const Syllabus: NextPage<ISyllabusPageProps> = ({ syllabusInfo, userCollections 
           <div className="w-full pt-3 pb-5 flex flex-col gap-3">
             <SyllabusHeader syllabusInfo={syllabusInfo} />
 
-            <SyllabusTitle syllabusTitle={syllabusInfo.title} apiUrl={apiUrl} />
+            <SyllabusTitle syllabusTitle={syllabusInfo.title} />
 
             <div className="text-sm">Uploaded by <Link href={`/user/${syllabusInfo.user.uuid}`} className={`${kurintoSerif.className} text-base hover:underline`} data-cy="courseInstructors">
               {isOwner ? 'you' : syllabusInfo.user ? syllabusInfo.user.name : "Course Author / Instructor"}
             </Link> on {getDate(syllabusInfo.created_at)}
             </div>
 
-            <SyllabusTags syllabusTags={syllabusInfo.tags as string[]} apiUrl={apiUrl} />
+            <SyllabusTags syllabusTags={syllabusInfo.tags as string[]} />
 
             <div className="flex flex-col gap-5">
-              <SyllabusTextFormField label="Description" info={syllabusInfo.description} apiUrl={apiUrl} />
+              <SyllabusTextFormField label="Description" info={syllabusInfo.description} />
 
-              <SyllabusListFormField label="Learning Outcomes" info={syllabusInfo.learning_outcomes as string[]} apiUrl={apiUrl} />
+              <SyllabusListFormField label="Learning Outcomes" info={syllabusInfo.learning_outcomes as string[]} />
 
-              <SyllabusListFormField label="Topic Outlines" info={syllabusInfo.topic_outlines as string[]} apiUrl={apiUrl} />
+              <SyllabusListFormField label="Topic Outlines" info={syllabusInfo.topic_outlines as string[]} />
 
-              <SyllabusListFormField label="Readings" info={syllabusInfo.readings as string[]} apiUrl={apiUrl} />
+              <SyllabusListFormField label="Readings" info={syllabusInfo.readings as string[]} />
 
-              <SyllabusTextFormField label="Grading Rubric" info={syllabusInfo.grading_rubric as string} apiUrl={apiUrl} />
+              <SyllabusTextFormField label="Grading Rubric" info={syllabusInfo.grading_rubric as string} />
 
-              <SyllabusListFormField label="Assignments" info={syllabusInfo.assignments as string[]} apiUrl={apiUrl} />
+              <SyllabusListFormField label="Assignments" info={syllabusInfo.assignments as string[]} />
 
-              <SyllabusTextFormField label="Other" info={syllabusInfo.other as string} apiUrl={apiUrl} />
+              <SyllabusTextFormField label="Other" info={syllabusInfo.other as string} />
 
               <hr className="border-gray-600 my-8" />
 
-              <SyllabusAttachments attachments={syllabusInfo.attachments} apiUrl={apiUrl} syllabusID={syllabusInfo.uuid} />
+              <SyllabusAttachments attachments={syllabusInfo.attachments} />
             </div>
           </div>
         </div>

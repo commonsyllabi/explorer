@@ -81,7 +81,6 @@ const NewSyllabus: NextPage = () => {
   });
 
   //Handle form submission
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL as string;
   const handleSubmit = async (event: React.BaseSyntheticEvent) => {
     event.preventDefault();
     event.stopPropagation();
@@ -100,7 +99,7 @@ const NewSyllabus: NextPage = () => {
     const header = new Headers();
     header.append("Authorization", `Bearer ${session.user.token}`);
 
-    const syll_endpoint = new URL(`/syllabi/`, apiUrl)
+    const syll_endpoint = new URL(`/syllabi/`, process.env.NEXT_PUBLIC_API_URL)
     const res = await submitForm(formData, syll_endpoint, "POST", header);
     setFormSubmitted(true);
     if (res.status !== 201) {
@@ -116,7 +115,7 @@ const NewSyllabus: NextPage = () => {
 
     const instit_endpoint = new URL(
       `/syllabi/${body.uuid}/institutions`,
-      apiUrl
+      process.env.NEXT_PUBLIC_API_URL
     );
     submitInstitution(institutionData, instit_endpoint, "POST", header).then(
       (res) => {
@@ -134,7 +133,7 @@ const NewSyllabus: NextPage = () => {
     }
     const attach_endpoint = new URL(
       `/attachments/?syllabus_id=${body.uuid}`,
-      apiUrl
+      process.env.NEXT_PUBLIC_API_URL
     );
     attachmentData.map((att) => {
       submitAttachments(att, attach_endpoint, "POST", header).then((res) => {

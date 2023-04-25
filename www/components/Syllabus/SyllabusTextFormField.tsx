@@ -1,6 +1,5 @@
 import { signOut, useSession } from "next-auth/react";
 import Router from "next/router";
-import * as React from "react";
 import { useContext, useState } from "react";
 import Image from "next/image";
 import editIcon from '../../public/icons/edit-line.svg'
@@ -12,10 +11,9 @@ import { EditContext } from "context/EditContext";
 interface ISyllabusTextFormFieldProps {
     info: string,
     label: string,
-    apiUrl: URL,
 }
 
-const SyllabusTextFormField: React.FunctionComponent<ISyllabusTextFormFieldProps> = ({ info, label, apiUrl }) => {
+const SyllabusTextFormField: React.FunctionComponent<ISyllabusTextFormFieldProps> = ({ info, label }) => {
     const ctx = useContext(EditContext)
     const [log, setLog] = useState('')
     const [isEditing, setIsEditing] = useState(false);
@@ -42,7 +40,8 @@ const SyllabusTextFormField: React.FunctionComponent<ISyllabusTextFormFieldProps
         let b = new FormData()
         b.append(`${keyLabel}`, tmp)
 
-        fetch(apiUrl, {
+        const endpoint = new URL(`/syllabi/${ctx.syllabusUUID}`, process.env.NEXT_PUBLIC_API_URL)
+        fetch(endpoint, {
             method: 'PATCH',
             headers: h,
             body: b

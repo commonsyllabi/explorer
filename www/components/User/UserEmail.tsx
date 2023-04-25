@@ -1,17 +1,18 @@
 import { signOut, useSession } from "next-auth/react";
 import Router from "next/router";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Image from "next/image";
 import editIcon from '../../public/icons/edit-line.svg'
 import cancelIcon from '../../public/icons/close-line.svg'
 import checkIcon from '../../public/icons/check-line.svg'
+import { EditContext } from "context/EditContext";
 
 interface IUserEmailProps {
     userEmail: string
-    apiUrl: string,
 }
 
-const UserEmail: React.FunctionComponent<IUserEmailProps> = ({ userEmail, apiUrl }) => {
+const UserEmail: React.FunctionComponent<IUserEmailProps> = ({ userEmail }) => {
+    const ctx = useContext(EditContext)
     const [log, setLog] = useState('')
     const [isEditing, setIsEditing] = useState(false);
     const [email, setEmail] = useState(userEmail)
@@ -43,7 +44,8 @@ const UserEmail: React.FunctionComponent<IUserEmailProps> = ({ userEmail, apiUrl
         let b = new FormData()
         b.append("email", tmp)
 
-        fetch(apiUrl, {
+        const endpoint = new URL(`/users/${ctx.userUUID}`, process.env.NEXT_PUBLIC_API_URL)
+        fetch(endpoint, {
             method: 'PATCH',
             headers: h,
             body: b
