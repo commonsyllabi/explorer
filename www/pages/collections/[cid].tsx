@@ -188,6 +188,7 @@ const Collection: NextPage<ICollectionPageProps> = ({ collectionInfo }) => {
         setLog(`An error occured while deleting: ${body}`)
       })
   }
+  
 
   if (!collectionInfo)
     return (
@@ -218,7 +219,7 @@ const Collection: NextPage<ICollectionPageProps> = ({ collectionInfo }) => {
             </>
             : isOwner ?
               <>
-                <h1 className={`${kurintoBook.className} text-3xl`}>{name}</h1>
+                <h1 className={`${kurintoBook.className} text-3xl`}>{collectionInfo.name}</h1>
                 <div className="flex gap-3">
                   <button className="p-1" onClick={() => setIsEditing(true)}>
                     <Image src={editIcon} width="24" height="24" alt="Icon to edit the name" />
@@ -230,8 +231,7 @@ const Collection: NextPage<ICollectionPageProps> = ({ collectionInfo }) => {
               </>
 
               :
-              <h1 className={`${kurintoBook.className} text-3xl`}>{name}</h1>
-
+              <h1 className={`${kurintoBook.className} text-3xl`}>{collectionInfo.name}</h1>
           }
 
         </div>
