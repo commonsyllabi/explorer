@@ -1,9 +1,8 @@
 import type { GetServerSideProps, GetServerSidePropsContext, NextPage } from "next";
 import Image from "next/image";
 
-import { IUser, ISyllabus, ICollection } from "types";
+import { ICollection } from "types";
 import BreadcrumbsBar from "components/commons/BreadcrumbsBar";
-
 
 import NotFound from "components/commons/NotFound";
 import { signOut, useSession } from "next-auth/react";
@@ -16,7 +15,6 @@ import deleteIcon from '../../public/icons/delete-bin-line.svg'
 import { Session } from "next-auth";
 import CollectionInfo from "components/Collection/CollectionInfo";
 import CollectionItem from "components/Collection/CollectionItem";
-import { Context } from "mocha";
 import { EditContext } from "context/EditContext";
 
 export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
