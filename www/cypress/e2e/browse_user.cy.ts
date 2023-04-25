@@ -29,16 +29,8 @@ describe('Browses a user profile', () => {
 
 describe('Browses its own user profile', () => {
     it('should login and find admin controls on the profile', () => {
-        cy.intercept('GET', '/auth/signin', (req) => {
-            req.continue((res) => {
-                if (res.statusCode != 200) throw new Error(`[cypress] error logging inthe user (${res.statusMessage})`)
-            })
-        }).as('login')
-
         cy.visit('/')
         cy.get('[data-cy="syllabusCard"]').should('have.length.greaterThan', 1)
-        cy.get('[data-cy="signin-button"]').click()
-
         cy.get('[data-cy="signin-button"]').click()
 
         cy.get('[data-cy="signin-button-email"]').type("pierre.depaz@gmail.com", {force: true})

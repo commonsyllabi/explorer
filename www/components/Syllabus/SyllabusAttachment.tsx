@@ -18,8 +18,8 @@ const SyllabusAttachment: React.FunctionComponent<ISyllabusAttachmentProps> = ({
     new URL(`uploads/${resourceUrl}`, process.env.NEXT_PUBLIC_STORAGE_URL) : new URL(`static/${resourceUrl}`, process.env.NEXT_PUBLIC_API_URL)
 
   return (
-    <div data-cy="course-resource" className="w-full p-3 gap-4 border border-gray-800 rounded-lg">
-      <h3 className="font-bold">{resourceTitle}</h3>
+    <div className="w-full p-3 gap-4 border border-gray-800 rounded-lg">
+      <h3 data-cy="course-attachment-title" className="font-bold">{resourceTitle}</h3>
       <div>
         <div className="flex">
           <div className="m-0 text-sm">
@@ -29,13 +29,13 @@ const SyllabusAttachment: React.FunctionComponent<ISyllabusAttachmentProps> = ({
                 {resourceUrl}
               </Link>
             ) : (
-              <Link href={resourceUrl} target="_blank" rel="noreferrer" className="underline">
+              <Link data-cy="course-attachment-url" href={resourceUrl} target="_blank" rel="noreferrer" className="underline">
                 {resourceUrl}
               </Link>
             )}
           </div>
         </div>
-        <div className="my-2 text-sm">{resourceDescription}</div>
+        <div data-cy="course-attachment-description" className="my-2 text-sm">{resourceDescription}</div>
       </div>
     </div>
   );

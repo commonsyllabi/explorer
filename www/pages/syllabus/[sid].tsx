@@ -185,7 +185,7 @@ const Syllabus: NextPage<ISyllabusPageProps> = ({ syllabusInfo, userCollections 
             <></>
           }
           {isOwner ?
-            <button onClick={() => setShowDeleteModal(true)} className="flex p-2 bg-red-400 hover:bg-red-500 text-white rounded-md gap-3" >
+            <button data-cy="delete-syllabus" onClick={() => setShowDeleteModal(true)} className="flex p-2 bg-red-400 hover:bg-red-500 text-white rounded-md gap-3" >
               <Image src={deleteIcon} width="24" height="24" alt="Icon to delete the syllabus" />
               <div>Delete syllabus</div>
             </button>

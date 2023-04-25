@@ -59,7 +59,7 @@ const SyllabusResource: React.FunctionComponent<ISyllabusResourceProps> = ({ att
         setLog(`An error occured while deleting: ${body}`)
     };
 
-    return (<>
+    return (<div data-cy={`course-attachment`}>
         {!isEditing ?
             <div className="flex items-stretch gap-2 mb-2">
                 <SyllabusAttachment
@@ -69,24 +69,26 @@ const SyllabusResource: React.FunctionComponent<ISyllabusResourceProps> = ({ att
                     resourceType={att.type}
                     key={att.uuid}
                 />
-                {ctx.isOwner && !isShowingMore ?
+                {ctx.isOwner ? !isShowingMore ?
                     <button className="flex items-center justify-center gap-2 border rounded-md border-gray-700 p-1" onClick={() => setIsShowingMore(true)}>
                         <Image src={moreIcon} width="24" height="24" alt="Icon to show more options" />
-                    </button> : <div className="flex flex-col gap-1 items-stretch">
-                        <button className="min-w-max grow flex justify-around items-center gap-2 border rounded-md border-gray-700 p-1" onClick={() => setIsEditing(true)}>
+                    </button>
+                    :
+                    <div className="flex flex-col gap-1 items-stretch">
+                        <button data-cy="course-attachment-button-edit" className="min-w-max grow flex justify-around items-center gap-2 border rounded-md border-gray-700 p-1" onClick={() => setIsEditing(true)}>
                             <Image src={editIcon} width="24" height="24" alt="Icon to edit the item`" />
                             <div className="text-sm">Edit</div>
                         </button>
-                        <button className="min-w-max grow flex justify-around items-center gap-2 border rounded-md border-gray-700 p-1" onClick={() => setIsShowingMore(false)}>
+                        <button data-cy="course-attachment-button-cancel" className="min-w-max grow flex justify-around items-center gap-2 border rounded-md border-gray-700 p-1" onClick={() => setIsShowingMore(false)}>
                             <Image src={cancelIcon} width="24" height="24" alt="Icon to cancel the edit" />
                             <div className="text-sm">Cancel</div>
                         </button>
-                        <button id={att.uuid}
+                        <button id={att.uuid} data-cy="course-attachment-button-delete"
                             onClick={deleteAttachment} className="min-w-max grow flex justify-around items-center gap-2 border rounded-md bg-red-100 hover:bg-red-400 border-red-500 p-1" >
                             <Image src={deleteIcon} width="24" height="24" alt="Icon to edit the name" />
                             <div className="text-sm">Delete</div>
                         </button>
-                    </div>}
+                    </div> : <></>}
             </div>
             :
             <>
@@ -94,10 +96,10 @@ const SyllabusResource: React.FunctionComponent<ISyllabusResourceProps> = ({ att
                     key={`attachment-editable-${att.uuid}`}
                     attachment={att}
                     onCancel={() => setIsEditing(false)}
-                    onEdit={(_att: IAttachment) => { onEdit(_att) }}
+                    onEdit={(_att: IAttachment) => { onEdit(_att); setIsEditing(false); setIsShowingMore(false) }}
                 />
             </>
-        }</>)
+        }</div>)
 }
 
 export default SyllabusResource

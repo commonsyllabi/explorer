@@ -118,18 +118,18 @@ const AttachmentItemFile: React.FunctionComponent<IAttachmentItemEditableProps> 
   return (
     <div className="my-3 p-3 rounded-md bg-gray-100 border-gray-400 border-2">
       <div className="font-bold w-full">
-        <input type="text" value={name} onChange={handleNameChange} className="bg-transparent mt-2 py-1 border-b-2 border-b-gray-900" />
+        <input data-cy="edit-attachment-name" type="text" value={name} onChange={handleNameChange} className="bg-transparent mt-2 py-1 border-b-2 border-b-gray-900" />
       </div>
 
       {attachment.type === "url" ?
         <div className="my-2">
-          <textarea className="w-full bg-transparent mt-2 p-1 border border-gray-900" rows={4} value={description} placeholder="No description" onChange={handleDescriptionChange} />
+          <textarea data-cy="edit-attachment-description" className="w-full bg-transparent mt-2 p-1 border border-gray-900" rows={4} value={description} placeholder="No description" onChange={handleDescriptionChange} />
           <div>
-            <input type="url" value={url} onChange={handleUrlChange} className="w-full bg-transparent mt-2 py-1 border-b-2 border-b-gray-900" />
+            <input data-cy="edit-attachment-url" type="url" value={url} onChange={handleUrlChange} className="w-full bg-transparent mt-2 py-1 border-b-2 border-b-gray-900" />
           </div>
         </div>
         : <>
-          <textarea className="bg-transparent mt-2 p-1 border border-gray-900 w-1/2" rows={4} value={description} placeholder="No description" onChange={handleDescriptionChange} />
+          <textarea data-cy="edit-attachment-description" className="bg-transparent mt-2 p-1 border border-gray-900 w-1/2" rows={4} value={description} placeholder="No description" onChange={handleDescriptionChange} />
           <div className="flex flex-col gap-2 items-start">
             <div className="small">
               <span className="font-bold">Filename:</span> <Link href={fileUrl} target="_blank" rel="noreferrer" className="underline">{attachment.url}</Link>
@@ -142,7 +142,7 @@ const AttachmentItemFile: React.FunctionComponent<IAttachmentItemEditableProps> 
                 type="file"
                 className="mt-2 py-1"
                 id="file"
-                data-cy={"new-attachment-file"}
+                data-cy={"edit-attachment-file"}
               />
 
               <div>
@@ -163,7 +163,7 @@ const AttachmentItemFile: React.FunctionComponent<IAttachmentItemEditableProps> 
           </button>
         </div>
         <div className="w-full md:w-auto flex flex-col lg:flex-row gap-2">
-          <button onClick={submitChanges} className="flex p-2 rounded-md gap-3 border border-gray-900" >
+          <button data-cy="button-save" onClick={submitChanges} className="flex p-2 rounded-md gap-3 border border-gray-900" >
             <Image src={checkIcon} width="24" height="24" alt="Icon to edit the name" />
             <div>Save</div>
           </button>

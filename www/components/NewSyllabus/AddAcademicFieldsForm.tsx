@@ -81,6 +81,7 @@ const AddAcademicFieldsForm: React.FunctionComponent<
             id="academic_field_broad"
             value={broadField}
             onChange={handleBroadFieldChange}
+            data-cy="academic-fields-broad"
           >
             <option value="">–</option>
             {generateAcadFieldsBroad()}
@@ -94,6 +95,7 @@ const AddAcademicFieldsForm: React.FunctionComponent<
             id="academic_field_narrow"
             onChange={handleNarrowFieldChange}
             value={narrowField.length == 1 ? `00${narrowField}` : narrowField.length == 2 ? `0${narrowField}` : narrowField}
+            data-cy="academic-fields-narrow"
           >
             <option value="">–</option>
             {generateAcadFieldsNarrow(
@@ -109,6 +111,7 @@ const AddAcademicFieldsForm: React.FunctionComponent<
             id="academic_field_detailed"
             onChange={handleDetailedFieldChange}
             value={detailedField.length == 1 ? `0${detailedField}` : detailedField.length == 2 ? `00${detailedField}` : detailedField}
+            data-cy="academic-fields-detailed"
           >
             <option value="">–</option>
             {generateAcadFieldsDetailed(

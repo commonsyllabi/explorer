@@ -33,7 +33,7 @@ const SyllabusSchoolCodeYear: React.FunctionComponent<
       <InstitutionMeta institutions={institutions} onSuccess={(_i: IInstitution) => setInstitutions([_i])}/>
 
       </div>
-      <div data-cy="w-full syllabus-meta" className="flex flex-col sm:flex-row justify-start md:gap-4">
+      <div data-cy="syllabus-header" className="w-full  flex flex-col sm:flex-row justify-start md:gap-4">
         <SyllabusMeta lang={lang as string} level={level as number} fields={fields as number[]} onSuccess={(_u: ISyllabus) => {
           setLang(_u.language); setFields(_u.academic_fields); setLevel(_u.academic_level)
         }}/>

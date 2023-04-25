@@ -48,19 +48,11 @@ describe('Create a new syllabus', () => {
 
     it('navigates to the home page', () => {
         cy.visit('/')
-
         cy.get('[data-cy="syllabusCard"]').should('have.length.greaterThan', 1)
-
         cy.get('[data-cy="signin-button"]').click()
     })
 
     it('logs in and creates a syllabus', () => {
-        cy.intercept('GET', '/auth/signin', (req) => {
-            req.continue((res) => {
-                if (res.statusCode != 200) throw new Error(`[cypress] error logging inthe user (${res.statusMessage})`)
-            })
-        }).as('login')
-
         cy.intercept('POST', '/syllabi/', (req) => {
             req.continue((res) => {
                 console.log('[cypress] created syllabus', res);
@@ -175,7 +167,7 @@ describe('Create a new syllabus', () => {
         cy.wait('@createAttachment')
     })
 
-    it('navigate to the syllabus page', () => {
+    it('navigates to the syllabus page and checks all fields', () => {
         if (!newSyllabusUUID) throw new Error(`incorrect newSyllabusUUID: ${newSyllabusUUID}`)
 
         cy.visit(`/syllabus/${newSyllabusUUID}`)
@@ -218,10 +210,21 @@ describe('Create a new syllabus', () => {
         cy.get('[data-cy="course-resource"]').should('have.length', 2)
     })
 
-    it('navigate to the home page and signs out', () => {
-        cy.visit('/')
-        cy.get('[data-cy="newSyllabusLink"]').click({ force: true })
-        cy.contains('log in').click()
+    it('navigates to the syllabus page page and deletes it', () => {
+        cy.get('[data-cy="signin-button"]').click()
+        cy.get('[data-cy="signin-button-email"]').type("pierre.depaz@gmail.com")
+        cy.get('[data-cy="signin-button-password"]').type("12345678")
+        cy.get('[data-cy="signin-button-submit"]').click()
+        cy.wait(500)
+
+        if (!newSyllabusUUID) throw new Error(`incorrect newSyllabusUUID: ${newSyllabusUUID}`)
+
+        cy.visit(`/syllabus/${newSyllabusUUID}`)
+        cy.wait(2000)
+
+        cy.get('[data-cy="delete-syllabus"]').click()
+        cy.get('[data-cy="delete-modal"]')
+        cy.get('[data-cy="confirm-delete-syllabus"]').click()
     })
 })
 

@@ -120,7 +120,7 @@ const InstitutionMeta: React.FunctionComponent<IInstitutionMetaProps> = ({ insti
 
     return (<>
         {!isEditing ?
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2" data-cy="institution-meta">
                 <div className="flex justify-between gap-4">
                     <div data-cy="course-institution-name" className={`${literalName ? '' : 'italic'}`}>{literalName ? literalName : 'No name'}</div>
                     <div data-cy="course-institution-country" className={`${literalCountry ? '' : 'italic'}`}>{literalCountry ? literalCountry : 'No country'}</div>
@@ -139,7 +139,8 @@ const InstitutionMeta: React.FunctionComponent<IInstitutionMetaProps> = ({ insti
                 <div className="w-full flex flex-col md:flex-row items-baseline justify-between gap-6 my-2">
                     <div className="w-1/4 flex flex-col">
                         <label>Name of institution</label>
-                        <input type="text" id="name" onChange={handleChange} placeholder="e.g. Open University" defaultValue={literalName} className="bg-transparent py-1 border-b-2 border-b-gray-900" />
+                        <input type="text" id="name" onChange={handleChange} placeholder="e.g. Open University" defaultValue={literalName} className="bg-transparent py-1 border-b-2 border-b-gray-900"
+                        data-cy="edit-institution-name" />
                     </div>
                     <div className="w-1/4 flex flex-col">
                         <label>Country of institution</label>
@@ -147,7 +148,7 @@ const InstitutionMeta: React.FunctionComponent<IInstitutionMetaProps> = ({ insti
                             className="w-full bg-transparent mt-2 p-1 border-2 border-gray-900"
                             id="country"
                             onChange={handleChange}
-                            data-cy="institutionCountryInput"
+                            data-cy="edit-institution-country"
                         >
                             <option> — </option>
                             {generateCountryOptions()}
@@ -155,19 +156,22 @@ const InstitutionMeta: React.FunctionComponent<IInstitutionMetaProps> = ({ insti
                     </div>
                     <div className="w-1/6 flex flex-col">
                         <label>Term</label>
-                        <input type="text" id="term" onChange={handleChange} placeholder="e.g. Spring" defaultValue={literalTerm} className="bg-transparent py-1 border-b-2 border-b-gray-900" />
+                        <input type="text" id="term" onChange={handleChange} placeholder="e.g. Spring" defaultValue={literalTerm} className="bg-transparent py-1 border-b-2 border-b-gray-900"
+                        data-cy="edit-institution-term"/>
                     </div>
                     <div className="w-1/6 flex flex-col">
                         <label>Year</label>
-                        <input type="number" id="year" onChange={handleChange} placeholder="e.g. 2021" defaultValue={literalYear} className="bg-transparent py-1 border-b-2 border-b-gray-900" />
+                        <input type="number" id="year" onChange={handleChange} placeholder="e.g. 2021" defaultValue={literalYear} className="bg-transparent py-1 border-b-2 border-b-gray-900"
+                        data-cy="edit-institution-year"
+                        />
                     </div>
                 </div>
-                <div className="py-1 mt-4 flex flex-col lg:flex-row gap-2 justify-between">
-                    <button className="flex items-center gap-2 rounded-lg border border-1 border-gray-900 py-1 px-2 bg-red-100 hover:bg-red-300" onClick={() => { setIsEditing(false); }}>
+                <div className="py-1 mt-4 flex flex-col md:flex-row gap-2 justify-between">
+                    <button className="flex items-center gap-2 rounded-lg border border-1 border-gray-900 py-1 px-2 bg-red-100 hover:bg-red-300" data-cy="cancel-button" onClick={() => { setIsEditing(false); }}>
                         <Image src={cancelIcon} width="24" height="24" alt="Icon to cancel the edit" />
                         <div>Cancel</div>
                     </button>
-                    <button className="flex items-center gap-2 rounded-lg border border-1 border-gray-900 py-1 px-2" onClick={submitEdit}>
+                    <button className="flex items-center gap-2 rounded-lg border border-1 border-gray-900 py-1 px-2" onClick={submitEdit} data-cy="save-button">
                         <Image src={checkIcon} width="24" height="24" alt="Icon to save the edit" />
                         <div>Save</div>
                     </button>

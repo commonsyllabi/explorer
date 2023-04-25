@@ -13,7 +13,7 @@ const Tags: React.FunctionComponent<ITagsProps> = ({ tags }) => {
         </button>
       </Link>
     ));
-    return <>{tagEls}</>;
+    return <div className="flex gap-2">{tagEls}</div>;
   }
 
   return <></>;
