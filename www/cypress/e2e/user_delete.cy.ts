@@ -32,3 +32,5 @@ describe('User profile deletion', () => {
         cy.wait('@deleteUser')
     })
 })
+
+export {}

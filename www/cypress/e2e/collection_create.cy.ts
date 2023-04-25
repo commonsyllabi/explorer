@@ -1,4 +1,5 @@
 /* eslint-disable */
+
 describe('Adds a syllabus to a collections', () => {
     let newCollectionName = "Famosa Collecya"
 
@@ -116,3 +117,5 @@ describe('Adds a syllabus to a collections', () => {
         cy.wait('@deleteCollection')
     })
 })
+
+export {}

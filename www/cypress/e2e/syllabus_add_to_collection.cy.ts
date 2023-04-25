@@ -59,3 +59,5 @@ describe('Adds a syllabus to a collections', () => {
         cy.get('[data-cy="create-new-collection"]').click()
     })
 })
+
+export {}

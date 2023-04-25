@@ -186,3 +186,5 @@ describe('Edits a syllabus body', () => {
         cy.get('[data-cy="course-attachment-button-delete"]').click()
     })
 })
+
+export {}

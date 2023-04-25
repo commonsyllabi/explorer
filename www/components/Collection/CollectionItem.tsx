@@ -30,8 +30,8 @@ const CollectionItem: React.FunctionComponent<ICollectionItemProps> = ({
     }
 
     const handleRemove = (syll_uuid: string) => {
-        if(!ctx.collectionUUID) return;
-        
+        if (!ctx.collectionUUID) return;
+
         const removeUrl = new URL(`/collections/${ctx.collectionUUID}/syllabi/${syll_uuid}`, process.env.NEXT_PUBLIC_API_URL)
 
         if (!window.confirm(confirmRemoveMsg))
@@ -61,8 +61,8 @@ const CollectionItem: React.FunctionComponent<ICollectionItemProps> = ({
             })
     }
 
-    return (<>
-        <div data-cy="collection-item" key={syllabusInfo.uuid} className="flex gap-1">
+    return (
+        <div data-cy="collection-item" className="flex gap-1">
             {getSyllabusCards([syllabusInfo], default_filters)}
             <div className="border-2 border-gray-900 p-2 rounded-md flex items-center">
                 <button data-cy="remove-from-collection" className="h-full" onClick={() => { handleRemove(syllabusInfo.uuid) }}>
@@ -70,7 +70,7 @@ const CollectionItem: React.FunctionComponent<ICollectionItemProps> = ({
                 </button>
             </div>
         </div>
-    </>)
+    )
 }
 
 export default CollectionItem;

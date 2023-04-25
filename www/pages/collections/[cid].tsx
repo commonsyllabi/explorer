@@ -115,7 +115,7 @@ const Collection: NextPage<ICollectionPageProps> = ({ collectionInfo }) => {
           <div className="gap-3 pb-5">{
             collectionInfo.syllabi ?
               collectionInfo.syllabi.map(s => {
-                return <CollectionItem syllabusInfo={s} />
+                return <CollectionItem syllabusInfo={s} key={`coll-item-${s.uuid}`} />
               })
               :
               <div data-cy="no-collection-items">
