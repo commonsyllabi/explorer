@@ -110,6 +110,7 @@ const Collection: NextPage<ICollectionPageProps> = ({ collectionInfo }) => {
           setIsEditing(false)
           setName(tmp)
           setLog('')
+          return;
         } else if (res.status == 401) {
           signOut({ redirect: false }).then((result) => {
             Router.push("/auth/signin");
@@ -207,22 +208,25 @@ const Collection: NextPage<ICollectionPageProps> = ({ collectionInfo }) => {
         />
         <div className="flex flex-col gap-2 my-6">
           {isEditing ?
-            <>
-              <input value={tmp} defaultValue={name} onChange={handleChange} className={`${kurintoBook.className} text-2xl w-8/12 bg-transparent mt-2 py-1 border-b-2 border-b-gray-900`}></input>
-              <div className="flex gap-3">
-                <button className="w-6" onClick={() => { setIsEditing(false); }}>
+            <div className="w-full md:w-2/3">
+              <input data-cy="edit-collection-name" value={tmp} defaultValue={name} onChange={handleChange} className={`${kurintoBook.className} w-full text-2xl bg-transparent mt-2 py-1 border-b-2 border-b-gray-900`}></input>
+              <div className="py-1 mt-2 flex flex-col lg:flex-row gap-2 justify-between">
+                <button data-cy="cancel-button" className="flex items-center gap-2 rounded-lg border border-1 border-gray-900 py-1 px-2 bg-red-100 hover:bg-red-300" onClick={() => { setIsEditing(false); }}>
                   <Image src={cancelIcon} width="24" height="24" alt="Icon to cancel the edit process" />
+                  <div>Cancel</div>
                 </button>
-                <button className="w-6" onClick={submitEdit}>
+                <button data-cy="save-button" className="flex items-center gap-2 rounded-lg border border-1 border-gray-900 py-1 px-2" onClick={submitEdit}>
                   <Image src={checkIcon} width="24" height="24" alt="Icon to save the edit process" />
+                  <div>Save</div>
                 </button>
               </div>
-            </>
+              <div>{log}</div>
+            </div>
             : isOwner ?
               <>
-                <h1 className={`${kurintoBook.className} text-3xl`}>{collectionInfo.name}</h1>
+                <h1 data-cy="collection-name" className={`${kurintoBook.className} text-3xl`}>{name}</h1>
                 <div className="flex gap-3">
-                  <button className={`flex gap-2 opacity-70 border ${isShowingTooltip ? '' : 'opacity-40'} rounded-md border-gray-700 w-max p-1`} onClick={() => setIsEditing(true)} onMouseEnter={() => { setShowTooltip(true) }} onMouseLeave={() => { setShowTooltip(false) }}>
+                  <button className={`flex gap-2 opacity-70 border ${isShowingTooltip ? '' : 'opacity-40'} rounded-md border-gray-700 w-max p-1`} onClick={() => setIsEditing(true)} data-cy="edit-button" onMouseEnter={() => { setShowTooltip(true) }} onMouseLeave={() => { setShowTooltip(false) }}>
                     <Image src={editIcon} width="22" height="22" alt="Icon to edit the list" />
                     <div className={`${isShowingTooltip ? '' : 'hidden'} text-sm`}>Edit</div>
                   </button>
@@ -254,7 +258,7 @@ const Collection: NextPage<ICollectionPageProps> = ({ collectionInfo }) => {
             </div>
         }</div>
         {isOwner ?
-          <button data-cy="delete-collection" onClick={submitDelete} className="flex p-2 bg-red-400 hover:bg-red-500 text-white rounded-md gap-3" >
+          <button data-cy="delete-button" onClick={submitDelete} className="flex p-2 bg-red-400 hover:bg-red-500 text-white rounded-md gap-3" >
             <Image src={deleteIcon} width="24" height="24" alt="Icon to delete the syllabus" />
             <div>Delete</div>
           </button>

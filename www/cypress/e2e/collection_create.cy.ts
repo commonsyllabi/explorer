@@ -23,7 +23,24 @@ describe('Adds a syllabus to a collections', () => {
         cy.get('[data-cy="collectionCard"]').last().contains(newCollectionName)
     })
 
-    it('should sign in, navigate to the profile, select the last collection and delete it', () => {
+    it('should sign in, navigate to the profile, select the last collection, change its name and delete it', () => {
+        cy.intercept('PATCH', '/collections/*', (req) => {
+            req.continue((res) => {
+                if (res.statusCode != 200) {
+                    throw new Error('[cypress] failed to edit institution')
+                }
+            })
+        }).as('editCollection')
+
+        cy.intercept('DELETE', '/collections/*', (req) => {
+            req.continue((res) => {
+                if (res.statusCode != 200) {
+                    throw new Error('[cypress] failed to delete institution')
+                }
+            })
+        }).as('deleteCollection')
+
+        const _name = `${newCollectionName} (edited)`
         cy.visit('/')
         cy.get('[data-cy="syllabusCard"]').should('have.length.greaterThan', 1)
         cy.get('[data-cy="signin-button"]').click({force: true})
@@ -38,5 +55,15 @@ describe('Adds a syllabus to a collections', () => {
         cy.get('[data-cy="libraryLink"]').click()
         cy.get('[data-cy="collectionsTab"]').click()
         cy.get('[data-cy="collectionCard"] a').first().click()
+        
+        cy.get('[data-cy="edit-button"]').click()
+        cy.get('[data-cy="edit-collection-name"]').clear().type(_name)
+        cy.get('[data-cy="save-button"]').click()
+        cy.wait('@editCollection')
+
+        cy.get('[data-cy="collection-name"]').contains(_name)
+
+        cy.get('[data-cy="delete-button"]').click()
+        cy.wait('@deleteCollection')
     })
 })
