@@ -197,7 +197,7 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo }) => {
                     {activeTab === "syllabi" ? (
                       <Link href="/new-syllabus" className=" w-2/3 md:w-3/12 text-center mt-4 py-1 bg-gray-900 text-gray-100 border-2 rounded-md" aria-label="New Syllabus" data-cy="newSyllabusLink">+ New Syllabus</Link>
                     ) : (
-                      <button className="w-2/3 md:w-3/12 mt-4 py-1 bg-gray-900 text-gray-100 border-2 rounded-md" aria-label="New Collection" onClick={() => { setIsCreatingCollection(true) }}>
+                      <button data-cy="new-collection-button" className="w-2/3 md:w-3/12 mt-4 py-1 bg-gray-900 text-gray-100 border-2 rounded-md" aria-label="New Collection" onClick={() => { setIsCreatingCollection(true) }}>
                         + New Collection
                       </button>
                     )}

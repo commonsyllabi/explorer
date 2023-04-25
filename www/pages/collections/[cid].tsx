@@ -55,6 +55,7 @@ const Collection: NextPage<ICollectionPageProps> = ({ collectionInfo }) => {
   const [tmp, setTmp] = useState('')
   const [log, setLog] = useState('')
   const [isOwner, setIsOwner] = useState(false)
+  const [isShowingTooltip, setShowTooltip] = useState(false)
   const [endpoint, setEndpoint] = useState<URL>()
 
   const checkIfOwner = (_session: Session, _uuid: string) => {
@@ -188,7 +189,7 @@ const Collection: NextPage<ICollectionPageProps> = ({ collectionInfo }) => {
         setLog(`An error occured while deleting: ${body}`)
       })
   }
-  
+
 
   if (!collectionInfo)
     return (
@@ -221,11 +222,9 @@ const Collection: NextPage<ICollectionPageProps> = ({ collectionInfo }) => {
               <>
                 <h1 className={`${kurintoBook.className} text-3xl`}>{collectionInfo.name}</h1>
                 <div className="flex gap-3">
-                  <button className="p-1" onClick={() => setIsEditing(true)}>
-                    <Image src={editIcon} width="24" height="24" alt="Icon to edit the name" />
-                  </button>
-                  <button className="p-1 rounded" onClick={submitDelete}>
-                    <Image src={deleteIcon} width="24" height="24" alt="Icon to edit the name" />
+                  <button className={`flex gap-2 opacity-70 border ${isShowingTooltip ? '' : 'opacity-40'} rounded-md border-gray-700 w-max p-1`} onClick={() => setIsEditing(true)} onMouseEnter={() => { setShowTooltip(true) }} onMouseLeave={() => { setShowTooltip(false) }}>
+                    <Image src={editIcon} width="22" height="22" alt="Icon to edit the list" />
+                    <div className={`${isShowingTooltip ? '' : 'hidden'} text-sm`}>Edit</div>
                   </button>
                 </div>
               </>
@@ -254,6 +253,13 @@ const Collection: NextPage<ICollectionPageProps> = ({ collectionInfo }) => {
               {isOwner ? <div className="mt-8"><Link href="/" className="underline">Browse syllabi</Link> to add them to your collection.</div> : <></>}
             </div>
         }</div>
+        {isOwner ?
+          <button data-cy="delete-collection" onClick={submitDelete} className="flex p-2 bg-red-400 hover:bg-red-500 text-white rounded-md gap-3" >
+            <Image src={deleteIcon} width="24" height="24" alt="Icon to delete the syllabus" />
+            <div>Delete</div>
+          </button>
+          :
+          <></>}
       </div>
     </>
   );
