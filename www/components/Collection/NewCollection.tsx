@@ -44,7 +44,6 @@ const NewCollection: React.FunctionComponent<INewCollectionProps> = ({ syllabusU
                     setTimeout(() => {
                         setLog('')
                     }, 2000)
-                    handleClose()
                     return
                 } else if (res.status == 401) {
                     signOut({ redirect: false }).then((result) => {
@@ -105,11 +104,11 @@ const NewCollection: React.FunctionComponent<INewCollectionProps> = ({ syllabusU
             <h1 className="text-xl mb-8">Create new collection</h1>
             <form className="flex flex-col">
                 <label htmlFor="name">Name</label>
-                <input name="name" type="text" placeholder="Name of your new collection" onChange={handleNameChange} className="bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"></input>
+                <input name="name" data-cy="new-collection-name" type="text" placeholder="Name of your new collection" onChange={handleNameChange} className="bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"></input>
                 <input type="submit" onClick={submitCreate} value="Create Collection" className="mt-8 p-2 bg-gray-900 text-gray-100 border-2 rounded-md"></input>
                 <div>{log}</div>
             </form>
-            <button onClick={handleCloseButton} className="absolute top-2 right-2">
+            <button data-cy="create-new-collection" onClick={handleCloseButton} className="absolute top-2 right-2">
                 <Image src={cancelIcon} width="24" height="24" alt="Icon to cancel the edit process" /></button>
         </>)
 }

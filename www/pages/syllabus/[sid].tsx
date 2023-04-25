@@ -177,7 +177,7 @@ const Syllabus: NextPage<ISyllabusPageProps> = ({ syllabusInfo, userCollections 
 
         <div className="flex gap-2 items-baseline justify-between">
           {session ?
-            <button onClick={() => showIsAddingToCollection(true)} className="p-2 border border-gray-900 rounded-md flex gap-3">
+            <button data-cy="show-add-collection" onClick={() => showIsAddingToCollection(true)} className="p-2 border border-gray-900 rounded-md flex gap-3">
               <Image src={addCircleIcon} width="24" height="24" alt="Icon to add a syllabus to a collection" />
               <div>Add to collection</div>
             </button>
