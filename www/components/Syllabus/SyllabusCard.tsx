@@ -34,7 +34,9 @@ const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = ({
     <div data-cy="syllabusCard" className="border-2 border-gray-600 rounded-lg p-3">
 
       <div>
-        <SyllabusHeader syllabusInfo={syllabusInfo}/>
+        <EditContext.Provider value={{ isOwner: false }}>
+          <SyllabusHeader syllabusInfo={syllabusInfo} />
+        </EditContext.Provider>
         <div>
           <div className="flex justify-between w-full mt-8 mb-4">
             <Link href={getSyllabiUrl(syllabusInfo.uuid)} className={`text-2xl w-full font-bold hover:underline ${kurintoBook.className}`}>

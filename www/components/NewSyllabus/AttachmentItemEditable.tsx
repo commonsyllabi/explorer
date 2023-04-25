@@ -1,23 +1,21 @@
-import * as React from "react";
+import { useState } from "react";
+import Router from "next/router";
 import Image from "next/image";
-import deleteIcon from '../../public/icons/delete-bin-line.svg'
-import editIcon from '../../public/icons/edit-box-line.svg'
-
 
 import { IAttachment } from "types";
 import { signOut, useSession } from "next-auth/react";
-import Router from "next/router";
-import { useState } from "react";
 import Link from "next/link";
+import checkIcon from '../../public/icons/check-line.svg'
+import cancelIcon from '../../public/icons/close-line.svg'
 
 interface IAttachmentItemEditableProps {
   attachment: IAttachment;
-  onDelete: Function,
+  onCancel: Function,
   onEdit: Function,
 }
 
 const AttachmentItemFile: React.FunctionComponent<IAttachmentItemEditableProps> = ({
-  attachment, onDelete, onEdit
+  attachment, onCancel, onEdit
 }) => {
   const { data: session } = useSession()
   const [log, setLog] = useState("")
@@ -35,8 +33,6 @@ const AttachmentItemFile: React.FunctionComponent<IAttachmentItemEditableProps> 
 
   const fileUrl = process.env.NODE_ENV === "production" ?
     new URL(`uploads/${attachment.url}`, process.env.NEXT_PUBLIC_STORAGE_URL) : new URL(`static/${attachment.url}`, process.env.NEXT_PUBLIC_API_URL)
-
-  const confirmMsg = `Do you really want to delete the attachment ${attachment.name}? This action cannot be undone.`;
 
   const handleNameChange = (e: React.BaseSyntheticEvent) => {
     e.preventDefault()
@@ -113,46 +109,11 @@ const AttachmentItemFile: React.FunctionComponent<IAttachmentItemEditableProps> 
         Router.push("/auth/signin");
       })
       return;
-    }else{
+    } else {
       const body = await res.text()
       setLog(`An error occured while saving edits: ${body}`)
     }
-
   }
-
-  const deleteAttachment = async (e: React.SyntheticEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-
-    if (!window.confirm(confirmMsg))
-      return
-
-    const h = new Headers();
-    h.append("Authorization", `Bearer ${session?.user.token}`);
-
-    const endpoint = new URL(`attachments/${attachment.uuid}`, process.env.NEXT_PUBLIC_API_URL)
-    const res = await fetch(endpoint, {
-      method: 'DELETE',
-      headers: h,
-    })
-
-    if (res.ok) {
-      setLog("Successfully deleted attachment!")
-
-      onDelete(attachment.uuid)
-    } else if (res.status == 401) {
-      signOut({ redirect: false }).then((result) => {
-        Router.push("/auth/signin");
-      })
-      return res.text()
-    } else {
-      return res.text()
-    }
-
-    const body = res.text()
-    setLog(`An error occured while deleting: ${body}`)
-
-  };
 
   return (
     <div className="my-3 p-3 rounded-md bg-gray-100 border-gray-400 border-2">
@@ -194,19 +155,22 @@ const AttachmentItemFile: React.FunctionComponent<IAttachmentItemEditableProps> 
         </>}
 
 
-      <div className="flex items-center justify-between gap-3 mt-8">
-        <button onClick={submitChanges} className="flex p-2 rounded-md gap-3 border border-gray-900" >
-          <Image src={editIcon} width="24" height="24" alt="Icon to edit the name" />
-          <div>Save changes</div>
-        </button>
-        <div>
-          {log}
+      <div className="w-full flex flex-col md:flex-row items-center justify-between mt-8 gap-2">
+        <div className="w-full md:w-auto flex flex-col lg:flex-row gap-2">
+          <button className="flex p-2 rounded-md gap-3 border border-gray-900 bg-red-100 hover:bg-red-300" onClick={() => { onCancel() }}>
+            <Image src={cancelIcon} width="24" height="24" alt="Icon to cancel the edit process" />
+            <div>Cancel</div>
+          </button>
         </div>
-        <button id={attachment.uuid}
-          onClick={deleteAttachment} className="flex p-2 bg-red-100 hover:bg-red-400 border-2 border-red-500 rounded-md gap-3" >
-          <Image src={deleteIcon} width="24" height="24" alt="Icon to edit the name" />
-          <div>Delete attachment</div>
-        </button>
+        <div className="w-full md:w-auto flex flex-col lg:flex-row gap-2">
+          <button onClick={submitChanges} className="flex p-2 rounded-md gap-3 border border-gray-900" >
+            <Image src={checkIcon} width="24" height="24" alt="Icon to edit the name" />
+            <div>Save</div>
+          </button>
+        </div>
+      </div>
+      <div>
+        {log}
       </div>
     </div>
   );
