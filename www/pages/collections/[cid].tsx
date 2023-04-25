@@ -12,7 +12,7 @@ import Router from "next/router";
 import Link from "next/link";
 import { getToken } from "next-auth/jwt";
 import { kurintoBook } from "app/layout";
-import editIcon from '../../public/icons/edit-box-line.svg'
+import editIcon from '../../public/icons/edit-line.svg'
 import cancelIcon from '../../public/icons/close-line.svg'
 import checkIcon from '../../public/icons/check-line.svg'
 import deleteIcon from '../../public/icons/delete-bin-line.svg'
@@ -159,10 +159,8 @@ const Collection: NextPage<ICollectionPageProps> = ({ collectionInfo }) => {
     setTmp(e.target.value)
   }
 
-  const handleRemove = (e: React.BaseSyntheticEvent) => {
-    e.preventDefault()
-    const t = e.target;
-    const removeUrl = new URL(`/collections/${collectionInfo.uuid}/syllabi/${t.dataset.syllabusid}`, process.env.NEXT_PUBLIC_API_URL)
+  const handleRemove = (syll_uuid: string) => {
+    const removeUrl = new URL(`/collections/${collectionInfo.uuid}/syllabi/${syll_uuid}`, process.env.NEXT_PUBLIC_API_URL)
 
     if (!window.confirm(confirmRemoveMsg))
       return
@@ -241,10 +239,10 @@ const Collection: NextPage<ICollectionPageProps> = ({ collectionInfo }) => {
         <div className="gap-3 pb-5">{
           collectionInfo.syllabi ?
             collectionInfo.syllabi.map(s => {
-              return <div key={s.uuid} className="flex gap-1">
+              return <div data-cy="collection-item" key={s.uuid} className="flex gap-1">
                 {getSyllabusCards([s], default_filters)}
                 <div className="border-2 border-gray-900 p-2 rounded-md flex items-center">
-                  <button data-syllabusid={s.uuid} onClick={handleRemove}>
+                  <button data-cy="remove-from-collection" data-syllabusid={s.uuid} onClick={() => {handleRemove(s.uuid)}}>
                     <Image src={removeIcon} width="24" height="24" alt="Icon to remove an element from the list" />
                   </button>
                 </div>
@@ -252,7 +250,7 @@ const Collection: NextPage<ICollectionPageProps> = ({ collectionInfo }) => {
 
             })
             :
-            <div>
+            <div data-cy="no-collection-items">
               <div>There are no syllabi in this collection.</div>
               {isOwner ? <div className="mt-8"><Link href="/" className="underline">Browse syllabi</Link> to add them to your collection.</div> : <></>}
             </div>

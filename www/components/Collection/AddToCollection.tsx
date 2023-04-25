@@ -11,6 +11,7 @@ import removeIcon from '../../public/icons/subtract-line.svg'
 import { kurintoSerif } from "app/layout";
 import PubBadge from "components/commons/PubBadge";
 import Modal from "components/commons/Modal";
+import Link from "next/link";
 
 interface IAddCollectionProps {
     collections: ICollection[],
@@ -67,7 +68,7 @@ const AddToCollection: React.FunctionComponent<IAddCollectionProps> = ({ collect
             })
     }
 
-    const addSyllabusToCollection = (coll_uuid: string) => {
+    const addSyllabusToCollection = async (coll_uuid: string) => {
         const b = new FormData()
         b.append("syllabus_id", syllabusInfo.uuid as string)
 
@@ -75,31 +76,28 @@ const AddToCollection: React.FunctionComponent<IAddCollectionProps> = ({ collect
         h.append("Authorization", `Bearer ${session?.user.token}`);
 
         const url = new URL(`/collections/${coll_uuid}/syllabi`, process.env.NEXT_PUBLIC_API_URL)
-        fetch(url, {
+        const res = await fetch(url, {
             method: 'POST',
             headers: h,
             body: b
         })
-            .then(res => {
-                if (res.ok) {
-                    setLog('Success!')
-                    setTimeout(() => {
-                        setLog('')
-                    }, 2000)
-                    return
-                } else if (res.status == 401) {
-                    signOut({ redirect: false }).then((result) => {
-                        Router.push("/auth/signin");
-                    })
-                    return res.text()
-                } else {
-                    return res.text()
-                }
+
+        if (res.ok) {
+            setLog('Success!')
+            setTimeout(() => {
+                setLog('')
+                //-- todo set checkIcon and disable button?
+                Router.reload()
+            }, 2000)
+            return; 
+        } else if (res.status == 401) {
+            signOut({ redirect: false }).then((result) => {
+                Router.push("/auth/signin");
             })
-            .then(body => {
-                if (body !== '')
-                    setLog(`There was an error adding the syllabus to the collection`)
-            })
+        } else {
+            const body = await res.text()
+            setLog(`There was an error adding the syllabus to the collection: ${body}`)
+        }
 
     }
     return (
@@ -112,7 +110,7 @@ const AddToCollection: React.FunctionComponent<IAddCollectionProps> = ({ collect
                             {collections.map((c, i) => {
                                 return (<div data-cy="user-collection" className="flex gap-2" key={`coll-${i}`}>
                                     <div className="w-full flex flex-col border border-gray-900 rounded-md p-1">
-                                        <div className={`${kurintoSerif.className} text-lg`}>{c.name}</div>
+                                        <Link href={`/collections/${c.uuid}`} className={`${kurintoSerif.className} text-lg hover:underline`}>{c.name}</Link>
                                         <PubBadge isPublic={c.status === "listed"} />
                                     </div>
                                     {checkIfSyllabusInCollection(c, syllabusInfo) ?
