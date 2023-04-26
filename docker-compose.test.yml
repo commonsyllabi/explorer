@@ -35,6 +35,7 @@ services:
       DEBUG: "false"
       API_MODE: "test"
       RUN_FIXTURES: "true"
+      FIXTURES_PATH: "test.yml"
     tmpfs:
       - /tmp
 

@@ -134,3 +134,634 @@
         - "politics"
         - "code"
         - "critical"
+      institutions:
+        - name: "NYU Abu Dhabi"
+          country: 12
+          url: "https://nyuad.nyu.edu"
+          date:
+            year: 2016
+            term: "fall"
+
+    - uuid: '46de6a2b-666b-4c24-b1e1-3495821f8469'
+      title: "Augmenting the Gallery"
+      status: "listed"
+      description: "Wall labels, audio guides, and informative maps are just some of the ways by which galleries and museums convey information and hidden narratives about a collection. Given the changing role of museums and galleries in the 21st century, how can we utilize new tools such as Augmented Reality (AR) to design and deliver immersive experiences that breathe new life into an exhibit? How can such tools do so without distracting from the power and importance of a collection, or by purposefully challenging problematic aspects such as an exhibit’s disputed provenance or ethical concerns? And how can these tools make collections more accessible to a wider audience?\nThis course mobilizes resources from museography, art history, sociology, interaction design and 3D, real-time development to answer these questions. Topics covered include exhibition installation and curation, mixed reality production in Unity, and mobile development for Augmented Reality. The course is open to students from a variety of academic backgrounds interested in gaining hands-on experience in applying new technologies to exhibition spaces."
+      language: en
+      academic_level: 2
+      duration: 14
+      attachments:
+        - uuid: 'c6660bef-12b8-4bdb-b5e6-2280bee8ab22'
+          name: "Course website"
+          url: "https://github.com/periode/augmenting-gallery"
+      tags:
+        - "museum studies"
+        - "augmented reality"
+        - "interactive media"
+      institutions:
+        - name: "NYU Berlin"
+          country: 12
+          url: "https://nyuad.nyu.edu"
+          date:
+            year: 2021
+            term: "fall"
+
+    - uuid: '46de6a2b-666b-4c24-b1e1-3595821f8469'
+      title: "Music Technology Fundamentals"
+      status: "listed"
+      description: "This course is designed for anyone interested in producing music on computer using virtual instruments, samples and microphones. Regardless of style, this course provides an overview of the wide range of tools available to the modern music production.\nThis is an “all-in-one” course for (almost) everything related to music technology, the basics of digital audio, physic of sound, music recording, binaural audio, musical acoustics, signal flow, sound synthesis, music production, Game Audio, post-production and mixing.\nStudents will also study the elements of production design, composition, song form, and how to arrange, edit, build and shape a song using different D.A.Ws. In this course students will also learn the fundamentals of digital audio, studio and location recording, mixing, and MIDI sequencing using Logic Pro X, Pro Tools 12, Ableton Live, music production, and audio programming using Max. Students will also be briefly introduced to a wide- range of applications (and careers) in music technology.\nThis course is the Gateway to the Music Technology disciplinary area courses in the Music Program and it is mandatory for all Music majors. There are no pre- requisitesfor this course and anyone with a keen interest in recording and production, sequencing or programming is more than welcome to take it."
+      language: en
+      academic_level: 1
+      duration: 14
+      attachments:
+        - uuid: 'c6660baf-12b8-4bdb-b5e6-2280bee8ab23'
+          name: "University website"
+          url: "https://nyuad.nyu.edu"
+      academic_fields:
+        - 215
+      tags:
+        - "music technology"
+        - "recording"
+        - "sound"
+      learning_outcomes:
+        - "Gain knowledge of the theoretical and practical foundations of music technology"
+        - "Understand the basics behind studio recording and computer music composition"
+      topic_outlines:
+        - "Sound theory"
+        - "Recording practice"
+      assignments:
+        - "Participation (30%)"
+        - "Homework assignments (40%)"
+        - "In-class tests (30%)"
+      institutions:
+        - name: "NYU Abu Dhabi"
+          country: 12
+          url: "https://nyuad.nyu.edu"
+          date:
+            year: 2020
+            term: "spring"
+
+    - uuid: '46de6a2b-666b-4c24-b1e1-3695821f8469'
+      title: "Yes Logo"
+      status: "listed"
+      description: "This immersive studio course in graphic design combines practice and reflection through a project- based approach to branding.\nLogos are graphic marks or emblems used by commercial enterprises, organizations and individuals to aid and promote instant public recognition.\nHow are Logos doing today? How designers are coping with new emerging standards? How do we deal with a brand when a Favicon or screen buttons become more important than header paper? We will see how some of the most successful logos only seem to be set in stone, while in reality they constantly mutate and adapt. We also examine how and why certain logos in the last two decades have become metaphors for the worst outcomes of corporate cultures and the targets of anti- globalization activists everywhere. We investigate how and why in our  Age of Brands, logos ended in the spotlight for reasons opposite to the ones they were created for"
+      language: en
+      academic_level: 1
+      duration: 14
+      academic_fields:
+        - 211
+      attachments:
+        - uuid: 'c6660baf-12b8-4bdb-b5e6-3680bee8ab24'
+          name: "University website"
+          url: "https://nyuad.nyu.edu"
+      tags:
+        - "brand"
+        - "communication design"
+        - "logo"
+      learning_outcomes:
+        - "Branding in the broader context of graphic design and visual communication."
+        - "Vector based design (Adobe Illustrator). They will also gain sufficient knowledge to expand their skillset with the most used software packages in the field such as Indesign and Photoshop."
+      topic_outlines:
+        - ""
+        - ""
+      assignments:
+        - "Attendance, participation (20%)"
+        - "Group assignments (20%)"
+        - "Individual assignments (25%)"
+        - "Final interview (15%)"
+        - "Personal blog (20%)"
+      institutions:
+        - name: "NYU Abu Dhabi"
+          country: 12
+          url: "https://nyuad.nyu.edu"
+          date:
+            year: 2017
+            term: "summer"
+
+    - uuid: '46de6a2b-666b-4c24-b1e1-3795821f8469'
+      title: "Docu-Fiction Cinema"
+      status: "listed"
+      description: "Fact may or may not be stranger than fiction, but invariably both exert strong influences in creating narrative. The course explores how documentary and fiction are combined throughout the history of film and in different cultures. We will examine the work of dozen filmmakers who have merged both formats creating singular hybrid films. Dramatic reconstructions, manipulated imagery or fictional interstitials are frequently incorporated into documentaries to elevate realism. Conversely, fiction occasionally crosses over into documentary to create a sense of authenticity or truthfulness. Lastly, the division is sometimes completely eradicated making it difficult to distinguish the reality from the imaginary. Over the course of the  emester, students will create their own docu-fiction short films. They will bring together fiction and non-fiction story elements reflecting on how each form complements the other."
+      language: en
+      academic_level: 1
+      academic_fields:
+        - 211
+      duration: 14
+      attachments:
+        - uuid: 'c6660baf-12b8-4bdb-b5e6-3780bee8ab25'
+          name: "University website"
+          url: "https://nyuad.nyu.edu"
+      tags:
+        - "film"
+        - "documentary"
+      learning_outcomes:
+        - "Students will be able to apply meaning and socio-cultural and historical significance to the artform of docu-fiction."
+        - "They will be be expected to interpret texts (articles, essays, book excerpts, short stories) and films. In addition to providing a synthesis of assigned  aterial, they will generate personal reflections in the form of writings and film exercises"
+        - "They will be able to compare and contrast a range of views on the intersection of documentary and fiction by studying its relationship over history"
+      assignments:
+        - "Attendance & Participation (20%)"
+        - "Reflections (10%)"
+        - "Film Exercises (20%)"
+        - "Mid-Term Docu-Fiction Essay (20%)"
+        - "Final Film (30%)"
+      institutions:
+        - name: "NYU Abu Dhabi"
+          country: 12
+          url: "https://nyuad.nyu.edu"
+          date:
+            year: 2020
+            term: "fall"
+
+    - uuid: '46de6a2b-666b-4c24-b1e1-3895821f8469'
+      title: "Paradise Lost: Muslims, Christians, and Jews in al-Andalus"
+      status: "listed"
+      description: "From the beginning of the 8th to the beginning of the 17th century, Islam played a crucial role in the history of the Iberian peninsula.  Today this period is often portrayed as one of inter-religious harmony, while al-Andalus is simultaneously mourned in contemporary Islamist discourse as a lost paradise. In this course we will investigate the rich and complex history of al-Andalus, focusing on the changing relationships between Muslim, Christian and Jewish communities."
+      language: en
+      academic_level: 2
+      academic_fields:
+        - 222
+      duration: 14
+      attachments:
+        - uuid: 'c6660baf-12b8-4bdb-b5e6-3880bee8ab26'
+          name: "University website"
+          url: "https://nyuad.nyu.edu"
+      tags:
+        - "Islam"
+        - "Religion"
+        - "History"
+      learning_outcomes:
+        - "A nuanced and historically informed understanding of the nature of religious interaction in Medieval Iberia"
+        - "An understanding of how in an argument authority is constructed and how evidence is adduced to support an argument."
+        - "An ability to closely read and analyze primary sources from the medieval and pre-modern periods."
+        - "An ability to identify and reproduce an author’s main argument."
+      assignments:
+        - "Attendance and participation (includes weekly reports) (15%);"
+        - "First Analytical Essay (25%);"
+        - "Second Analytical Essay (25%);"
+        - "Research Paper (35%) (including final presentation)"
+      institutions:
+        - name: "NYU Abu Dhabi"
+          country: 12
+          url: "https://nyuad.nyu.edu"
+          date:
+            year: 2018
+            term: "fall"
+
+    - uuid: '46de6a2b-666b-4c24-b1e1-3995821f8469'
+      title: "Problems and Methods in Arab Crossroads Studies"
+      status: "listed"
+      description: "This seminar aims to, on the one hand, introduce students to the main theoretical and epistemological trends in the study of the Arab Crossroads region, and on the other, to offer practical examples of the types of methodologies used by scholars working in the humanities and the qualitative social sciences.  The course begins with a critical engagement with the strengths and weaknesses of area studies, and the politics of producing knowledge on a region that is of such global economic and political importance. It then turns to specific areas of research that have attracted considerable attention in the fields of history, anthropology, literature, and politics, before exploring the various methodological approaches used by practitioners of these fields.  The course assignments include response papers, short essays on specific debates in relevant scholarship, transcribed interviews, and culminate in an extended research proposal for a capstone project."
+      language: en
+      academic_level: 2
+      academic_fields:
+       - 222
+      duration: 14
+      attachments:
+        - uuid: 'c6660baf-12b8-4bdb-b5e6-3980bee8ab27'
+          name: "University website"
+          url: "https://nyuad.nyu.edu"
+      tags:
+        - "Islam"
+        - "Arab world"
+        - "Cultural studies"
+      learning_outcomes:
+        - "A nuanced understanding of the nature of the different fields that form part of Middle East Studies and the methodologies that they use"
+        - "An ability to closely read and analyze primary sources from the medieval and pre-modern periods."
+        - "An understanding of how in an argument authority is constructed and how evidence is adduced to support an argument."
+        - "An ability to draft an essay, to accept and discuss criticism of one’s writing, and to rewrite the same essay."
+      topic_outlines:
+        - "Arab history"
+        - "Arab culture"
+      assignments:
+        - "Attendance and participation (includes weekly reports) (20%);"
+        - "Attendance at 5 of the ACS Luncheon lectures, and at both movie screenings (10%);"
+        - "Source-Critical Historical Analysis (20%);"
+        - "Participant-Observation (20%);"
+        - "Research Proposal (30%) (including final presentation)"
+      institutions:
+        - name: "NYU Abu Dhabi"
+          country: 12
+          url: "https://nyuad.nyu.edu"
+          date:
+            year: 2019
+            term: "fall"
+
+    - uuid: '46de6a2b-666b-4c24-b1e1-4095821f8469'
+      title: "Law in Entrepreneurship"
+      status: "listed"
+      description: "Law in Entrepreneurship seeks to prepare students for the interconnectedness of global startup organizations and the internal and external legal environments. The course will provide an introduction to entrepreneurial strategy, focusing on law as a basic framework. The course will provide students with the fundamental and practical knowledge of legal competitiveness for enterprises and will introduce students to a broad range of legal issues encountered by founders and business executives and will also help students develop a set of analytical perspectives for making judgments when such issues arise.\nStudents will act in the roles of key decision-makers or their advisors and solve problems related to the development of the competitive advantage of the enterprise in a given market. While the chief concern of those who create and manage businesses of any kind is often in the mechanics of the business itself, law is an integral part of running the machine that is an enterprise. It is law that sets certain standards for the setting in which a business operates and provides the framework to codify the business’ own standards. Thus, insight into the law becomes a significant tool in the business leader’s repertoire. It allows you to be mindful of the business’ limits and knowledgeable about in what manner the business can be strengthened."
+      language: en
+      academic_level: 1
+      academic_fields:
+        - 421
+      duration: 14
+      attachments:
+        - uuid: 'c6660baf-12b8-4bdb-b5e6-4080bee8ab28'
+          name: "University website"
+          url: "https://nyuad.nyu.edu"
+      tags:
+        - "legal studies"
+        - "entrepreneurship"
+      learning_outcomes:
+        - "Retain basic legal literacy in regards to how litigation and the judicial system function, what to be aware of when receiving contracts (whether from second/third parties or from one’s own attorney), and typical frequent liability issues faced by businesspeople and entrepreneurs;"
+        - "Complete and submit any necessary formation documents involved in establishing a business entity;"
+        - "Write a standard judicial opinion (i.e., a legal analysis as is typically rendered by judges who decide cases or attorneys who submit briefs to cases, analyzing the facts of the case, the issue at stake, a recounting of the applicable law, and the application of the law to the facts of the case while citing case law);"
+      topic_outlines:
+        - "Marketing and Advertising"
+        - "Legal Complicance"
+        - "Product Liability"
+      assignments:
+        - "participation (15%);"
+        - "three homework assignments (total of 45%, which is broken down in the Deliverables section below);"
+        - "midterm examination or research paper (15%);"
+        - "final examinations (25%)."
+      institutions:
+        - name: "NYU Abu Dhabi"
+          country: 12
+          url: "https://nyuad.nyu.edu"
+          date:
+            year: 2022
+            term: "spring"
+
+    - uuid: '46de6a2b-666b-4c24-b1e1-4195821f8469'
+      title: "Shared Worlds: The Interwoven Pasts of Spain and Morocco"
+      status: "listed"
+      description: "At the western end of the Mediterranean, the religious, political, and economic histories of North Africa and Iberia have always been intertwined.  This was especially the case during the eight centuries from 711-1492 when various parts of the Iberian peninsula were ruled over by Muslims.  In this course we will look both at how what are today Morocco and Spain were connected in this period in both history and imagination, and at how the Spanish colonial presence in Morocco in the 20th century played a important role in the Spanish civil war.  The course will include an extended trip through Morocco and Spain."
+      language: en
+      academic_level: 2
+      duration: 14
+      attachments:
+        - uuid: 'c6660baf-12b8-4bdb-b5e6-4180bee8ab29'
+          name: "University website"
+          url: "https://nyuad.nyu.edu"
+      tags:
+        - "medieval history"
+        - "utopias"
+      learning_outcomes:
+        - "A nuanced and historically informed understanding of the relationship between Spain and Morocco and of the interaction between Muslims and Christians in North Africa and Iberia"
+        - "An understanding of how in an argument authority is constructed and how evidence is adduced to support an argument."
+      topic_outlines:
+        - "Al-Andalous"
+        - "Emirate to Caliphate"
+        - "Berbers"
+      assignments:
+        - "participation (30%)"
+        - "response papers (20%)"
+        - "first historiographic essay (30%)"
+        - "trip journal/essay (35%)"
+      institutions:
+        - name: "NYU Abu Dhabi"
+          country: 12
+          url: "https://nyuad.nyu.edu"
+          date:
+            year: 2017
+            term: "fall"
+
+    - uuid: '46de6a2b-666b-4c24-b1e1-4295821f8469'
+      title: "Music, Electricity & Computation"
+      status: "listed"
+      description: "An intensive, project- driven course designed to develop skills in sound synthesis techniques and procedural music, with a focus on their specific application in composition, sound design, New Instruments of Musical Expression, and games.\nThe course will consist in extensive exploration of analog modular synthesis, Max, and SuperCollider, in recreating algorithms used by synthesis and computer music pioneers such as Xenakis, Chowning, and Risset as well as new talents in electronic music such as Agostino Di Scipio, Alessandro Cortini or Richard Devine. Previous knowledge of working with Max and/or SuperCollider is required for this course or students may have to take a complementary lab in order to be able to follow the class. By the end of the semester, students will have built a small portfolio of musical works employing the techniques learned during the semester."
+      language: en
+      academic_level: 2
+      academic_fields:
+        - 215
+      duration: 14
+      attachments:
+        - uuid: 'c6660baf-12b8-4bdb-b5e6-4280bee8ab30'
+          name: "University website"
+          url: "https://nyuad.nyu.edu"
+      tags:
+        - "electronic music"
+        - "modular synthesis"
+        - "algorithmic music"
+      learning_outcomes:
+        - "Development of an algorithmic approach to music "
+        - "Ability to implement musical algorithms in three commonly used platforms: control- voltage modular systems, graphic programming environments (Max), and textual programming environments (SuperCollider)"
+        - "Ability to devise new musical algorithms and implement them"
+      topic_outlines:
+        - "Electronic music"
+        - "Composition"
+        - "Contemporary music hardware"
+      assignments:
+        - "participation (10%)"
+        - "project 1 (20%)"
+        - "project 2 (25%)"
+        - "project 3 (25%)"
+        - "homework (20%)"
+      institutions:
+        - name: "NYU Abu Dhabi"
+          country: 12
+          url: "https://nyuad.nyu.edu"
+          date:
+            year: 2021
+            term: "fall"
+
+    - uuid: '46de6a2b-666b-4c24-b1e1-4395821f8469'
+      title: "Sensors, Body and Motion"
+      status: "listed"
+      description: "Art can be defined as a coalescing of skills and imagination into creative expression. We often experience the results of this process through our senses and then reflect on the presented work. However, through the use of readily accessible open source technologies, such as sensors and computer vision, it is possible to create interactive art that leverages the full potential of the human body and continuously integrates a person into the artistic expression of the work. Directly injecting people-sensing into an art work creates a unique feedback loop, or dialogue-like relationship, where a person does something and a computer senses what the person did and reacts; the person experiences this reaction through their senses and then reacts themselves, and so on and so forth.\nThis course will examine this feedback loop of sensing people and stimulating people's senses, all within the framework of artistic expression. Students will create interactive installations and performances where the human body is the central component of the art work. Since the human body is naturally dynamic and unpredictable, students will be challenged to develop algorithms that manage potentially chaotic data as well as design systems that help guide people’s physical interactions and input. Students will study past and present works in the field to help inform and direct their own creative decisions. "
+      language: en
+      academic_level: 1
+      academic_fields:
+        - 0
+        - 211
+      duration: 14
+      attachments:
+        - uuid: 'c6660baf-12b8-4bdb-b5e6-4380bee8ab31'
+          name: "University website"
+          url: "https://nyuad.nyu.edu"
+      tags:
+        - "interactive media"
+        - "live performance"
+        - "physical computing"
+      learning_outcomes:
+        - "Foster an ability to think critically about the human form in the context of art, technology, installation, and performance"
+        - "Develop performances and interactive installations from concept to execution"
+        - "Learn how to use a variety of sensors with a micro controller to track the human body in a multitude of ways"
+      topic_outlines:
+        - "interactive installation"
+        - "interactive performance"
+      assignments:
+        - "attendance (10%)"
+        - "participation (10%)"
+        - "wekly assignments (20%)"
+        - "blog posts (20%)"
+        - "midterm (interactive installation) (20%)"
+        - "final (performance) (20%)"
+      institutions:
+        - name: "NYU Abu Dhabi"
+          country: 12
+          url: "https://nyuad.nyu.edu"
+          date:
+            year: 2020
+            term: "fall"
+
+    - uuid: '46de6a2b-666b-4c24-b1e1-4495821f8469'
+      title: "Dramatizing History"
+      status: "listed"
+      description: "How does the dramatis bring alive an historucal poch to enliven a work for stage, film or television/ What elements are essential to create a compelling narrative? Should the characters be actual people or fictionalized composites? And what ethical issues are raised in such decision-making?\nIn this course students will embark on a journey to bring alive stories that hold personal significance. Whether the tales are connection to family, culture, gender or 'race' memory, there are certain steps that may enhance the creation and development of dramatic work based on historical information. Students will have the opportunity to detail their personal process in both creative and critical terms."
+      language: en
+      academic_level: 1
+      duration: 14
+      attachments:
+        - uuid: 'c6660baf-12b8-4bdb-b5e6-4480bee8ab32'
+          name: "University website"
+          url: "https://nyuad.nyu.edu"
+      tags:
+        - "history"
+        - "drama"
+        - "screenplay"
+      learning_outcomes:
+        - "outline and structure a dramatic work."
+        - "identify and understand the principles of aristotelian dramatic structure."
+        - "identify and understand the principles of Augusto Boal's Theater of the Oppressed."
+        - "identify and understand the principles of Bertolt Brecht's theatrical approach to theater."
+      assignments:
+        - "Participation (25%)"
+        - "Written assignments (30%)"
+        - "Workshop presentation (15%)"
+        - "Journal presentation (15%"
+        - "Final script (15%)"
+      institutions:
+        - name: "NYU Abu Dhabi"
+          country: 12
+          url: "https://nyuad.nyu.edu"
+          date:
+            year: 2021
+            term: "spring"
+
+    - uuid: '46de6a2b-666b-4c24-b1e1-4595821f8469'
+      title: "Mashups: Creating with Web APIs"
+      status: "listed"
+      description: "As the World Wide Web continues to grow and permeate our everyday lives, an ever-increasing amount of data and digital services are accessible to us through public web APIs - Application Programming Interfaces. Common to many web sites, including YouTube, Twitter, Google Maps, Wikipedia and more, web APIs offer a means to programmatically request and re-purpose endless troves of information. But how exactly do we access these datasets and services? How can we write code to transfer, store, and display this content on our own web sites? And how might we use these available resources to design unique, creative, and compelling web experiences of our own.\n\nThis class is about creating interactive single-page web applications that leverage public data and digital services from a wide range of existing web products. The overall goal of the class will be for each student to have 3 well-designed functional single-page web applications by end of semester. Subscribing to a project-oriented approach, a majority of class time will be spent reviewing and writing code, primarily Javascript, for client-side (front-end) web development. We will use a number of Javascript libraries, including jQuery, Underscore, D3,p5, Three and more, to help build a diversity of web experiences. Where server-side (back-end) development is required, we will use the Node-Express framework. Students should have some programming experience as well as an exposure to basic client-side web development, specifically HTML and CSS. Experience with Javascript is a plus."
+      language: en
+      academic_level: 2
+      duration: 14
+      attachments:
+        - uuid: 'c6660baf-12b8-4bdb-b5e6-4580bee8ab33'
+          name: "Course website"
+          url: "https://github.com/craigprotzel/Mashups"
+      tags:
+        - "interactive media"
+        - "web"
+        - "api"
+      learning_outcomes:
+        - "Develop a clear understanding of client-side (front-end) web development and the roles of client-side web technologies, specifically HTML, CSS, Javascript, and public web APIs"
+        - "Develop a basic understanding of the Javascript language as well as the ecosystem of open source client-side Javascript libraries"
+        - "Learn how to work with a variety of data-serving public web APIs"
+        - "Learn how to create web pages for modern browsers that leverage data and services from public web APIs"
+        - "Gain exposure to server-side (back-end) web development and data storage"
+      topic_outlines:
+        - "Frontend"
+        - "Backend"
+        - "Data structures"
+      assignments:
+        - "10% Attendance"
+        - "15% Participation"
+        - "20% Homework Assignments"
+        - "30% Projects #1 & #2 (15% each)"
+        - "25% Final Project"
+      institutions:
+        - name: "NYU Abu Dhabi"
+          country: 12
+          url: "https://nyuad.nyu.edu"
+          date:
+            year: 2017
+            term: "fall"
+    - uuid: '46de6a2b-666b-4c24-b1e1-4695821f8469'
+      title: "Projects in Painting 1: private theater, public meaning"
+      status: "listed"
+      description: "Painting goes back over 40,000 years, as evidenced by the El Castillo Caves of Spain. No other art form has an accessible history this extensive, which is why the choice to make paintings is particularly challenging. And yet, this is also the reason we continue to do it.  Because, when you reach out with that brush, you are metaphorically touching all painting and thus attempting to communicate with all humanity past and present. Painting has provided us an impression of people from the Neanderthal to the Renaissance to Modern and Post-Modern times. This history serves as evidence of our humanity. Because of its plasticity, painting continues to be the most economic means for expression. The intelligence of painting comes from its 2-dimensional character. It requires the invention of flat abstract shapes to communicate complex, multi-dimensional ideas. For the individual painter the painting process takes place in time. It is an intimate theater of action. However, in public, paintings are experienced in their simultaneity. The paradox; painting is a process that takes place in time but is experienced without time. When we connect with a painting our empathy with the artist collapses all of time into the present. There is no history."
+      language: en
+      academic_level: 1
+      duration: 14
+      attachments:
+        - uuid: 'c6660baf-12b8-4bdb-b5e6-4680bee8ab34'
+          name: "University website"
+          url: "https://nyuad.nyu.edu"
+      tags:
+        - "painting"
+        - "art history"
+        - "exhibition design"
+      learning_outcomes:
+        - "They will learn to see shapes of color with sizes, brightness, hue intensities and textures and understand what constitutes an appropriate relationship between form and content."
+        - "They will have an increased authority and self-confidence with the tools of painting and a better understanding of how to express ideas 2-dimensionally."
+        - "they will experience painting as an art form rich in possibilities for the expression of feelings, perceptions and ideas."
+      topic_outlines:
+        - "Painting"
+        - "Visual Perception"
+        - "Visual Expression"
+      assignments:
+        - "Demonstrated comprehension of techniques from canvas and panel preparation to mixing and application of paint."
+        - "Comprehension of ideas appropriate to painting. (Good “ideas” are not always good for painting.)"
+        - "Comprehension of painting principles: Position/reposition, proximity, dark-light-middletone, closure, figure/ground relationships and an increased facility with brush work."
+      institutions:
+        - name: "NYU Abu Dhabi"
+          country: 12
+          url: "https://nyuad.nyu.edu"
+          date:
+            year: 2021
+            term: "fall"
+
+    - uuid: '46de6a2b-666b-4c24-b1e1-4795821f8469'
+      title: "Anthropology and the Arab World"
+      status: "listed"
+      description: "How have anthropologists encountered, written about, and produced the “Arab world” over the past century? Beginning with early Western travelers’ imaginaries of Arabia and ending with a reflection on the role of anthropology (in the Muslim world, and more globally) today, this course provides an introduction to the anthropological project and to the everyday realities of people living in the region. Through ethnographic texts, films, and fieldwork, we will explore such topics as Orientalism and its legacy; constructs of youth, gender, family, and tribe; poetry and mediation; generational and social change; oil, development, and globalization; water, resource scarcity, and environmental governance; transnational labor, migration, and diaspora; the Islamic Revival and religious conversion; faith, medicine, and bioethics; displacement and dispossession; refugees and human rights; the Arab uprisings and their aftermath; and ethnographic representations and responsibilities."
+      language: en
+      academic_level: 1
+      academic_fields:
+        - 314
+      duration: 14
+      attachments:
+        - uuid: 'c6660baf-12b8-4bdb-b5e6-4780bee8ab35'
+          name: "University website"
+          url: "https://nyuad.nyu.edu"
+      tags:
+        - "Anthropology"
+        - "Arab World"
+      learning_outcomes:
+        - "I dentify some of the multiple political, social, and economic developments that have occurred in the Arab world since the beginning of the 20th century."
+        - "Demonstrate a familiarity with anthropological approaches to the study of the Arab world and to the thematic topics discussed over the course of the semester."
+      topic_outlines:
+        - "Gulf Migration"
+        - "Arab Spring"
+        - "Bedouin Culture"
+      assignments:
+        - "Participation"
+        - "Presentation"
+        - "Evening Film Screening"
+        - "Reading Responses"
+      institutions:
+        - name: "NYU Abu Dhabi"
+          country: 12
+          url: "https://nyuad.nyu.edu"
+          date:
+            year: 2020
+            term: "fall/spring"
+
+    - uuid: '46de6a2b-666b-4c24-b1e1-4895821f8469'
+      title: "Unmasking the Actor: Covering the face to liberate the body"
+      status: "listed"
+      description: "Unmasking the Actor is a theatre performance course that provides students with a series of tools to allow them not to “play themselves” but to “play using themselves”.\nThe course is based on the performance philosophy and practice of Jacques Lecoq, where an investigation of the mechanics of the body is applied to dramatic creation using different acting traditions. Students analyze their body and movement with four different kinds of mask: Neutral mask, Larval mask, Commedia dell’Arte mask and the smallest mask in the world, the red nose of the clown. In this process, the disguise drives the students to discover emotions, movements and thoughts far from their habitual and comfortable modes of performance; by gradually removing the disguise, they reach self-awareness and learn how to enjoy their presence on stage. Combining the methodologies of Jacques Lecoq, Carlo Boso and Philippe Gaulier the course is a careful study of stage performance and its effects."
+      language: en
+      academic_level: 2
+      academic_fields:
+        - 215
+      duration: 14
+      attachments:
+        - uuid: 'c6660baf-12b8-4bdb-b5e6-4880bee8ab36'
+          name: "University website"
+          url: "https://nyuad.nyu.edu"
+      tags:
+        - "masks"
+        - "acting technique"
+        - "jacques lecoq"
+      learning_outcomes:
+        - "Deep awareness of the body"
+        - "Understanding of acting in space"
+        - "Economy of movement"
+        - "Attentive listening"
+        - "Open to the imaginary"
+      topic_outlines:
+        - "Theory of Jacques Lecoq"
+        - "Concentration in acting"
+        - "History of the mask"
+      assignments:
+        - "Participation (15%)\nParticipation means being present and proactive in the class. Students will be asked to lead acting exercises without prior warning. In working with the mask, students will be encouraged to practice and improvise without fear, and to question themselves. Participation also means letting yourself go in the play space, being mindful but carefree."
+        - "Attentive listenting and involvement (25%)\nMost of the exercises require the attention of the spectator. The silent participation of students who are temporarily out of the work space can enrich a performance exercise. In group work, students will be asked to concentrate and remain present, and ready to collaborate. Distraction and carelessness can weaken a performance. Attentive listening and learning to give and receive constructive criticism are crucial traits of this class."
+        - "Preparation (30%)\nStudents are expected to conduct research outside of class in order to generate original individual improvisation and creations. Their work must provide evidence that ample time was devoted to research and study, and applied to the practical exercises that will build their final projects.\nAt the end of each mask analysis - four in total - students are required to send an email to the instructor, reflecting upon class  experiences and participation in the work. At the end of Larval, Commedia and Clown sessions, students are expected to create a short scene/improvisation. This may take the form of a 3 to 5 minute original scene inspired by in-class improvisations."
+        - "Progress (30%)\nOne third of the final grade is based on the student’s ability to understand and process new stimuli, ideas and working methods, and to progressively incorporate them in his/her practice as an actor. The ability to question their beliefs, not to remain anchored in previous habits and conventions, either physical and emotional, is taken into consideration here."
+      institutions:
+        - name: "NYU Abu Dhabi"
+          country: 12
+          url: "https://nyuad.nyu.edu"
+          date:
+            year: 2018
+            term: "winter"
+
+    - uuid: '46de6a2b-666b-4c24-b1e1-4995821f8469'
+      title: "A.rt I.ntel: Machine Learning for Artists"
+      status: "listed"
+      description: "Artificial intelligence and machine learning algorithms affect many aspects of our lives whether we realize it or not: banking transactions, healthcare treatments and diagnoses, entertainment recommendations, smart car functionality, customer service agents, financial trading… the list goes on and on. The power of these algorithms lies in their ability to leverage computers to \"study\" and \"learn\". Instead of programming a computer to do a specific task, we program the computer to train itself how to do any number of tasks. As artists, how can we harness the power of these algorithms and apply them towards creative endeavors? This class will explore that basic question. Through a combination of high level applied machine learning techniques, speculative design of artificial intelligence, and some basic understanding of how these algorithms work at a low level, students will explore this rich new field. With their machine counterparts, they will create images, sounds, text, intuitive interactions, chatbots, and more."
+      language: en
+      academic_level: 1
+      academic_fields:
+        - 211
+      duration: 14
+      attachments:
+        - uuid: 'c6660baf-12b8-4bdb-b5e6-4980bee8ab37'
+          name: "University website"
+          url: "https://nyuad.nyu.edu"
+      tags:
+        - "machine learning"
+        - "generative art"
+        - "interactive media"
+      learning_outcomes:
+        - "Foster an ability to think critically about AI in terms of design, ethics, and global impact"
+        - "Develop a speculative artistic vision of the future that leverages both critical perspectives and creative applications of emerging AI technologies"
+        - "Create intuitive interactions using machine learning"
+        - "Understand some of the low-level math and code used in neural networks and deep learning"
+        - "Use Python, Tensorflow, & Keras to implement machine learning algorithms"
+        - "Use various types of neural networks to generate sound, visuals, and text"
+      topic_outlines:
+        - "keras"
+        - "tensorflow"
+        - "interface design"
+      assignments:
+        - "Attendance: 10%"
+        - "Participation: 10%"
+        - "Documentation and Reading Responses: 20%"
+        - "Exercises: 20%"
+        - "Projects: 40%"
+      institutions:
+        - name: "NYU Abu Dhabi"
+          country: 12
+          url: "https://nyuad.nyu.edu"
+          date:
+            year: 2021
+            term: "spring"
+
+    - uuid: '46de6a2b-666b-4c24-b1e1-5095821f8469'
+      title: "Topics in the History of Philosophy"
+      status: "listed"
+      description: "An advanced seminar that involves the careful study of some particular movement, philosopher, or issue in the history of philosophy. Examples: Aristotle, Ibn Sina, Kant, German Idealism, theories of causation in Indian philosophy, vice in the global history of philosophy.\nThe topic of this seminar is the philosophy of David Hume [1711- 1776], often considered to be the greatest philosopher to have written in English. Specific sub- topics for examination and discussion include Hume’s treatments of mental representation, space and time, inductive reasoning, belief, probability, causation, knowledge of the external world, epistemic normativity, free will, motivation, moral epistemology, moral normativity, natural virtues, justice, politics, and economics. Recurring themes will include the nature and consequences of his empiricism, skepticism, and naturalism and the systematic interrelations among the various elements of his philosophy. Emphasis will be placed throughout on Hume's significance for issues in contemporary philosophy."
+      language: en
+      academic_fields:
+        - 223
+      academic_level: 1
+      duration: 14
+      attachments:
+        - uuid: 'c6660baf-12b8-4bdb-b5e6-5080bee8ab38'
+          name: "University website"
+          url: "https://nyuad.nyu.edu"
+      tags:
+        - "David Hume"
+        - "Philosophy"
+        - "Macroeconomics"
+      learning_outcomes:
+        - "Understand the context in which Hume made his contributions to epistemology, metaphysics, philosophy of mind, ethics, politics, and economics"
+        - "Understand Hume's main philosophical concepts, doctrines, and arguments, both individually and as elements in a larger philosophical system."
+        - "Develop for oneself well- reasoned evaluations of the various elements of Hume's philosophy."
+        - "Bring elements of Hume's philosophy to bear on contemporary philosophical issues."
+        - "Improve one's skills in reading, analyzing, discussing, and writing about philosophy texts, especially philosophical texts from the past."
+      topic_outlines:
+        - "David Hume"
+        - "Morals"
+        - "Taste"
+      assignments:
+        - "Short pre-writing seminar writing assignments (20%)"
+        - "Essay #1 Epistemology/Metaphysics (35%)"
+        - "Essay #2 Morals/Politics (35%)"
+        - "Participation (10%)"
+      institutions:
+        - name: "NYU Abu Dhabi"
+          country: 12
+          url: "https://nyuad.nyu.edu"
+          date:
+            year: 2019
+            term: "spring"
+
+- uuid: 'e7b74bcd-c975-41ee-b5a7-d3031f76c8a0'
+  status: "confirmed"
+  name: "Test User (to delete)"
+  email: "test@delete.com"
+  password: [36, 50, 97, 36, 49, 48, 36, 121, 72, 53, 79, 110, 76, 51, 98, 57, 112, 80, 81, 53, 49, 104, 54, 100, 74, 121, 54, 79, 101, 47, 117, 119, 78, 76, 57, 103, 107, 100, 88, 51, 90, 111, 73, 75, 80, 117, 113, 57, 104, 69, 102, 103, 85, 67, 51, 73, 56, 88, 113, 67]
