@@ -25,6 +25,35 @@ func GetAllUsers(c echo.Context) error {
 	return c.JSON(http.StatusOK, users)
 }
 
+func GetUser(c echo.Context) error {
+	user_uuid := mustGetUser(c)
+
+	id := c.Param("id")
+	uid, err := uuid.Parse(id)
+	if err != nil {
+		if len(id) < 5 || !strings.Contains(id, "-") {
+			zero.Error(err.Error())
+			return c.String(http.StatusBadRequest, "Not a valid slug")
+		}
+
+		user, err := models.GetUserBySlug(id, user_uuid)
+		if err != nil {
+			zero.Errorf(err.Error())
+			return c.String(http.StatusNotFound, "There was an error getting the requested User.")
+		}
+
+		return c.JSON(http.StatusOK, user)
+	}
+
+	user, err := models.GetUser(uid, user_uuid)
+	if err != nil {
+		zero.Errorf("error getting User by UUID %v: %s", id, err)
+		return c.String(http.StatusNotFound, "We couldn't find the User.")
+	}
+
+	return c.JSON(http.StatusOK, user)
+}
+
 func CreateUser(c echo.Context) error {
 	err := sanitizeUserCreate(c)
 	if err != nil {
@@ -142,13 +171,13 @@ func AddUserInstitution(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "We had a problem binding your information, please check it again.")
 	}
 
-	syll, err := models.AddInstitutionToUser(user_uid, user_uuid, &inst)
+	user, err := models.AddInstitutionToUser(user_uid, user_uuid, &inst)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusInternalServerError, "We had a problem adding the Institution to the User profile.")
 	}
 
-	return c.JSON(http.StatusOK, syll)
+	return c.JSON(http.StatusOK, user)
 }
 
 func EditUserInstitution(c echo.Context) error {
@@ -178,42 +207,13 @@ func EditUserInstitution(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "We had a problem binding your information, please check it again.")
 	}
 
-	syll, err := models.EditInstitutionToUser(owner_uuid, inst_uid, &inst)
+	updated, err := models.EditInstitutionToUser(owner_uuid, inst_uid, &inst)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusInternalServerError, "We had a problem adding the Institution to the User profile.")
 	}
 
-	return c.JSON(http.StatusOK, syll)
-}
-
-func GetUser(c echo.Context) error {
-	user_uuid := mustGetUser(c)
-
-	id := c.Param("id")
-	uid, err := uuid.Parse(id)
-	if err != nil {
-		if len(id) < 5 || !strings.Contains(id, "-") {
-			zero.Error(err.Error())
-			return c.String(http.StatusBadRequest, "Not a valid slug")
-		}
-
-		user, err := models.GetUserBySlug(id, user_uuid)
-		if err != nil {
-			zero.Errorf(err.Error())
-			return c.String(http.StatusNotFound, "There was an error getting the requested User.")
-		}
-
-		return c.JSON(http.StatusOK, user)
-	}
-
-	user, err := models.GetUser(uid, user_uuid)
-	if err != nil {
-		zero.Errorf("error getting User by UUID %v: %s", id, err)
-		return c.String(http.StatusNotFound, "We couldn't find the User.")
-	}
-
-	return c.JSON(http.StatusOK, user)
+	return c.JSON(http.StatusOK, updated)
 }
 
 func RemoveUserInstitution(c echo.Context) error {
@@ -236,13 +236,13 @@ func RemoveUserInstitution(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, "Not a valid institution ID.")
 	}
 
-	syll, err := models.RemoveInstitutionFromUser(user_uid, inst_uid, user_uuid)
+	user, err := models.RemoveInstitutionFromUser(user_uid, inst_uid, user_uuid)
 	if err != nil {
 		zero.Error(err.Error())
 		return c.String(http.StatusInternalServerError, "There was an error removing the Institution.")
 	}
 
-	return c.JSON(http.StatusOK, syll)
+	return c.JSON(http.StatusOK, user)
 }
 
 func DeleteUser(c echo.Context) error {
