@@ -45,7 +45,7 @@ const GlobalNav: React.FunctionComponent = () => {
         </div>
 
         {/* DESKTOP */}
-        <div className="hidden md:flex items-center gap-6">
+        <div className="hidden md:flex items-center gap-6 mr-6">
           <Link
             href="/new-syllabus"
             className="p-2 bg-gray-900 text-gray-100 border-2 rounded-md"

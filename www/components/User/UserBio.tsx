@@ -58,7 +58,7 @@ const UserBio: React.FunctionComponent<IUserBioProps> = ({ userBio }) => {
   }
 
   return (
-    <div className="mt-5 flex flex-col">
+    <div className="mt-5 flex flex-col" data-cy="user-bio">
       <div className="flex justify-between">
         <h3 className="text-lg">Bio</h3>
         {ctx.isOwner && !isEditing ?
@@ -75,7 +75,7 @@ const UserBio: React.FunctionComponent<IUserBioProps> = ({ userBio }) => {
               <Image src={cancelIcon} width="24" height="24" alt="Icon to cancel the edit process" />
               <div>Cancel</div>
             </button>
-            <button className="flex items-center gap-2 rounded-lg border border-1 border-gray-900 py-1 px-2" onClick={submitEdit}>
+            <button data-cy="save-button" className="flex items-center gap-2 rounded-lg border border-1 border-gray-900 py-1 px-2" onClick={submitEdit}>
               <Image src={checkIcon} width="24" height="24" alt="Icon to save the edit process" />
               <div>Save</div>
             </button>

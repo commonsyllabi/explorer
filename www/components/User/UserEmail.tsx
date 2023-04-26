@@ -79,7 +79,7 @@ const UserEmail: React.FunctionComponent<IUserEmailProps> = ({ userEmail }) => {
         setTmpConf(e.target.value)
     }
 
-    return (<div id="user-email">
+    return (<div id="user-email" data-cy="user-email">
         <div className="flex justify-between">
 
             <h3 className="text-lg">Email</h3>
@@ -98,7 +98,7 @@ const UserEmail: React.FunctionComponent<IUserEmailProps> = ({ userEmail }) => {
                         <Image src={cancelIcon} width="24" height="24" alt="Icon to cancel the edit process" />
                         <div>Cancel</div>
                     </button>
-                    <button className="flex items-center gap-2 rounded-lg border border-1 border-gray-900 py-1 px-2" onClick={submitEdit}>
+                    <button data-cy="save-button" className="flex items-center gap-2 rounded-lg border border-1 border-gray-900 py-1 px-2" onClick={submitEdit}>
                         <Image src={checkIcon} width="24" height="24" alt="Icon to save the edit process" />
                         <div>Save</div>
                     </button>

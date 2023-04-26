@@ -75,7 +75,7 @@ const UserEducation: React.FunctionComponent<IUserEducationProps> = ({
   }
 
   return (
-    <div id="user-education" className="py-4">
+    <div id="user-education" className="py-4" data-cy="user-education">
       <div className="flex justify-between">
         <h3 className="text-lg">Education</h3>
         {ctx.isOwner && !isEditing ?
@@ -97,7 +97,7 @@ const UserEducation: React.FunctionComponent<IUserEducationProps> = ({
               </li>
             ))}
           </ul>
-          <button onClick={add} className="flex">
+          <button data-cy="add-item-button" onClick={add} className="flex">
             <Image src={addIcon} width="24" height="24" alt="Icon to add an element to the list" />
             <div>Add a field of study</div>
           </button>
@@ -107,7 +107,7 @@ const UserEducation: React.FunctionComponent<IUserEducationProps> = ({
               <Image src={cancelIcon} width="24" height="24" alt="Icon to cancel the edit process" />
               <div>Cancel</div>
             </button>
-            <button className="flex items-center gap-2 rounded-lg border border-1 border-gray-900 py-1 px-2" onClick={submitEdit}>
+            <button data-cy="save-button" className="flex items-center gap-2 rounded-lg border border-1 border-gray-900 py-1 px-2" onClick={submitEdit}>
               <Image src={checkIcon} width="24" height="24" alt="Icon to save the edit process" />
               <div>Save</div>
             </button>
@@ -123,7 +123,7 @@ const UserEducation: React.FunctionComponent<IUserEducationProps> = ({
               <></>
             }
             {education.map((item) => (
-              <li key={item}>{item !== '' ? item : 'No education yet.'}</li>
+              <li data-cy="user-education-item" key={item}>{item !== '' ? item : 'No education yet.'}</li>
             ))}</ul>
         </div>
       }

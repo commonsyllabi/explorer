@@ -64,7 +64,7 @@ const UserName: React.FunctionComponent<IUserNameProps> = ({ userName }) => {
     }
 
     return (
-        <div className="w-full mt-5 mb-16 flex flex-col">
+        <div className="w-full mt-5 mb-16 flex flex-col" data-cy="user-name">
             {isEditing ?
                 <div className="w-full flex flex-col justify-between">
                     <input type="text" className={`${kurintoSerif.className} text-3xl w-full bg-transparent mt-2 py-1 border-b-2 border-b-gray-900`} value={tmp} onChange={handleChange}></input>
@@ -73,7 +73,7 @@ const UserName: React.FunctionComponent<IUserNameProps> = ({ userName }) => {
                             <Image src={cancelIcon} width="24" height="24" alt="Icon to cancel the edit process" />
                             <div>Cancel</div>
                         </button>
-                        <button className="flex items-center gap-2 rounded-lg border border-1 border-gray-900 py-1 px-2" onClick={submitEdit}>
+                        <button data-cy="save-button" className="flex items-center gap-2 rounded-lg border border-1 border-gray-900 py-1 px-2" onClick={submitEdit}>
                             <Image src={checkIcon} width="24" height="24" alt="Icon to save the edit process" />
                             <div>Save</div>
                         </button>

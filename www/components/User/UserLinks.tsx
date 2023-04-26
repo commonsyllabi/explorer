@@ -95,14 +95,14 @@ const UserLinks: React.FunctionComponent<IUserLinksProps> = ({ userLinks }) => {
   }
 
   return (
-    <div id="user-links" className="mt-5">
+    <div id="user-links" className="mt-5" data-cy="user-links">
       <div className="flex justify-between">
-      <h3 className="text-lg">Links</h3>
-      {ctx.isOwner && !isEditing ?
-            <button className="ml-8" onClick={() => setIsEditing(true)}>
-              <Image src={editIcon} width="18" height="18" alt="Icon to edit the name" />
-            </button>
-            : <></>}
+        <h3 className="text-lg">Links</h3>
+        {ctx.isOwner && !isEditing ?
+          <button className="ml-8" onClick={() => setIsEditing(true)}>
+            <Image src={editIcon} width="18" height="18" alt="Icon to edit the name" />
+          </button>
+          : <></>}
       </div>
       {isEditing ?
         <div>
@@ -116,7 +116,7 @@ const UserLinks: React.FunctionComponent<IUserLinksProps> = ({ userLinks }) => {
               </li>
             ))}
           </ul>
-          <button onClick={add} className="flex">
+          <button data-cy="add-item-button" onClick={add} className="flex">
             <Image src={addIcon} width="24" height="24" alt="Icon to add an element to the list" />
             <div>Add URL</div>
           </button>
@@ -126,7 +126,7 @@ const UserLinks: React.FunctionComponent<IUserLinksProps> = ({ userLinks }) => {
               <Image src={cancelIcon} width="24" height="24" alt="Icon to cancel the edit process" />
               <div>Cancel</div>
             </button>
-            <button className="flex items-center gap-2 rounded-lg border border-1 border-gray-900 py-1 px-2" onClick={submitEdit}>
+            <button data-cy="save-button" className="flex items-center gap-2 rounded-lg border border-1 border-gray-900 py-1 px-2" onClick={submitEdit}>
               <Image src={checkIcon} width="24" height="24" alt="Icon to save the edit process" />
               <div>Save</div>
             </button>
@@ -136,18 +136,18 @@ const UserLinks: React.FunctionComponent<IUserLinksProps> = ({ userLinks }) => {
         :
         <div className="flex justify-between mb-3">
           <ul className="list-unstyled">
-          {links.length === 0 ?
-            <div className="text-sm text-gray-400">No links yet.</div>
-            :
-            <></>
+            {links.length === 0 ?
+              <div className="text-sm text-gray-400">No links yet.</div>
+              :
+              <></>
             }
             {links.map((link) => (
-            <li key={link}>
-              <Link href={link} target="_blank" rel="noreferrer" className="underline">
-                {link}
-              </Link>
-            </li>
-          ))}</ul>
+              <li data-cy="user-link" key={link}>
+                <Link href={link} target="_blank" rel="noreferrer" className="underline">
+                  {link}
+                </Link>
+              </li>
+            ))}</ul>
         </div>
       }
     </div>
