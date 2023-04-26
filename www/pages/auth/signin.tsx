@@ -191,8 +191,8 @@ const SignIn: NextPage = () => {
       {!isCreated ? (
         <div>
           <div className="flex my-8">
-            <div data-cy="signin-button-tab" onClick={() => setActiveTab("Login")} className={`text-xl mr-6 cursor-pointer ${activeTab === "Login" ? "font-bold" : ""}`}>Login</div>
-            <div data-cy="Signup-tab" onClick={() => setActiveTab("Sign up")} className={`text-xl mr-6 cursor-pointer ${activeTab === "Sign up" ? "font-bold" : ""}`}>Sign up</div>
+            <div data-cy="signin-tab" onClick={() => setActiveTab("Login")} className={`text-xl mr-6 cursor-pointer ${activeTab === "Login" ? "font-bold" : ""}`}>Login</div>
+            <div data-cy="signup-tab" onClick={() => setActiveTab("Sign up")} className={`text-xl mr-6 cursor-pointer ${activeTab === "Sign up" ? "font-bold" : ""}`}>Sign up</div>
           </div>
           <div id="tab">
             {activeTab === "Login" ?

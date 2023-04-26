@@ -91,7 +91,7 @@ const SyllabusListFormField: React.FunctionComponent<ISyllabusListFormFieldProps
 
                         <ul>
                             {learningOutcomes.map((lo, i) => (
-                                <li key={`${keyLabel}-${i}`} className={`${lo.length == 0 ? 'text-sm text-gray-400' : ''} whitespace-pre-wrap`}>
+                                <li data-cy={`course-${keyLabel}-item`} key={`${keyLabel}-${i}`} className={`${lo.length == 0 ? 'text-sm text-gray-400' : ''} whitespace-pre-wrap`}>
                                     {lo.length == 0 ? `No ${label.toLowerCase()}.` : lo}
                                 </li>
                             ))}

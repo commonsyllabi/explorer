@@ -1,6 +1,8 @@
 /* eslint-disable */
 // Disable ESLint to prevent failing linting inside the Next.js repo.
 
+import { login } from "../support/e2e"
+
 let stub = {
     title: "Intro to studies",
     public: true,
@@ -77,11 +79,8 @@ describe('Create a new syllabus', () => {
             })
         }).as('createAttachment')
 
-        cy.get('[data-cy="signin-button"]').click()
-        cy.get('[data-cy="signin-button-email"]').type("pierre.depaz@gmail.com")
-        cy.get('[data-cy="signin-button-password"]').type("12345678")
-        cy.get('[data-cy="signin-button-submit"]').click()
-        cy.wait(500)
+        login('test-user')
+        cy.visit('/')
         cy.get('[data-cy="newSyllabusLink"]').click()
         cy.wait(500)
 
@@ -97,15 +96,10 @@ describe('Create a new syllabus', () => {
 
         //-- add institution
         cy.get('[data-cy="institutionNameInput"]').type(stub.institution.name, { force: true })
-        cy.wait(500)
         cy.get('[data-cy="institutionCountryInput"]').select(stub.institution.country, { force: true })
-        cy.wait(500)
         cy.get('[data-cy="institutionYearInput"]').type(stub.institution.year, { force: true })
-        cy.wait(500)
         cy.get('[data-cy="institutionUrlInput"]').type(stub.institution.url, { force: true })
-        cy.wait(500)
         cy.get('[data-cy="institutionTermInput"]').type(stub.institution.term, { force: true })
-        cy.wait(500)
 
 
         //-- add academic fields and check academic fields
@@ -190,32 +184,30 @@ describe('Create a new syllabus', () => {
 
         cy.get('[data-cy="course-description"]').contains(stub.description)
 
-        cy.get('[data-cy="course-learning-outcomes"]').children().should('have.length', stub.learning_outcomes.length)
-        cy.get('[data-cy="course-learning-outcomes"]').children().first().contains(stub.learning_outcomes[0])
-        cy.get('[data-cy="course-learning-outcomes"]').children().last().contains(stub.learning_outcomes[1])
+        // AssertionError: Timed out retrying after 4000ms: Expected to find content: 'You will learn to learn' within the element: <h2.__className_615156.font-bold.text-lg> but never did. -> THE ISSUE IS THAT THE header of the
 
-        cy.get('[data-cy="course-topic-outlines"]').children().should('have.length', stub.topic_outlines.length)
-        cy.get('[data-cy="course-topic-outlines"]').children().first().contains(stub.topic_outlines[0])
-        cy.get('[data-cy="course-topic-outlines"]').children().last().contains(stub.topic_outlines[1])
+        cy.get('[data-cy="course-learning-outcomes-item"]').should('have.length', stub.learning_outcomes.length)
+        cy.get('[data-cy="course-learning-outcomes-item"]').first().contains(stub.learning_outcomes[0])
+        cy.get('[data-cy="course-learning-outcomes-item"]').last().contains(stub.learning_outcomes[1])
 
-        cy.get('[data-cy="course-readings"]').children().should('have.length', stub.readings.length)
-        cy.get('[data-cy="course-readings"]').children().first().contains(stub.readings[0])
-        cy.get('[data-cy="course-readings"]').children().last().contains(stub.readings[1])
-        cy.get('[data-cy="course-assignments"]').children().should('have.length', stub.learning_outcomes.length)
-        cy.get('[data-cy="course-assignments"]').children().first().contains(stub.assignments[0])
-        cy.get('[data-cy="course-assignments"]').children().last().contains(stub.assignments[1])
+        cy.get('[data-cy="course-topic-outlines-item"]').should('have.length', stub.topic_outlines.length)
+        cy.get('[data-cy="course-topic-outlines-item"]').first().contains(stub.topic_outlines[0])
+        cy.get('[data-cy="course-topic-outlines-item"]').last().contains(stub.topic_outlines[1])
+
+        cy.get('[data-cy="course-readings-item"]').should('have.length', stub.readings.length)
+        cy.get('[data-cy="course-readings-item"]').first().contains(stub.readings[0])
+        cy.get('[data-cy="course-readings-item"]').last().contains(stub.readings[1])
+        cy.get('[data-cy="course-assignments-item"]').should('have.length', stub.learning_outcomes.length)
+        cy.get('[data-cy="course-assignments-item"]').first().contains(stub.assignments[0])
+        cy.get('[data-cy="course-assignments-item"]').last().contains(stub.assignments[1])
 
         cy.get('[data-cy="course-grading-rubric"]').contains(stub.grading_rubric)
         cy.get('[data-cy="course-other"]').contains(stub.other)
-        cy.get('[data-cy="course-resource"]').should('have.length', 2)
+        cy.get('[data-cy="course-attachment"]').should('have.length', 2)
     })
 
     it('navigates to the syllabus page page and deletes it', () => {
-        cy.get('[data-cy="signin-button"]').click()
-        cy.get('[data-cy="signin-button-email"]').type("pierre.depaz@gmail.com")
-        cy.get('[data-cy="signin-button-password"]').type("12345678")
-        cy.get('[data-cy="signin-button-submit"]').click()
-        cy.wait(500)
+        login('test-user')
 
         if (!newSyllabusUUID) throw new Error(`incorrect newSyllabusUUID: ${newSyllabusUUID}`)
 

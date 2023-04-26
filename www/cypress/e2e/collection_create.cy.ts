@@ -1,15 +1,11 @@
 /* eslint-disable */
 
+import { login } from "../support/e2e"
+
 describe('Adds a syllabus to a collections', () => {
     let newCollectionName = "Famosa Collecya"
 
     it('should sign in, navigate to a syllabus and add it to a collection', () => {
-        cy.intercept('POST', '/api/auth/callback/credentials?', (req) => {
-            req.continue((res) => {
-                if (res.statusCode != 200) throw new Error(`Error logging the user in ${res.statusMessage}`)
-            })
-        }).as('login')
-
         cy.intercept('POST', '/collections/*/syllabi', (req) => {
             req.continue((res) => {
                 if (res.statusCode != 200) {
@@ -26,17 +22,7 @@ describe('Adds a syllabus to a collections', () => {
             })
         }).as('removeFromCollection')
 
-        cy.visit('/')
-        cy.get('[data-cy="syllabusCard"]').should('have.length.greaterThan', 1)
-        cy.get('[data-cy="signin-button"]').click({ force: true })
-        cy.wait(500)
-
-        cy.get('[data-cy="signin-button-email"]').type("pierre.depaz@gmail.com", { force: true })
-        cy.get('[data-cy="signin-button-password"]').type("12345678")
-
-        cy.get('[data-cy="signin-button-submit"]').click()
-        cy.wait('@login')
-
+        login('test-user')
         cy.visit('/')
         cy.get('[data-cy="syllabus-card-title"]').first().click()
 
@@ -52,17 +38,8 @@ describe('Adds a syllabus to a collections', () => {
     })
 
     it('should sign in, navigate to the profile and create a new collection', () => {
+        login('test-user')
         cy.visit('/')
-        cy.get('[data-cy="syllabusCard"]').should('have.length.greaterThan', 1)
-        cy.get('[data-cy="signin-button"]').click({ force: true })
-        cy.wait(500)
-
-        cy.get('[data-cy="signin-button-email"]').type("pierre.depaz@gmail.com", { force: true })
-        cy.get('[data-cy="signin-button-password"]').type("12345678")
-
-        cy.get('[data-cy="signin-button-submit"]').click()
-        cy.wait(1000)
-
         cy.get('[data-cy="libraryLink"]').click()
         cy.get('[data-cy="collectionsTab"]').click()
         cy.get('[data-cy="new-collection-button"]').click()
@@ -91,17 +68,8 @@ describe('Adds a syllabus to a collections', () => {
         }).as('deleteCollection')
 
         const _name = `${newCollectionName} (edited)`
+        login('test-user')
         cy.visit('/')
-        cy.get('[data-cy="syllabusCard"]').should('have.length.greaterThan', 1)
-        cy.get('[data-cy="signin-button"]').click({ force: true })
-        cy.wait(500)
-
-        cy.get('[data-cy="signin-button-email"]').type("pierre.depaz@gmail.com", { force: true })
-        cy.get('[data-cy="signin-button-password"]').type("12345678")
-
-        cy.get('[data-cy="signin-button-submit"]').click()
-        cy.wait(1000)
-
         cy.get('[data-cy="libraryLink"]').click()
         cy.get('[data-cy="collectionsTab"]').click()
         cy.get('[data-cy="collectionCard"] a').first().click()
