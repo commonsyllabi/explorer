@@ -5,13 +5,8 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
-COPY www/package.json www/yarn.lock* www/package-lock.json* www/pnpm-lock.yaml* ./
-RUN \
-  if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
-  elif [ -f package-lock.json ]; then npm ci; \
-  elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm && pnpm i; \
-  else echo "Lockfile not found." && exit 1; \
-  fi
+COPY www/package.json www/yarn.lock* ./
+RUN yarn --frozen-lockfile
 
 
 # Rebuild the source code only when needed
@@ -19,6 +14,7 @@ FROM node:16-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY ./www .
+COPY ./tests/frontend/.env.docker .
 
 ENV NEXT_TELEMETRY_DISABLED 1
 

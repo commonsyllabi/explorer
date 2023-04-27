@@ -207,7 +207,7 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo }) => {
               </div>
 
               {activeTab === "syllabi" ?
-                <div title="Syllabi" data-cy="syllabiTab" id="syllabi" className="flex flex-col gap-3">
+                <div title="Syllabi" id="syllabi" className="flex flex-col gap-3">
                   {!userInfo.syllabi || userInfo.syllabi?.length === 0 ? "No syllabi yet." :
                     getSyllabusCards(
                       filteredSyllabi(),
@@ -219,7 +219,7 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo }) => {
                   }
                 </div>
                 :
-                <div title="Collections" data-cy="collectionsTab" id="collections" className="flex flex-col gap-3">
+                <div title="Collections" id="collections" className="flex flex-col gap-3">
                   {getCollectionCards(
                     filteredCollections(),
                   ) ? getCollectionCards(

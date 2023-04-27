@@ -18,16 +18,30 @@ services:
       timeout: 3s
       retries: 10
 
-  backend:
-    container_name: backend
-    build: .
+  backend_test:
+    container_name: backend_test
+    build: ../
     depends_on:
       db:
         condition: service_healthy
     ports:
-     - ${PORT}:${PORT}
+     - 3046:3046
     env_file:
-     - ./.secrets
+     - ../.secrets
+     - ../.env.test
+    tmpfs:
+      - /tmp
+
+  backend:
+    container_name: backend
+    build: ../
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+     - 3046:3046
+    env_file:
+     - ../.secrets
     environment:
       DATABASE_URL: "postgres://cosyl:cosyl@db:5433/explorer-test"
       PORT: "3046"
@@ -42,10 +56,10 @@ services:
   frontend:
     container_name: frontend
     build:
-      context: .
-      dockerfile: tests/Dockertest.next.front
+      context: ../
+      dockerfile: ./tests/frontend/Dockerfile
     env_file:
-      - ./www/.env.docker
+      - ./frontend/.env.docker
     depends_on:
       - backend
     ports:
