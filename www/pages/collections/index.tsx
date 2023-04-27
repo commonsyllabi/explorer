@@ -11,7 +11,7 @@ interface ICollectionsProps {
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const url = new URL("collections/", process.env.NEXT_PUBLIC_API_URL);
+  const url = new URL("collections/", process.env.API_URL);
 
   const res = (await fetch(url).catch((err) => {
     return {

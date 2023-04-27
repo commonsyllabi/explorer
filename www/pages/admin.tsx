@@ -21,7 +21,7 @@ export const getServerSideProps: GetServerSideProps = async (context: GetServerS
     if (adminId !== process.env.ADMIN_KEY)
         return { props: {} }
 
-    const url = new URL(`admin?token=${adminId}`, process.env.NEXT_PUBLIC_API_URL);
+    const url = new URL(`admin?token=${adminId}`, process.env.API_URL);
 
     const h = new Headers();
     if (adminId)

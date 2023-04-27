@@ -20,8 +20,7 @@ export const authOptions: NextAuthOptions = {
                 b.append("email", credentials.username);
                 b.append("password", credentials.password);
 
-                const apiUrl = process.env.NODE_ENV == 'test' ? 'http://backend_explorer:3046/' : process.env.NEXT_PUBLIC_API_URL;
-                const login_endpoint = new URL('/login', apiUrl)
+                const login_endpoint = new URL('/login', process.env.API_URL)
                 const response = await fetch(login_endpoint.href, {
                     method: 'POST',
                     body: b,

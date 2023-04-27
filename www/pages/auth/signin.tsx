@@ -1,10 +1,9 @@
-import type { GetStaticProps, NextPage } from "next";
+import type { NextPage } from "next";
 import React, { useState } from "react";
 
 import { useSession, signIn, signOut } from "next-auth/react";
 import Router from "next/router";
 import Link from "next/link";
-import UserName from "components/User/UserName";
 
 const SignIn: NextPage = () => {
   const { data: session, status } = useSession();

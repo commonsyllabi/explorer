@@ -70,7 +70,7 @@ const FiltersBar: React.FunctionComponent<syllabiFiltersProps> = ({ updateFilter
             data-cy="filtersAcademicLevel"
             onChange={handleChange}>
             <option value="">All</option>
-            {getLevelsFilters(meta.academic_levels)}
+            {getLevelsFilters(meta ? meta.academic_levels : [])}
           </select>
         </form>
 
@@ -85,7 +85,7 @@ const FiltersBar: React.FunctionComponent<syllabiFiltersProps> = ({ updateFilter
             data-cy="filtersAcademicYear"
             onChange={handleChange}>
             <option value="">All</option>
-            {getYearsFilters(meta.academic_years)}
+            {getYearsFilters(meta ? meta.academic_years : [])}
           </select>
         </form>
 
@@ -100,7 +100,7 @@ const FiltersBar: React.FunctionComponent<syllabiFiltersProps> = ({ updateFilter
             data-cy="filtersAcademicField"
             onChange={handleChange}>
             <option value="">All</option>
-            {getFieldsFilters(meta.academic_fields)}
+            {getFieldsFilters(meta ? meta.academic_fields : [])}
           </select>
         </form>
 
@@ -115,7 +115,7 @@ const FiltersBar: React.FunctionComponent<syllabiFiltersProps> = ({ updateFilter
             data-cy="filtersLanguage"
             onChange={handleChange}>
             <option value="">All</option>
-            {getLanguagesFilters(meta.languages)}
+            {getLanguagesFilters(meta ? meta.languages : [])}
           </select>
         </form>
 

@@ -23,7 +23,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const userId = context.params!.uid;
   const t = await getToken({ req: context.req, secret: process.env.NEXTAUTH_SECRET })
   const token = t ? (t.user as { _id: string, token: string }).token : '';
-  const url = new URL(`users/${userId}`, process.env.NEXT_PUBLIC_API_URL);
+  const url = new URL(`users/${userId}`, process.env.API_URL);
 
   const h = new Headers();
   if (t)
@@ -42,7 +42,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
     let full_syllabi = []
     for (const syll of userInfo.syllabi) {
-      const res = await fetch(new URL(`syllabi/${syll.uuid}`, process.env.NEXT_PUBLIC_API_URL), { headers: h })
+      const res = await fetch(new URL(`syllabi/${syll.uuid}`, process.env.API_URL), { headers: h })
       if (res.ok) {
         const s = await res.json()
         full_syllabi.push(s)

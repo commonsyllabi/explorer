@@ -22,7 +22,7 @@ export const getServerSideProps: GetServerSideProps = async (context: GetServerS
 
   const t = await getToken({ req: context.req, secret: process.env.NEXTAUTH_SECRET })
   const token = t ? (t.user as { _id: string, token: string }).token : '';
-  const url = new URL(`collections/${collectionId}`, process.env.NEXT_PUBLIC_API_URL);
+  const url = new URL(`collections/${collectionId}`, process.env.API_URL);
 
   const h = new Headers();
   if (t)

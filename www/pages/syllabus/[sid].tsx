@@ -39,8 +39,8 @@ export const getServerSideProps: GetServerSideProps = async (context: GetServerS
   if (t)
     h.append("Authorization", `Bearer ${token}`);
 
-  const syllUrl = new URL(`syllabi/${syllabusId}`, process.env.NEXT_PUBLIC_API_URL);
-  const userUrl = new URL(`users/${userId}`, process.env.NEXT_PUBLIC_API_URL);
+  const syllUrl = new URL(`syllabi/${syllabusId}`, process.env.API_URL);
+  const userUrl = new URL(`users/${userId}`, process.env.API_URL);
 
   //-- get syllabus info
   const syll_res = await fetch(syllUrl, { headers: h });
