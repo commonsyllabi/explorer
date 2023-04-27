@@ -86,6 +86,8 @@ func runFixtures(shouldTruncateTables bool) error {
 	var fixtures_path = ""
 	if os.Getenv("FIXTURES_PATH") != "" {
 		fixtures_path = os.Getenv("FIXTURES_PATH")
+	} else if os.Getenv("API_MODE") == "test" {
+		fixtures_path = "test.yml"
 	} else {
 		zero.Error("missing FIXTURES_PATH env var")
 	}

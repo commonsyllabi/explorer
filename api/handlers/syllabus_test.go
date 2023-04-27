@@ -44,6 +44,9 @@ var (
 	userUnknownID uuid.UUID
 
 	instID uuid.UUID
+
+	syllabiCount          = 20
+	syllabiAcademicLevels = 8
 )
 
 func setup(t *testing.T) func(t *testing.T) {
@@ -105,7 +108,7 @@ func TestSyllabusHandler(t *testing.T) {
 		var resp SyllabusResponse
 		err := json.Unmarshal(res.Body.Bytes(), &resp)
 		require.Nil(t, err)
-		assert.Equal(t, 3, len(resp.Syllabi))
+		assert.Equal(t, syllabiCount, len(resp.Syllabi))
 	})
 
 	t.Run("Test get all syllabi in academic fields", func(t *testing.T) {
@@ -206,7 +209,7 @@ func TestSyllabusHandler(t *testing.T) {
 		var resp SyllabusResponse
 		err := json.Unmarshal(res.Body.Bytes(), &resp)
 		require.Nil(t, err)
-		assert.Equal(t, 1, len(resp.Syllabi))
+		assert.Equal(t, syllabiAcademicLevels, len(resp.Syllabi))
 	})
 
 	t.Run("Test get all syllabi in a wrong academic_level", func(t *testing.T) {
