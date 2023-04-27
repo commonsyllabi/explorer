@@ -1,8 +1,8 @@
 services:
-  db_test_explorer:
+  db:
     image: postgres:alpine
     user: postgres
-    container_name: db_test_explorer
+    container_name: db
     environment:
       POSTGRES_USER: cosyl
       POSTGRES_PASSWORD: cosyl
@@ -18,38 +18,36 @@ services:
       timeout: 3s
       retries: 10
 
-  backend_explorer:
-    container_name: backend_explorer
+  backend:
+    container_name: backend
     build: .
     depends_on:
-      db_test_explorer:
+      db:
         condition: service_healthy
     ports:
      - ${PORT}:${PORT}
     env_file:
      - ./.secrets
     environment:
-      DATABASE_TEST_URL: "postgres://cosyl:cosyl@db_test_explorer:5433/explorer-test"
+      DATABASE_URL: "postgres://cosyl:cosyl@db:5433/explorer-test"
       PORT: "3046"
       DB_PORT: "5433"
       DEBUG: "false"
-      API_MODE: "test"
+      API_MODE: "dev"
       RUN_FIXTURES: "true"
       FIXTURES_PATH: "test.yml"
     tmpfs:
       - /tmp
 
-  frontend_test_explorer:
-    container_name: frontend_test_explorer
+  frontend:
+    container_name: frontend
     build:
       context: .
       dockerfile: tests/Dockertest.next.front
-    environment:
-      API_URL: "http://backend_explorer:3046"
-      NEXT_PUBLIC_API_URL: "http://backend_explorer:3046"
-      NEXTAUTH_URL: "http://backend_explorer:3046/auth"
+    env_file:
+      - ./www/.env.docker
     depends_on:
-      - backend_explorer
+      - backend
     ports:
      - 3000:3000
 
