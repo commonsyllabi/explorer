@@ -15,7 +15,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func getInstution(os models.OpenSyllabus) []models.OpenSyllabusParsedInstitution {
+func getInstitution(os models.OpenSyllabus) []models.OpenSyllabusParsedInstitution {
 	// Initialize the institution
 	var institutions []models.OpenSyllabusParsedInstitution
 
@@ -32,8 +32,9 @@ func getInstution(os models.OpenSyllabus) []models.OpenSyllabusParsedInstitution
 }
 
 func getAcademicField(os models.OpenSyllabus) []string {
-	// initialize the academic field array
 	var academicFields []string
+
+	// TODO: ignore academic fields for now: the conversion from CID to ISCED is a pain
 
 	return academicFields
 }
@@ -50,6 +51,91 @@ func getTitle(os models.OpenSyllabus) string {
 	}
 
 	return title
+}
+
+func getDescription(os models.OpenSyllabus) string {
+	var desc string
+
+	var maxProbability float64 = 0
+	for _, d := range os.Data.ExtractedSections.Description {
+		if d.MeanProbability > maxProbability {
+			maxProbability = d.MeanProbability
+			desc = d.Text
+		}
+	}
+
+	return desc
+}
+
+func getReadings(os models.OpenSyllabus) []string {
+	var readings []string
+
+	for _, c := range os.Data.Citations {
+		var title, author string
+		if len(c.Parsed.Title) > 0 {
+			title = c.Parsed.Title[0].Text
+		} else {
+			title = "Unknown title"
+		}
+
+		if len(c.Parsed.Author) > 0 {
+			author = c.Parsed.Author[0].Text
+		} else {
+			author = "Unknown author"
+		}
+		reading := fmt.Sprintf("%s, %s", title, author)
+		readings = append(readings, reading)
+	}
+
+	return readings
+}
+
+func getGradingRubric(os models.OpenSyllabus) []string {
+	var rubric []string
+
+	for _, lo := range os.Data.ExtractedSections.LearningOutcomes {
+		if lo.MeanProbability > 0.5 {
+			rubric = append(rubric, lo.Text)
+		}
+	}
+
+	return rubric
+}
+
+func getLearningOutcomes(os models.OpenSyllabus) []string {
+	var outcomes []string
+
+	for _, lo := range os.Data.ExtractedSections.LearningOutcomes {
+		if lo.MeanProbability > 0.5 {
+			outcomes = append(outcomes, lo.Text)
+		}
+	}
+
+	return outcomes
+}
+
+func getSchedule(os models.OpenSyllabus) []string {
+	var schedule []string
+
+	for _, sch := range os.Data.ExtractedSections.AssignmentSchedule {
+		if sch.MeanProbability > 0.5 {
+			schedule = append(schedule, sch.Text)
+		}
+	}
+
+	return schedule
+}
+
+func getAssignments(os models.OpenSyllabus) []string {
+	var assignments []string
+
+	for _, ass := range os.Data.ExtractedSections.AssessmentStrategy {
+		if ass.MeanProbability > 0.5 {
+			assignments = append(assignments, ass.Text)
+		}
+	}
+
+	return assignments
 }
 
 func getProbability(jsonResponse interface{}) (float64, error) {
@@ -119,8 +205,8 @@ func ParseSyllabusFile(c echo.Context) error {
 
 	// Check if the API response was successful
 	if resp.StatusCode != http.StatusOK {
-		zero.Error(err.Error())
-		return c.String(http.StatusInternalServerError, "Error processing file")
+		zero.Error(fmt.Sprintf("Error processing file: %v", resp.Status))
+		return c.String(http.StatusInternalServerError, fmt.Sprintf("Error processing file: %v", resp.Status))
 	}
 
 	// Read the response body
@@ -158,7 +244,6 @@ func ParseSyllabusFile(c echo.Context) error {
 		fmt.Println(openSyllabus)
 		return c.String(http.StatusInternalServerError, "There was a probleming parsing the response body")
 	}
-	fmt.Println(openSyllabus)
 
 	if err != nil {
 		zero.Error(err.Error())
@@ -166,13 +251,17 @@ func ParseSyllabusFile(c echo.Context) error {
 	}
 
 	formData := models.OpenSyllabusParsed{
-		Title:          getTitle(openSyllabus),
-		Institutions:   getInstution(openSyllabus),
-		Language:       openSyllabus.Data.Language,
-		AcademicFields: getAcademicField(openSyllabus),
-		// Readings:       getReadings(openSyllabus),
-		// GradingRubric:  openSyllabus.Data.ExtractedSections.GradingRubric,
-		// Assignments:    getAssignments(openSyllabus),
+		Title:            getTitle(openSyllabus),
+		Institutions:     getInstitution(openSyllabus),
+		Description:      getDescription(openSyllabus),
+		Language:         openSyllabus.Data.Language,
+		AcademicFields:   getAcademicField(openSyllabus),
+		Readings:         getReadings(openSyllabus),
+		LearningOutcomes: getLearningOutcomes(openSyllabus),
+		GradingRubric:    getGradingRubric(openSyllabus),
+		Schedule:         getSchedule(openSyllabus),
+		URLs:             openSyllabus.Data.URLs,
+		Assessments:      getAssignments(openSyllabus),
 	}
 
 	// Return a success message
