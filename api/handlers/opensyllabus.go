@@ -93,7 +93,7 @@ func getReadings(os models.OpenSyllabus) []string {
 func getGradingRubric(os models.OpenSyllabus) []string {
 	var rubric []string
 
-	for _, lo := range os.Data.ExtractedSections.LearningOutcomes {
+	for _, lo := range os.Data.ExtractedSections.GradingRubric {
 		if lo.MeanProbability > 0.5 {
 			rubric = append(rubric, lo.Text)
 		}

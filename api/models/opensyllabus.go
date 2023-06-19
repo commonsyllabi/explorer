@@ -73,7 +73,7 @@ type OpenSyllabusParsedInstitution struct {
 
 type OpenSyllabusParsed struct {
 	Title            string                          `json:"title"`
-	Institutions     []OpenSyllabusParsedInstitution `json:"institution"`
+	Institutions     []OpenSyllabusParsedInstitution `json:"institutions"`
 	AcademicFields   []string                        `json:"academic_field"`
 	AcademicLevel    string                          `json:"academic_level"`
 	Language         string                          `json:"language"`
@@ -81,10 +81,10 @@ type OpenSyllabusParsed struct {
 	Tags             []string                        `json:"tags"`
 	Description      string                          `json:"description"`
 	LearningOutcomes []string                        `json:"learning_outcomes"`
-	TopicOutline     string                          `json:"topic_outline"`
+	TopicOutline     string                          `json:"topic_outlines"`
 	Readings         []string                        `json:"readings"`
 	GradingRubric    []string                        `json:"grading_rubric"`
-	Schedule         []string                        `json:"schedule"`
+	Schedule         []string                        `json:"other"`
 	Attachments      []string                        `json:"attachments"`
 	Assessments      []string                        `json:"assignments"`
 	URLs             []string                        `json:"urls"`
