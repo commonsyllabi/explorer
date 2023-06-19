@@ -69,6 +69,7 @@ export interface ISyllabus {
 }
 
 export interface IFormData {
+  [K:string]:any,
   institutions: IInstitution[];
   title: string;
   course_number: string;

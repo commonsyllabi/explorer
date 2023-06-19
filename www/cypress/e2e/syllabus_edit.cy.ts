@@ -18,7 +18,7 @@ let stub = {
         literal: 'Master\'s'
     },
     language: {
-        code: 'FR',
+        code: 'fr',
         literal: 'French'
     },
     duration: 7,

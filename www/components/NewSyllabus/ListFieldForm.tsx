@@ -10,11 +10,16 @@ interface IListFieldFormProps {
 }
 
 const ListFieldForm: React.FunctionComponent<IListFieldFormProps> = ({ name, data, setData }) => {
-
+    const [base, setBase] = useState(data ? data : [''])
     const [tmp, setTmp] = useState(data ? data : [''])
     const nameKey = name.split(' ').join('_').toLowerCase()
+
     useEffect(() => {
-        setData(tmp)
+        setBase(data)
+    }, [data])
+
+    useEffect(() => {
+            setData(tmp)
     }, [tmp])
 
     const handleChange = (e: React.BaseSyntheticEvent) => {
@@ -22,6 +27,7 @@ const ListFieldForm: React.FunctionComponent<IListFieldFormProps> = ({ name, dat
         const t = e.target;
         tmp[t.dataset.index] = t.value
         setTmp([...tmp])
+        setBase(([...tmp]))
     }
 
     const add = (e: React.BaseSyntheticEvent) => {
@@ -29,6 +35,7 @@ const ListFieldForm: React.FunctionComponent<IListFieldFormProps> = ({ name, dat
         e.stopPropagation()
 
         setTmp([...tmp, ''])
+        setBase(([...tmp, '']))
     }
 
     const remove = (e: React.BaseSyntheticEvent) => {
@@ -39,13 +46,14 @@ const ListFieldForm: React.FunctionComponent<IListFieldFormProps> = ({ name, dat
         tmp.splice(i, 1)
 
         setTmp([...tmp])
+        setBase(([...tmp]))
     }
 
     return (
         <div className="flex flex-col my-8 gap-2">
             <label htmlFor={nameKey}>{name}</label>
             <ul>
-                {tmp.map((r, _index) => (
+                {base.map((r, _index) => (
                     <li className="flex gap-2" key={`${nameKey}-${_index}`} >
                         <textarea className="w-full bg-transparent mt-2 p-1 border border-gray-900" data-index={_index} onChange={handleChange} 
                         data-cy={`${nameKey}-item`} value={r} placeholder={`Add a new item`} />

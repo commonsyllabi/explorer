@@ -54,15 +54,25 @@ const NewSyllabus: NextPage = () => {
 
   useEffect(() => {
     if (parsedData) {
-      console.log(parsedData);
+      console.log('parsed data', parsedData);
   
-      setFormData((prevFormData) => {
-        const newData = { ...prevFormData };
-        for (const key in parsedData) {
-          if (Object.prototype.hasOwnProperty.call(parsedData, key) && key in newData) {
-            // newData[key] = parsedData[key]; //-- type error?
+      setFormData((prevFormData : IFormData) => {
+        let newData: IFormData = {} as IFormData
+        Object.assign(newData, prevFormData)
+        
+        for (const key in newData) {
+          if (key && Object.prototype.hasOwnProperty.call(parsedData, key) && key in newData) {
+            
+            if(parsedData[key as keyof IFormDataOptional] && parsedData[key as keyof IFormDataOptional].length > 0)
+              newData[key as keyof IFormData] = parsedData[key as keyof IFormDataOptional]; //-- type error?
           }
         }
+        
+        
+        // newData.language = parsedData["language"] ? parsedData["language"] : newData.language
+        // newData.title = parsedData["title"] ? parsedData["title"] : newData.title
+        // newData.other += parsedData["other"] ? parsedData["other"] : ''
+        
         return newData;
       });
     }
@@ -264,7 +274,7 @@ const NewSyllabus: NextPage = () => {
 
               <hr className="my-12 border border-gray-300" />
 
-              {/* <div className="w-10/12 m-auto my-32 border border-gray-900 rounded-lg p-2">
+              <div className="w-10/12 m-auto my-32 border border-gray-900 rounded-lg p-2">
                 <h4>
                   Upload a syllabus and autofill{"  "}
                   <span className="w-min p-1 border-2 border-gray-400 rounded-xl">
@@ -274,7 +284,7 @@ const NewSyllabus: NextPage = () => {
                 <DragAndDropSyllabus session={session} setParsedData={setParsedData} setParsedFile={setParsedFile}/>
               </div>
 
-              <hr className="my-12 border border-gray-300" /> */}
+              <hr className="my-12 border border-gray-300" />
 
               {/* //TODO make add institution work */}
               <div className="institution-section my-12 flex flex-col gap-3">
@@ -425,6 +435,7 @@ const NewSyllabus: NextPage = () => {
                     className="bg-transparent mt-2 p-1 border-2 border-gray-900"
                     id="language"
                     onChange={handleChange}
+                    value={formData.language}
                     data-cy="courseLanguageInput"
                   >
                     <option value="">—</option>
@@ -446,6 +457,7 @@ const NewSyllabus: NextPage = () => {
                       type="text"
                       id="duration"
                       onChange={handleChange}
+                      value={formData.duration}
                       placeholder="e.g. 14 weeks"
                       data-cy="courseDurationInput"
                     />
@@ -479,7 +491,8 @@ const NewSyllabus: NextPage = () => {
                   required
                   id="description"
                   onChange={handleChange}
-                  rows={4}
+                  value={formData.description}
+                  rows={8}
                   placeholder="Course outline..."
                   data-cy="courseDescriptionInput"
                 />
@@ -504,7 +517,8 @@ const NewSyllabus: NextPage = () => {
                   className="bg-transparent mt-2 p-1 border border-gray-900"
                   id="grading_rubric"
                   onChange={handleChange}
-                  rows={4}
+                  value={formData.grading_rubric}
+                  rows={8}
                   placeholder="Course grading rubric..."
                   data-cy="courseGradingRubric"
                 />
@@ -518,7 +532,8 @@ const NewSyllabus: NextPage = () => {
                   className="bg-transparent mt-2 p-1 border border-gray-900"
                   id="other"
                   onChange={handleChange}
-                  rows={4}
+                  rows={8}
+                  value={formData.other}
                   placeholder="Other comments or notes about the course..."
                   data-cy="courseOther"
                 />

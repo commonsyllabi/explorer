@@ -1,6 +1,5 @@
 import React, { useMemo, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { Row, Col, Spinner, Alert } from "react-bootstrap";
 import { FiCheckCircle, FiFile, FiXCircle } from "react-icons/fi";
 import { Session } from "next-auth";
 import { IFormDataOptional } from "types";
@@ -154,11 +153,11 @@ function DragAndDropSyllabus({
 
   return (
     <>
-      <Row {...getRootProps({ style })}>
+      <div {...getRootProps({ style })}>
         <input {...getInputProps()} />
         <div style={{ fontSize: "32px", width: "32px", marginRight: "16px" }}>
           {isLoading ? (
-            <Spinner animation="border" />
+            'Loading...'
           ) : showSuccess ? (
             // show checkmark
             <FiCheckCircle />
@@ -168,7 +167,7 @@ function DragAndDropSyllabus({
             <FiFile />
           )}
         </div>
-        <Col>
+        <div>
           <p className="m-0">
             Drag and drop a syllabus file here, or click to select a file.
           </p>
@@ -176,8 +175,8 @@ function DragAndDropSyllabus({
             Accepted file types:{" "}
             <span style={styleAcceptedFormats}>DOC, DOCX, PDF.</span>
           </p>
-        </Col>
-      </Row>
+        </div>
+      </div>
       <p className={`small p-2 ${showError ? "text-danger" : "text-success"}`}>
         {message}
       </p>

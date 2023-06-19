@@ -1,7 +1,5 @@
 /* eslint-disable */
 
-import { login } from "../support/e2e"
-
 describe('User profile deletion', () => {
     it('deletes the user profile', () => {
         cy.intercept('DELETE', '/users/*', (req) => {
