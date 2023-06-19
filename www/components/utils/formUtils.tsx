@@ -65,7 +65,9 @@ export const generateLanguageOptions = () => {
 };
 
 export const getLanguageFromCode = (_lang: string) => {
+  if(!_lang) return ""
   const languages = setUpLanguages();
+
   let language = ""
   Object.keys(languages).map(l => {
     if (l.toLowerCase() === _lang.toLowerCase())
@@ -219,14 +221,16 @@ export const submitForm = async (form: IFormData, endpoint: URL, method: string,
 
   let body = new FormData();
   for (let [key, value] of Object.entries(form)) {
-    if (arrayFields.includes(key)) {
-      for (const t of value) {
-        if (t !== "") {
-          body.append(`${key}[]`, t as string)
+    if (value !== null) {
+      if (arrayFields.includes(key)) {
+        for (const t of value) {
+          if (t !== "") {
+            body.append(`${key}[]`, t as string)
+          }
         }
+      } else {
+        body.append(key, value as string);
       }
-    } else {
-      body.append(key, value as string);
     }
   }
 

@@ -1,10 +1,9 @@
-import type { GetStaticProps, NextPage } from "next";
+import type { NextPage } from "next";
 import React, { useState } from "react";
 
 import { useSession, signIn, signOut } from "next-auth/react";
 import Router from "next/router";
 import Link from "next/link";
-import UserName from "components/User/UserName";
 
 const SignIn: NextPage = () => {
   const { data: session, status } = useSession();
@@ -23,6 +22,9 @@ const SignIn: NextPage = () => {
   const [signupEmailConf, setSignupEmailConf] = useState("");
   const [signupPassword, setSignupPassword] = useState("");
   const [signupPasswordConf, setSignupPasswordConf] = useState("");
+
+  const [isNewsletterAgreement, setNewsletterAgreement] = useState(false)
+  const [isTermsAgreement, setTermsAgreement] = useState(false)
 
   const handleLogin = (e: React.BaseSyntheticEvent) => {
     e.preventDefault();
@@ -65,6 +67,11 @@ const SignIn: NextPage = () => {
     e.preventDefault();
     e.stopPropagation();
 
+    if(!isTermsAgreement){
+      setLog("You must agree to the terms of use and privacy policy to use this platform.")
+      return;
+    }
+
     if (signupEmail !== signupEmailConf) {
       setLog("Emails should match!");
       return;
@@ -94,6 +101,8 @@ const SignIn: NextPage = () => {
     b.append("name", signupName);
     b.append("email", signupEmail);
     b.append("password", signupPassword);
+    if(isNewsletterAgreement)
+      b.append("is_newsletter_subscribed", "true")
 
     fetch(url.href, {
       method: "POST",
@@ -147,6 +156,16 @@ const SignIn: NextPage = () => {
     setSignupPasswordConf(v);
   };
 
+  const handleNewsletterAgreement = (e: React.BaseSyntheticEvent) => {
+    const v = e.target.value;
+    setNewsletterAgreement(v);
+  }
+
+  const handleTermsAgreement = (e: React.BaseSyntheticEvent) => {
+    const v = e.target.value;
+    setTermsAgreement(v);
+  }
+
   //if already signed in, render user info
   if (status === "authenticated") {
     return (
@@ -171,8 +190,8 @@ const SignIn: NextPage = () => {
       {!isCreated ? (
         <div>
           <div className="flex my-8">
-            <div data-cy="Login-tab" onClick={() => setActiveTab("Login")} className={`text-xl mr-6 cursor-pointer ${activeTab === "Login" ? "font-bold" : ""}`}>Login</div>
-            <div data-cy="Signup-tab" onClick={() => setActiveTab("Sign up")} className={`text-xl mr-6 cursor-pointer ${activeTab === "Sign up" ? "font-bold" : ""}`}>Sign up</div>
+            <div data-cy="signin-tab" onClick={() => setActiveTab("Login")} className={`text-xl mr-6 cursor-pointer ${activeTab === "Login" ? "font-bold" : ""}`}>Login</div>
+            <div data-cy="signup-tab" onClick={() => setActiveTab("Sign up")} className={`text-xl mr-6 cursor-pointer ${activeTab === "Sign up" ? "font-bold" : ""}`}>Sign up</div>
           </div>
           <div id="tab">
             {activeTab === "Login" ?
@@ -186,7 +205,7 @@ const SignIn: NextPage = () => {
                       name="username"
                       type="email"
                       placeholder="Enter email"
-                      data-cy="Login-email"
+                      data-cy="signin-button-email"
                       onChange={handleLoginUsername}
                     />
                     <div className="text-sm">
@@ -204,7 +223,7 @@ const SignIn: NextPage = () => {
                       name="password"
                       type="password"
                       placeholder="Password"
-                      data-cy="Login-password"
+                      data-cy="signin-button-password"
                       onChange={handleLoginPassword}
                     />
                   </div>
@@ -212,7 +231,7 @@ const SignIn: NextPage = () => {
                   <button
                     type="submit"
                     className="mt-4 p-2 bg-gray-900 text-gray-100 border-2 rounded-md"
-                    data-cy="Login-submit"
+                    data-cy="signin-button-submit"
                   >
                     Login
                   </button>
@@ -220,41 +239,39 @@ const SignIn: NextPage = () => {
               </div>
               :
               <div className="flex" title="Sign up" data-cy="Sign up">
-                <form className="w-full mt-2">
-                  <div className="mb-8 flex flex-col">
+                <form className="w-full flex flex-col gap-10 mt-2">
+                  <div className="flex flex-col">
                     <label htmlFor="name">Name</label>
                     <input
                       className="w-full bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
                       type="text"
                       name="name"
-                      placeholder="Enter name"
+                      placeholder="e.g. Max Li"
                       data-cy="Signup-name"
                       onChange={handleSignupName}
                     />
                   </div>
 
-                  <div className="mb-8 flex flex-col">
-                    <div className="mb-3">
+                  <div className="flex flex-col gap-3">
+                    <div>
                       <label htmlFor="signup-email">Email address</label>
                       <input
                         className="w-full bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
                         type="email"
                         name="signup-email"
-                        placeholder="Enter email"
+                        placeholder="e.g. you@email.com"
                         data-cy="Signup-email"
                         onChange={handleSignupEmail}
                       />
                     </div>
 
-                    <div
-                      className="mb-3 flex flex-col "
-                    >
+                    <div>
                       <label htmlFor="signup-email-conf">Confirm email address</label>
                       <input
                         className="w-full bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
                         type="email"
                         name="signup-email-conf"
-                        placeholder="Confirm email"
+                        placeholder="e.g. you@email.com"
                         data-cy="Signup-email-conf"
                         onChange={handleSignupEmailConf}
                       />
@@ -264,43 +281,68 @@ const SignIn: NextPage = () => {
                     </div>
                   </div>
 
-                  <div
-                    className="mb-3 flex flex-col"
+                  <div className="flex flex-col gap-3">
+                    <div>
+                      <label htmlFor="signup-password">Password</label>
+                      <input
+                        className="w-full bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
+                        type="password"
+                        name="signup-password"
+                        placeholder="●●●●●●●"
+                        data-cy="Signup-password"
+                        onChange={handleSignupPassword}
+                      />
+                    </div>
 
-                  >
-                    <label htmlFor="signup-password">Password</label>
-                    <input
-                      className="w-full bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
-                      type="password"
-                      name="signup-password"
-                      placeholder="Password"
-                      data-cy="Signup-password"
-                      onChange={handleSignupPassword}
-                    />
+                    <div>
+                      <label htmlFor="signup-password-conf">Confirm password</label>
+                      <input
+                        className="w-full bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
+                        type="password"
+                        name="signup-password-conf"
+                        placeholder="●●●●●●●"
+                        data-cy="Signup-password-conf"
+                        onChange={handleSignupPasswordConf}
+                      />
+                    </div>
                   </div>
 
-                  <div
-                    className="mb-3 flex flex-col"
-
-                  >
-                    <label htmlFor="signup-password-conf">Confirm password</label>
-                    <input
-                      className="w-full bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
-                      type="password"
-                      name="signup-password-conf"
-                      placeholder="Confirm password"
-                      data-cy="Signup-password-conf"
-                      onChange={handleSignupPasswordConf}
-                    />
-                  </div>
-
-                  <div className="text-sm">
-                    By creating an account, you agree to our <Link target="_blank" className="underline" href="/terms-of-use">terms of use</Link> and to our <Link target="_blank" className="underline" href="/privacy-policy">privacy policy</Link>.
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center gap-3">
+                      <label htmlFor="status" className="order-2" data-cy="courseStatusLabel">
+                        I would like to subscribe to the newsletter.
+                      </label>
+                      <div className="relative border-2 w-6 h-6 border-gray-900 p-0.5 order-1 rounded-full">
+                        <input
+                          type="checkbox"
+                          role="switch"
+                          className="absolute w-4 h-4 appearance-none bg-gray-300 checked:bg-gray-900 cursor-pointer rounded-full"
+                          onChange={handleNewsletterAgreement}
+                          name="status"
+                          id="status"
+                          data-cy="newsletter-toggle" />
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <label htmlFor="status" className="order-2" data-cy="courseStatusLabel">
+                        I agree to the <Link target="_blank" className="underline" href="/terms-of-use">terms of use</Link> and to our <Link target="_blank" className="underline" href="/privacy-policy">privacy policy</Link>.
+                      </label>
+                      <div className="relative border-2 w-6 h-6 border-gray-900 p-0.5 order-1 rounded-full">
+                        <input
+                          type="checkbox"
+                          role="switch"
+                          className="absolute w-4 h-4 appearance-none bg-gray-300 checked:bg-gray-900 cursor-pointer rounded-full"
+                          onChange={handleTermsAgreement}
+                          name="status"
+                          id="status"
+                          data-cy="terms-toggle" />
+                      </div>
+                    </div>
                   </div>
 
                   <button
                     onClick={handleSignup}
-                    className="self-end mt-4 p-2 bg-gray-900 text-gray-100 border-2 rounded-md"
+                    className="mt-4 p-2 bg-gray-900 text-gray-100 border-2 rounded-md"
                     data-cy="Signup-submit"
                   >
                     Sign up

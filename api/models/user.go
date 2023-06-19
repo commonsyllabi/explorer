@@ -39,6 +39,8 @@ type User struct {
 
 	Collections []Collection `gorm:"foreignKey:UserUUID;references:UUID" json:"collections"`
 	Syllabi     []Syllabus   `gorm:"foreignKey:UserUUID;references:UUID" json:"syllabi"`
+
+	IsNewsletterSubscribed bool `gorm:"default:false" json:"is_newsletter_subscribed" form:"is_newsletter_subscribed"`
 }
 
 func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
@@ -195,19 +197,20 @@ func AddInstitutionToUser(uuid uuid.UUID, user_uuid uuid.UUID, inst *Institution
 	return updated, err
 }
 
-func EditInstitutionToUser(uuid uuid.UUID, inst_uuid uuid.UUID, updated *Institution) (Institution, error) {
+func EditInstitutionToUser(uuid uuid.UUID, inst_uuid uuid.UUID, inst *Institution) (User, error) {
 	var existing Institution
 	result := db.Where("uuid = ?", inst_uuid).First(&existing)
 	if result.Error != nil {
-		return existing, result.Error
+		return User{}, result.Error
 	}
 
-	err := db.Model(&existing).Updates(updated).Error
+	err := db.Model(&existing).Updates(inst).Error
 	if err != nil {
-		return existing, err
+		return User{}, err
 	}
 
-	return *updated, err
+	updated, err := GetUser(uuid, uuid)
+	return updated, err
 }
 
 func RemoveInstitutionFromUser(uuid uuid.UUID, inst_uuid uuid.UUID, user_uuid uuid.UUID) (User, error) {

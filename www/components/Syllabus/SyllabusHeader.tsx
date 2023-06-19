@@ -1,70 +1,43 @@
-import { getAcademicLevelText } from "components/utils/getAcademicLevel";
-import { getAcademicFieldsText } from "components/utils/getAcademicFields";
-import * as React from "react";
+import { useEffect, useState } from "react";
+import { IInstitution, ISyllabus } from "types";
+import SyllabusMeta from "./SyllabusMeta";
+import InstitutionMeta from "./InstitutionMeta";
 import { inter } from "app/layout";
 
 interface ISyllabusSchoolCodeYearProps {
-  institution?: string | null;
-  lang?: string | null;
-  country?: string | null;
-  courseNumber?: string | null;
-  level?: number | null;
-  fields?: number[] | null;
-  term?: string | null;
-  year?: string | null;
+  syllabusInfo: ISyllabus,
 }
 
 const SyllabusSchoolCodeYear: React.FunctionComponent<
   ISyllabusSchoolCodeYearProps
-> = ({ institution, lang, country, courseNumber, level, fields, term, year }) => {
+> = ({ syllabusInfo }) => {
+  const [institutions, setInstitutions] = useState<IInstitution[]>([] as IInstitution[])
+  const [lang, setLang] = useState<string>()
+  const [level, setLevel] = useState<number>()
+  const [fields, setFields] = useState<number[]>()
+
+  useEffect(() => {    
+    if (!syllabusInfo) return
+
+    setInstitutions(syllabusInfo.institutions as IInstitution[])
+    setLang(syllabusInfo.language)
+    setLevel(syllabusInfo.academic_level as number)
+    setFields(syllabusInfo.academic_fields)
+
+  }, [syllabusInfo])
+
   return (
-    <div className={`flex flex-col md:flex-row gap-4 text-sm mb-4 ${inter.className} text-gray-600`}>
-      <div className="flex flex-row justify-between md:gap-4">
-        <div className="flex flex-col sm:flex-row justify-between md:gap-4">
-          {institution ? (
-            <div className="">{institution}{country ? ` (${country})` : ''}</div>
-          ) : (
-            <div className="italic">No institution</div>
-          )}
+    <div className={`md:w-full flex flex-col gap-6 md:gap-2 md:text-sm mb-4 ${inter.className} text-gray-600`}>
+      <div data-cy="institution-info" className="flex flex-col sm:flex-row justify-start md:gap-4">
 
-          {lang ? (
-            <div className="">{lang}</div>
-          ) : (
-            <div className="italic">No language</div>
-          )}
-        </div>
-        {/* {courseNumber ? (
-        <p className="">{courseNumber}</p>
-      ) : (
-        <p className="">
-          <em>no course code</em>
-        </p>
-      )} */}
+      <InstitutionMeta institutions={institutions} onSuccess={(_i: IInstitution) => setInstitutions([_i])}/>
 
-        <div className="flex flex-col sm:flex-row justify-between md:gap-4">
-          {year ? (
-            <div className="">{term ? `${term} ` : ''}{year}</div>
-          ) : (
-            <div className="italic">No date</div>
-          )}
-
-          {level != null ? (
-            <div className="">{getAcademicLevelText(level)}</div>
-          ) : (
-            <div className="">
-              <em>No academic level</em>
-            </div>
-          )}
-        </div>
       </div>
-
-      {fields != null ? (
-        <div className="">{getAcademicFieldsText(fields).join(" | ")}</div>
-      ) : (
-        <div className="">
-          <em>No academic fields</em>
-        </div>
-      )}
+      <div data-cy="syllabus-header" className="w-full  flex flex-col sm:flex-row justify-start md:gap-4">
+        <SyllabusMeta lang={lang as string} level={level as number} fields={fields as number[]} onSuccess={(_u: ISyllabus) => {
+          setLang(_u.language); setFields(_u.academic_fields); setLevel(_u.academic_level)
+        }}/>
+      </div>
     </div>
   );
 };

@@ -10,6 +10,10 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+var (
+	userCount = 6
+)
+
 func TestUserModel(t *testing.T) {
 	teardown := setup(t)
 	defer teardown(t)
@@ -17,7 +21,7 @@ func TestUserModel(t *testing.T) {
 	t.Run("Test get all users", func(t *testing.T) {
 		users, err := models.GetAllUsers()
 		require.Nil(t, err)
-		assert.Equal(t, 5, len(users))
+		assert.Equal(t, userCount, len(users))
 	})
 
 	t.Run("Test create user", func(t *testing.T) {

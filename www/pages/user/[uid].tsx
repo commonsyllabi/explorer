@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import Head from "next/head";
@@ -15,13 +15,15 @@ import { getCollectionCards } from "components/utils/getCollectionCards";
 import NotFound from "components/commons/NotFound";
 import NewCollection from "components/Collection/NewCollection";
 import { kurintoSerif } from "app/layout";
+import Modal from "components/commons/Modal";
+import { EditContext } from "context/EditContext";
+import { Session } from "next-auth";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const userId = context.params!.uid;
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   const t = await getToken({ req: context.req, secret: process.env.NEXTAUTH_SECRET })
   const token = t ? (t.user as { _id: string, token: string }).token : '';
-  const url = new URL(`users/${userId}`, apiUrl);
+  const url = new URL(`users/${userId}`, process.env.API_URL);
 
   const h = new Headers();
   if (t)
@@ -40,7 +42,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
     let full_syllabi = []
     for (const syll of userInfo.syllabi) {
-      const res = await fetch(new URL(`syllabi/${syll.uuid}`, apiUrl), { headers: h })
+      const res = await fetch(new URL(`syllabi/${syll.uuid}`, process.env.API_URL), { headers: h })
       if (res.ok) {
         const s = await res.json()
         full_syllabi.push(s)
@@ -75,13 +77,21 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo }) => {
   const [syllFilter, setSyllFilter] = useState("");
   const [collFilter, setCollFilter] = useState("");
   const [isCreatingCollection, setIsCreatingCollection] = useState(false)
+  const [isOwner, setIsOwner] = useState(false)
 
-  const checkIfAdmin = () => {
-    if (session != null && session.user != null) {
-      return session.user._id === userInfo.uuid;
+  const checkIfOwner = (_session: Session, _uuid: string) => {
+    if (_session.user != null) {
+      return _session.user._id === _uuid;
     }
     return false
   };
+
+  useEffect(() => {
+    if (!userInfo || !session) return
+    const o = checkIfOwner(session, userInfo.uuid)
+
+    setIsOwner(o)
+  }, [session, userInfo])
 
   const default_filters = {
     academic_level: "",
@@ -156,79 +166,79 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo }) => {
         />
       </Head>
 
-      <div>
-        <div className="flex flex-col md:flex-row w-11/12 sm:w-full lg:w-10/12 m-auto mt-4 justify-between">
+      <EditContext.Provider value={{ isOwner: isOwner, userUUID: userInfo.uuid }}>
+        <div>
+          <div className="flex flex-col md:flex-row w-11/12 sm:w-full lg:w-10/12 m-auto mt-4 justify-between">
 
-          <div className="w-full md:w-3/12 p-3">
-            <UserProfileSidebar props={userInfo} apiUrl={`${process.env.NEXT_PUBLIC_API_URL}/users/${userInfo.uuid}`} isAdmin={checkIfAdmin()} />
-          </div>
-
-          <div className="w-full md:w-8/12 mx-auto mb-4">
-            <div className="w-full flex flex-col sm:flex-row items-baseline mt-3 my-8" data-cy="userTabs">
-
-              <div className="flex justify-between md:justify-normal gap-6">
-                <div onClick={() => setActiveTab("syllabi")} className={`${kurintoSerif.className} text-3xl cursor-pointer ${activeTab === "syllabi" ? "font-bold underline underline-offset-4" : ""}`} data-cy="syllabiTab">Syllabi</div>
-                <div onClick={() => setActiveTab("collections")} className={`${kurintoSerif.className} text-3xl cursor-pointer ${activeTab === "collections" ? "font-bold underline underline-offset-4" : ""}`} data-cy="collectionsTab">Collections</div>
-              </div>
-
-              <div className="hidden sm:flex flex w-full justify-end items-center content-end">
-                <div className="flex w-full items-baseline gap-2 mb-3 justify-end">
-                  <input
-                    id={activeTab}
-                    type="text"
-                    className="w-1/2 bg-transparent border-b-2 border-b-gray-900"
-                    placeholder={`Search ${activeTab}...`}
-                    aria-label="Filter"
-                    value={activeTab === "syllabus" ? syllFilter : collFilter}
-                    onChange={handleFilterChange}
-                  />
-
-                  {activeTab === "syllabi" ? (
-                    <Link href="/new-syllabus" className=" w-2/3 md:w-3/12 text-center mt-4 py-1 bg-gray-900 text-gray-100 border-2 rounded-md" aria-label="New Syllabus" data-cy="newSyllabusLink">+ New Syllabus</Link>
-                  ) : (
-                    <button className="w-2/3 md:w-3/12 mt-4 py-1 bg-gray-900 text-gray-100 border-2 rounded-md" aria-label="New Collection" onClick={() => { setIsCreatingCollection(true) }}>
-                      + New Collection
-                    </button>
-                  )}
-
-                </div>
-              </div>
+            <div className="w-full md:w-3/12 p-3">
+              <UserProfileSidebar userInfo={userInfo} />
             </div>
 
-            {activeTab === "syllabi" ?
-              <div title="Syllabi" data-cy="syllabiTab" id="syllabi" className="flex flex-col gap-3">
-                {!userInfo.syllabi || userInfo.syllabi?.length === 0 ? "No syllabi yet." :
-                  getSyllabusCards(
-                    filteredSyllabi(),
-                    default_filters,
-                    checkIfAdmin()
-                  ) ? getSyllabusCards(
-                    filteredSyllabi(),
-                    default_filters,
-                    checkIfAdmin()
-                  ) : "No syllabi yet."
-                }
+            <div className="w-full md:w-8/12 mx-auto mb-4">
+              <div className="w-full flex flex-col sm:flex-row items-baseline mt-3 my-8" data-cy="userTabs">
+
+                <div className="flex justify-between md:justify-normal gap-6">
+                  <div onClick={() => setActiveTab("syllabi")} className={`${kurintoSerif.className} text-3xl cursor-pointer ${activeTab === "syllabi" ? "font-bold underline underline-offset-4" : ""}`} data-cy="syllabiTab">Syllabi</div>
+                  <div onClick={() => setActiveTab("collections")} className={`${kurintoSerif.className} text-3xl cursor-pointer ${activeTab === "collections" ? "font-bold underline underline-offset-4" : ""}`} data-cy="collectionsTab">Collections</div>
+                </div>
+
+                <div className="hidden sm:flex w-full justify-end items-center content-end">
+                  <div className="flex w-full items-baseline gap-2 mb-3 justify-end">
+                    <input
+                      id={activeTab}
+                      type="text"
+                      className="w-1/2 bg-transparent border-b-2 border-b-gray-900"
+                      placeholder={`Search ${activeTab}...`}
+                      aria-label="Filter"
+                      value={activeTab === "syllabus" ? syllFilter : collFilter}
+                      onChange={handleFilterChange}
+                    />
+
+                    {activeTab === "syllabi" ? (
+                      <Link href="/new-syllabus" className=" w-2/3 md:w-3/12 text-center mt-4 py-1 bg-gray-900 text-gray-100 border-2 rounded-md" aria-label="New Syllabus" data-cy="newSyllabusLink">+ New Syllabus</Link>
+                    ) : (
+                      <button data-cy="new-collection-button" className="w-2/3 md:w-3/12 mt-4 py-1 bg-gray-900 text-gray-100 border-2 rounded-md" aria-label="New Collection" onClick={() => { setIsCreatingCollection(true) }}>
+                        + New Collection
+                      </button>
+                    )}
+
+                  </div>
+                </div>
               </div>
-              :
-              <div title="Collections" data-cy="collectionsTab" id="collections" className="flex flex-col gap-3">
-                {getCollectionCards(
-                  filteredCollections(),
-                  checkIfAdmin()
-                ) ? getCollectionCards(
-                  filteredCollections(),
-                  checkIfAdmin()
-                ) : "No collections yet."}
-              </div>
-            }
+
+              {activeTab === "syllabi" ?
+                <div title="Syllabi" id="syllabi" className="flex flex-col gap-3">
+                  {!userInfo.syllabi || userInfo.syllabi?.length === 0 ? "No syllabi yet." :
+                    getSyllabusCards(
+                      filteredSyllabi(),
+                      default_filters,
+                    ) ? getSyllabusCards(
+                      filteredSyllabi(),
+                      default_filters,
+                    ) : "No syllabi yet."
+                  }
+                </div>
+                :
+                <div title="Collections" id="collections" className="flex flex-col gap-3">
+                  {getCollectionCards(
+                    filteredCollections(),
+                  ) ? getCollectionCards(
+                    filteredCollections(),
+                  ) : "No collections yet."}
+                </div>
+              }
+            </div>
           </div>
         </div>
-      </div>
 
-      {isCreatingCollection ?
-        <NewCollection syllabusUUID="" handleClose={() => setIsCreatingCollection(false)} />
-        :
-        <></>
-      }
+        {isCreatingCollection ?
+          <Modal>
+            <NewCollection syllabusUUID="" handleClose={() => setIsCreatingCollection(false)} />
+          </Modal>
+          :
+          <></>
+        }
+      </EditContext.Provider>
     </>
   );
 };

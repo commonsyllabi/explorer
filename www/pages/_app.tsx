@@ -23,7 +23,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
             <script defer
               data-domain="explorer.common-syllabi.org"
               src="https://stats.ia-fictions.net/js/plausible.js"></script>
-            <title>Cosyll: share and archive syllabi</title>
+            <title>Cosyll | Archive, share and browse syllabi</title>
           </Head>
           <Component {...pageProps} />
         </RootLayout>

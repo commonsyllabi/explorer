@@ -1,21 +1,20 @@
 import { signOut, useSession } from "next-auth/react";
 import Router from "next/router";
 import * as React from "react";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Image from "next/image";
-import editIcon from '../../public/icons/edit-box-line.svg'
+import editIcon from '../../public/icons/edit-line.svg'
 import cancelIcon from '../../public/icons/close-line.svg'
 import checkIcon from '../../public/icons/check-line.svg'
 import { kurintoSerif } from "app/layout";
+import { EditContext } from "context/EditContext";
 
 interface IUserNameProps {
     userName: string,
-    isAdmin: boolean,
-    apiUrl: string,
 }
 
-const UserName: React.FunctionComponent<IUserNameProps> = ({ userName, isAdmin, apiUrl }) => {
-
+const UserName: React.FunctionComponent<IUserNameProps> = ({ userName }) => {
+    const ctx = useContext(EditContext)
     const [log, setLog] = useState('')
     const [isEditing, setIsEditing] = useState(false);
     const [name, setName] = useState(userName ? userName as string : '')
@@ -39,7 +38,8 @@ const UserName: React.FunctionComponent<IUserNameProps> = ({ userName, isAdmin, 
         let b = new FormData()
         b.append("name", tmp)
 
-        fetch(apiUrl, {
+        const endpoint = new URL(`/users/${ctx.userUUID}`, process.env.NEXT_PUBLIC_API_URL)
+        fetch(endpoint, {
             method: 'PATCH',
             headers: h,
             body: b
@@ -64,16 +64,18 @@ const UserName: React.FunctionComponent<IUserNameProps> = ({ userName, isAdmin, 
     }
 
     return (
-        <div className="mt-5 mb-16 flex flex-col">
+        <div className="w-full mt-5 mb-16 flex flex-col" data-cy="user-name">
             {isEditing ?
-                <div className="flex items-center justify-between">
-                    <input type="text" className="text-2xl w-8/12 bg-transparent mt-2 py-1 border-b-2 border-b-gray-900" value={tmp} onChange={handleChange}></input>
-                    <div className="py-1 mt-2">
-                        <button className="w-6" onClick={() => { setIsEditing(false); }}>
+                <div className="w-full flex flex-col justify-between">
+                    <input type="text" className={`${kurintoSerif.className} text-3xl w-full bg-transparent mt-2 py-1 border-b-2 border-b-gray-900`} value={tmp} onChange={handleChange}></input>
+                    <div className="py-1 mt-2 flex flex-col lg:flex-row gap-2 justify-between">
+                        <button className="flex items-center gap-2 rounded-lg border border-1 border-gray-900 py-1 px-2 bg-red-100 hover:bg-red-300" onClick={() => { setIsEditing(false); }}>
                             <Image src={cancelIcon} width="24" height="24" alt="Icon to cancel the edit process" />
+                            <div>Cancel</div>
                         </button>
-                        <button className="w-6" onClick={submitEdit}>
+                        <button data-cy="save-button" className="flex items-center gap-2 rounded-lg border border-1 border-gray-900 py-1 px-2" onClick={submitEdit}>
                             <Image src={checkIcon} width="24" height="24" alt="Icon to save the edit process" />
+                            <div>Save</div>
                         </button>
                     </div>
                     <div>{log}</div>
@@ -81,7 +83,7 @@ const UserName: React.FunctionComponent<IUserNameProps> = ({ userName, isAdmin, 
                 :
                 <div className="flex justify-between">
                     <h2 className={`${kurintoSerif.className} text-3xl`}>{name}</h2>
-                    {isAdmin ?
+                    {ctx.isOwner ?
                         <button className="ml-8" onClick={() => setIsEditing(true)}>
                             <Image src={editIcon} width="24" height="24" alt="Icon to edit the name" />
                         </button>

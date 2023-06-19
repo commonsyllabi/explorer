@@ -1,9 +1,8 @@
 import type { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   const token = context.query.token as string;
-  const url = new URL(`auth/confirm?token=${token}`, apiUrl);
+  const url = new URL(`auth/confirm?token=${token}`, process.env.API_URL);
   let log = "";
   let success = false
 

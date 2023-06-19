@@ -6,7 +6,7 @@ COPY go.sum /app
 WORKDIR /app
 RUN go mod download
 
-COPY tests/files /app/tests/files 
+COPY tests/files /app/tests/files
 COPY cmd /app/cmd
 COPY api /app/api
 COPY mailer /app/mailer
@@ -14,7 +14,5 @@ COPY mailer /app/mailer
 RUN chmod -R a+rwX /app
 ENV CGO_ENABLED=0
 RUN mkdir -p /go/tmp
-ENV TMPDIR=/go/tmp
-ENV API_MODE=test
 RUN chmod -R a+rwX /go/tmp
 CMD ["go", "test", "-p", "1", "./...", "-cover"]

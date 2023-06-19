@@ -21,9 +21,7 @@ export const getServerSideProps: GetServerSideProps = async (context: GetServerS
     if (adminId !== process.env.ADMIN_KEY)
         return { props: {} }
 
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-
-    const url = new URL(`admin?token=${adminId}`, apiUrl);
+    const url = new URL(`admin?token=${adminId}`, process.env.API_URL);
 
     const h = new Headers();
     if (adminId)
@@ -68,13 +66,13 @@ const AdminPanel: React.FunctionComponent<IAdminPanelProps> = ({
                 <div>
                     <h1 className={`${kurintoSerif.className} text-2xl p-0 my-4 hover:underline cursor-pointer`} onClick={() => setShowSyllabi(!showSyllabi)}>Syllabi ({syllabi.length})</h1>
                     <div className="flex flex-col gap-3">
-                        {showSyllabi ? getSyllabusCards(syllabi, undefined, true, 1) : <></>}
+                        {showSyllabi ? getSyllabusCards(syllabi, undefined, 1) : <></>}
                     </div>
                 </div>
                 <div>
                     <h1 className={`${kurintoSerif.className} text-2xl p-0 my-4 hover:underline cursor-pointer`} onClick={() => setShowCollections(!showCollections)}>Collections ({collections.length})</h1>
                     <div className="flex flex-col gap-3">
-                        {showCollections ? getCollectionCards(collections, false) : <></>}
+                        {showCollections ? getCollectionCards(collections) : <></>}
                         
                     </div>
                 </div>

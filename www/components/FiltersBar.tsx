@@ -4,13 +4,14 @@ import { ISyllabiFilters, IMetaInformation } from "../types"
 import { getFieldsFilters, getLanguagesFilters, getLevelsFilters, getYearsFilters } from "./utils/getSearchFilters";
 import plusIcon from '../public/icons/add-line.svg'
 import minusIcon from '../public/icons/subtract-line.svg'
+import { update } from "cypress/types/lodash";
 
 interface syllabiFiltersProps {
   updateFilters: (filters: ISyllabiFilters) => void;
   meta: IMetaInformation
 }
 
-const FiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => {
+const FiltersBar: React.FunctionComponent<syllabiFiltersProps> = ({ updateFilters, meta }) => {
   const [isShown, setIsShown] = React.useState(false)
   const [filters, setFilters] = React.useState<ISyllabiFilters>({
     academic_level: "",
@@ -22,7 +23,7 @@ const FiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => {
   })
 
   React.useEffect(() => {
-    props.updateFilters(filters)
+    updateFilters(filters)
   }, [filters])
 
   //-- todo : generate the options dropdown html given the meta props (might be annoying to deal with fields and levels)
@@ -45,7 +46,7 @@ const FiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => {
 
   return (
     <div className="py-3 flex flex-col gap-3">
-      
+
       <div className="flex justify-between">
         <h2 className="text-lg font-bold">Search filters</h2>
         <div className="md:hidden">
@@ -69,7 +70,7 @@ const FiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => {
             data-cy="filtersAcademicLevel"
             onChange={handleChange}>
             <option value="">All</option>
-            {getLevelsFilters(props.meta.academic_levels)}
+            {getLevelsFilters(meta ? meta.academic_levels : [])}
           </select>
         </form>
 
@@ -84,7 +85,7 @@ const FiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => {
             data-cy="filtersAcademicYear"
             onChange={handleChange}>
             <option value="">All</option>
-            {getYearsFilters(props.meta.academic_years)}
+            {getYearsFilters(meta ? meta.academic_years : [])}
           </select>
         </form>
 
@@ -99,7 +100,7 @@ const FiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => {
             data-cy="filtersAcademicField"
             onChange={handleChange}>
             <option value="">All</option>
-            {getFieldsFilters(props.meta.academic_fields)}
+            {getFieldsFilters(meta ? meta.academic_fields : [])}
           </select>
         </form>
 
@@ -114,7 +115,7 @@ const FiltersBar: React.FunctionComponent<syllabiFiltersProps> = (props) => {
             data-cy="filtersLanguage"
             onChange={handleChange}>
             <option value="">All</option>
-            {getLanguagesFilters(props.meta.languages)}
+            {getLanguagesFilters(meta ? meta.languages : [])}
           </select>
         </form>
 

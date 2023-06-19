@@ -97,7 +97,6 @@ const NewSyllabus: NextPage = () => {
   });
 
   //Handle form submission
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL as string;
   const handleSubmit = async (event: React.BaseSyntheticEvent) => {
     event.preventDefault();
     event.stopPropagation();
@@ -116,7 +115,7 @@ const NewSyllabus: NextPage = () => {
     const header = new Headers();
     header.append("Authorization", `Bearer ${session.user.token}`);
 
-    const syll_endpoint = new URL(`/syllabi/`, apiUrl)
+    const syll_endpoint = new URL(`/syllabi/`, process.env.NEXT_PUBLIC_API_URL)
     const res = await submitForm(formData, syll_endpoint, "POST", header);
     setFormSubmitted(true);
     if (res.status !== 201) {
@@ -132,7 +131,7 @@ const NewSyllabus: NextPage = () => {
 
     const instit_endpoint = new URL(
       `/syllabi/${body.uuid}/institutions`,
-      apiUrl
+      process.env.NEXT_PUBLIC_API_URL
     );
     submitInstitution(institutionData, instit_endpoint, "POST", header).then(
       (res) => {
@@ -150,7 +149,7 @@ const NewSyllabus: NextPage = () => {
     }
     const attach_endpoint = new URL(
       `/attachments/?syllabus_id=${body.uuid}`,
-      apiUrl
+      process.env.NEXT_PUBLIC_API_URL
     );
     attachmentData.map((att) => {
       submitAttachments(att, attach_endpoint, "POST", header).then((res) => {
@@ -233,7 +232,7 @@ const NewSyllabus: NextPage = () => {
               <div className="flex flex-col my-8 gap-2">
                 <label htmlFor="title">Course Title*</label>
                 <input
-                  className="bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
+                  className="bg-transparent mt-2 py-1 border-b-2 border-b-gray-900 text-2xl"
                   type="text"
                   required
                   id="title"
@@ -244,13 +243,10 @@ const NewSyllabus: NextPage = () => {
                   data-cy="courseTitleInput"
                 // defaultValue={parsedData?.data?.title || ""} -- // TODO: we cannot have both defaultValue and value props. parsedData should set formData.title, instead?
                 />
-                <div className="text-sm">
-                  Please provide a valid course title.
-                </div>
               </div>
 
               <div className="flex items-center gap-3">
-                <label htmlFor="status" className="order-2">
+                <label htmlFor="status" className="order-2" data-cy="courseStatusLabel">
                   {getPublicPrivateLabel(formData.status)}
                 </label>
                 <div className="relative border-2 w-6 h-6 border-gray-900 p-0.5 order-1 rounded-full">
@@ -268,7 +264,7 @@ const NewSyllabus: NextPage = () => {
 
               <hr className="my-12 border border-gray-300" />
 
-              <div className="w-10/12 m-auto my-32 border border-gray-900 rounded-lg p-2">
+              {/* <div className="w-10/12 m-auto my-32 border border-gray-900 rounded-lg p-2">
                 <h4>
                   Upload a syllabus and autofill{"  "}
                   <span className="w-min p-1 border-2 border-gray-400 rounded-xl">
@@ -278,7 +274,7 @@ const NewSyllabus: NextPage = () => {
                 <DragAndDropSyllabus session={session} setParsedData={setParsedData} setParsedFile={setParsedFile}/>
               </div>
 
-              <hr className="my-12 border border-gray-300" />
+              <hr className="my-12 border border-gray-300" /> */}
 
               {/* //TODO make add institution work */}
               <div className="institution-section my-12 flex flex-col gap-3">
@@ -286,7 +282,7 @@ const NewSyllabus: NextPage = () => {
                   <label htmlFor="name" className="mb-0">
                     Institution*
                   </label>
-                  <div className="col-10">
+                  <div>
                     <input
                       className="w-full bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
                       type="text"
@@ -395,16 +391,19 @@ const NewSyllabus: NextPage = () => {
                     </div>
                   </div> */}
 
-              <AddAcademicFieldsForm
-                setAcadFieldsData={(_af: string[]) => { setFormData({ ...formData, ["academic_fields"]: _af }); }}
-                academicFields={[]}
-              />
+              <div className="w-full">
+                <AddAcademicFieldsForm
+                  setAcadFieldsData={(_af: string[]) => { setFormData({ ...formData, ["academic_fields"]: _af }); }}
+                  academicFields={[]}
+                />
+              </div>
 
-              <div className="mb-5">
-                <label htmlFor="academic_level" className="mb-0">
-                  Academic Level
-                </label>
-                <div className="col-6">
+              {/* TODO: replace this with component */}
+              <div className="flex flex-col md:flex-row items-baseline justify-between gap-6 my-8">
+                <div className="w-full md:w-1/3">
+                  <label htmlFor="academic_level">
+                    Academic Level
+                  </label>
                   <select
                     className="w-full bg-transparent mt-2 p-1 border-2 border-gray-900"
                     id="academic_level"
@@ -418,38 +417,39 @@ const NewSyllabus: NextPage = () => {
                     <option value="3">Doctoral</option>
                   </select>
                 </div>
-              </div>
 
-              <div className="flex flex-col my-8 gap-2">
-                <label htmlFor="language">Language*</label>
-                <select
-                  className="bg-transparent mt-2 p-1 border-2 border-gray-900"
-                  id="language"
-                  onChange={handleChange}
-                  data-cy="courseLanguageInput"
-                >
-                  <option value="">—</option>
-                  {generateLanguageOptions()}
-                </select>
-                <div className="text-sm">
-                  The language in which this course was
-                  taught.
-                </div>
-              </div>
-
-              <div className="flex gap-3">
-                <div className="flex flex-col my-8 gap-2 w-full">
-                  <label htmlFor="duration">
-                    Duration of course in weeks
-                  </label>
-                  <input
-                    className="bg-transparent mt-2 py-1 border-b-2 border-b-gray-900 w-full"
-                    type="text"
-                    id="duration"
+                {/* TODO: replace this with component */}
+                <div className="w-full md:w-1/3 flex flex-col">
+                  <label htmlFor="language">Language*</label>
+                  <select
+                    className="bg-transparent mt-2 p-1 border-2 border-gray-900"
+                    id="language"
                     onChange={handleChange}
-                    placeholder="e.g. 14 weeks"
-                    data-cy="courseDurationInput"
-                  />
+                    data-cy="courseLanguageInput"
+                  >
+                    <option value="">—</option>
+                    {generateLanguageOptions()}
+                  </select>
+                  <div className="text-sm">
+                    The language in which this course was
+                    taught.
+                  </div>
+                </div>
+
+                <div className="w-full md:w-1/3 flex">
+                  <div className="flex flex-col w-full">
+                    <label htmlFor="duration">
+                      Duration of course in weeks
+                    </label>
+                    <input
+                      className="bg-transparent mt-2 py-1 border-b-2 border-b-gray-900 w-full"
+                      type="text"
+                      id="duration"
+                      onChange={handleChange}
+                      placeholder="e.g. 14 weeks"
+                      data-cy="courseDurationInput"
+                    />
+                  </div>
                 </div>
               </div>
 

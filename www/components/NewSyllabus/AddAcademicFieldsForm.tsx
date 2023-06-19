@@ -11,13 +11,23 @@ interface IAddAcademicFieldsFormProps {
   academicFields: string[]
 }
 
+// TODO: the way the values are being left-padded before retrieval doesn't scale
+// write a helper function to do the conversion?
+
 const AddAcademicFieldsForm: React.FunctionComponent<
   IAddAcademicFieldsFormProps
 > = ({ setAcadFieldsData, academicFields }) => {
+  const [broadField, setBroadField] = useState<string>("");
+  const [narrowField, setNarrowField] = useState<string>("");
+  const [detailedField, setDetailedField] = useState<string>("");
 
-  const [broadField, setBroadField] = useState(academicFields.length > 0 ? academicFields[0].length == 1 ? `0${academicFields[0]}` : academicFields[0] : "");
-  const [narrowField, setNarrowField] = useState(academicFields.length > 1 ? academicFields[1] : "");
-  const [detailedField, setDetailedField] = useState(academicFields.length > 2 ? academicFields[2] : "");
+  useEffect(() => {
+    if (academicFields) {
+      setBroadField(academicFields.length > 0 ? academicFields[0].length == 1 ? `0${academicFields[0]}` : academicFields[0] : "")
+      setNarrowField(academicFields.length > 1 ? academicFields[1] : "")
+      setDetailedField(academicFields.length > 2 ? academicFields[2] : "")
+    }
+  }, [])
 
   const handleBroadFieldChange = (event: React.SyntheticEvent) => {
     const t = event.target as HTMLInputElement;
@@ -39,13 +49,13 @@ const AddAcademicFieldsForm: React.FunctionComponent<
 
   useEffect(() => {
     let acadFieldsArray = [];
-    if (broadField.length > 0) {
+    if (broadField != "") {
       acadFieldsArray.push(broadField);
     }
-    if (narrowField.length > 0) {
+    if (narrowField != "") {
       acadFieldsArray.push(narrowField);
     }
-    if (detailedField.length > 0) {
+    if (detailedField != "") {
       acadFieldsArray.push(detailedField);
     }
 
@@ -53,59 +63,62 @@ const AddAcademicFieldsForm: React.FunctionComponent<
   }, [broadField, narrowField, detailedField]);
 
   return (
-    <div className="mb-5">
+    <div className="">
       <label htmlFor="academic_fields">
-        Academic Field{" "}
-        <p className="text-sm text-muted mb-1">
-          <em>ISCED Fields of Education and Training</em>
-        </p>
+        Academic Field{" - "}
+        <span className="text-xs">
+          <em><a href="https://isced.uis.unesco.org/about/" className="underline" target="_blank" rel="noopener noreferrer">ISCED</a></em>
+        </span>
       </label>
       <div
-        className="flex flex-col md:flex-row w-full gap-2 mb-3"
+        className="flex flex-col md:flex-row items-baseline gap-2 mt-2"
         id="academicFieldsInputSection"
         data-cy="academicFieldsInputSection"
       >
-        <div className="w-full">
-          <p className="text-sm text-muted mb-0">BROAD</p>
+        <div className="w-1/3">
           <select
-            className="bg-transparent mt-2 p-1 border-2 border-gray-900 w-full"
+            className="bg-transparent p-1 border-2 border-gray-900 w-full"
             id="academic_field_broad"
             value={broadField}
             onChange={handleBroadFieldChange}
+            data-cy="academic-fields-broad"
           >
             <option value="">–</option>
             {generateAcadFieldsBroad()}
           </select>
+          <p className="text-sm text-gray-800 mb-0">BROAD</p>
         </div>
 
-        <div className="w-full">
-          <p className="text-sm text-muted mb-0">NARROW</p>
+        <div className="w-1/3">
           <select
-            className="bg-transparent mt-2 p-1 border-2 border-gray-900 w-full"
+            className="bg-transparent p-1 border-2 border-gray-900 w-full"
             id="academic_field_narrow"
             onChange={handleNarrowFieldChange}
-            value={narrowField}
+            value={narrowField.length == 1 ? `00${narrowField}` : narrowField.length == 2 ? `0${narrowField}` : narrowField}
+            data-cy="academic-fields-narrow"
           >
             <option value="">–</option>
             {generateAcadFieldsNarrow(
               broadField as keyof typeof modelsIsced["NARROW_FIELDS"]
             )}
           </select>
+          <p className="text-sm text-gray-800 mb-0">NARROW</p>
         </div>
 
-        <div className="w-full">
-          <p className="small text-muted mb-0">DETAILED</p>
+        <div className="w-1/3">
           <select
-            className="bg-transparent mt-2 p-1 border-2 border-gray-900 w-full"
+            className="bg-transparent p-1 border-2 border-gray-900 w-full"
             id="academic_field_detailed"
             onChange={handleDetailedFieldChange}
-            value={detailedField}
+            value={detailedField.length == 1 ? `0${detailedField}` : detailedField.length == 2 ? `00${detailedField}` : detailedField}
+            data-cy="academic-fields-detailed"
           >
             <option value="">–</option>
             {generateAcadFieldsDetailed(
-              narrowField as keyof typeof modelsIsced["DETAILED_FIELDS"]
+              (narrowField.length == 1 ? `00${narrowField}` : narrowField.length == 2 ? `0${narrowField}` : narrowField) as keyof typeof modelsIsced["DETAILED_FIELDS"]
             )}
           </select>
+          <p className="small text-gray-800 mb-0">DETAILED</p>
         </div>
       </div>
     </div>

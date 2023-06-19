@@ -1,5 +1,4 @@
 import type { GetServerSideProps, GetServerSidePropsContext, NextPage } from "next";
-import { useRouter } from "next/router";
 import Head from "next/head";
 import { getToken } from "next-auth/jwt";
 import { useSession } from "next-auth/react";
@@ -9,26 +8,23 @@ import { ICollection, ISyllabus } from "types";
 
 import BreadcrumbsBar from "components/commons/BreadcrumbsBar";
 import SyllabusAttachments from "components/Syllabus/SyllabusAttachments";
-import Tags from "components/Syllabus/Tags";
 import NotFound from "components/commons/NotFound";
 import Link from "next/link";
 
-import {
-  getInstitutionCountry,
-  getInstitutionLang,
-  getInstitutionName,
-  getInstitutionTermInfo,
-  getInstitutionYearInfo,
-} from "components/utils/getInstitutionInfo";
 import SyllabusHeader from "components/Syllabus/SyllabusHeader";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddToCollection from "components/Collection/AddToCollection";
 import addCircleIcon from '../../public/icons/add-circle-line.svg'
 import deleteIcon from '../../public/icons/delete-bin-line.svg'
-import editIcon from '../../public/icons/edit-box-line.svg'
 import { kurintoSerif } from "app/layout";
 import SyllabusDelete from "components/Syllabus/SyllabusDelete";
 import Modal from "components/commons/Modal";
+import SyllabusTitle from "components/Syllabus/SyllabusTitle";
+import SyllabusTags from "components/Syllabus/SyllabusTags";
+import SyllabusListFormField from "components/Syllabus/SyllabusListFormField";
+import SyllabusTextFormField from "components/Syllabus/SyllabusTextFormField";
+import { Session } from "next-auth";
+import { EditContext } from "context/EditContext";
 
 export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
   const syllabusId = context.params!.sid;
@@ -43,9 +39,8 @@ export const getServerSideProps: GetServerSideProps = async (context: GetServerS
   if (t)
     h.append("Authorization", `Bearer ${token}`);
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-  const syllUrl = new URL(`syllabi/${syllabusId}`, apiUrl);
-  const userUrl = new URL(`users/${userId}`, apiUrl);
+  const syllUrl = new URL(`syllabi/${syllabusId}`, process.env.API_URL);
+  const userUrl = new URL(`users/${userId}`, process.env.API_URL);
 
   //-- get syllabus info
   const syll_res = await fetch(syllUrl, { headers: h });
@@ -87,17 +82,30 @@ interface ISyllabusPageProps {
 }
 
 const Syllabus: NextPage<ISyllabusPageProps> = ({ syllabusInfo, userCollections }) => {
-  const router = useRouter();
   const { data: session } = useSession()
   const [isAddingToCollection, showIsAddingToCollection] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [isOwner, setIsOwner] = useState(false)
 
-  const checkIfAdmin = () => {
-    if (session != null && session.user != null) {
-      return session.user._id === syllabusInfo.user_uuid;
+  const checkIfOwner = (_session: Session, _uuid: string) => {
+    if (_session.user != null) {
+      return _session.user._id === _uuid;
     }
     return false
   };
+
+  useEffect(() => {  
+    if (!syllabusInfo || !session) return
+    const o = checkIfOwner(session, syllabusInfo.user_uuid)
+    
+    setIsOwner(o)
+  }, [session, syllabusInfo])
+
+  const getDate = (_d: string) => {
+    const d = new Date(_d)
+
+    return `${d.getFullYear()}-${d.getMonth() + 1 < 10 ? '0' + (d.getMonth() + 1) : (d.getMonth() + 1)}-${d.getDate() < 10 ? '0' + d.getDate() : d.getDate()}`
+  }
 
   if (Object.keys(syllabusInfo).length === 0) {
     return (
@@ -118,7 +126,6 @@ const Syllabus: NextPage<ISyllabusPageProps> = ({ syllabusInfo, userCollections 
 
       <div className="w-11/12 md:w-10/12 m-auto mb-4">
 
-
         <BreadcrumbsBar
           user={syllabusInfo.user.name}
           userId={syllabusInfo.user.uuid}
@@ -126,179 +133,69 @@ const Syllabus: NextPage<ISyllabusPageProps> = ({ syllabusInfo, userCollections 
           pageTitle={syllabusInfo.title}
         />
 
+      <EditContext.Provider value={{isOwner: isOwner, syllabusUUID: syllabusInfo.uuid}}>
         {showDeleteModal ?
           <Modal>
             <SyllabusDelete syllabusInfo={syllabusInfo} handleClose={() => setShowDeleteModal(false)} />
           </Modal>
           : <></>}
 
-        <div>
-          <div className="flex mt-8">
-            <div className="pt-3 pb-5 flex flex-col gap-3">
-              <SyllabusHeader
-                institution={getInstitutionName(syllabusInfo.institutions)}
-                country={getInstitutionCountry(syllabusInfo.institutions)}
-                lang={getInstitutionLang(syllabusInfo.language)}
-                courseNumber={syllabusInfo.course_number}
-                level={syllabusInfo.academic_level}
-                fields={syllabusInfo.academic_fields}
-                year={getInstitutionYearInfo(syllabusInfo.institutions)}
-                term={getInstitutionTermInfo(syllabusInfo.institutions)}
-              />
-              <h1 className={`${kurintoSerif.className} text-3xl p-0 m-0`}>
-                {syllabusInfo.title ? syllabusInfo.title : "Course Title"}
-              </h1>
+        <div className="flex mt-8">
+          <div className="w-full pt-3 pb-5 flex flex-col gap-3">
+            <SyllabusHeader syllabusInfo={syllabusInfo} />
 
-              <Link href={`/user/${syllabusInfo.user.uuid}`} className={`${kurintoSerif.className} `} data-cy="courseInstructors">
-                {syllabusInfo.user ? syllabusInfo.user.name : "Course Author / Instructor"}
-              </Link>
+            <SyllabusTitle syllabusTitle={syllabusInfo.title} />
 
+            <div className="text-sm">Uploaded by <Link href={`/user/${syllabusInfo.user.uuid}`} className={`${kurintoSerif.className} text-base hover:underline`} data-cy="courseInstructors">
+              {isOwner ? 'you' : syllabusInfo.user ? syllabusInfo.user.name : "Course Author / Instructor"}
+            </Link> on {getDate(syllabusInfo.created_at)}
+            </div>
 
-              <div id="course-tags" className="flex gap-2 mb-6">
-                <Tags tags={syllabusInfo.tags} />
-              </div>
+            <SyllabusTags syllabusTags={syllabusInfo.tags as string[]} />
 
-              <div className="flex flex-col gap-5">
-                {syllabusInfo.description ?
-                  <div>
-                    <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Course Overview</h2>
-                    <p data-cy="course-description" className="whitespace-pre-wrap">
-                      {syllabusInfo.description}
-                    </p>
-                  </div>
-                  : <div>
-                    <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Course Overview</h2>
-                    <p className="text-sm text-gray-400 whitespace-pre-wrap">
-                      No description.
-                    </p>
-                  </div>}
+            <div className="flex flex-col gap-5">
+              <SyllabusTextFormField label="Description" info={syllabusInfo.description} />
 
-                {syllabusInfo.learning_outcomes ?
-                  <div>
-                    <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Learning outcomes</h2>
-                    <ul data-cy="course-learning-outcomes" className="whitespace-pre-wrap">
-                      {syllabusInfo.learning_outcomes.map((l, i) => (
-                        <li key={`learnings-${i}`}>{l}</li>
-                      ))}
-                    </ul>
-                  </div>
-                  : <div>
-                    <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Learning outcomes</h2>
-                    <p className="text-sm text-gray-400 whitespace-pre-wrap">
-                      No learning outcomes.
-                    </p>
-                  </div>}
+              <SyllabusListFormField label="Learning Outcomes" info={syllabusInfo.learning_outcomes as string[]} />
 
-                {syllabusInfo.topic_outlines ?
-                  <div>
-                    <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Topics outline</h2>
-                    <ul data-cy="course-learning-outcomes" className="whitespace-pre-wrap">
-                      {syllabusInfo.topic_outlines.map((t, i) => (
-                        <li key={`topics-${i}`}>{t}</li>
-                      ))}
-                    </ul>
-                  </div>
-                  : <div>
-                    <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Topics outline</h2>
-                    <p className="text-sm text-gray-400 whitespace-pre-wrap">
-                      No topics outlined.
-                    </p>
-                  </div>}
+              <SyllabusListFormField label="Topic Outlines" info={syllabusInfo.topic_outlines as string[]} />
 
-                {syllabusInfo.readings ?
-                  <div>
-                    <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Readings</h2>
-                    <ul data-cy="course-readings" className="list-inside list-disc whitespace-pre-wrap">
-                      {syllabusInfo.readings.map((r, i) => (
-                        <li key={`readings-${i}`}>{r}</li>
-                      ))}
-                    </ul>
-                  </div>
-                  : <div>
-                    <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Readings</h2>
-                    <p className="text-sm text-gray-400 whitespace-pre-wrap">
-                      No readings assigned.
-                    </p>
-                  </div>}
+              <SyllabusListFormField label="Readings" info={syllabusInfo.readings as string[]} />
 
-                {syllabusInfo.grading_rubric ?
-                  <div>
-                    <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Grading rubric</h2>
-                    <p data-cy="course-grading-rubric" className="whitespace-pre-wrap">
-                      {syllabusInfo.grading_rubric}
-                    </p>
-                  </div>
-                  : <div>
-                    <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Grading rubric</h2>
-                    <p className="text-sm text-gray-400 whitespace-pre-wrap">
-                      No grading rubric.
-                    </p>
-                  </div>}
+              <SyllabusTextFormField label="Grading Rubric" info={syllabusInfo.grading_rubric as string} />
 
-                {syllabusInfo.assignments ?
-                  <div>
-                    <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Assignments</h2>
-                    <ul data-cy="course-assignments" className="whitespace-pre-wrap">
-                      {syllabusInfo.assignments.map((r, i) => (
-                        <li key={`assignments-${i}`}>{r}</li>
-                      ))}
-                    </ul>
-                  </div>
-                  : <div>
-                    <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Assignments</h2>
-                    <p className="text-sm text-gray-400 whitespace-pre-wrap">
-                      No assignments.
-                    </p>
-                  </div>}
+              <SyllabusListFormField label="Assignments" info={syllabusInfo.assignments as string[]} />
 
-                  {syllabusInfo.other ?
-                  <div>
-                    <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Other</h2>
-                    <p data-cy="course-other" className="whitespace-pre-wrap">
-                      {syllabusInfo.other}
-                    </p>
-                  </div>
-                  : <div>
-                    <h2 className={`${kurintoSerif.className} text-lg mb-2`}>Other</h2>
-                    <p className="text-sm text-gray-400 whitespace-pre-wrap">
-                      No other coment.
-                    </p>
-                  </div>}
+              <SyllabusTextFormField label="Other" info={syllabusInfo.other as string} />
 
+              <hr className="border-gray-600 my-8" />
 
-                <hr className="border-gray-600 my-8" />
-                <SyllabusAttachments attachments={syllabusInfo.attachments} />
-              </div>
+              <SyllabusAttachments attachments={syllabusInfo.attachments} />
             </div>
           </div>
-
-          <div className="flex gap-2 items-baseline">
-            {session ?
-              <button onClick={() => showIsAddingToCollection(true)} className="p-2 border border-gray-900 rounded-md flex gap-3">
-                <Image src={addCircleIcon} width="24" height="24" alt="Icon to add a syllabus to a collection" />
-                <div>Add to collection</div>
-              </button>
-              :
-              <></>
-            }
-            {checkIfAdmin() ?
-              <>
-                <Link href={`/edit-syllabus?sid=${syllabusInfo.uuid}`} className="mt-3 flex p-2 rounded-md gap-3 border border-gray-900" >
-                  <Image src={editIcon} width="24" height="24" alt="Icon to edit the name" />
-                  <div>Edit syllabus</div>
-                </Link>
-                <button onClick={() => setShowDeleteModal(true)} className="mt-3 flex p-2 bg-red-400 hover:bg-red-500 text-white rounded-md gap-3" >
-                  <Image src={deleteIcon} width="24" height="24" alt="Icon to delete the syllabus" />
-                  <div>Delete syllabus</div>
-                </button>
-              </>
-              : <></>}
-          </div>
-          {isAddingToCollection ?
-            <AddToCollection collections={userCollections} syllabusInfo={syllabusInfo} handleClose={() => showIsAddingToCollection(false)} />
-            :
-            <></>}
         </div>
+
+        <div className="flex gap-2 items-baseline justify-between">
+          {session ?
+            <button data-cy="show-add-collection" onClick={() => showIsAddingToCollection(true)} className="p-2 border border-gray-900 rounded-md flex gap-3">
+              <Image src={addCircleIcon} width="24" height="24" alt="Icon to add a syllabus to a collection" />
+              <div>Add to collection</div>
+            </button>
+            :
+            <></>
+          }
+          {isOwner ?
+            <button data-cy="delete-syllabus" onClick={() => setShowDeleteModal(true)} className="flex p-2 bg-red-400 hover:bg-red-500 text-white rounded-md gap-3" >
+              <Image src={deleteIcon} width="24" height="24" alt="Icon to delete the syllabus" />
+              <div>Delete syllabus</div>
+            </button>
+            : <></>}
+        </div>
+        {isAddingToCollection ?
+          <AddToCollection collections={userCollections} syllabusInfo={syllabusInfo} handleClose={() => showIsAddingToCollection(false)} />
+          :
+          <></>}
+      </EditContext.Provider>
       </div>
     </>
   );

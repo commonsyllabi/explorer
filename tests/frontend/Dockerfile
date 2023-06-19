@@ -5,13 +5,8 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
-COPY www/package.json www/yarn.lock* www/package-lock.json* www/pnpm-lock.yaml* ./
-RUN \
-  if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
-  elif [ -f package-lock.json ]; then npm ci; \
-  elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm && pnpm i; \
-  else echo "Lockfile not found." && exit 1; \
-  fi
+COPY www/package.json www/yarn.lock* ./
+RUN yarn --frozen-lockfile
 
 
 # Rebuild the source code only when needed
@@ -19,27 +14,19 @@ FROM node:16-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY ./www .
+COPY ./tests/frontend/.env.docker .
 
-# Next.js collects completely anonymous telemetry data about general usage.
-# Learn more here: https://nextjs.org/telemetry
-# Uncomment the following line in case you want to disable telemetry during the build.
-# ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED 1
 
-ENV API_URL https://api.common-syllabi.org
-ENV NEXT_PUBLIC_API_URL https://api.common-syllabi.org
-ENV NEXTAUTH_URL https://api.common-syllabi.org/auth
 RUN yarn build
-
-# If using npm comment out above and use below instead
-# RUN npm run build
 
 # Production image, copy all the files and run next
 FROM node:16-alpine AS runner
 WORKDIR /app
 
-# ENV NODE_ENV test
+ENV NODE_ENV test
 # Uncomment the following line in case you want to disable telemetry during runtime.
-# ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED 1
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs

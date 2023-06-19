@@ -1,17 +1,18 @@
 import { signOut, useSession } from "next-auth/react";
 import Router from "next/router";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Image from "next/image";
-import editIcon from '../../public/icons/edit-box-line.svg'
+import editIcon from '../../public/icons/edit-line.svg'
 import cancelIcon from '../../public/icons/close-line.svg'
 import checkIcon from '../../public/icons/check-line.svg'
+import { EditContext } from "context/EditContext";
 
 interface IUserEmailProps {
     userEmail: string
-    apiUrl: string,
 }
 
-const UserEmail: React.FunctionComponent<IUserEmailProps> = ({ userEmail, apiUrl }) => {
+const UserEmail: React.FunctionComponent<IUserEmailProps> = ({ userEmail }) => {
+    const ctx = useContext(EditContext)
     const [log, setLog] = useState('')
     const [isEditing, setIsEditing] = useState(false);
     const [email, setEmail] = useState(userEmail)
@@ -43,7 +44,8 @@ const UserEmail: React.FunctionComponent<IUserEmailProps> = ({ userEmail, apiUrl
         let b = new FormData()
         b.append("email", tmp)
 
-        fetch(apiUrl, {
+        const endpoint = new URL(`/users/${ctx.userUUID}`, process.env.NEXT_PUBLIC_API_URL)
+        fetch(endpoint, {
             method: 'PATCH',
             headers: h,
             body: b
@@ -77,18 +79,26 @@ const UserEmail: React.FunctionComponent<IUserEmailProps> = ({ userEmail, apiUrl
         setTmpConf(e.target.value)
     }
 
-    return (<div id="user-email">
-        <h3 className="text-lg">Email</h3>
+    return (<div id="user-email" data-cy="user-email">
+        <div className="flex justify-between">
+
+            <h3 className="text-lg">Email</h3>
+            {!isEditing ?
+                <button className="ml-8" onClick={() => setIsEditing(true)}>
+                    <Image src={editIcon} width="18" height="18" alt="Icon to edit the name" />
+                </button>
+                : <></>}
+        </div>
         {isEditing ?
             <div>
                 <input type="text" placeholder="Enter your new email" className="w-11/12 bg-transparent mt-2 py-1 border-b-2 border-b-gray-900" onChange={handleChange}></input>
                 <input type="text" placeholder="Confirm your new email" className="w-11/12 bg-transparent mt-2 py-1 border-b-2 border-b-gray-900" onChange={handleChangeConf}></input>
                 <div className="py-1 mt-4 flex flex-col lg:flex-row gap-2 justify-between">
-                    <button className="flex gap-2 rounded-lg border border-1 border-gray-900 py-1 px-2 bg-red-100 hover:bg-red-300" onClick={() => { setIsEditing(false); }}>
+                    <button className="flex items-center gap-2 rounded-lg border border-1 border-gray-900 py-1 px-2 bg-red-100 hover:bg-red-300" onClick={() => { setIsEditing(false); }}>
                         <Image src={cancelIcon} width="24" height="24" alt="Icon to cancel the edit process" />
                         <div>Cancel</div>
                     </button>
-                    <button className="flex gap-2 rounded-lg border border-1 border-gray-900 py-1 px-2" onClick={submitEdit}>
+                    <button data-cy="save-button" className="flex items-center gap-2 rounded-lg border border-1 border-gray-900 py-1 px-2" onClick={submitEdit}>
                         <Image src={checkIcon} width="24" height="24" alt="Icon to save the edit process" />
                         <div>Save</div>
                     </button>
@@ -98,9 +108,7 @@ const UserEmail: React.FunctionComponent<IUserEmailProps> = ({ userEmail, apiUrl
             :
             <div className="flex justify-between">
                 <div className="underline">{email}</div>
-                <button className="ml-8" onClick={() => setIsEditing(true)}>
-                    <Image src={editIcon} width="18" height="18" alt="Icon to edit the name" />
-                </button>
+
             </div>
         }
     </div>)

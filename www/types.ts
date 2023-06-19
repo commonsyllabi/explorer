@@ -9,6 +9,7 @@ export interface IUser {
   institutions?: IInstitution[];
   syllabi?: ISyllabus[];
   collections?: ICollection[];
+  is_newsletter_subscribed: boolean;
 }
 
 export interface IInstitution {

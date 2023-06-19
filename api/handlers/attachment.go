@@ -10,6 +10,10 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/commonsyllabi/explorer/api/config"
 	zero "github.com/commonsyllabi/explorer/api/logger"
 	"github.com/commonsyllabi/explorer/api/models"
@@ -71,7 +75,6 @@ func CreateAttachment(c echo.Context) error {
 		b := make([]byte, 4)
 		rand.Read(b)
 		fname := fmt.Sprintf("%x-%s", b, filepath.Base(file.Filename))
-		dest := filepath.Join(conf.UploadsDir, fname)
 		src, err := file.Open()
 		if err != nil {
 			zero.Error(err.Error())
@@ -79,16 +82,62 @@ func CreateAttachment(c echo.Context) error {
 		}
 		defer src.Close()
 
-		target, err := os.Create(dest)
-		if err != nil {
-			zero.Error(err.Error())
-			return err
-		}
-		defer target.Close()
+		if os.Getenv("API_MODE") == "release" {
+			s3key := os.Getenv("SPACES_ACCESS_KEY")
+			if s3key == "" {
+				zero.Error("missing spaces access key env var")
+				return c.String(http.StatusInternalServerError, "Failed to upload file.")
+			}
+			s3secret := os.Getenv("SPACES_SECRET_KEY")
+			if s3secret == "" {
+				zero.Error("missing spaces access secret env var")
+				return c.String(http.StatusInternalServerError, "Failed to upload file.")
+			}
+			s3endpoint := os.Getenv("STORAGE_URL")
+			if s3key == "" {
+				zero.Error("missing spaces endpoint env var")
+				return c.String(http.StatusInternalServerError, "Failed to upload file.")
+			}
 
-		if _, err = io.Copy(target, src); err != nil {
-			zero.Error(err.Error())
-			return c.String(http.StatusBadRequest, "Error saving File to disk.")
+			s3config := &aws.Config{
+				Credentials:      credentials.NewStaticCredentials(s3key, s3secret, ""),
+				Endpoint:         aws.String(s3endpoint),
+				S3ForcePathStyle: aws.Bool(false),
+				Region:           aws.String("us-east-1"),
+			}
+
+			newSession, err := session.NewSession(s3config)
+			if err != nil {
+				zero.Error(err.Error())
+				return c.String(http.StatusInternalServerError, "Failed to upload file.")
+			}
+			s3client := s3.New(newSession)
+
+			object := s3.PutObjectInput{
+				Bucket: aws.String("cosyll"),
+				Key:    aws.String(fmt.Sprintf("%s/%s", "uploads", fname)),
+				Body:   src,
+				ACL:    aws.String("public-read"),
+			}
+
+			_, err = s3client.PutObject(&object)
+			if err != nil {
+				zero.Error(err.Error())
+				return c.String(http.StatusInternalServerError, "Failed to upload file.")
+			}
+		} else {
+			dest := filepath.Join(conf.UploadsDir, fname)
+			target, err := os.Create(dest)
+			if err != nil {
+				zero.Error(err.Error())
+				return err
+			}
+			defer target.Close()
+
+			if _, err = io.Copy(target, src); err != nil {
+				zero.Error(err.Error())
+				return c.String(http.StatusBadRequest, "Error saving File to disk.")
+			}
 		}
 
 		att = models.Attachment{

@@ -9,6 +9,10 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+var (
+	attachmentCount = 23
+)
+
 func TestAttachmentModel(t *testing.T) {
 	teardown := setup(t)
 	defer teardown(t)
@@ -16,7 +20,7 @@ func TestAttachmentModel(t *testing.T) {
 	t.Run("Test get all attachments", func(t *testing.T) {
 		res, err := models.GetAllAttachments()
 		require.Nil(t, err)
-		assert.Equal(t, 6, len(res))
+		assert.Equal(t, attachmentCount, len(res))
 	})
 
 	t.Run("Test create attachment", func(t *testing.T) {

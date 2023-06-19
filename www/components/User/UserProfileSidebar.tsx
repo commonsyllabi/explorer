@@ -3,66 +3,49 @@ import * as React from "react";
 import UserLinks from "components/User/UserLinks";
 import UserInstitutions from "components/User/UserInstitutions";
 
-import { IUser, ICollection, IInstitution, ISyllabus } from "types";
+import { IUser } from "types";
 import UserBio from "./UserBio";
 import UserEducation from "./UserEducation";
 import UserEmail from "./UserEmail";
 import UserName from "./UserName";
 import UserPassword from "./UserPassword";
 import UserDelete from "./UserDelete";
-import { useState } from "react";
-
-const getinstitutionNames = (
-  institutionsArray: IInstitution[] | undefined
-): string[] => {
-  let instutionNames = [];
-  if (institutionsArray) {
-    for (let i = 0; i < institutionsArray.length; i++) {
-      const name = institutionsArray[i].name;
-      instutionNames.push(name);
-    }
-  }
-  return instutionNames;
-};
+import { useContext, useState } from "react";
+import { EditContext } from "context/EditContext";
 
 interface IUserProfileSidebarProps {
-  props: IUser;
-  apiUrl: string;
-  isAdmin: boolean;
+  userInfo: IUser;
 }
 
 const UserProfileSidebar: React.FunctionComponent<IUserProfileSidebarProps> = ({
-  props,
-  apiUrl,
-  isAdmin,
+  userInfo,
 }) => {
-
+  const ctx = useContext(EditContext)
   const [isShowingPasswordRecovery, setShowPasswordRecovery] = useState(false)
   return (
 
     <div id="user-profile" className="">
       <div id="user-description" className="pb-4">
-        <UserName userName={props.name} isAdmin={isAdmin} apiUrl={apiUrl} />
-        <UserBio userBio={props.bio} isAdmin={isAdmin} apiUrl={apiUrl} />
-        <UserLinks userLinks={props.urls as Array<string>} isAdmin={isAdmin} apiUrl={apiUrl} />
+        <UserName userName={userInfo.name} />
+        <UserBio userBio={userInfo.bio} />
+        <UserLinks userLinks={userInfo.urls as Array<string>} />
       </div>
       <UserInstitutions
-        userInstitutions={props.institutions}
-        isAdmin={isAdmin} apiUrl={apiUrl}
+        userInstitutions={userInfo.institutions}
       />
-      <UserEducation userEducation={props.education as Array<string>} isAdmin={isAdmin} apiUrl={apiUrl} />
+      <UserEducation userEducation={userInfo.education as Array<string>} />
 
-      {isAdmin ?
+      {ctx.isOwner ?
         <div>
-          <UserEmail userEmail={props.email} apiUrl={apiUrl} />
+          <UserEmail userEmail={userInfo.email} />
           <div className=" mt-5">
             {isShowingPasswordRecovery ?
-              <UserPassword userEmail={props.email} handleClose={() => setShowPasswordRecovery(false)} />
+              <UserPassword userEmail={userInfo.email} handleClose={() => setShowPasswordRecovery(false)} />
               :
               <button onClick={() => setShowPasswordRecovery(true)} className="w-full border border-gray-900 rounded-lg">Reset password</button>
             }
           </div>
-          <UserDelete apiUrl={apiUrl} />
+          <UserDelete />
         </div>
         :
         <></>}

@@ -7,7 +7,6 @@ const getCollectionList = (
   filterPrivate: boolean
 ) => {
   let collectionList = [];
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   if (collectionArray) {
     for (let i = 0; i < collectionArray.length; i++) {
       if (filterPrivate) {

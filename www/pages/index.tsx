@@ -14,7 +14,7 @@ import clearIcon from '../public/icons/close-line.svg'
 const PAGINATION_LIMIT = 15;
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const url = new URL(`syllabi/`, process.env.NEXT_PUBLIC_API_URL);
+  const url = new URL(`syllabi/`, process.env.API_URL);
   const page = query.page ? (query.page as string) : "1";
   const keywords = query.keywords ? (query.keywords as string) : "";
   const tags = query.tags ? (query.tags as string) : "";
@@ -53,8 +53,8 @@ const Home: NextPage<IHomeProps> = ({ meta, syllabiListings }) => {
   const [currentPath, setCurrentPath] = useState("");
   const [currentQuery, setCurrentQuery] = useState(router.query);
   const [syllabi, setSyllabi] = useState<ISyllabus[]>();
-  const [syllabiCount, setSyllabiCount] = useState(syllabiListings.length);
-  const [totalPages, setTotalPages] = useState(Math.floor(syllabiListings.length / PAGINATION_LIMIT) + 1);
+  const [syllabiCount, setSyllabiCount] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
   const [searchTerms, setSearchTerms] = useState("");
   const [filters, setFilters] = useState<ISyllabiFilters>({
     academic_level: "",
@@ -66,7 +66,10 @@ const Home: NextPage<IHomeProps> = ({ meta, syllabiListings }) => {
   });
 
   useEffect(() => {
-    setSyllabi(syllabiListings);
+    if(!syllabiListings) return;
+    setSyllabiCount(syllabiListings.length)
+    setSyllabi(syllabiListings)
+    setTotalPages(Math.floor(syllabiListings.length / PAGINATION_LIMIT) + 1)
   }, [syllabiListings]);
 
   //-- parses query params into filters
@@ -114,7 +117,7 @@ const Home: NextPage<IHomeProps> = ({ meta, syllabiListings }) => {
   //-- it resets the activePage to 1, then updates the cards, totals and pages
   useEffect(() => {
     // paginationHandler(1)
-    const s = getSyllabusCards(syllabi, filters, false, 1);
+    const s = getSyllabusCards(syllabi, filters, 1);
     if (s === undefined) return;
     const total = s.length;
 
@@ -153,8 +156,8 @@ const Home: NextPage<IHomeProps> = ({ meta, syllabiListings }) => {
 
   const getAllSyllabi = () => {
     if (activePage > totalPages || activePage < 1)
-      return getSyllabusCards(syllabi, filters, false, 1)
-    else return getSyllabusCards(syllabi, filters, false, activePage)
+      return getSyllabusCards(syllabi, filters, 1)
+    else return getSyllabusCards(syllabi, filters, activePage)
   };
 
   const handleSearchChange = (e: React.BaseSyntheticEvent) => {

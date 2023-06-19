@@ -6,11 +6,11 @@ export const getAcademicLevelText = (level: number | undefined) => {
     case 0:
       return "Other";
     case 1:
-      return "Bachelor's Level";
+      return "Bachelor's";
     case 2:
-      return "Master's Level";
+      return "Master's";
     case 3:
-      return "Doctora Level";
+      return "Doctoral";
     default:
       return null;
   }

@@ -5,7 +5,6 @@ import { ISyllabiFilters, ISyllabus } from "types";
 export const getSyllabusCards = (
   syllabiArray: ISyllabus[] | undefined,
   filters: ISyllabiFilters | undefined,
-  isAdmin: boolean | false,
   activePage?: number,
 ) => {
   let syllabiCards;
@@ -69,7 +68,6 @@ export const getSyllabusCards = (
     <SyllabusCard
       key={item.uuid}
       syllabusInfo={item}
-      isAdmin={isAdmin}
     />
   )) as JSX.Element[];
 

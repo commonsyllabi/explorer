@@ -292,19 +292,21 @@ func RemoveAttachmentFromSyllabus(syll_uuid uuid.UUID, att_uuid uuid.UUID, user_
 	return syll, nil
 }
 
-func AddInstitutionToSyllabus(syll_uuid uuid.UUID, user_uuid uuid.UUID, inst *Institution) (Syllabus, error) {
+func AddInstitutionToSyllabus(syll_uuid uuid.UUID, user_uuid uuid.UUID, inst *Institution) (Institution, error) {
+	var updated Institution
 	var syll Syllabus
 	result := db.Where("uuid = ? AND user_uuid = ?", syll_uuid, user_uuid).First(&syll)
 	if result.Error != nil {
-		return syll, result.Error
+		return updated, result.Error
 	}
 
 	err := db.Model(&syll).Association("Institutions").Append(inst)
 	if err != nil {
-		return syll, err
+		return updated, err
 	}
 
-	return syll, err
+	updated = syll.Institutions[len(syll.Institutions)-1]
+	return updated, err
 }
 
 func EditInstitutionToSyllabus(uuid uuid.UUID, inst_uuid uuid.UUID, updated *Institution) (Institution, error) {
@@ -319,7 +321,7 @@ func EditInstitutionToSyllabus(uuid uuid.UUID, inst_uuid uuid.UUID, updated *Ins
 		return existing, err
 	}
 
-	return *updated, err
+	return existing, err
 }
 
 func RemoveInstitutionFromSyllabus(syll_uuid uuid.UUID, inst_uuid uuid.UUID, user_uuid uuid.UUID) (Syllabus, error) {

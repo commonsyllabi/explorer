@@ -26,6 +26,7 @@ var (
 func InitDB(url string) (*gorm.DB, error) {
 	var err error
 
+	zero.Infof("db connecting to %s", url)
 	conf := &gorm.Config{}
 	if os.Getenv("API_MODE") == "release" {
 		conf.Logger = logger.Default.LogMode(logger.Silent)
@@ -83,10 +84,12 @@ func runFixtures(shouldTruncateTables bool) error {
 	}
 
 	var fixtures_path = ""
-	if os.Getenv("API_MODE") == "test" {
+	if os.Getenv("FIXTURES_PATH") != "" {
+		fixtures_path = os.Getenv("FIXTURES_PATH")
+	} else if os.Getenv("API_MODE") == "test" {
 		fixtures_path = "test.yml"
 	} else {
-		fixtures_path = "full.yml"
+		zero.Error("missing FIXTURES_PATH env var")
 	}
 
 	bytes, err := os.ReadFile(filepath.Join(Basepath, "fixtures", fixtures_path))

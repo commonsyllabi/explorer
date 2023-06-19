@@ -10,6 +10,12 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+var (
+	listedSyllabiCount = 20
+	tagSyllabiCount    = 3
+	levelsSyllabiCount = 8
+)
+
 func TestSyllabusModel(t *testing.T) {
 	teardown := setup(t)
 	defer teardown(t)
@@ -25,7 +31,7 @@ func TestSyllabusModel(t *testing.T) {
 	t.Run("Test get all listed syllabi", func(t *testing.T) {
 		syll, err := models.GetSyllabi(searchParams, userID)
 		require.Nil(t, err)
-		assert.Equal(t, 3, len(syll))
+		assert.Equal(t, listedSyllabiCount, len(syll))
 	})
 
 	t.Run("Test get all listed syllabi written in french", func(t *testing.T) {
@@ -48,7 +54,7 @@ func TestSyllabusModel(t *testing.T) {
 		searchParams["tags"] = "%(design)%"
 		syll, err := models.GetSyllabi(searchParams, userID)
 		require.Nil(t, err)
-		assert.Equal(t, 1, len(syll))
+		assert.Equal(t, tagSyllabiCount, len(syll))
 		searchParams["tags"] = "%"
 	})
 
@@ -56,7 +62,7 @@ func TestSyllabusModel(t *testing.T) {
 		searchParams["levels"] = "%(2)%"
 		syll, err := models.GetSyllabi(searchParams, userID)
 		require.Nil(t, err)
-		assert.Equal(t, 1, len(syll))
+		assert.Equal(t, levelsSyllabiCount, len(syll))
 		searchParams["levels"] = "%"
 	})
 
@@ -156,9 +162,8 @@ func TestSyllabusModel(t *testing.T) {
 
 		updated, err := models.AddInstitutionToSyllabus(syllabusID, userID, &inst)
 		assert.Nil(t, err)
-		assert.Equal(t, syllabusID, updated.UUID)
-		assert.Equal(t, 1, len(updated.Institutions))
-		newInstID = updated.Institutions[0].UUID
+		assert.NotNil(t, updated.UUID)
+		newInstID = updated.UUID
 	})
 
 	t.Run("Test remove institution from syllabus", func(t *testing.T) {

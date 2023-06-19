@@ -16,6 +16,10 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+var (
+	userCount = 6
+)
+
 func TestUserHandler(t *testing.T) {
 	teardown := setup(t)
 	defer teardown(t)
@@ -31,7 +35,7 @@ func TestUserHandler(t *testing.T) {
 		users := make([]models.User, 0)
 		err := json.Unmarshal(res.Body.Bytes(), &users)
 		require.Nil(t, err)
-		assert.Equal(t, 5, len(users))
+		assert.Equal(t, userCount, len(users))
 	})
 
 	t.Run("Test create user", func(t *testing.T) {

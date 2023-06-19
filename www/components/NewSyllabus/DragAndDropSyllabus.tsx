@@ -62,8 +62,6 @@ function DragAndDropSyllabus({
   const [message, setMessage] = useState("");
   const [File, setFile] = useState<File | null>(null);
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-
   const handleDrop = async (acceptedFiles: File[]) => {
     setIsLoading(true);
     setMessage("");
@@ -87,7 +85,7 @@ function DragAndDropSyllabus({
     // Creating http request
     const postHeader = new Headers();
     postHeader.append("Authorization", `Bearer ${session.user.token}`);
-    const endpoint = new URL(`syllabi/parse`, apiUrl);
+    const endpoint = new URL(`syllabi/parse`, process.env.NEXT_PUBLIC_API_URL);
     const body = new FormData();
     body.append("file", acceptedFiles[0]);
     try {
