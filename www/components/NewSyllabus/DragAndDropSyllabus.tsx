@@ -62,6 +62,11 @@ function DragAndDropSyllabus({
   const [File, setFile] = useState<File | null>(null);
 
   const handleDrop = async (acceptedFiles: File[]) => {
+    if(acceptedFiles.length == 0 || acceptedFiles[0].size * 0.000001 > 10){
+      setShowError(true)
+      setMessage("The file you are trying to upload is too large!")
+      return
+    }
     setIsLoading(true);
     setMessage("");
     setShowError(false);
@@ -105,7 +110,7 @@ function DragAndDropSyllabus({
     } catch (error: any) {
       console.error(error);
       setMessage(
-        error.message || error.toString() || "An unknown error occurred."
+        error.message || error.toString() || "An unknown error occurred, please try again later."
       );
       setShowError(true);
     } finally {
@@ -157,7 +162,7 @@ function DragAndDropSyllabus({
         <input {...getInputProps()} />
         <div style={{ fontSize: "32px", width: "32px", marginRight: "16px" }}>
           {isLoading ? (
-            'Loading...'
+            '...'
           ) : showSuccess ? (
             // show checkmark
             <FiCheckCircle />
@@ -177,7 +182,7 @@ function DragAndDropSyllabus({
           </p>
         </div>
       </div>
-      <p className={`small p-2 ${showError ? "text-danger" : "text-success"}`}>
+      <p className={`small p-2 ${showError ? "text-red-600 font-bold" : ""}`}>
         {message}
       </p>
     </>

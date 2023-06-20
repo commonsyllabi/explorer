@@ -64,19 +64,38 @@ const NewSyllabus: NextPage = () => {
           if (key && Object.prototype.hasOwnProperty.call(parsedData, key) && key in newData) {
             
             if(parsedData[key as keyof IFormDataOptional] && parsedData[key as keyof IFormDataOptional].length > 0)
-              newData[key as keyof IFormData] = parsedData[key as keyof IFormDataOptional]; //-- type error?
+              newData[key as keyof IFormData] = parsedData[key as keyof IFormDataOptional];
           }
         }
-        
-        
-        // newData.language = parsedData["language"] ? parsedData["language"] : newData.language
-        // newData.title = parsedData["title"] ? parsedData["title"] : newData.title
-        // newData.other += parsedData["other"] ? parsedData["other"] : ''
         
         return newData;
       });
     }
   }, [parsedData]);
+
+  useEffect(() => {
+    if(!parsedFile) return
+    console.log(parsedFile);
+
+    for (const att of attachmentData) {
+      if(att.file == parsedFile){
+        return
+      }
+    }
+
+    const syllabusFile = {
+      id: attachmentData.length.toString(),
+      name: parsedFile.name,
+      description: "Syllabus for the course",
+      file: parsedFile,
+      size: (parsedFile.size * 0.000001).toFixed(2).toString(),
+      type: "file",
+      url: "",
+    } as IUploadAttachment
+
+    setAttachmentData([...attachmentData, syllabusFile])
+    
+  }, [parsedFile])
 
   const [formData, setFormData] = useState<IFormData>({
     institutions: [],
