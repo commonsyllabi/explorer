@@ -210,8 +210,8 @@ function DragAndDropSyllabus({
       <p className={`small p-2 ${showError ? "text-red-600 font-bold" : ""}`}>
         Parsed fields:
         <ul>
-          {parsedFields.map((e) => {
-            return(<li className="list-disc list-inside">{e}</li>)
+          {parsedFields.map((e, i) => {
+            return(<li key={`parsed-${i}`} className="list-disc list-inside">{e}</li>)
           })}
         </ul>
       </p>
