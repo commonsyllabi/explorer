@@ -78,7 +78,7 @@ const NewSyllabus: NextPage = () => {
     console.log(parsedFile);
 
     for (const att of attachmentData) {
-      if(att.file == parsedFile){
+      if(att.name == parsedFile.name){
         return
       }
     }

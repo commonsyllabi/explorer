@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { FiCheckCircle, FiFile, FiXCircle } from "react-icons/fi";
 import { Session } from "next-auth";
@@ -59,20 +59,28 @@ function DragAndDropSyllabus({
   const [showError, setShowError] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [message, setMessage] = useState("");
+  const [parsedFields, setParsedFields] = useState<string[]>([])
   const [File, setFile] = useState<File | null>(null);
 
   const handleDrop = async (acceptedFiles: File[]) => {
     if(acceptedFiles.length == 0 || acceptedFiles[0].size * 0.000001 > 10){
       setShowError(true)
-      setMessage("The file you are trying to upload is too large!")
+      setMessage("The file you are trying to upload is too large.")
       return
     }
+
+    if(acceptedFiles[0].type.indexOf("vnd.openxmlformats-officedocument.wordprocessingml.document") === -1 && acceptedFiles[0].type.indexOf("opendocument.text") === -1 && acceptedFiles[0].type.indexOf("application/pdf") === -1){
+      setShowError(true)
+      setMessage("Your file should be a .doc, .docx or .pdf.")
+      return
+    }
+
     setIsLoading(true);
     setMessage("");
     setShowError(false);
     setShowSuccess(false);
+    setParsedFields([])
 
-    // Make sure the document is a PDF or a Word document
 
     // check if user is logged in
     if (session == null || session.user == null) {
@@ -104,6 +112,7 @@ function DragAndDropSyllabus({
       }
       const data: IFormDataOptional = await res.json();
       setParsedData(data);
+      assessParsedFields(data)
       setParsedFile(acceptedFiles[0]);
       setShowSuccess(true);
       setMessage("Syllabus file uploaded successfully!");
@@ -117,6 +126,17 @@ function DragAndDropSyllabus({
       setIsLoading(false);
     }
   };
+
+  const assessParsedFields = (data: IFormDataOptional) => {
+    let parsed: string[] = []
+    for (const key in data) {
+      console.log(data[key]);
+      if(data[key] != null && data[key] !== "")
+        parsed.push(key) 
+    }
+
+    setParsedFields(parsed)
+  }
 
   const {
     acceptedFiles,
@@ -185,6 +205,19 @@ function DragAndDropSyllabus({
       <p className={`small p-2 ${showError ? "text-red-600 font-bold" : ""}`}>
         {message}
       </p>
+      {parsedFields.length > 0 ?
+      
+      <p className={`small p-2 ${showError ? "text-red-600 font-bold" : ""}`}>
+        Parsed fields:
+        <ul>
+          {parsedFields.map((e) => {
+            return(<li className="list-disc list-inside">{e}</li>)
+          })}
+        </ul>
+      </p>
+      :
+      <></>
+      }
     </>
   );
 }
