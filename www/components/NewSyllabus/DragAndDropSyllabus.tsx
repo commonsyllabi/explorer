@@ -47,12 +47,14 @@ export type DragAndDropSyllabusProps = {
     React.SetStateAction<IFormDataOptional | undefined>
   >;
   setParsedFile: React.Dispatch<React.SetStateAction<File | undefined>>;
+  setParsedURLs: React.Dispatch<React.SetStateAction<Array<string> | undefined>>;
   session: Session | null;
 };
 
 function DragAndDropSyllabus({
   setParsedData,
   setParsedFile,
+  setParsedURLs,
   session,
 }: DragAndDropSyllabusProps) {
   const [isLoading, setIsLoading] = useState(false);
@@ -112,8 +114,9 @@ function DragAndDropSyllabus({
       }
       const data: IFormDataOptional = await res.json();
       setParsedData(data);
-      assessParsedFields(data)
-      setParsedFile(acceptedFiles[0]);
+      assessParsedFields(data);
+      setParsedFile(acceptedFiles[0]);      
+      setParsedURLs(data.urls);
       setShowSuccess(true);
       setMessage("Syllabus file uploaded successfully!");
     } catch (error: any) {
@@ -130,7 +133,6 @@ function DragAndDropSyllabus({
   const assessParsedFields = (data: IFormDataOptional) => {
     let parsed: string[] = []
     for (const key in data) {
-      console.log(data[key]);
       if(data[key] != null && data[key] !== "")
         parsed.push(key) 
     }
@@ -207,14 +209,14 @@ function DragAndDropSyllabus({
       </p>
       {parsedFields.length > 0 ?
       
-      <p className={`small p-2 ${showError ? "text-red-600 font-bold" : ""}`}>
+      <div className={`small p-2 ${showError ? "text-red-600 font-bold" : ""}`}>
         Parsed fields:
         <ul>
           {parsedFields.map((e, i) => {
             return(<li key={`parsed-${i}`} className="list-disc list-inside">{e}</li>)
           })}
         </ul>
-      </p>
+      </div>
       :
       <></>
       }

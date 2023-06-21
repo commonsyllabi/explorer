@@ -48,13 +48,13 @@ const NewSyllabus: NextPage = () => {
   const [syllabusUUID, setSyllabusUUID] = useState("");
   const [parsedData, setParsedData] = useState<IFormDataOptional>();
   const [parsedFile, setParsedFile] = useState<File>();
+  const [parsedURLs, setParsedURLs] = useState<Array<string>>();
   const [attachmentData, setAttachmentData] = useState(
     Array<IUploadAttachment>
   );
 
   useEffect(() => {
     if (parsedData) {
-      console.log('parsed data', parsedData);
   
       setFormData((prevFormData : IFormData) => {
         let newData: IFormData = {} as IFormData
@@ -74,8 +74,30 @@ const NewSyllabus: NextPage = () => {
   }, [parsedData]);
 
   useEffect(() => {
+    if(!parsedURLs) return;
+
+    let n = [] as IUploadAttachment[]
+    for (const u of parsedURLs) {
+      let found = false
+      for (const att of attachmentData) {
+          if(att.type === "url" && att.url === u)
+            found = true
+      }
+      if(!found)
+        n.push({
+          id: (attachmentData.length + n.length).toString(),
+          name: new URL(u).hostname,
+          description: "Additional material",
+          type: "url",
+          url: u,
+        } as IUploadAttachment)
+    }
+
+    setAttachmentData([...attachmentData, ...n])
+  }, [parsedURLs])
+
+  useEffect(() => {
     if(!parsedFile) return
-    console.log(parsedFile);
 
     for (const att of attachmentData) {
       if(att.name == parsedFile.name){
@@ -300,7 +322,7 @@ const NewSyllabus: NextPage = () => {
                     New
                   </span>
                 </h4>
-                <DragAndDropSyllabus session={session} setParsedData={setParsedData} setParsedFile={setParsedFile}/>
+                <DragAndDropSyllabus session={session} setParsedData={setParsedData} setParsedFile={setParsedFile} setParsedURLs={setParsedURLs}/>
               </div>
 
               <hr className="my-12 border border-gray-300" />
