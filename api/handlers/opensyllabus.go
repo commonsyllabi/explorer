@@ -15,129 +15,6 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func getInstitution(os models.OpenSyllabus) []models.OpenSyllabusParsedInstitution {
-	// Initialize the institution
-	var institutions []models.OpenSyllabusParsedInstitution
-
-	institution := models.OpenSyllabusParsedInstitution{
-		Name: os.Data.ExtractedSections.Institution.Name,
-		// Country: os.Data.ExtractedSections.Institution.Country,
-		URL: os.Data.ExtractedSections.Institution.URL,
-	}
-
-	// add the institution to the institutions array
-	institutions = append(institutions, institution)
-
-	return institutions
-}
-
-func getAcademicField(os models.OpenSyllabus) []string {
-	var academicFields []string
-
-	// TODO: ignore academic fields for now: the conversion from CID to ISCED is a pain
-
-	return academicFields
-}
-
-func getTitle(os models.OpenSyllabus) string {
-	var title string
-	var maxProbability float64 = 0
-
-	for _, t := range os.Data.ExtractedSections.Title {
-		if t.MeanProbability > maxProbability {
-			maxProbability = t.MeanProbability
-			title = t.Text
-		}
-	}
-
-	return title
-}
-
-func getDescription(os models.OpenSyllabus) string {
-	var desc string
-
-	var maxProbability float64 = 0
-	for _, d := range os.Data.ExtractedSections.Description {
-		if d.MeanProbability > maxProbability {
-			maxProbability = d.MeanProbability
-			desc = d.Text
-		}
-	}
-
-	return desc
-}
-
-func getReadings(os models.OpenSyllabus) []string {
-	var readings []string
-
-	for _, c := range os.Data.Citations {
-		var title, author string
-		if len(c.Parsed.Title) > 0 {
-			title = c.Parsed.Title[0].Text
-		} else {
-			title = "Unknown title"
-		}
-
-		if len(c.Parsed.Author) > 0 {
-			author = c.Parsed.Author[0].Text
-		} else {
-			author = "Unknown author"
-		}
-		reading := fmt.Sprintf("%s, %s", title, author)
-		readings = append(readings, reading)
-	}
-
-	return readings
-}
-
-func getGradingRubric(os models.OpenSyllabus) []string {
-	var rubric []string
-
-	for _, lo := range os.Data.ExtractedSections.GradingRubric {
-		if lo.MeanProbability > 0.5 {
-			rubric = append(rubric, lo.Text)
-		}
-	}
-
-	return rubric
-}
-
-func getLearningOutcomes(os models.OpenSyllabus) []string {
-	var outcomes []string
-
-	for _, lo := range os.Data.ExtractedSections.LearningOutcomes {
-		if lo.MeanProbability > 0.5 {
-			outcomes = append(outcomes, lo.Text)
-		}
-	}
-
-	return outcomes
-}
-
-func getSchedule(os models.OpenSyllabus) []string {
-	var schedule []string
-
-	for _, sch := range os.Data.ExtractedSections.AssignmentSchedule {
-		if sch.MeanProbability > 0.5 {
-			schedule = append(schedule, sch.Text)
-		}
-	}
-
-	return schedule
-}
-
-func getAssignments(os models.OpenSyllabus) []string {
-	var assignments []string
-
-	for _, ass := range os.Data.ExtractedSections.AssessmentStrategy {
-		if ass.MeanProbability > 0.5 {
-			assignments = append(assignments, ass.Text)
-		}
-	}
-
-	return assignments
-}
-
 func getProbability(jsonResponse interface{}) (float64, error) {
 	data, ok := jsonResponse.(map[string]interface{})["data"].(map[string]interface{})
 	if !ok {
@@ -251,17 +128,17 @@ func ParseSyllabusFile(c echo.Context) error {
 	}
 
 	formData := models.OpenSyllabusParsed{
-		Title:            getTitle(openSyllabus),
-		Institutions:     getInstitution(openSyllabus),
-		Description:      getDescription(openSyllabus),
+		Title:            openSyllabus.GetTitle(),
+		Institutions:     openSyllabus.GetInstitution(),
+		Description:      openSyllabus.GetDescription(),
 		Language:         openSyllabus.Data.Language,
-		AcademicFields:   getAcademicField(openSyllabus),
-		Readings:         getReadings(openSyllabus),
-		LearningOutcomes: getLearningOutcomes(openSyllabus),
-		GradingRubric:    getGradingRubric(openSyllabus),
-		Schedule:         getSchedule(openSyllabus),
+		AcademicFields:   openSyllabus.GetAcademicField(),
+		Readings:         openSyllabus.GetReadings(),
+		LearningOutcomes: openSyllabus.GetLearningOutcomes(),
+		GradingRubric:    openSyllabus.GetGradingRubric(),
+		Schedule:         openSyllabus.GetSchedule(),
 		URLs:             openSyllabus.Data.URLs,
-		Assessments:      getAssignments(openSyllabus),
+		Assessments:      openSyllabus.GetAssignments(),
 	}
 
 	// Return a success message

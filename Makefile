@@ -7,7 +7,7 @@ run: ## run the backend locally
 	godotenv -f ".env,.secrets" go run cmd/api/main.go
 
 test: ## run the backend tests locally
-	go clean -testcache && go test -p 1 ./... -cover
+	go clean -testcache && godotenv -f ".secrets" go test -p 1 ./... -cover
 
 docker-build: ## build the production container
 	docker compose build

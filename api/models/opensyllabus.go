@@ -1,5 +1,9 @@
 package models
 
+import (
+	"fmt"
+)
+
 type OpenSyllabus struct {
 	Data struct {
 		Field struct {
@@ -88,4 +92,127 @@ type OpenSyllabusParsed struct {
 	Attachments      []string                        `json:"attachments"`
 	Assessments      []string                        `json:"assignments"`
 	URLs             []string                        `json:"urls"`
+}
+
+func (os *OpenSyllabus) GetInstitution() []OpenSyllabusParsedInstitution {
+	// Initialize the institution
+	var institutions []OpenSyllabusParsedInstitution
+
+	institution := OpenSyllabusParsedInstitution{
+		Name: os.Data.ExtractedSections.Institution.Name,
+		// Country: os.Data.ExtractedSections.Institution.Country,
+		URL: os.Data.ExtractedSections.Institution.URL,
+	}
+
+	// add the institution to the institutions array
+	institutions = append(institutions, institution)
+
+	return institutions
+}
+
+func (os *OpenSyllabus) GetAcademicField() []string {
+	var academicFields []string
+
+	// TODO: ignore academic fields for now: the conversion from CID to ISCED is a pain
+
+	return academicFields
+}
+
+func (os *OpenSyllabus) GetTitle() string {
+	var title string
+	var maxProbability float64 = 0
+
+	for _, t := range os.Data.ExtractedSections.Title {
+		if t.MeanProbability > maxProbability {
+			maxProbability = t.MeanProbability
+			title = t.Text
+		}
+	}
+
+	return title
+}
+
+func (os *OpenSyllabus) GetDescription() string {
+	var desc string
+
+	var maxProbability float64 = 0
+	for _, d := range os.Data.ExtractedSections.Description {
+		if d.MeanProbability > maxProbability {
+			maxProbability = d.MeanProbability
+			desc = d.Text
+		}
+	}
+
+	return desc
+}
+
+func (os *OpenSyllabus) GetReadings() []string {
+	var readings []string
+
+	for _, c := range os.Data.Citations {
+		var title, author string
+		if len(c.Parsed.Title) > 0 {
+			title = c.Parsed.Title[0].Text
+		} else {
+			title = "Unknown title"
+		}
+
+		if len(c.Parsed.Author) > 0 {
+			author = c.Parsed.Author[0].Text
+		} else {
+			author = "Unknown author"
+		}
+		reading := fmt.Sprintf("%s, %s", title, author)
+		readings = append(readings, reading)
+	}
+
+	return readings
+}
+
+func (os *OpenSyllabus) GetGradingRubric() []string {
+	var rubric []string
+
+	for _, lo := range os.Data.ExtractedSections.GradingRubric {
+		if lo.MeanProbability > 0.5 {
+			rubric = append(rubric, lo.Text)
+		}
+	}
+
+	return rubric
+}
+
+func (os *OpenSyllabus) GetLearningOutcomes() []string {
+	var outcomes []string
+
+	for _, lo := range os.Data.ExtractedSections.LearningOutcomes {
+		if lo.MeanProbability > 0.5 {
+			outcomes = append(outcomes, lo.Text)
+		}
+	}
+
+	return outcomes
+}
+
+func (os *OpenSyllabus) GetSchedule() []string {
+	var schedule []string
+
+	for _, sch := range os.Data.ExtractedSections.AssignmentSchedule {
+		if sch.MeanProbability > 0.5 {
+			schedule = append(schedule, sch.Text)
+		}
+	}
+
+	return schedule
+}
+
+func (os *OpenSyllabus) GetAssignments() []string {
+	var assignments []string
+
+	for _, ass := range os.Data.ExtractedSections.AssessmentStrategy {
+		if ass.MeanProbability > 0.5 {
+			assignments = append(assignments, ass.Text)
+		}
+	}
+
+	return assignments
 }
