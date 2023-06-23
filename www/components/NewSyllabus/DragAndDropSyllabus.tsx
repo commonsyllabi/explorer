@@ -181,7 +181,7 @@ function DragAndDropSyllabus({
   return (
     <>
       <div {...getRootProps({ style })}>
-        <input {...getInputProps()} />
+        <input data-cy="opensyllabus-file-input" {...getInputProps()} />
         <div style={{ fontSize: "32px", width: "32px", marginRight: "16px" }}>
           {isLoading ? (
             '...'
@@ -211,9 +211,9 @@ function DragAndDropSyllabus({
       
       <div className={`small p-2 ${showError ? "text-red-600 font-bold" : ""}`}>
         Parsed fields:
-        <ul>
+        <ul data-cy="parsed-fields">
           {parsedFields.map((e, i) => {
-            return(<li key={`parsed-${i}`} className="list-disc list-inside">{e}</li>)
+            return(<li key={`parsed-${i}`} data-cy="parsed-field" className="list-disc list-inside">{e}</li>)
           })}
         </ul>
       </div>
