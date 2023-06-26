@@ -36,7 +36,7 @@ const CollectionInfo: React.FunctionComponent<ICollectionInfoProps> = ({
         if (!collectionInfo) return
         setName(collectionInfo.name)
         setTmpName(collectionInfo.name)
-        setDescription(collectionInfo.description)
+        setDescription(collectionInfo.description ? collectionInfo.description : 'This collection does not have a description')
         setTmpDescription(collectionInfo.description)
         setStatus(collectionInfo.status)
         setTmpStatus(collectionInfo.status)
@@ -143,8 +143,8 @@ const CollectionInfo: React.FunctionComponent<ICollectionInfoProps> = ({
                     <>
                         <h1 data-cy="collection-name" className={`${kurintoBook.className} text-3xl`}>{name}</h1>
                         <div data-cy="collection-description" className="">{description}</div>
-                        <div className="flex gap-3">
                         <PubBadge isPublic={getIsPublic(status)} />
+                        <div className="flex gap-3">
                             <button className={`flex gap-2 opacity-70 border ${isShowingTooltip ? '' : 'opacity-40'} rounded-md border-gray-700 w-max p-1`} onClick={() => setIsEditing(true)} data-cy="edit-button" onMouseEnter={() => { setShowTooltip(true) }} onMouseLeave={() => { setShowTooltip(false) }}>
                                 <Image src={editIcon} width="22" height="22" alt="Icon to edit the list" />
                                 <div className={`${isShowingTooltip ? '' : 'hidden'} text-sm`}>Edit</div>
@@ -155,7 +155,7 @@ const CollectionInfo: React.FunctionComponent<ICollectionInfoProps> = ({
                     :
                     <>
                         <h1 className={`${kurintoBook.className} text-3xl`}>{collectionInfo.name}</h1>
-                        
+
                         <div data-cy="collection-description" className="">{description}</div>
                     </>
             }

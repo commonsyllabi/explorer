@@ -7,23 +7,31 @@ import cancelIcon from '../../public/icons/close-line.svg'
 import checkIcon from '../../public/icons/check-line.svg'
 import { kurintoSerif } from "app/layout";
 import { EditContext } from "context/EditContext";
+import { getPublicPrivateLabel } from "components/utils/formUtils";
 
 interface ISyllabusTitleProps {
-    syllabusTitle: string
+    syllabusTitle: string,
+    syllabusStatus: string
 }
 
-const SyllabusTitle: React.FunctionComponent<ISyllabusTitleProps> = ({ syllabusTitle }) => {
+const SyllabusTitle: React.FunctionComponent<ISyllabusTitleProps> = ({ syllabusTitle, syllabusStatus }) => {
     const ctx = useContext(EditContext)
     const [log, setLog] = useState('')
     const [isEditing, setIsEditing] = useState(false);
     const [isShowingTooltip, setShowTooltip] = useState(false)
     const [title, setTitle] = useState(syllabusTitle ? syllabusTitle as string : '')
     const [tmp, setTmp] = useState(title)
+    const [tmpStatus, setTmpStatus] = useState(syllabusStatus)
     const { data: session } = useSession();
 
     const handleChange = (e: React.BaseSyntheticEvent) => {
         e.preventDefault()
         setTmp(e.target.value)
+    }
+
+    const handleStatusChange = (e: React.BaseSyntheticEvent) => {
+        const st = tmpStatus === "unlisted" ? "listed" : "unlisted"
+        setTmpStatus(st)
     }
 
     const submitEdit = () => {
@@ -37,6 +45,7 @@ const SyllabusTitle: React.FunctionComponent<ISyllabusTitleProps> = ({ syllabusT
 
         let b = new FormData()
         b.append("title", tmp)
+        b.append("status", tmpStatus)
 
         const endpoint = new URL(`/syllabi/${ctx.syllabusUUID}`, process.env.NEXT_PUBLIC_API_URL)
         fetch(endpoint, {
@@ -59,7 +68,8 @@ const SyllabusTitle: React.FunctionComponent<ISyllabusTitleProps> = ({ syllabusT
                 }
             })
             .then(body => {
-                setLog(`An error occured while saving: ${body}`)
+                if(body)
+                    setLog(`An error occured while saving: ${body}`)
             })
     }
 
@@ -77,6 +87,24 @@ const SyllabusTitle: React.FunctionComponent<ISyllabusTitleProps> = ({ syllabusT
                             <Image src={checkIcon} width="24" height="24" alt="Icon to save the edit process" />
                             <div>Save</div>
                         </button>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                        <label htmlFor="status" className="order-2" data-cy="collection-status-label">
+                            {getPublicPrivateLabel(tmpStatus)}
+                        </label>
+                        <div className="relative border-2 w-6 h-6 border-gray-900 p-0.5 order-1 rounded-full" key="collection-status">
+                            <input
+                                type="checkbox"
+                                role="switch"
+                                className="absolute w-4 h-4 appearance-none bg-gray-300 checked:bg-gray-900 cursor-pointer rounded-full"
+                                onChange={handleStatusChange}
+                                name="status"
+                                id="status"
+                                value={tmpStatus}
+                                defaultValue={status}
+                                data-cy="collection-status-input" />
+                        </div>
                     </div>
                     <div>{log}</div>
                 </div>
