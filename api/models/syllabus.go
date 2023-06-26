@@ -40,6 +40,7 @@ type Syllabus struct {
 	Tags             pq.StringArray `gorm:"type:text[]" json:"tags" yaml:"tags" form:"tags[]"`
 	Slug             string         `gorm:"" json:"slug"`
 	Title            string         `gorm:"not null" form:"title" json:"title"`
+	TaughtBy         string         `gorm:"" form:"taught_by" json:"taught_by"`
 	TopicOutlines    pq.StringArray `gorm:"type:text[]" json:"topic_outlines" form:"topic_outlines[]"`
 }
 
@@ -84,7 +85,7 @@ func (s *Syllabus) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 func (s *Syllabus) IsEmpty() bool {
-	return (len(s.AcademicFields) == 0) && s.AcademicLevel == 0 && len(s.Assignments) == 0 && s.Description == "" && s.Duration == 0 && s.GradingRubric == "" && s.Language == "" && len(s.LearningOutcomes) == 0 && s.Other == "" && len(s.Readings) == 0 && len(s.Tags) == 0 && s.Title == "" && len(s.TopicOutlines) == 0
+	return (len(s.AcademicFields) == 0) && s.AcademicLevel == 0 && len(s.Assignments) == 0 && s.Description == "" && s.Duration == 0 && s.GradingRubric == "" && s.Language == "" && len(s.LearningOutcomes) == 0 && s.Other == "" && len(s.Readings) == 0 && len(s.Tags) == 0 && s.Title == "" && len(s.TopicOutlines) == 0 && s.TaughtBy == ""
 }
 
 func CreateSyllabus(syll *Syllabus, user_uuid uuid.UUID) (Syllabus, error) {

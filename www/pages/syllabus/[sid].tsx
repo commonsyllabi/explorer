@@ -25,6 +25,7 @@ import SyllabusListFormField from "components/Syllabus/SyllabusListFormField";
 import SyllabusTextFormField from "components/Syllabus/SyllabusTextFormField";
 import { Session } from "next-auth";
 import { EditContext } from "context/EditContext";
+import SyllabusInstructors from "components/Syllabus/SyllabusInstructors";
 
 export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
   const syllabusId = context.params!.sid;
@@ -94,10 +95,10 @@ const Syllabus: NextPage<ISyllabusPageProps> = ({ syllabusInfo, userCollections 
     return false
   };
 
-  useEffect(() => {  
+  useEffect(() => {
     if (!syllabusInfo || !session) return
     const o = checkIfOwner(session, syllabusInfo.user_uuid)
-    
+
     setIsOwner(o)
   }, [session, syllabusInfo])
 
@@ -133,69 +134,71 @@ const Syllabus: NextPage<ISyllabusPageProps> = ({ syllabusInfo, userCollections 
           pageTitle={syllabusInfo.title}
         />
 
-      <EditContext.Provider value={{isOwner: isOwner, syllabusUUID: syllabusInfo.uuid}}>
-        {showDeleteModal ?
-          <Modal>
-            <SyllabusDelete syllabusInfo={syllabusInfo} handleClose={() => setShowDeleteModal(false)} />
-          </Modal>
-          : <></>}
+        <EditContext.Provider value={{ isOwner: isOwner, syllabusUUID: syllabusInfo.uuid }}>
+          {showDeleteModal ?
+            <Modal>
+              <SyllabusDelete syllabusInfo={syllabusInfo} handleClose={() => setShowDeleteModal(false)} />
+            </Modal>
+            : <></>}
 
-        <div className="flex mt-8">
-          <div className="w-full pt-3 pb-5 flex flex-col gap-3">
-            <SyllabusHeader syllabusInfo={syllabusInfo} />
+          <div className="flex mt-8">
+            <div className="w-full pt-3 pb-5 flex flex-col gap-3">
+              <SyllabusHeader syllabusInfo={syllabusInfo} />
 
-            <SyllabusTitle syllabusTitle={syllabusInfo.title} />
+              <SyllabusTitle syllabusTitle={syllabusInfo.title} />
 
-            <div className="text-sm">Uploaded by <Link href={`/user/${syllabusInfo.user.uuid}`} className={`${kurintoSerif.className} text-base hover:underline`} data-cy="courseInstructors">
-              {isOwner ? 'you' : syllabusInfo.user ? syllabusInfo.user.name : "Course Author / Instructor"}
-            </Link> on {getDate(syllabusInfo.created_at)}
-            </div>
 
-            <SyllabusTags syllabusTags={syllabusInfo.tags as string[]} />
 
-            <div className="flex flex-col gap-5">
-              <SyllabusTextFormField label="Description" info={syllabusInfo.description} />
+              <SyllabusInstructors syllabusInstructors={syllabusInfo.taught_by} />
+              <SyllabusTags syllabusTags={syllabusInfo.tags as string[]} />
 
-              <SyllabusListFormField label="Learning Outcomes" info={syllabusInfo.learning_outcomes as string[]} />
+              <div className="flex flex-col gap-5">
+                <SyllabusTextFormField label="Description" info={syllabusInfo.description} />
 
-              <SyllabusListFormField label="Topic Outlines" info={syllabusInfo.topic_outlines as string[]} />
+                <SyllabusListFormField label="Learning Outcomes" info={syllabusInfo.learning_outcomes as string[]} />
 
-              <SyllabusListFormField label="Readings" info={syllabusInfo.readings as string[]} />
+                <SyllabusListFormField label="Topic Outlines" info={syllabusInfo.topic_outlines as string[]} />
 
-              <SyllabusTextFormField label="Grading Rubric" info={syllabusInfo.grading_rubric as string} />
+                <SyllabusListFormField label="Readings" info={syllabusInfo.readings as string[]} />
 
-              <SyllabusListFormField label="Assignments" info={syllabusInfo.assignments as string[]} />
+                <SyllabusTextFormField label="Grading Rubric" info={syllabusInfo.grading_rubric as string} />
 
-              <SyllabusTextFormField label="Other" info={syllabusInfo.other as string} />
+                <SyllabusListFormField label="Assignments" info={syllabusInfo.assignments as string[]} />
 
-              <hr className="border-gray-600 my-8" />
+                <SyllabusTextFormField label="Other" info={syllabusInfo.other as string} />
 
-              <SyllabusAttachments attachments={syllabusInfo.attachments} />
+                <hr className="border-gray-600 my-8" />
+
+                <SyllabusAttachments attachments={syllabusInfo.attachments} />
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="flex gap-2 items-baseline justify-between">
-          {session ?
-            <button data-cy="show-add-collection" onClick={() => showIsAddingToCollection(true)} className="p-2 border border-gray-900 rounded-md flex gap-3">
-              <Image src={addCircleIcon} width="24" height="24" alt="Icon to add a syllabus to a collection" />
-              <div>Add to collection</div>
-            </button>
+          <div className="flex gap-2 items-baseline justify-between">
+            {session ?
+              <button data-cy="show-add-collection" onClick={() => showIsAddingToCollection(true)} className="p-2 border border-gray-900 rounded-md flex gap-3">
+                <Image src={addCircleIcon} width="24" height="24" alt="Icon to add a syllabus to a collection" />
+                <div>Add to collection</div>
+              </button>
+              :
+              <></>
+            }
+            {isOwner ?
+              <button data-cy="delete-syllabus" onClick={() => setShowDeleteModal(true)} className="flex p-2 bg-red-400 hover:bg-red-500 text-white rounded-md gap-3" >
+                <Image src={deleteIcon} width="24" height="24" alt="Icon to delete the syllabus" />
+                <div>Delete syllabus</div>
+              </button>
+              : <></>}
+          </div>
+          {isAddingToCollection ?
+            <AddToCollection collections={userCollections} syllabusInfo={syllabusInfo} handleClose={() => showIsAddingToCollection(false)} />
             :
-            <></>
-          }
-          {isOwner ?
-            <button data-cy="delete-syllabus" onClick={() => setShowDeleteModal(true)} className="flex p-2 bg-red-400 hover:bg-red-500 text-white rounded-md gap-3" >
-              <Image src={deleteIcon} width="24" height="24" alt="Icon to delete the syllabus" />
-              <div>Delete syllabus</div>
-            </button>
-            : <></>}
+            <></>}
+        </EditContext.Provider>
+        <div className="text-sm my-8">Uploaded by <Link href={`/user/${syllabusInfo.user.uuid}`} className={`${kurintoSerif.className} text-base hover:underline`} data-cy="courseInstructors">
+          {isOwner ? 'you' : syllabusInfo.user ? syllabusInfo.user.name : "Course Author / Instructor"}
+        </Link> on {getDate(syllabusInfo.created_at)}
         </div>
-        {isAddingToCollection ?
-          <AddToCollection collections={userCollections} syllabusInfo={syllabusInfo} handleClose={() => showIsAddingToCollection(false)} />
-          :
-          <></>}
-      </EditContext.Provider>
       </div>
     </>
   );

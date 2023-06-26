@@ -55,6 +55,7 @@ export interface ISyllabus {
   academic_level?: number;
   user_uuid: string;
   user: IUser;
+  taught_by: string;
   tags?: string[];
   description: string;
   duration: number;

@@ -292,7 +292,6 @@ const NewSyllabus: NextPage = () => {
                   onChange={handleChange}
                   value={formData.title}
                   data-cy="courseTitleInput"
-                // defaultValue={parsedData?.data?.title || ""} -- // TODO: we cannot have both defaultValue and value props. parsedData should set formData.title, instead?
                 />
               </div>
 
@@ -311,6 +310,21 @@ const NewSyllabus: NextPage = () => {
                     value={formData.status}
                     data-cy="courseStatusInput" />
                 </div>
+              </div>
+
+              <div className="flex flex-col my-8 gap-2">
+                <label htmlFor="taught_by">Course Instructor(s)*</label>
+                <input
+                  className="bg-transparent mt-2 py-1 border-b-2 border-b-gray-900 text-2xl"
+                  type="text"
+                  required
+                  id="taught_by"
+                  name="taught_by"
+                  placeholder="e.g. Jane Doe, John Smith, ..."
+                  onChange={handleChange}
+                  value={formData.taught_by}
+                  data-cy="courseInstructorsInput"
+                />
               </div>
 
               <hr className="my-12 border border-gray-300" />
