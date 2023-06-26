@@ -13,6 +13,7 @@ interface INewCollectionProps {
 const NewCollection: React.FunctionComponent<INewCollectionProps> = ({ syllabusUUID, handleClose }) => {
     const [log, setLog] = useState('')
     const [name, setName] = useState('')
+    const [description, setDescription] = useState('')
     const { data: session } = useSession();
 
     const handleCloseButton = (e: React.BaseSyntheticEvent) => {
@@ -23,6 +24,11 @@ const NewCollection: React.FunctionComponent<INewCollectionProps> = ({ syllabusU
     const handleNameChange = (e: React.BaseSyntheticEvent) => {
         e.preventDefault()
         setName(e.target.value)
+    }
+
+    const handleDescriptionChange = (e: React.BaseSyntheticEvent) => {
+        e.preventDefault()
+        setDescription(e.target.value)
     }
 
     const addSyllabusToCollection = async (coll_uuid: string, syll_uuid: string) => {
@@ -63,7 +69,12 @@ const NewCollection: React.FunctionComponent<INewCollectionProps> = ({ syllabusU
         h.append("Authorization", `Bearer ${session?.user.token}`);
 
         let b = new FormData()
+        if (name.length < 1) {
+            setLog("Name must be at least 1 character long")
+            return;
+        }
         b.append("name", name)
+        b.append("description", description)
 
         const url = new URL(`collections/`, process.env.NEXT_PUBLIC_API_URL);
         const res = await fetch(url, {
@@ -97,6 +108,7 @@ const NewCollection: React.FunctionComponent<INewCollectionProps> = ({ syllabusU
             <form className="flex flex-col">
                 <label htmlFor="name">Name</label>
                 <input name="name" data-cy="new-collection-name" type="text" placeholder="Name of your new collection" onChange={handleNameChange} className="bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"></input>
+                <textarea data-cy="edit-collection-description" value={description} placeholder="Description of what this collection is about." className={`w-full text bg-transparent mt-2 py-1 border border-gray-900`} rows={6} onChange={handleDescriptionChange}/>
                 <input type="submit" data-cy="create-new-collection" onClick={submitCreate} value="Create Collection" className="mt-8 p-2 bg-gray-900 text-gray-100 border-2 rounded-md"></input>
                 <div>{log}</div>
             </form>

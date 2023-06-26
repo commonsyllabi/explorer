@@ -36,7 +36,7 @@ export interface ICollection {
   uuid: string;
   name: string;
   status: string;
-  description?: string;
+  description: string;
   tags: string[];
   syllabi: ISyllabus[];
   user_uuid: string;

@@ -23,8 +23,9 @@ type Collection struct {
 	User     User        `gorm:"foreignKey:UserUUID;references:UUID" json:"user"`
 	Syllabi  []*Syllabus `gorm:"many2many:collections_syllabi;" json:"syllabi"`
 
-	Name string `gorm:"not null" json:"name" form:"name" binding:"required"`
-	Slug string `gorm:"" json:"slug"`
+	Name       string `gorm:"not null" json:"name" form:"name" binding:"required"`
+	Collection string `json:"description" form:"description"`
+	Slug       string `gorm:"" json:"slug"`
 }
 
 func (c *Collection) BeforeCreate(tx *gorm.DB) (err error) {

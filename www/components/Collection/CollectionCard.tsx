@@ -17,8 +17,8 @@ const CollectionCard: React.FunctionComponent<ICollectionCardProps> = (
   const ctx = useContext(EditContext)
   return (
     <div data-cy="collectionCard" className="border-2 border-gray-600 rounded-lg p-3">
-      <div>
-        <div className="flex justify-between w-full mt-2 mb-2">
+      <div className="flex flex-col gap-3">
+        <div className="flex justify-between w-full mt-2">
           <Link href={`/collections/${collection.uuid}`} className="text-xl font-bold hover:underline">
             {collection.name}
           </Link>
