@@ -17,7 +17,7 @@ type Collection struct {
 	UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`
 	UUID      uuid.UUID      `gorm:"uniqueIndex;type:uuid;primaryKey;default:uuid_generate_v4()" json:"uuid" yaml:"uuid"`
-	Status    string         `gorm:"default:unlisted" json:"status"`
+	Status    string         `gorm:"default:unlisted" json:"status" form:"status"`
 
 	UserUUID uuid.UUID   `gorm:"type:uuid;primaryKey;default:uuid_generate_v4()" json:"user_uuid" yaml:"user_uuid"`
 	User     User        `gorm:"foreignKey:UserUUID;references:UUID" json:"user"`

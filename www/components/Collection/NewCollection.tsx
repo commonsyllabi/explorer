@@ -1,9 +1,10 @@
 import { signOut, useSession } from "next-auth/react";
 import Router from "next/router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ICollection } from "types";
 import Image from "next/image";
 import cancelIcon from '../../public/icons/close-line.svg'
+import { getPublicPrivateLabel } from "components/utils/formUtils";
 
 interface INewCollectionProps {
     syllabusUUID: string,
@@ -13,12 +14,18 @@ interface INewCollectionProps {
 const NewCollection: React.FunctionComponent<INewCollectionProps> = ({ syllabusUUID, handleClose }) => {
     const [log, setLog] = useState('')
     const [name, setName] = useState('')
+    const [status, setStatus] = useState('listed')
     const [description, setDescription] = useState('')
     const { data: session } = useSession();
 
     const handleCloseButton = (e: React.BaseSyntheticEvent) => {
         e.preventDefault()
         handleClose()
+    }
+
+    const handleStatusChange = (e: React.BaseSyntheticEvent) => {
+        const st = status === "unlisted" ? "listed" : "unlisted"
+        setStatus(st)
     }
 
     const handleNameChange = (e: React.BaseSyntheticEvent) => {
@@ -75,6 +82,7 @@ const NewCollection: React.FunctionComponent<INewCollectionProps> = ({ syllabusU
         }
         b.append("name", name)
         b.append("description", description)
+        b.append("status", status)
 
         const url = new URL(`collections/`, process.env.NEXT_PUBLIC_API_URL);
         const res = await fetch(url, {
@@ -105,10 +113,31 @@ const NewCollection: React.FunctionComponent<INewCollectionProps> = ({ syllabusU
     return (
         <>
             <h1 className="text-xl mb-8">Create new collection</h1>
-            <form className="flex flex-col">
-                <label htmlFor="name">Name</label>
-                <input name="name" data-cy="new-collection-name" type="text" placeholder="Name of your new collection" onChange={handleNameChange} className="bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"></input>
-                <textarea data-cy="edit-collection-description" value={description} placeholder="Description of what this collection is about." className={`w-full text bg-transparent mt-2 py-1 border border-gray-900`} rows={6} onChange={handleDescriptionChange}/>
+            <form className="flex flex-col gap-6">
+                <div className="flex flex-col w-full">
+                    <label htmlFor="name">Name</label>
+                    <input name="name" data-cy="new-collection-name" type="text" placeholder="Name of your new collection" onChange={handleNameChange} className="bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"></input>
+                </div>
+                <div className="flex items-center gap-3">
+                    <label htmlFor="status" className="order-2" data-cy="collection-status-label">
+                        {getPublicPrivateLabel(status)}
+                    </label>
+                    <div className="relative border-2 w-6 h-6 border-gray-900 p-0.5 order-1 rounded-full" key="collection-status">
+                        <input
+                            type="checkbox"
+                            role="switch"
+                            className="absolute w-4 h-4 appearance-none bg-gray-300 checked:bg-gray-900 cursor-pointer rounded-full"
+                            onChange={handleStatusChange}
+                            name="status"
+                            id="status"
+                            value={status}
+                            data-cy="collection-status-input" />
+                    </div>
+                </div>
+                <div>
+                    <label htmlFor="description">Description</label>
+                    <textarea name="description" data-cy="edit-collection-description" value={description} placeholder="Description of what this collection is about." className={`w-full text bg-transparent mt-2 py-1 border border-gray-900`} rows={6} onChange={handleDescriptionChange} />
+                </div>
                 <input type="submit" data-cy="create-new-collection" onClick={submitCreate} value="Create Collection" className="mt-8 p-2 bg-gray-900 text-gray-100 border-2 rounded-md"></input>
                 <div>{log}</div>
             </form>
