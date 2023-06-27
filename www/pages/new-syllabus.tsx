@@ -55,35 +55,35 @@ const NewSyllabus: NextPage = () => {
 
   useEffect(() => {
     if (parsedData) {
-  
-      setFormData((prevFormData : IFormData) => {
+
+      setFormData((prevFormData: IFormData) => {
         let newData: IFormData = {} as IFormData
         Object.assign(newData, prevFormData)
-        
+
         for (const key in newData) {
           if (key && Object.prototype.hasOwnProperty.call(parsedData, key) && key in newData) {
-            
-            if(parsedData[key as keyof IFormDataOptional] && parsedData[key as keyof IFormDataOptional].length > 0)
+
+            if (parsedData[key as keyof IFormDataOptional] && parsedData[key as keyof IFormDataOptional].length > 0)
               newData[key as keyof IFormData] = parsedData[key as keyof IFormDataOptional];
           }
         }
-        
+
         return newData;
       });
     }
   }, [parsedData]);
 
   useEffect(() => {
-    if(!parsedURLs) return;
+    if (!parsedURLs) return;
 
     let n = [] as IUploadAttachment[]
     for (const u of parsedURLs) {
       let found = false
       for (const att of attachmentData) {
-          if(att.type === "url" && att.url === u)
-            found = true
+        if (att.type === "url" && att.url === u)
+          found = true
       }
-      if(!found)
+      if (!found)
         n.push({
           id: (attachmentData.length + n.length).toString(),
           name: new URL(u).hostname,
@@ -97,10 +97,10 @@ const NewSyllabus: NextPage = () => {
   }, [parsedURLs])
 
   useEffect(() => {
-    if(!parsedFile) return
+    if (!parsedFile) return
 
     for (const att of attachmentData) {
-      if(att.name == parsedFile.name){
+      if (att.name == parsedFile.name) {
         return
       }
     }
@@ -116,7 +116,7 @@ const NewSyllabus: NextPage = () => {
     } as IUploadAttachment
 
     setAttachmentData([...attachmentData, syllabusFile])
-    
+
   }, [parsedFile])
 
   const [formData, setFormData] = useState<IFormData>({
@@ -136,6 +136,7 @@ const NewSyllabus: NextPage = () => {
     other: "",
     status: "listed",
     academic_fields: [],
+    academic_field: "",
     academic_level: 0,
     duration: 0,
   });
@@ -314,7 +315,7 @@ const NewSyllabus: NextPage = () => {
               </div>
 
               <div className="flex flex-col my-8 gap-2">
-                <label htmlFor="instructors">Course Instructor(s)*</label>
+                {/* <label htmlFor="instructors">Course Instructor(s)*</label>
                 <input
                   className="bg-transparent mt-2 py-1 border-b-2 border-b-gray-900 text-2xl"
                   type="text"
@@ -325,7 +326,8 @@ const NewSyllabus: NextPage = () => {
                   onChange={handleChange}
                   value={formData.instructors}
                   data-cy="courseInstructorsInput"
-                />
+                /> */}
+                <ListFieldForm name="Course Instructors" data={formData.instructors} setData={(_a: string[]) => { setFormData({ ...formData, ["instructors"]: [..._a] }) }} />
               </div>
 
               <hr className="my-12 border border-gray-300" />
@@ -337,7 +339,7 @@ const NewSyllabus: NextPage = () => {
                     New
                   </span>
                 </h4>
-                <DragAndDropSyllabus session={session} setParsedData={setParsedData} setParsedFile={setParsedFile} setParsedURLs={setParsedURLs}/>
+                <DragAndDropSyllabus session={session} setParsedData={setParsedData} setParsedFile={setParsedFile} setParsedURLs={setParsedURLs} />
               </div>
 
               <hr className="my-12 border border-gray-300" />
@@ -365,39 +367,42 @@ const NewSyllabus: NextPage = () => {
                   </div>
                 </div>
 
-                <div className="mb-1">
-                  <label htmlFor="country">Country*</label>
-                  <select
-                    className="w-full bg-transparent mt-2 p-1 border-2 border-gray-900"
-                    id="country"
-                    onChange={handleInstitutionChange}
-                    data-cy="institutionCountryInput"
-                  >
-                    <option> – </option>
-                    {generateCountryOptions()}
-                  </select>
-                  <div className="text-sm">
-                    Please provide the country where this course was taught.
+                <div className="flex flex-col md:flex-row justify-between gap-8">
+                  <div className="w-1/2 mb-1">
+                    <label htmlFor="country">Country*</label>
+                    <select
+                      className="w-full bg-transparent mt-2 p-1 border-2 border-gray-900"
+                      id="country"
+                      onChange={handleInstitutionChange}
+                      data-cy="institutionCountryInput"
+                    >
+                      <option> – </option>
+                      {generateCountryOptions()}
+                    </select>
+                    <div className="text-sm">
+                      Please provide the country where this course was taught.
+                    </div>
+                  </div>
+
+                  <div className="w-1/2 mb-1 flex flex-col">
+                    <label htmlFor="url" className="mb-0">
+                      Institution Website
+                    </label>
+                    <div className="col-8">
+                      <input
+                        className="w-full bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
+                        type="url"
+                        id="url"
+                        placeholder="e.g. https://open.university"
+                        onChange={handleInstitutionChange}
+                        data-cy="institutionUrlInput"
+                      />
+                    </div>
                   </div>
                 </div>
 
-                <div className="mb-1 flex flex-col">
-                  <label htmlFor="url" className="mb-0">
-                    Institution Website
-                  </label>
-                  <div className="col-8">
-                    <input
-                      className="w-full bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
-                      type="url"
-                      id="url"
-                      placeholder="e.g. https://open.university"
-                      onChange={handleInstitutionChange}
-                      data-cy="institutionUrlInput"
-                    />
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-2">
+                <div className="flex flex-col md:flex-row justify-between gap-8">
+                  <div className="w-1/2">
                     <div className="mb-1 flex flex-col">
                       <label htmlFor="year" className="mb-0">
                         Year*
@@ -418,7 +423,7 @@ const NewSyllabus: NextPage = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="col-4 flex flex-col">
+                  <div className="w-1/2 flex flex-col">
                     <div className="my-1 flex flex-col">
                       <label htmlFor="term" className="mb-0">
                         Term*
@@ -428,6 +433,7 @@ const NewSyllabus: NextPage = () => {
                         type="text"
                         required
                         id="date_term"
+                        name="term"
                         placeholder="e.g. Spring"
                         onChange={handleInstitutionChange}
                         data-cy="institutionTermInput"
@@ -458,10 +464,28 @@ const NewSyllabus: NextPage = () => {
                   </div> */}
 
               <div className="w-full">
-                <AddAcademicFieldsForm
+                {/* <AddAcademicFieldsForm
                   setAcadFieldsData={(_af: string[]) => { setFormData({ ...formData, ["academic_fields"]: _af }); }}
                   academicFields={[]}
-                />
+                /> */}
+                <div className="my-1 flex flex-col">
+                  <label htmlFor="academic_field" className="mb-0">
+                    Academic Field*
+                  </label>
+                  <input
+                    className="bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
+                    type="text"
+                    required
+                    id="academic_field"
+                    name="academic_field"
+                    placeholder="e.g. Media Studies and Performance Art"
+                    onChange={handleChange}
+                    data-cy="academicFieldInput"
+                  />
+                  <div className="text-sm">
+                    Please provide the academic fields to which this course relates.
+                  </div>
+                </div>
               </div>
 
               {/* TODO: replace this with component */}

@@ -23,7 +23,7 @@ const AddLanguageForm: React.FunctionComponent<IAddLanguageFormProps> = ({ lang,
         className="bg-transparent mt-2 p-1 border-2 border-gray-900"
         id="language"
         onChange={handleChange}
-        value={tmp.toUpperCase()}
+        value={tmp}
         data-cy="courseLanguageInput"
       >
         <option value="">—</option>

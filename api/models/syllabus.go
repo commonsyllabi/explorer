@@ -27,6 +27,7 @@ type Syllabus struct {
 	Institutions []Institution `gorm:"many2many:inst_syllabi;" json:"institutions"`
 
 	AcademicFields   pq.Int32Array  `gorm:"type:integer[];" json:"academic_fields" yaml:"academic_fields" form:"academic_fields[]"`
+	AcademicField    string         `gorm:"" json:"academic_field" yaml:"academic_field" form:"academic_field"`
 	AcademicLevel    int            `json:"academic_level" yaml:"academic_level" form:"academic_level"`
 	Assignments      pq.StringArray `gorm:"type:text[]" json:"assignments" form:"assignments[]"`
 	Description      string         `gorm:"not null" json:"description" form:"description"`
@@ -85,7 +86,7 @@ func (s *Syllabus) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 func (s *Syllabus) IsEmpty() bool {
-	return (len(s.AcademicFields) == 0) && s.AcademicLevel == 0 && len(s.Assignments) == 0 && s.Description == "" && s.Duration == 0 && s.GradingRubric == "" && s.Language == "" && len(s.LearningOutcomes) == 0 && s.Other == "" && len(s.Readings) == 0 && len(s.Tags) == 0 && s.Title == "" && len(s.TopicOutlines) == 0 && len(s.Instructors) == 0
+	return (len(s.AcademicFields) == 0) && s.AcademicLevel == 0 && len(s.Assignments) == 0 && s.Description == "" && s.Duration == 0 && s.GradingRubric == "" && s.Language == "" && len(s.LearningOutcomes) == 0 && s.Other == "" && len(s.Readings) == 0 && len(s.Tags) == 0 && s.Title == "" && len(s.TopicOutlines) == 0 && len(s.Instructors) == 0 && s.AcademicField == ""
 }
 
 func CreateSyllabus(syll *Syllabus, user_uuid uuid.UUID) (Syllabus, error) {

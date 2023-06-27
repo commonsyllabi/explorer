@@ -20,8 +20,8 @@ const SyllabusListFormField: React.FunctionComponent<ISyllabusListFormFieldProps
     const [log, setLog] = useState('')
     const [isEditing, setIsEditing] = useState(false);
     const [isShowingTooltip, setShowTooltip] = useState(false)
-    const [learningOutcomes, setLearningOutcomes] = useState(info ? info : [''])
-    const [tmp, setTmp] = useState(learningOutcomes)
+    const [fields, setFields] = useState(info ? info : [''])
+    const [tmp, setTmp] = useState(fields)
     const { data: session } = useSession();
     const keyLabel = label.toLowerCase().split(" ").join("-")
 
@@ -60,7 +60,7 @@ const SyllabusListFormField: React.FunctionComponent<ISyllabusListFormFieldProps
             .then((res) => {
                 if (res.ok) {
                     setIsEditing(false)
-                    setLearningOutcomes(tmp)
+                    setFields(tmp)
                     setLog('')
                 } else if (res.status == 401) {
                     signOut({ redirect: false }).then((result) => {
@@ -79,18 +79,20 @@ const SyllabusListFormField: React.FunctionComponent<ISyllabusListFormFieldProps
     return (
         <div className="w-full mt-5 mb-8 flex flex-col">
             <div className="flex flex-col gap-2 mb-2" data-cy={`course-${keyLabel}`}>
-                <h2 className={`${kurintoSerif.className} font-bold text-lg`}>{label}</h2>
                 {!isEditing ?
                     <div>
-                        {ctx.isOwner ?
-                            <button data-cy="edit-button" className={`flex gap-2 opacity-70 border ${isShowingTooltip ? '' : 'opacity-40'} rounded-md border-gray-700 w-max p-1`} onClick={() => setIsEditing(true)} onMouseEnter={() => { setShowTooltip(true) }} onMouseLeave={() => { setShowTooltip(false) }}>
-                                <Image src={editIcon} width="24" height="24" alt="Icon to edit the list" />
-                                <div className={`${isShowingTooltip ? '' : 'hidden'} text-sm`}>Edit</div>
-                            </button>
-                            : <></>}
+                        <div className="flex gap-3 items-center mb-2">
+                            {ctx.isOwner ?
+                                <button data-cy="edit-button" className={`flex gap-2 opacity-70 border ${isShowingTooltip ? '' : 'opacity-40'} rounded-md border-gray-700 w-max p-1`} onClick={() => setIsEditing(true)} onMouseEnter={() => { setShowTooltip(true) }} onMouseLeave={() => { setShowTooltip(false) }}>
+                                    <Image src={editIcon} width="24" height="24" alt="Icon to edit the list" />
+                                    <div className={`${isShowingTooltip ? '' : 'hidden'} text-sm`}>Edit</div>
+                                </button>
+                                : <></>}
+                            <h2 className={`${kurintoSerif.className} font-bold text-lg`}>{label}</h2>
 
+                        </div>
                         <ul>
-                            {learningOutcomes.map((lo, i) => (
+                            {fields.map((lo, i) => (
                                 <li data-cy={`course-${keyLabel}-item`} key={`${keyLabel}-${i}`} className={`${lo.length == 0 ? 'text-sm text-gray-400' : ''} whitespace-pre-wrap`}>
                                     {lo.length == 0 ? `No ${label.toLowerCase()}.` : lo}
                                 </li>

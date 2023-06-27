@@ -120,19 +120,19 @@ const InstitutionMeta: React.FunctionComponent<IInstitutionMetaProps> = ({ insti
 
     return (<>
         {!isEditing ?
-            <div className="flex flex-col gap-2" data-cy="institution-meta">
+            <div className="flex gap-2" data-cy="institution-meta">
+                {ctx.isOwner && !isEditing ?
+                    <button className={`flex items-center gap-2 opacity-70 border ${isShowingTooltip ? '' : 'opacity-40'} rounded-md border-gray-700 w-max p-1`} onClick={() => setIsEditing(true)} onMouseEnter={() => { setShowTooltip(true) }} onMouseLeave={() => { setShowTooltip(false) }}>
+                        <Image src={editIcon} width="24" height="24" className="h-4" alt="Icon to edit the list" />
+                        <div className={`${isShowingTooltip ? '' : 'hidden'} text-xs`}>Edit</div>
+                    </button>
+                    : <></>}
                 <div className="flex justify-between gap-4">
                     <div data-cy="course-institution-name" className={`${literalName ? '' : 'italic'}`}>{literalName ? literalName : 'No name'}</div>
                     <div data-cy="course-institution-country" className={`${literalCountry ? '' : 'italic'}`}>{literalCountry ? literalCountry : 'No country'}</div>
                     <div data-cy="course-institution-term" className={`${literalTerm ? '' : 'italic'}`}>{literalTerm ? literalTerm : 'No term'}</div>
                     <div data-cy="course-institution-year" className={`${literalYear ? '' : 'italic'}`}>{literalYear ? literalYear : 'No term'}</div>
                 </div>
-                {ctx.isOwner && !isEditing ?
-                    <button className={`flex items-center gap-2 opacity-70 border ${isShowingTooltip ? '' : 'opacity-40'} rounded-md border-gray-700 w-max p-1`} onClick={() => setIsEditing(true)} onMouseEnter={() => {setShowTooltip(true)}} onMouseLeave={() => {setShowTooltip(false)}}>
-                        <Image src={editIcon} width="24" height="24" className="h-4" alt="Icon to edit the list" />
-                        <div className={`${isShowingTooltip ? '' : 'hidden'} text-xs`}>Edit</div>
-                    </button>
-                    : <></>}
             </div>
             :
             <div>
@@ -140,7 +140,7 @@ const InstitutionMeta: React.FunctionComponent<IInstitutionMetaProps> = ({ insti
                     <div className="w-1/4 flex flex-col">
                         <label>Name of institution</label>
                         <input type="text" id="name" onChange={handleChange} placeholder="e.g. Open University" defaultValue={literalName} className="bg-transparent py-1 border-b-2 border-b-gray-900"
-                        data-cy="edit-institution-name" />
+                            data-cy="edit-institution-name" />
                     </div>
                     <div className="w-1/4 flex flex-col">
                         <label>Country of institution</label>
@@ -157,12 +157,12 @@ const InstitutionMeta: React.FunctionComponent<IInstitutionMetaProps> = ({ insti
                     <div className="w-1/6 flex flex-col">
                         <label>Term</label>
                         <input type="text" id="term" onChange={handleChange} placeholder="e.g. Spring" defaultValue={literalTerm} className="bg-transparent py-1 border-b-2 border-b-gray-900"
-                        data-cy="edit-institution-term"/>
+                            data-cy="edit-institution-term" />
                     </div>
                     <div className="w-1/6 flex flex-col">
                         <label>Year</label>
                         <input type="number" id="year" onChange={handleChange} placeholder="e.g. 2021" defaultValue={literalYear} className="bg-transparent py-1 border-b-2 border-b-gray-900"
-                        data-cy="edit-institution-year"
+                            data-cy="edit-institution-year"
                         />
                     </div>
                 </div>

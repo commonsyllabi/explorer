@@ -15,6 +15,7 @@ let stub = {
         year: "2002"
     },
     academic_fields: ['01 - Education', '011 - Education', '0111 - Education science'],
+    academic_field: "Media studies",
     academic_level: {
         code: 'Master',
         literal: 'Master\'s'
@@ -88,7 +89,8 @@ describe('Create a new syllabus', () => {
         //-- BEGIN SYLLABUS INPUT
 
         cy.get('[data-cy="courseTitleInput"]').type(stub.title, { force: true })
-        cy.get('[data-cy="courseInstructorsInput"]').type(stub.instructors, { force: true })
+        cy.get('[data-cy="course_instructors-add"]').click({ force: true })
+        cy.get('[data-cy="course_instructors-item"]').last().type(stub.instructors, { force: true })
 
         //-- click twice to check that toggle works and make sure it is set to listed
         cy.get('[data-cy="courseStatusInput"]').click({ force: true })
@@ -105,9 +107,10 @@ describe('Create a new syllabus', () => {
 
 
         //-- add academic fields and check academic fields
-        cy.get('#academic_field_broad').select(stub.academic_fields[0], { force: true })
-        cy.get('#academic_field_narrow').select(stub.academic_fields[1], { force: true })
-        cy.get('#academic_field_detailed').select(stub.academic_fields[2], { force: true })
+        // cy.get('#academic_field_broad').select(stub.academic_fields[0], { force: true })
+        // cy.get('#academic_field_narrow').select(stub.academic_fields[1], { force: true })
+        // cy.get('#academic_field_detailed').select(stub.academic_fields[2], { force: true })
+        cy.get('[data-cy="academicFieldInput"').type(stub.academic_field, {force: true})
         cy.get('[data-cy="academicLevelInput"]').select(stub.academic_level.code, { force: true })
         cy.get('[data-cy="courseLanguageInput"]').select(stub.language.code, { force: true })
         cy.get('[data-cy="courseDurationInput"]').type(stub.duration.toString(), { force: true })
@@ -177,7 +180,8 @@ describe('Create a new syllabus', () => {
         
         cy.get('[data-cy="course-language"]').contains(stub.language.literal)
         cy.get('[data-cy="course-level"]').contains(stub.academic_level.literal)
-        cy.get('[data-cy="course-fields"]').children().should('have.length', 3)
+        // cy.get('[data-cy="course-fields"]').children().should('have.length', 3)
+        cy.get('[data-cy="course-field"]').contains(stub.academic_field)
         
         cy.get('[data-cy="course-institution-name"]').contains(stub.institution.name)
         cy.get('[data-cy="course-institution-country"]').contains(stub.institution.country)

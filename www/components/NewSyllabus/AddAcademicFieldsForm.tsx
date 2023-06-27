@@ -65,7 +65,7 @@ const AddAcademicFieldsForm: React.FunctionComponent<
   return (
     <div className="">
       <label htmlFor="academic_fields">
-        Academic Field{" - "}
+        Academic Field Codes{" - "}
         <span className="text-xs">
           <em><a href="https://isced.uis.unesco.org/about/" className="underline" target="_blank" rel="noopener noreferrer">ISCED</a></em>
         </span>

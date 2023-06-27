@@ -147,7 +147,8 @@ const Syllabus: NextPage<ISyllabusPageProps> = ({ syllabusInfo, userCollections 
 
               <SyllabusTitle syllabusTitle={syllabusInfo.title} syllabusStatus={syllabusInfo.status} />
 
-              <SyllabusInstructors syllabusInstructors={syllabusInfo.instructors ? syllabusInfo.instructors[0] : ""} />
+              <SyllabusListFormField label="Instructors" info={syllabusInfo.instructors as string[]} />
+
               <SyllabusTags syllabusTags={syllabusInfo.tags as string[]} />
 
               <div className="flex flex-col gap-5">

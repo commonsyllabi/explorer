@@ -70,15 +70,17 @@ const SyllabusTextFormField: React.FunctionComponent<ISyllabusTextFormFieldProps
         <div className="w-full mt-5 mb-8 flex flex-col">
             {!isEditing ?
                 <div className="flex flex-col gap-2 mb-2" data-cy={`course-${keyLabel}`}>
-                    <h2 className={`${kurintoSerif.className} font-bold text-lg`}>{label}</h2>
+                    <div className="flex gap-3 items-center mb-3">
 
-                    {ctx.isOwner && !isEditing ?
-                        <button className={`flex gap-2 opacity-70 border ${isShowingTooltip ? '' : 'opacity-40'} rounded-md border-gray-700 w-max p-1`} onClick={() => setIsEditing(true)} onMouseEnter={() => { setShowTooltip(true) }} onMouseLeave={() => { setShowTooltip(false) }}>
-                            <Image src={editIcon} width="22" height="22" alt="Icon to edit the list" />
-                            <div className={`${isShowingTooltip ? '' : 'hidden'} text-sm`}>Edit</div>
-                        </button>
-                        : <></>}
+                        {ctx.isOwner && !isEditing ?
+                            <button className={`flex gap-2 opacity-70 border ${isShowingTooltip ? '' : 'opacity-40'} rounded-md border-gray-700 w-max p-1`} onClick={() => setIsEditing(true)} onMouseEnter={() => { setShowTooltip(true) }} onMouseLeave={() => { setShowTooltip(false) }}>
+                                <Image src={editIcon} width="22" height="22" alt="Icon to edit the list" />
+                                <div className={`${isShowingTooltip ? '' : 'hidden'} text-sm`}>Edit</div>
+                            </button>
+                            : <></>}
+                        <h2 className={`${kurintoSerif.className} font-bold text-lg`}>{label}</h2>
 
+                    </div>
                     <div className={`${original.length == 0 ? 'text-sm text-gray-400' : ''} whitespace-pre-wrap`} data-cy={`course-${keyLabel}`}>
                         {original.length == 0 ? `No ${label.toLowerCase()}.` : original}
                     </div>

@@ -14,6 +14,7 @@ let stub = {
         year: "2002"
     },
     academic_fields: ['01 - Education', '011 - Education', '0111 - Education science'],
+    academic_field: 'sociology',
     academic_level: {
         code: 'Master',
         literal: 'Master\'s'
@@ -72,18 +73,19 @@ describe('Edits a syllabus body', () => {
         cy.get('[data-cy="syllabus-meta"] button').click()
         cy.get('[data-cy="courseLanguageInput"]').select(stub.language.code)
         cy.get('[data-cy="academicLevelInput"]').select(stub.academic_level.code)
-        cy.get('[data-cy="academic-fields-broad"]').select(stub.academic_fields[0])
-        cy.get('[data-cy="academic-fields-narrow"]').select(stub.academic_fields[1])
-        cy.get('[data-cy="academic-fields-detailed"]').select(stub.academic_fields[2])
+        // cy.get('[data-cy="academic-fields-broad"]').select(stub.academic_fields[0])
+        // cy.get('[data-cy="academic-fields-narrow"]').select(stub.academic_fields[1])
+        // cy.get('[data-cy="academic-fields-detailed"]').select(stub.academic_fields[2])
+        cy.get('[data-cy="edit-academic-field"]').type(stub.academic_field, {force: true})
 
         cy.get('[data-cy="save-button"]').click()
 
         cy.get('[data-cy="course-language"]').contains(stub.language.literal)
         cy.get('[data-cy="course-level"]').contains(stub.academic_level.literal)
-        cy.get('[data-cy="course-fields"]').children().first()
-            .contains("Basic")
-            .next().contains(stub.academic_fields[1].split(" ")[2])
-            .next().contains(stub.academic_fields[2].split(" ")[2])
+        // cy.get('[data-cy="course-fields"]').children().first()
+        //     .contains("Basic")
+        //     .next().contains(stub.academic_fields[1].split(" ")[2])
+        //     .next().contains(stub.academic_fields[2].split(" ")[2])
 
         //-- editing body
         cy.get('[data-cy="course-title"] button').click()
@@ -92,15 +94,15 @@ describe('Edits a syllabus body', () => {
         cy.get('[data-cy="course-title"]').contains(stub.title)
 
         cy.get('[data-cy="course-instructors"] button').click()
-        cy.get('[data-cy="edit-course-instructors"]').clear().type(stub.instructors)
+        cy.get('[data-cy="edit-course-instructors"] input').first().clear().type(stub.instructors)
         cy.get('[data-cy="save-button"]').click()
         cy.get('[data-cy="course-instructors"]').contains(stub.instructors)
 
-        cy.get('[data-cy="course-tags"] button').last().click()
+        cy.get('[data-cy="course-tags"] button').first().click()
         cy.get('[data-cy="edit-course-tags"]').clear().type(stub.tags.join(", "))
         cy.get('[data-cy="save-button"]').click()
-        cy.get('[data-cy="course-tags"]').children()
-            .first().contains(stub.tags[0]).parent()
+        cy.get('[data-cy="course-tags"]').children().first()
+            .next().contains(stub.tags[0]).parent()
             .next().contains(stub.tags[1]).parent()
             .next().contains(stub.tags[2])
 

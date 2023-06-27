@@ -84,14 +84,14 @@ const SyllabusTags: React.FunctionComponent<ISyllabusTagsProps> = ({ syllabusTag
                     <div>{log}</div>
                 </div>
                 :
-                <div className="flex flex-col gap-2" data-cy="course-tags">
-                    <Tags tags={tags} />
+                <div className="flex gap-3" data-cy="course-tags">
                     {ctx.isOwner ?
                         <button className={`flex gap-2 opacity-70 border ${isShowingTooltip ? '' : 'opacity-40'} rounded-md border-gray-700 w-max p-1`} onClick={() => setIsEditing(true)} onMouseEnter={() => { setShowTooltip(true) }} onMouseLeave={() => { setShowTooltip(false) }}>
                             <Image src={editIcon} width="22" height="22" alt="Icon to edit the list" />
                             <div className={`${isShowingTooltip ? '' : 'hidden'} text-sm`}>Edit</div>
                         </button>
                         : <></>}
+                        <Tags tags={tags} />
                 </div>
             }
         </div>

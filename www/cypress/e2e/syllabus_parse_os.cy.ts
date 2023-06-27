@@ -14,7 +14,7 @@ describe('Browses its own user profile', () => {
         cy.visit('/new-syllabus')
         cy.get('[data-cy="opensyllabus-file-input"]').selectFile(`cypress/fixtures/osp.docx`, { log: true, force: true })
         cy.wait('@parseSyllabus')
-        cy.get('[data-cy="parsed-field"]').should('have.length', 9)
+        cy.get('[data-cy="parsed-field"]').should('have.length', 10)
         cy.get('[data-cy="courseTitleInput"]').should('have.value', "What is Law?")
     })
 })

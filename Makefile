@@ -26,7 +26,7 @@ docker-test-back: docker-clean ## test the backend in a container
 docker-test-front: docker-clean docker-build-test ## test the frontend in a container
 	docker compose -f tests/docker-compose.yml up -d --remove-orphans frontend
 	cd www/ && yarn cypress:headless
-	docker compose -f tests/docker-compose.yml down
+	make docker-clean
 
 docker-clean: ## brings down test and production containers
 	docker compose -f tests/docker-compose.yml down --volumes

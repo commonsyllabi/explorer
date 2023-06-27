@@ -15,6 +15,7 @@ const SyllabusSchoolCodeYear: React.FunctionComponent<
   const [lang, setLang] = useState<string>()
   const [level, setLevel] = useState<number>()
   const [fields, setFields] = useState<number[]>()
+  const [field, setField] = useState<string>()
 
   useEffect(() => {    
     if (!syllabusInfo) return
@@ -23,6 +24,7 @@ const SyllabusSchoolCodeYear: React.FunctionComponent<
     setLang(syllabusInfo.language)
     setLevel(syllabusInfo.academic_level as number)
     setFields(syllabusInfo.academic_fields)
+    setField(syllabusInfo.academic_field)
 
   }, [syllabusInfo])
 
@@ -34,8 +36,8 @@ const SyllabusSchoolCodeYear: React.FunctionComponent<
 
       </div>
       <div data-cy="syllabus-header" className="w-full  flex flex-col sm:flex-row justify-start md:gap-4">
-        <SyllabusMeta lang={lang as string} level={level as number} fields={fields as number[]} onSuccess={(_u: ISyllabus) => {
-          setLang(_u.language); setFields(_u.academic_fields); setLevel(_u.academic_level)
+        <SyllabusMeta lang={lang as string} level={level as number} fields={fields as number[]} field={field as string} onSuccess={(_u: ISyllabus) => {
+          setLang(_u.language); setFields(_u.academic_fields); setLevel(_u.academic_level); setField(_u.academic_field)
         }}/>
       </div>
     </div>
