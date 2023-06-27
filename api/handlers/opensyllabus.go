@@ -130,6 +130,7 @@ func ParseSyllabusFile(c echo.Context) error {
 	formData := models.OpenSyllabusParsed{
 		Title:            openSyllabus.GetTitle(),
 		Institutions:     openSyllabus.GetInstitution(),
+		Instructors:      openSyllabus.GetInstructors(),
 		Description:      openSyllabus.GetDescription(),
 		Language:         openSyllabus.Data.Language,
 		AcademicFields:   openSyllabus.GetAcademicField(),

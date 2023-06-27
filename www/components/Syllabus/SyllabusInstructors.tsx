@@ -26,11 +26,6 @@ const SyllabusInstructors: React.FunctionComponent<ISyllabusInstructorsProps> = 
         setTmp(e.target.value)
     }
 
-    useEffect(() => {
-        console.log(tmp);
-        
-    }, [tmp])
-
     const submitEdit = () => {
         if (tmp.length > 2000) {
             setLog("title cannot be too long")
@@ -41,7 +36,8 @@ const SyllabusInstructors: React.FunctionComponent<ISyllabusInstructorsProps> = 
         h.append("Authorization", `Bearer ${session?.user.token}`);
 
         let b = new FormData()
-        b.append("taught_by", tmp)
+        b.append("instructors[]", tmp)
+        
 
         const endpoint = new URL(`/syllabi/${ctx.syllabusUUID}`, process.env.NEXT_PUBLIC_API_URL)
         fetch(endpoint, {
@@ -73,7 +69,7 @@ const SyllabusInstructors: React.FunctionComponent<ISyllabusInstructorsProps> = 
             {isEditing ?
                 <div className="flex flex-col justify-between">
                     <h2 className={`${kurintoSerif.className} font-bold text-lg`}>Instructors</h2>
-                    <input type="text" className={`p-0 m-0 w-full bg-transparent pb-1 border-b-2 border-b-gray-900`} value={tmp} onChange={handleChange} data-cy="edit-course-title"/>
+                    <input type="text" className={`p-0 m-0 w-full bg-transparent pb-1 border-b-2 border-b-gray-900`} value={tmp} onChange={handleChange} data-cy="edit-course-instructors"/>
                     <div className="py-1 mt-2 flex flex-col md:flex-row gap-2 justify-between">
                         <button className="flex items-center gap-2 rounded-lg border border-1 border-gray-900 py-1 px-2 bg-red-100 hover:bg-red-300" onClick={() => { setIsEditing(false); }}>
                             <Image src={cancelIcon} width="24" height="24" alt="Icon to cancel the edit process" />
@@ -87,7 +83,7 @@ const SyllabusInstructors: React.FunctionComponent<ISyllabusInstructorsProps> = 
                     <div>{log}</div>
                 </div>
                 :
-                <div className="flex flex-col gap-2" data-cy="course-title">
+                <div className="flex flex-col gap-2" data-cy="course-instructors">
                     <h2 className={`${kurintoSerif.className} font-bold text-lg`}>Instructors</h2>
                     <div className={`text p-0 m-0`}>{instructors}</div>
                     {ctx.isOwner && !isEditing ?

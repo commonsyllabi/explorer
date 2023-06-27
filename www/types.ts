@@ -55,7 +55,7 @@ export interface ISyllabus {
   academic_level?: number;
   user_uuid: string;
   user: IUser;
-  taught_by: string;
+  instructors: string[];
   tags?: string[];
   description: string;
   duration: number;
@@ -72,6 +72,7 @@ export interface ISyllabus {
 export interface IFormData {
   [K:string]:any,
   institutions: IInstitution[];
+  instructors: string[],
   title: string;
   course_number: string;
   description: string;

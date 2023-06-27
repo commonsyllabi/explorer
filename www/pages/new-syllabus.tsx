@@ -122,6 +122,7 @@ const NewSyllabus: NextPage = () => {
   const [formData, setFormData] = useState<IFormData>({
     institutions: [],
     title: "",
+    instructors: [],
     course_number: "",
     description: "",
     attachments: [],
@@ -313,16 +314,16 @@ const NewSyllabus: NextPage = () => {
               </div>
 
               <div className="flex flex-col my-8 gap-2">
-                <label htmlFor="taught_by">Course Instructor(s)*</label>
+                <label htmlFor="instructors">Course Instructor(s)*</label>
                 <input
                   className="bg-transparent mt-2 py-1 border-b-2 border-b-gray-900 text-2xl"
                   type="text"
                   required
-                  id="taught_by"
-                  name="taught_by"
+                  id="instructors"
+                  name="instructors"
                   placeholder="e.g. Jane Doe, John Smith, ..."
                   onChange={handleChange}
-                  value={formData.taught_by}
+                  value={formData.instructors}
                   data-cy="courseInstructorsInput"
                 />
               </div>

@@ -203,13 +203,13 @@ export const isValidForm = (
   }
 
   if (institution.name === "")
-    messages.push(`Please add the name of the institution.`);
+    messages.push(`Please add the name of the institution where this course was taught.`);
 
   if (institution.country === "")
-    messages.push(`Please add the country of the institution.`);
+    messages.push(`Please add the country where this course was taught.`);
 
   if (institution.date_year === "")
-    messages.push(`Please add the year of the institution.`)
+    messages.push(`Please add the date at which this material was taught.`)
 
 
   return { errors: messages }
@@ -217,7 +217,7 @@ export const isValidForm = (
 
 export const submitForm = async (form: IFormData, endpoint: URL, method: string, h: Headers): Promise<Response> => {
 
-  const arrayFields = ["readings", "tags", "academic_fields", "learning_outcomes", "topic_outlines", "assignments"]
+  const arrayFields = ["readings", "tags", "academic_fields", "learning_outcomes", "topic_outlines", "assignments", "instructors"]
 
   let body = new FormData();
   for (let [key, value] of Object.entries(form)) {

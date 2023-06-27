@@ -5,6 +5,7 @@ import { login } from "../support/e2e"
 
 let stub = {
     title: "Intro to studies",
+    instructors: "Justyna Poplawska",
     public: true,
     institution: {
         name: "Khartum Jamiyat",
@@ -87,6 +88,7 @@ describe('Create a new syllabus', () => {
         //-- BEGIN SYLLABUS INPUT
 
         cy.get('[data-cy="courseTitleInput"]').type(stub.title, { force: true })
+        cy.get('[data-cy="courseInstructorsInput"]').type(stub.instructors, { force: true })
 
         //-- click twice to check that toggle works and make sure it is set to listed
         cy.get('[data-cy="courseStatusInput"]').click({ force: true })

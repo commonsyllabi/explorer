@@ -4,6 +4,7 @@ import { login } from "../support/e2e"
 
 let stub = {
     title: "Intro to studies",
+    instructors: "Pop Jus",
     public: true,
     institution: {
         name: "Khartum Jamiyat",
@@ -89,6 +90,11 @@ describe('Edits a syllabus body', () => {
         cy.get('[data-cy="edit-course-title"]').clear().type(stub.title)
         cy.get('[data-cy="save-button"]').click()
         cy.get('[data-cy="course-title"]').contains(stub.title)
+
+        cy.get('[data-cy="course-instructors"] button').click()
+        cy.get('[data-cy="edit-course-instructors"]').clear().type(stub.instructors)
+        cy.get('[data-cy="save-button"]').click()
+        cy.get('[data-cy="course-instructors"]').contains(stub.instructors)
 
         cy.get('[data-cy="course-tags"] button').last().click()
         cy.get('[data-cy="edit-course-tags"]').clear().type(stub.tags.join(", "))

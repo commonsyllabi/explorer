@@ -15,6 +15,10 @@ type OpenSyllabus struct {
 				Text            string  `json:"text"`
 				MeanProbability float64 `json:"mean_proba"`
 			} `json:"title"`
+			Instructor []struct {
+				Text            string  `json:"text"`
+				MeanProbability float64 `json:"mean_proba"`
+			} `json:"instructor"`
 			Institution struct {
 				Name    string `json:"name"`
 				City    string `json:"city"`
@@ -78,6 +82,7 @@ type OpenSyllabusParsedInstitution struct {
 type OpenSyllabusParsed struct {
 	Title            string                          `json:"title"`
 	Institutions     []OpenSyllabusParsedInstitution `json:"institutions"`
+	Instructors      []string                        `json:"instructors"`
 	AcademicFields   []string                        `json:"academic_field"`
 	AcademicLevel    string                          `json:"academic_level"`
 	Language         string                          `json:"language"`
@@ -130,6 +135,20 @@ func (os *OpenSyllabus) GetTitle() string {
 	}
 
 	return title
+}
+
+func (os *OpenSyllabus) GetInstructors() []string {
+	var instructors []string
+	var maxProbability float64 = 0
+
+	for _, i := range os.Data.ExtractedSections.Instructor {
+		if i.MeanProbability > maxProbability {
+			maxProbability = i.MeanProbability
+			instructors = append(instructors, i.Text)
+		}
+	}
+
+	return instructors
 }
 
 func (os *OpenSyllabus) GetDescription() string {

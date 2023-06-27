@@ -26,7 +26,6 @@ import SyllabusTextFormField from "components/Syllabus/SyllabusTextFormField";
 import { Session } from "next-auth";
 import { EditContext } from "context/EditContext";
 import SyllabusInstructors from "components/Syllabus/SyllabusInstructors";
-import { getPublicPrivateLabel } from "components/utils/formUtils";
 
 export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
   const syllabusId = context.params!.sid;
@@ -107,7 +106,7 @@ const Syllabus: NextPage<ISyllabusPageProps> = ({ syllabusInfo, userCollections 
     const d = new Date(_d)
 
     return `${d.getFullYear()}-${d.getMonth() + 1 < 10 ? '0' + (d.getMonth() + 1) : (d.getMonth() + 1)}-${d.getDate() < 10 ? '0' + d.getDate() : d.getDate()}`
-  }
+  }  
 
   if (Object.keys(syllabusInfo).length === 0) {
     return (
@@ -148,7 +147,7 @@ const Syllabus: NextPage<ISyllabusPageProps> = ({ syllabusInfo, userCollections 
 
               <SyllabusTitle syllabusTitle={syllabusInfo.title} syllabusStatus={syllabusInfo.status} />
 
-              <SyllabusInstructors syllabusInstructors={syllabusInfo.taught_by} />
+              <SyllabusInstructors syllabusInstructors={syllabusInfo.instructors ? syllabusInfo.instructors[0] : ""} />
               <SyllabusTags syllabusTags={syllabusInfo.tags as string[]} />
 
               <div className="flex flex-col gap-5">
