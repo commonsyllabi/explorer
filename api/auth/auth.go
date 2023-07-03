@@ -197,14 +197,14 @@ func RequestRecover(c echo.Context) error {
 func Recover(c echo.Context) error {
 	token, err := uuid.Parse(c.QueryParam("token"))
 	if err != nil {
-		zero.Errorf("token not found %s", err)
+		zero.Errorf("token param not found %s", err)
 		return c.String(http.StatusNotFound, "token not found")
 	}
 
 	user, err := models.GetTokenUser(token)
 	if err != nil {
-		zero.Errorf("token not found %s", err)
-		return c.String(http.StatusNotFound, "token not found")
+		zero.Errorf("user not found %s", err)
+		return c.String(http.StatusNotFound, "user not found")
 	}
 
 	var password struct {

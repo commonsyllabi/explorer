@@ -70,7 +70,7 @@ const PasswordRecover: NextPage = () => {
             onSubmit={handleRecover}
         >
             <div className="w-full">
-                <h2 className="text-2xl">Email recovery</h2>
+                <h2 className="text-2xl">Password update</h2>
                 <div className="flex flex-col gap-3 w-full">
                     <input
                         className="w-full bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
