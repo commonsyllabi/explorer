@@ -242,7 +242,7 @@ const SignIn: NextPage = () => {
                       Login
                     </button>
 
-                    <button className="underline cursor" onClick={() => setShowingRecovery(!isShowingRecovery)}>
+                    <button type="button" className="underline cursor" onClick={() => setShowingRecovery(!isShowingRecovery)}>
                       Forgot your password?
                     </button>
                   </div>

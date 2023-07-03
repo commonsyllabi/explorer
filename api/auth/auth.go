@@ -159,17 +159,25 @@ func Confirm(c echo.Context) error {
 func RequestRecover(c echo.Context) error {
 	email, err := mail.ParseAddress(c.FormValue("email"))
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err)
+		zero.Errorf("could not find email")
+		return c.String(http.StatusBadRequest, err.Error())
 	}
 
 	user, err := models.GetUserByEmail(email.Address, uuid.Nil)
 	if err != nil {
-		return c.JSON(http.StatusNotFound, err)
+		zero.Errorf("could not find user")
+		return c.String(http.StatusNotFound, err.Error())
+	}
+
+	if user.UUID == uuid.Nil {
+		zero.Errorf("could not find user UUID")
+		return c.String(http.StatusNotFound, "user has nil uuid")
 	}
 
 	token, err := models.CreateToken(user.UUID)
 	if err != nil {
-		return c.JSON(http.StatusNotFound, err)
+		zero.Errorf("could not create token")
+		return c.String(http.StatusNotFound, err.Error())
 	}
 
 	var host string
