@@ -32,8 +32,8 @@ const UserPassword: React.FunctionComponent<IPasswordReset> = ({ userEmail, hand
         else
           return res.text()
       })
-      .then(body => {
-        setLog(`Something went wrong: ${body}`)
+      .catch(err => {
+        setLog(`Something went wrong: ${err}`)
       })
   };
 
@@ -49,7 +49,8 @@ const UserPassword: React.FunctionComponent<IPasswordReset> = ({ userEmail, hand
           <input
             onChange={handleEmailChange}
             defaultValue={recoverEmail}
-            className="bg-transparent mt-2 py-1 border-b-2 border-b-gray-900"
+            className="bg-transparent my-8 py-1 border-b-2 border-b-gray-900 w-full"
+            placeholder="you@mail.com"
             type="text"
           />
         </div>
@@ -59,7 +60,7 @@ const UserPassword: React.FunctionComponent<IPasswordReset> = ({ userEmail, hand
       >
         <div className="">
           <button
-            className="w-full border border-gray-900 rounded-lg my-2"
+            className="w-full border border-gray-900  rounded-lg my-2"
             type="submit"
             onClick={handleRecover}
           >
@@ -88,7 +89,7 @@ const UserPassword: React.FunctionComponent<IPasswordReset> = ({ userEmail, hand
         )}
       </div>
       <div>{log}</div>
-      <button onClick={() => handleClose()} className="w-full border border-gray-900 rounded-lg">Close</button>
+      <button onClick={() => handleClose()} className="w-full border border-gray-900 bg-gray-200 rounded-lg">Close</button>
     </div>
   );
 };

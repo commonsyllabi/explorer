@@ -7,7 +7,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   let success = false
 
   if (token != undefined) {
-    log = `That's at least a valid token; we're checking it...`;
+    log = `That's a valid token; we're checking it...`;
 
     const res = await fetch(url, {
       method: "POST",

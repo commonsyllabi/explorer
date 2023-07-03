@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import Router from "next/router";
 import Link from "next/link";
+import UserPassword from "components/User/UserPassword";
+import Modal from "components/commons/Modal";
 
 const SignIn: NextPage = () => {
   const { data: session, status } = useSession();
@@ -13,8 +15,9 @@ const SignIn: NextPage = () => {
   const [log, setLog] = useState("");
   const [error, setError] = useState("");
   const [isCreated, setCreated] = useState(false);
+  const [isShowingRecovery, setShowingRecovery] = useState(false)
 
-  const [loginUsername, setLoginUsername] = useState("");
+  const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
 
   const [signupName, setSignupName] = useState("");
@@ -38,7 +41,7 @@ const SignIn: NextPage = () => {
         );
     };
 
-    if (!validateEmail(loginUsername)) {
+    if (!validateEmail(loginEmail)) {
       setLog("The email does not seem to be valid.")
       return
     }
@@ -49,10 +52,10 @@ const SignIn: NextPage = () => {
     }
 
     setLog('')
-
+    setError('')
 
     signIn("credentials", {
-      username: loginUsername,
+      username: loginEmail,
       password: loginPassword,
       redirect: false
     }).
@@ -67,7 +70,7 @@ const SignIn: NextPage = () => {
     e.preventDefault();
     e.stopPropagation();
 
-    if(!isTermsAgreement){
+    if (!isTermsAgreement) {
       setLog("You must agree to the terms of use and privacy policy to use this platform.")
       return;
     }
@@ -92,7 +95,8 @@ const SignIn: NextPage = () => {
       return;
     }
 
-    setLog("");
+    setLog("")
+    setError("")
 
     const h = new Headers();
     h.append("Content-Type", "application/x-www-form-urlencoded");
@@ -101,7 +105,7 @@ const SignIn: NextPage = () => {
     b.append("name", signupName);
     b.append("email", signupEmail);
     b.append("password", signupPassword);
-    if(isNewsletterAgreement)
+    if (isNewsletterAgreement)
       b.append("is_newsletter_subscribed", "true")
 
     fetch(url.href, {
@@ -123,7 +127,7 @@ const SignIn: NextPage = () => {
 
   const handleLoginUsername = (e: React.BaseSyntheticEvent) => {
     const v = e.target.value as string;
-    setLoginUsername(v);
+    setLoginEmail(v);
   };
 
   const handleLoginPassword = (e: React.BaseSyntheticEvent) => {
@@ -228,13 +232,20 @@ const SignIn: NextPage = () => {
                     />
                   </div>
 
-                  <button
-                    type="submit"
-                    className="mt-4 p-2 bg-gray-900 text-gray-100 border-2 rounded-md"
-                    data-cy="signin-button-submit"
-                  >
-                    Login
-                  </button>
+                  <div className="flex justify-between items-baseline">
+
+                    <button
+                      type="submit"
+                      className="mt-4 p-2 bg-gray-900 text-gray-100 border-2 rounded-md"
+                      data-cy="signin-button-submit"
+                    >
+                      Login
+                    </button>
+
+                    <button className="underline cursor" onClick={() => setShowingRecovery(!isShowingRecovery)}>
+                      Forgot your password?
+                    </button>
+                  </div>
                 </form>
               </div>
               :
@@ -351,6 +362,13 @@ const SignIn: NextPage = () => {
               </div>
             }
           </div>
+
+          {isShowingRecovery ?
+            <Modal>
+              <UserPassword handleClose={() => setShowingRecovery(false)} userEmail="" />
+            </Modal>
+            :
+            <></>}
 
           {log !== "" ?
             <div className="w-full mt-3 p-2 bg-amber-200">
