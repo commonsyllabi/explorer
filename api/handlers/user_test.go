@@ -17,7 +17,7 @@ import (
 )
 
 var (
-	userCount = 6
+	userCount = 7
 )
 
 func TestUserHandler(t *testing.T) {

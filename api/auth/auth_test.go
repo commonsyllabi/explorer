@@ -28,17 +28,16 @@ var (
 )
 
 func setup(t *testing.T) func(t *testing.T) {
+	os.Setenv("API_MODE", "test")
+
 	tokenConfirmID = uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c801")
 	tokenRecoveryID = uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c901")
 	userConfirmID = uuid.MustParse("e7b74bcd-c864-41ee-b5a7-d3031f76c800")
 
 	router = mustSetupRouter()
 	mustInitDB()
-	os.Setenv("API_MODE", "auth")
 
 	return func(t *testing.T) {
-		os.Setenv("API_MODE", "test")
-		t.Log("tearing down api")
 	}
 }
 

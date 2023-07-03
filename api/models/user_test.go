@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	userCount = 6
+	userCount = 7
 )
 
 func TestUserModel(t *testing.T) {
