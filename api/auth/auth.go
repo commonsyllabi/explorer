@@ -195,7 +195,11 @@ func RequestRecover(c echo.Context) error {
 			Token: token.UUID.String(),
 		}
 
-		mailer.SendMail(email.Address, "Account recovery", "account_recovery", body)
+		err := mailer.SendMail(email.Address, "Account recovery", "account_recovery", body)
+		if err != nil {
+			zero.Errorf(err.Error())
+			return c.String(http.StatusInternalServerError, err.Error())
+		}
 	}
 
 	return c.String(http.StatusOK, "recovery email sent!")
