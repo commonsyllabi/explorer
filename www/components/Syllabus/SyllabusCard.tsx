@@ -51,13 +51,14 @@ const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = ({
           </div>
         </div>
         <div className={`${kurintoSerif.className} mb-6`}>
-          <Link href={getUserUrl(syllabusInfo.user_uuid)}>{syllabusInfo.user.name}</Link>
+          {syllabusInfo.instructors ? syllabusInfo.instructors.join(", ") : ''}
         </div>
         <div className="course-description whitespace-pre-wrap">
           {syllabusInfo.description}
         </div>
-        <div className="mt-6 mb-2 flex gap-2">
+        <div className="mt-6 mb-2 flex gap-2 justify-between">
           <Tags tags={syllabusInfo.tags} />
+          <div className="text-sm">Uploaded by: <Link className="hover:underline" href={getUserUrl(syllabusInfo.user_uuid)}>{syllabusInfo.user.name}</Link></div>
         </div>
       </div>
     </div>

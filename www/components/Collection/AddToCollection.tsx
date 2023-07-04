@@ -114,7 +114,7 @@ const AddToCollection: React.FunctionComponent<IAddCollectionProps> = ({ collect
                                         <PubBadge isPublic={c.status === "listed"} />
                                     </div>
                                     {checkIfSyllabusInCollection(c, syllabusInfo) ?
-                                        <button data-cy="remove-from-collection" onClick={() => { removeSyllabusFromCollection(c.uuid) }} data-collectionid={c.uuid} key={c.uuid} className="flex gap-2 items-center border border-gray-900 rounded-md p-1">
+                                        <button data-cy="remove-from-collection" onClick={() => { removeSyllabusFromCollection(c.uuid) }} data-collectionid={c.uuid} key={c.uuid} className="flex gap-2 items-center border border-gray-900 bg-red-200 rounded-md p-1">
                                             <Image src={removeIcon} width="24" height="24" alt="Icon to remove the syllabus from the collection" />
 
                                         </button>

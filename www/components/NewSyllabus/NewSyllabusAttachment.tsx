@@ -204,7 +204,8 @@ const NewSyllbusAttachment: React.FunctionComponent<
         <button
           onClick={handleSubmitNewAttachment}
           data-cy="attachment-add"
-          className="mt-6 mb-2 p-2 bg-gray-50 text-gray-900 border border-gray-900 rounded-md"
+          className="mt-6 mb-2 p-2 bg-gray-50 text-gray-900 border border-gray-900 rounded-md disabled:text-gray-300"
+          disabled={thisAttachment.name === "" || (thisAttachment.url === "" && thisAttachment.file === undefined)}
         >
           Add attachment
         </button>

@@ -91,7 +91,7 @@ const SyllabusListFormField: React.FunctionComponent<ISyllabusListFormFieldProps
                             <h2 className={`${kurintoSerif.className} font-bold text-lg`}>{label}</h2>
 
                         </div>
-                        <ul>
+                        <ul className="list-inside list-disc">
                             {fields.map((lo, i) => (
                                 <li data-cy={`course-${keyLabel}-item`} key={`${keyLabel}-${i}`} className={`${lo.length == 0 ? 'text-sm text-gray-400' : ''} whitespace-pre-wrap`}>
                                     {lo.length == 0 ? `No ${label.toLowerCase()}.` : lo}
