@@ -111,7 +111,7 @@ const AttachmentItemFile: React.FunctionComponent<IAttachmentItemEditableProps> 
       return;
     } else {
       const body = await res.text()
-      setLog(`An error occured while saving edits: ${body}`)
+      setLog(`An error occured while saving edits: ${body} (${res.statusText})`)
     }
   }
 

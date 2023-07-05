@@ -218,6 +218,9 @@ const Home: NextPage<IHomeProps> = ({ meta, syllabiListings }) => {
             id="search-terms"
             placeholder="Search syllabi (e.g. intro to sociology...)"
             onChange={handleSearchChange}
+            onKeyDown={(e: React.KeyboardEvent) => {
+              if(e.key === "Enter") startSearch()
+            }}
           ></input>
           <button className="hidden md:block mx-1" onClick={clearSearch} >
             <Image src={clearIcon} width="24" height="24" alt="Icon to clear the search" />

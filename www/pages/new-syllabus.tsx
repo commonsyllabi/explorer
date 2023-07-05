@@ -36,6 +36,7 @@ import DragAndDropSyllabus from "components/NewSyllabus/DragAndDropSyllabus";
 import { kurintoSerif } from "app/layout";
 import SyllabusProcessing from "components/NewSyllabus/SyllabusProcessing";
 import ListFieldForm from "components/NewSyllabus/ListFieldForm";
+import { useRouter } from "next/router";
 
 const NewSyllabus: NextPage = () => {
   const { data: session, status } = useSession();
@@ -52,6 +53,11 @@ const NewSyllabus: NextPage = () => {
   const [attachmentData, setAttachmentData] = useState(
     Array<IUploadAttachment>
   );
+
+  const dynamicRoute = useRouter().asPath
+  useEffect(() => {
+    setFormSubmitted(false)
+  }, [dynamicRoute])
 
   useEffect(() => {
     if (parsedData) {

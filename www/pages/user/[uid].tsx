@@ -107,7 +107,7 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo }) => {
     if (t.id === "collections") {
       setCollFilter(t.value);
     }
-    if (t.id === "syllabus") {
+    if (t.id === "syllabi") {
       setSyllFilter(t.value);
     }
     return;
@@ -121,7 +121,8 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo }) => {
       const results = userInfo.syllabi.filter((item) => {
         return (
           item.title.toLowerCase().includes(syllFilter.toLowerCase()) ||
-          item.description.toLowerCase().includes(syllFilter.toLowerCase())
+          item.description.toLowerCase().includes(syllFilter.toLowerCase()) ||
+          (item.instructors && item.instructors.join(' ').toLowerCase().includes(syllFilter.toLowerCase()))
         );
       });
       return results;
@@ -190,7 +191,7 @@ const UserPage: NextPage<IUserPageProps> = ({ userInfo }) => {
                       className="w-1/2 bg-transparent border-b-2 border-b-gray-900"
                       placeholder={`Search ${activeTab}...`}
                       aria-label="Filter"
-                      value={activeTab === "syllabus" ? syllFilter : collFilter}
+                      value={activeTab === "syllabi" ? syllFilter : collFilter}
                       onChange={handleFilterChange}
                     />
 
