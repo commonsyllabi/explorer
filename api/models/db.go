@@ -66,7 +66,8 @@ func InitDB(url string) (*gorm.DB, error) {
 func runFixtures(shouldTruncateTables bool) error {
 	var err error
 
-	if shouldTruncateTables {
+	// only truncate tables if the database is local
+	if shouldTruncateTables && os.Getenv("DATABASE_URL") == "" {
 		err := db.Exec("TRUNCATE TABLE users CASCADE").Error
 		if err != nil {
 			return err
