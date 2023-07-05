@@ -6,159 +6,60 @@ import Image from "next/image";
 import FiltersBar from "components/FiltersBar";
 import { getSyllabusCards } from "../components/utils/getSyllabusCards";
 import PaginationSection from "components/PaginationSection";
-import { IMetaInformation, ISyllabiFilters, ISyllabus } from "types";
+import { ICollection, IMetaInformation, ISyllabiFilters, ISyllabus, IUser } from "types";
 
 import searchIcon from '../public/icons/search-line.svg'
 import clearIcon from '../public/icons/close-line.svg'
+import { kurintoBook } from "app/layout";
+import CollectionCard from "components/Collection/CollectionCard";
+import SyllabusCard from "components/Syllabus/SyllabusCard";
+import UserCard from "components/User/UserCard";
+import Link from "next/link";
 
 const PAGINATION_LIMIT = 15;
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const url = new URL(`syllabi/`, process.env.API_URL);
-  const page = query.page ? (query.page as string) : "1";
-  const keywords = query.keywords ? (query.keywords as string) : "";
-  const tags = query.tags ? (query.tags as string) : "";
-  if (query.page !== "1") url.searchParams.append("page", page);
-  if (keywords !== "") url.searchParams.append("keywords", keywords);
-  if (tags !== "") url.searchParams.append("tags", tags);
-
-  const res = (await fetch(url).catch((err) => {
-    return {
-      props: {}
-    };
-  })) as Response;
-
-  if (!res.ok) {
-    return {
-      props: {}
-    };
+  let payload = {
+    syllabus: {} as ISyllabus,
+    profile: {} as IUser,
+    collection: {} as ICollection
   }
 
-  const payload = await res.json();
+  const syll_url = new URL(`syllabi/c194a1f2-549b-442f-af01-0d4bab60a566`, process.env.API_URL);
+  const syll_res = await fetch(syll_url)
+  if (syll_res.ok) payload.syllabus = await syll_res.json()
+
+  const coll_url = new URL(`collections/752b70e3-0d6b-4f72-8b77-0ec53c713db6`, process.env.API_URL);
+  const coll_res = await fetch(coll_url)
+  if (coll_res.ok) payload.collection = await coll_res.json()
+
+  const user_url = new URL(`users/e7b74bcd-c864-41ee-b666-d3031f76c800`, process.env.API_URL);
+  const user_res = await fetch(user_url)
+  if (user_res.ok) payload.profile = await user_res.json()
+
+
+
+  // console.log(payload.syllabus);
+
+
   return {
     props: {
-      meta: payload.meta,
-      syllabiListings: payload.syllabi,
+      syllabus: payload.syllabus,
+      collection: payload.collection,
+      profile: payload.profile,
     },
   };
 };
 
 interface IHomeProps {
-  meta: IMetaInformation;
-  syllabiListings: ISyllabus[];
+  syllabus: ISyllabus,
+  collection: ICollection,
+  profile: IUser,
 }
 
-const Home: NextPage<IHomeProps> = ({ meta, syllabiListings }) => {
+const Home: NextPage<IHomeProps> = ({ syllabus, collection, profile }) => {
   const router = useRouter();
-  const [currentPath, setCurrentPath] = useState("");
-  const [currentQuery, setCurrentQuery] = useState(router.query);
-  const [syllabi, setSyllabi] = useState<ISyllabus[]>();
-  const [syllabiCount, setSyllabiCount] = useState(0);
-  const [totalPages, setTotalPages] = useState(1);
-  const [searchTerms, setSearchTerms] = useState("");
-  const [filters, setFilters] = useState<ISyllabiFilters>({
-    academic_level: "",
-    academic_field: "",
-    academic_year: "",
-    language: "",
-    tags_include: [],
-    tags_exclude: [],
-  });
-
-  useEffect(() => {
-    if(!syllabiListings) return;
-    setSyllabiCount(syllabiListings.length)
-    setSyllabi(syllabiListings)
-    setTotalPages(Math.floor(syllabiListings.length / PAGINATION_LIMIT) + 1)
-  }, [syllabiListings]);
-
-  //-- parses query params into filters
-  //-- should be done only once at the beginning
-  useEffect(() => {
-    if (router.query.year) {
-      setFilters({ ...filters, academic_year: router.query.year[0] });
-    }
-
-    if (router.query.fields) {
-      setFilters({ ...filters, academic_field: router.query.fields[0] });
-    }
-
-    if (router.query.levels) {
-      setFilters({ ...filters, academic_level: router.query.levels[0] });
-    }
-
-    if (router.query.languages) {
-      setFilters({ ...filters, language: router.query.languages[0] });
-    }
-
-    if (router.query.tags) {
-      setFilters({ ...filters, tags_include: router.query.tags as string[] });
-    }
-  }, []);
-
-  const updateRouterQueryParams = (filters: ISyllabiFilters) => {
-    if (filters.academic_year != "")
-      setCurrentQuery({ ...currentQuery, year: filters.academic_year });
-
-    if (filters.academic_field != "")
-      setCurrentQuery({ ...currentQuery, fields: filters.academic_field });
-
-    if (filters.academic_level != "")
-      setCurrentQuery({ ...currentQuery, levels: filters.academic_level });
-
-    if (filters.language != "")
-      setCurrentQuery({ ...currentQuery, languages: filters.language });
-
-    if (filters.tags_include.length != 0)
-      setCurrentQuery({ ...currentQuery, tags: filters.tags_include });
-  };
-
-  //-- this useEffect() listens for changes from the search bar or the filters bar
-  //-- it resets the activePage to 1, then updates the cards, totals and pages
-  useEffect(() => {
-    // paginationHandler(1)
-    const s = getSyllabusCards(syllabi, filters, 1);
-    if (s === undefined) return;
-    const total = s.length;
-
-    setTotalPages(Math.ceil(total / PAGINATION_LIMIT));
-    setSyllabiCount(total);
-  }, [syllabi, filters]);
-
-  useEffect(() => {
-    updateRouterQueryParams(filters);
-  }, [filters]);
-
-  //-- listens for path and query changes and updates the URL
-  useEffect(() => {
-    router.push({
-      pathname: currentPath as string,
-      query: currentQuery,
-    });
-  }, [currentPath, currentQuery]);
-
-  const paginationHandler = (page: number) => {
-    setCurrentQuery({ ...currentQuery, page: page.toString() });
-    setActivePage(page);
-  };
-
-  const getCurrentPage = () => {
-    const query = router.query;
-    if (query.page) {
-      const pageParams = query.page;
-      if (pageParams.length) return parseInt(pageParams[0]);
-      else return parseInt(pageParams as string);
-    }
-    return 1;
-  };
-
-  const [activePage, setActivePage] = useState(getCurrentPage());
-
-  const getAllSyllabi = () => {
-    if (activePage > totalPages || activePage < 1)
-      return getSyllabusCards(syllabi, filters, 1)
-    else return getSyllabusCards(syllabi, filters, activePage)
-  };
+  const [searchTerms, setSearchTerms] = useState("")
 
   const handleSearchChange = (e: React.BaseSyntheticEvent) => {
     e.stopPropagation();
@@ -166,91 +67,92 @@ const Home: NextPage<IHomeProps> = ({ meta, syllabiListings }) => {
     const v = e.target.value;
     setSearchTerms(v);
   };
-
+  
   const startSearch = () => {
-    const url = new URL(`syllabi/?keywords=${encodeURI(searchTerms)}`, process.env.NEXT_PUBLIC_API_URL);
-
-    fetch(url)
-      .then((res) => {
-        if (res.ok) return res.json();
-        else console.warn("Problem with search!", res.statusText);
-      })
-      .then((data) => {
-        setSyllabi(data.syllabi);
-        setSyllabiCount(data.syllabi.length);
-        setTotalPages(Math.ceil(data.syllabi.length / PAGINATION_LIMIT));
-
-        setCurrentPath(router.query.pathname as string);
-        setCurrentQuery({ ...router.query, keywords: searchTerms });
-      })
-      .catch((err) => {
-        console.error("Problem with search", err);
-      });
+    router.push(`browse/?keywords=${encodeURI(searchTerms)}`)
   };
 
-  const clearSearch = () => {
-    const st = document.getElementById("search-terms") as HTMLInputElement;
-    if (st != null) st.value = "";
-    setSearchTerms("");
-    setSyllabi(syllabiListings);
-    setCurrentQuery({});
-    paginationHandler(1);
-  };
+  const searchTag = (tag: string) => {
+    router.push(`browse/?tags=${encodeURI(tag)}`)
+  }
 
-  const handleFilterChange = (filters: ISyllabiFilters) => {
-    if (!Object.values(filters).some((v) => v.length !== 0))
-      //-- if filters are being reset
-      setCurrentQuery({});
-    else paginationHandler(1);
+  const searchLevel = (level: string) => {
+    router.push(`browse/?levels=${encodeURI(level)}`)
+  }
 
-    setFilters(filters);
-  };
 
   return (
     <div className="flex flex-col w-11/12 sm:w-full lg:w-10/12 m-auto">
 
+      <div className="h-96 flex flex-col gap-2 items-center justify-center">
+        <h1 className={`${kurintoBook.className} text-4xl`}>Cosyll</h1>
+        <h2 className={`${kurintoBook.className} text-xl`}>is a platform for publishing, sharing and archiving syllabi.</h2>
+      </div>
+
+      <hr className="border-gray-400" />
+
       {/* SEARCH BAR */}
-      <div className="w-11/12 m-auto md:w-full my-8 flex justify-between">
-        <div className="w-full mt-3 mb-3 flex flex-row items-center">
+      <div className="w-11/12 h-64 m-auto md:w-full my-8 flex flex-col justify-center">
+        <h3 className="text-sm text-center my-2">PICK A TOPIC TO START BROWSING</h3>
+        <div className="flex gap-2 justify-center m-4">
+          <button className="py-1 px-2 border border-black rounded-3xl text-sm hover:shadow-md" onClick={() => searchTag("history")}>History</button>
+          <button className="py-1 px-2 border border-black rounded-3xl text-sm hover:shadow-md" onClick={() => searchTag("introduction")}>Introduction</button>
+          <button className="py-1 px-2 border border-black rounded-3xl text-sm hover:shadow-md" onClick={() => searchLevel("2")}>Master's</button>
+          <button className="py-1 px-2 border border-black rounded-3xl text-sm hover:shadow-md" onClick={() => searchTag("design")}>Design</button>
+          <button className="py-1 px-2 border border-black rounded-3xl text-sm hover:shadow-md" onClick={() => searchTag("Islam")}>Islam</button>
+          <button className="py-1 px-2 border border-black rounded-3xl text-sm hover:shadow-md" onClick={() => searchTag("media studies")}>Media Studies</button>
+        </div>
+        <div className="w-full mt-3 mb-3 flex flex-row justify-center">
           <input
-            className="w-full bg-transparent border-b-2 border-b-gray-900"
+            className="w-7/12 bg-transparent border-b-2 border-b-gray-900"
             type="text"
             id="search-terms"
-            placeholder="Search syllabi (e.g. intro to sociology...)"
+            placeholder="Or search for keywords..."
             onChange={handleSearchChange}
             onKeyDown={(e: React.KeyboardEvent) => {
-              if(e.key === "Enter") startSearch()
+              if (e.key === "Enter") startSearch()
             }}
           ></input>
-          <button className="hidden md:block mx-1" onClick={clearSearch} >
-            <Image src={clearIcon} width="24" height="24" alt="Icon to clear the search" />
-          </button>
           <button className="mx-1" onClick={startSearch} >
             <Image src={searchIcon} width="24" height="24" alt="Icon to start the search" />
           </button>
         </div>
       </div>
 
-      <div className="w-11/12 m-auto md:w-full my-2">
-        {syllabiCount === 1
-          ? `Found 1 syllabus.`
-          : `Found ${syllabiCount} syllabi.`}
+      <hr className="border-gray-400" />
+
+      <div className="min-h-96 flex flex-col justify-center my-8">
+        <h3 className="text-sm text-center my-12">FEATURED</h3>
+        <div className="min-h-96 flex flex-col justify-center gap-4">
+          <div className="w-7/12">
+            <h4 className="text-md my-2">SYLLABUS</h4>
+            <SyllabusCard syllabusInfo={syllabus} />
+          </div>
+          <div className="w-7/12 self-end">
+            <h4 className="text-md my-2 text-right">COLLECTION</h4>
+            <CollectionCard collection={collection} />
+          </div>
+          <div className="w-7/12">
+            <h4 className="text-md my-2">PROFILE</h4>
+            <UserCard user={profile} isAdmin={false} />
+          </div>
+        </div>
       </div>
 
-      <div className="flex flex-col-reverse md:flex-row justify-between">
-        <div className="w-11/12 m-auto md:m-0 md:w-7/12 pt-3 pb-5 flex flex-col gap-6">
-          {getAllSyllabi()}
-        </div>
-        <div className="w-11/12 md:w-4/12 m-auto md:m-0 pb-3 border-bottom border-lg-bottom-0">
-          <FiltersBar updateFilters={handleFilterChange} meta={meta} />
+      <hr className="border-gray-400" />
+
+      <div className="min-h-96 flex flex-col justify-center my-8">
+        <h3 className="text-sm text-center my-12">ABOUT</h3>
+        <div className="w-1/2 m-auto flex flex-col gap-6">
+          <p><b>Cosyll</b> is an infrastructure for open-access of syllabi and curricula; it is a place where we can meaningfully search, archive, distribute and reference syllabi.</p>
+          <p>
+            Whether to have a convenient place to publish your classes for your personal portfolio, to see how a similar class is being taught at another university, in another country, or to find inspiration in your peers' works, Cosyll focuses on exchange between teachers.
+          </p>
+          <p>
+            In this spirit, we encourage the sharing of documents one does not always easily find online: schedules, assignments descriptions, works cited and referenced, class wikis, etc. You can get started by <Link className="underline font-bold" href="/new-syllabus">contributing a syllabus</Link>.
+          </p>
         </div>
       </div>
-
-        {/* <PaginationSection
-          totalPages={totalPages}
-          activePage={activePage}
-          handlePageChange={paginationHandler}
-        /> */}
     </div>
   );
 };

@@ -113,7 +113,7 @@ const Collection: NextPage<ICollectionPageProps> = ({ collectionInfo }) => {
         <EditContext.Provider value={{ isOwner: isOwner, collectionUUID: collectionInfo.uuid }}>
           <CollectionInfo collectionInfo={collectionInfo} />
           <hr className="border-1 border-gray-900 my-6"/>
-          <div className="gap-3 pb-5">{
+          <div className="flex  flex-col gap-3 pb-5">{
             collectionInfo.syllabi ?
               collectionInfo.syllabi.map(s => {
                 return <CollectionItem syllabusInfo={s} key={`coll-item-${s.uuid}`} />

@@ -237,7 +237,7 @@ func GetSyllabi(params map[string]any, user_uuid uuid.UUID) ([]Syllabus, error) 
 	}
 
 	//-- TODO: we removed server-side pagination for now
-	result := db.Where("language SIMILAR TO ? AND (lower(description) SIMILAR TO ? OR lower(title) SIMILAR TO ? OR lower(ARRAY_TO_STRING(instructors, ' ')) SIMILAR TO ?) AND ARRAY_TO_STRING(tags, ' ') SIMILAR TO ? AND academic_level::TEXT SIMILAR TO ? AND ARRAY_TO_STRING(academic_fields, ' ') SIMILAR TO ? AND (status = 'listed' OR user_uuid = ?)", params["languages"], params["keywords"], params["keywords"], params["keywords"], params["tags"], params["levels"], params["fields"], user_uuid.String()).Preload("User").Preload("Institutions").Preload("Attachments").Find(&syllabi)
+	result := db.Where("language SIMILAR TO ? AND (lower(description) SIMILAR TO ? OR lower(title) SIMILAR TO ? OR lower(ARRAY_TO_STRING(instructors, ' ')) SIMILAR TO ?) AND lower(ARRAY_TO_STRING(tags, ' ')) SIMILAR TO ? AND academic_level::TEXT SIMILAR TO ? AND ARRAY_TO_STRING(academic_fields, ' ') SIMILAR TO ? AND (status = 'listed' OR user_uuid = ?)", params["languages"], params["keywords"], params["keywords"], params["keywords"], params["tags"], params["levels"], params["fields"], user_uuid.String()).Preload("User").Preload("Institutions").Preload("Attachments").Find(&syllabi)
 
 	return syllabi, result.Error
 
