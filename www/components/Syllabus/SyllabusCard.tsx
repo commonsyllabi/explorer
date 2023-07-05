@@ -56,7 +56,7 @@ const SyllabusCard: React.FunctionComponent<ISyllabusCardProps> = ({
         <div className="course-description whitespace-pre-wrap">
           {syllabusInfo.description}
         </div>
-        <div className="mt-6 mb-2 flex gap-2 justify-between items-baseline">
+        <div className="flex flex-col md:flex-row mt-6 mb-2 gap-2 justify-between items-baseline">
           <Tags tags={syllabusInfo.tags} />
           <div className="text-sm">Uploaded by: <Link className="hover:underline" href={getUserUrl(syllabusInfo.user_uuid)}>{syllabusInfo.user.name}</Link></div>
         </div>

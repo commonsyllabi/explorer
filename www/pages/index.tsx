@@ -86,7 +86,7 @@ const Home: NextPage<IHomeProps> = ({ syllabus, collection, profile }) => {
 
       <div className="h-96 flex flex-col gap-2 items-center justify-center">
         <h1 className={`${kurintoBook.className} text-4xl`}>Cosyll</h1>
-        <h2 className={`${kurintoBook.className} text-xl`}>is a platform for publishing, sharing and archiving syllabi.</h2>
+        <h2 className={`${kurintoBook.className} text-xl w-10/12 mx-auto text-center`}>is a platform for publishing, sharing and archiving syllabi.</h2>
       </div>
 
       <hr className="border-gray-400" />
@@ -94,7 +94,7 @@ const Home: NextPage<IHomeProps> = ({ syllabus, collection, profile }) => {
       {/* SEARCH BAR */}
       <div className="w-11/12 h-64 m-auto md:w-full my-8 flex flex-col justify-center">
         <h3 className="text-sm text-center my-2">PICK A TOPIC TO START BROWSING</h3>
-        <div className="flex gap-2 justify-center m-4">
+        <div className="flex flex-wrap md:gap-2 gap-4 justify-center m-4">
           <button className="py-1 px-2 border border-black rounded-3xl text-sm hover:shadow-md" onClick={() => searchTag("history")}>History</button>
           <button className="py-1 px-2 border border-black rounded-3xl text-sm hover:shadow-md" onClick={() => searchTag("introduction")}>Introduction</button>
           <button className="py-1 px-2 border border-black rounded-3xl text-sm hover:shadow-md" onClick={() => searchLevel("2")}>Master's</button>
@@ -104,7 +104,7 @@ const Home: NextPage<IHomeProps> = ({ syllabus, collection, profile }) => {
         </div>
         <div className="w-full mt-3 mb-3 flex flex-row justify-center">
           <input
-            className="w-7/12 bg-transparent border-b-2 border-b-gray-900"
+            className="w-10/12 md:w-7/12 bg-transparent border-b-2 border-b-gray-900"
             type="text"
             id="search-terms"
             placeholder="Or search for keywords..."
@@ -123,16 +123,16 @@ const Home: NextPage<IHomeProps> = ({ syllabus, collection, profile }) => {
 
       <div className="min-h-96 flex flex-col justify-center my-8">
         <h3 className="text-sm text-center my-12">FEATURED</h3>
-        <div className="min-h-96 flex flex-col justify-center gap-4">
-          <div className="w-7/12">
+        <div className="min-h-96 flex flex-col justify-center gap-16 md:gap-4">
+          <div className="md:w-7/12">
             <h4 className="text-md my-2">SYLLABUS</h4>
             <SyllabusCard syllabusInfo={syllabus} />
           </div>
-          <div className="w-7/12 self-end">
+          <div className="md:w-7/12 self-end">
             <h4 className="text-md my-2 text-right">COLLECTION</h4>
             <CollectionCard collection={collection} />
           </div>
-          <div className="w-7/12">
+          <div className="md:w-7/12">
             <h4 className="text-md my-2">PROFILE</h4>
             <UserCard user={profile} isAdmin={false} />
           </div>
@@ -143,7 +143,7 @@ const Home: NextPage<IHomeProps> = ({ syllabus, collection, profile }) => {
 
       <div className="min-h-96 flex flex-col justify-center my-8">
         <h3 className="text-sm text-center my-12">ABOUT</h3>
-        <div className="w-1/2 m-auto flex flex-col gap-6">
+        <div className="w-5/6 md:w-1/2 m-auto flex flex-col gap-6">
           <p><b>Cosyll</b> is an infrastructure for open-access of syllabi and curricula; it is a place where we can meaningfully search, archive, distribute and reference syllabi.</p>
           <p>
             Whether to have a convenient place to publish your classes for your personal portfolio, to see how a similar class is being taught at another university, in another country, or to find inspiration in your peers' works, Cosyll focuses on exchange between teachers.

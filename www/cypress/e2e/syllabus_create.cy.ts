@@ -51,7 +51,7 @@ let newSyllabusUUID: String
 describe('Create a new syllabus', () => {
 
     it('navigates to the home page', () => {
-        cy.visit('/')
+        cy.visit('/browse')
         cy.get('[data-cy="syllabusCard"]').should('have.length.greaterThan', 1)
         cy.get('[data-cy="signin-button"]').click()
     })
