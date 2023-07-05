@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 describe('Create a new syllabus', () => {
 
     it('navigates to the home page', () => {
@@ -7,3 +9,5 @@ describe('Create a new syllabus', () => {
         cy.get('[data-cy="collectionCard"]').should('have.length', 1)
     })
 })
+
+export { }

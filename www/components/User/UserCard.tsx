@@ -18,8 +18,8 @@ const UserCard: React.FunctionComponent<IUserCardProps> = (
                     <Link href={`/user/${user.uuid}`} className={`${kurintoBook.className} text-2xl font-bold hover:underline`}>
                         {user.name}
                     </Link>
-                    {user.institutions?.map((i) => {
-                        return(<div className="text-sm">{i.name}</div>)
+                    {user.institutions?.map((inst, index) => {
+                        return(<div className="text-sm" key={`instructor-${index}`}>{inst.name}</div>)
                     })}
                 </div>
                 {isAdmin ?
