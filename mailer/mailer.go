@@ -80,7 +80,7 @@ func SendMail(_dest string, _subject string, _template string, _data Payload) er
 	mg := mailgun.NewMailgun(DOMAIN, os.Getenv("MAILGUN_PRIVATE_API_KEY"))
 	mg.SetAPIBase(mailgun.APIBaseEU) //-- rgpd mon amour
 
-	sender := "Common Syllabi <cosyl@mail.common-syllabi.org>"
+	sender := "Cosyll <cosyll@mail.common-syllabi.org>"
 	subject := _subject
 	recipient := _dest
 	message := mg.NewMessage(sender, subject, "", recipient)

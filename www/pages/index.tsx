@@ -37,11 +37,6 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const user_res = await fetch(user_url)
   if (user_res.ok) payload.profile = await user_res.json()
 
-
-
-  // console.log(payload.syllabus);
-
-
   return {
     props: {
       syllabus: payload.syllabus,

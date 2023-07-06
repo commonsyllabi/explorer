@@ -44,6 +44,26 @@ func GetTokenUser(token_uuid uuid.UUID) (User, error) {
 	return user, err
 }
 
+// GetDeletedTokenUser checks for any deleted token and returns the user
+func GetDeletedTokenUser(token_uuid uuid.UUID) (User, error) {
+	var user User
+	var token Token
+
+	result := db.Unscoped().Where("uuid = ?", token_uuid).First(&token)
+	if result.Error != nil {
+		zero.Error(result.Error.Error())
+		return user, result.Error
+	}
+
+	user, err := GetUser(token.UserID, uuid.Nil)
+	if err != nil {
+		zero.Error(err.Error())
+		return user, err
+	}
+
+	return user, err
+}
+
 func DeleteToken(token_uuid uuid.UUID) error {
 	var token Token
 	result := db.Where("uuid = ?", token_uuid).First(&token)

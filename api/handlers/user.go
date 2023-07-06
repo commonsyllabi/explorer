@@ -101,7 +101,7 @@ func CreateUser(c echo.Context) error {
 	}
 
 	if os.Getenv("API_MODE") != "test" {
-		err = mailer.SendMail(user.Email, "Welcome to Common Syllabi!", "account_confirmation", payload)
+		err = mailer.SendMail(user.Email, "Welcome to Cosyll!", "account_confirmation", payload)
 		if err != nil {
 			zero.Warnf(err.Error())
 		}

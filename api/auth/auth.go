@@ -134,10 +134,22 @@ func Confirm(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "The token format is incorrect")
 	}
 
-	user, err := models.GetTokenUser(token)
+	var user models.User
+	user, err = models.GetTokenUser(token)
 	if err != nil {
-		zero.Errorf(err.Error())
-		return c.String(http.StatusNotFound, "The confirmation token could not be found.")
+		// no regular user found, check deleted tokens
+		user, err = models.GetDeletedTokenUser(token)
+		if err != nil {
+			zero.Errorf(err.Error())
+			return c.String(http.StatusNotFound, "The confirmation token could not be found.")
+		}
+
+		if user.Status == models.UserConfirmed {
+			return c.JSON(http.StatusOK, user)
+		} else {
+			zero.Error("the token is deleted and the user not confirmed")
+			return c.String(http.StatusNotFound, "The confirmation token could not be found.")
+		}
 	}
 
 	user.Status = models.UserConfirmed
