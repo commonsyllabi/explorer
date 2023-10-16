@@ -23,7 +23,7 @@ const About: NextPage = () => {
         To get started, you can get a feeling for Cosyll&apos;s collection by browsing the <Link className="underline" href="/">home page</Link>. If you decide to contribute yourself, start by <Link className="underline" href="/auth/signin">creating an account</Link>, and then <Link className="underline" href="/new-syllabus">add your first syllabus</Link>.
       </p>
       <p>
-        If you are interested in the project and want to contribute to its development, if you have specific questions about how syllabi are handled, or if you just want to say hello, you can email us at <a className="underline" href="mailto:team@common-syllabi.org">team@common-syllabi.org</a>.
+        If you are interested in the project and want to contribute to its development, if you have specific questions about how syllabi are handled, or if you just want to say hello, you can email us at <a className="underline" href="mailto:team@mail.cosyll.org">team@mail.cosyll.org</a>.
       </p>
       <p>
         If you just want to keep track of the newest developments of the project, you can <a
@@ -39,7 +39,7 @@ const About: NextPage = () => {
         <h2 className="text-xl font-bold mt-6 mb-3">About</h2>
       </p>
       <p>
-        We are a group of educators, designers and developers who firmly believe that open-access and information archival is essential to improve pedagogical practices. We are open to collaborations and cooperations, do not hesitate to <a href="mailto:team@common-syllabi.org">get in touch</a>!
+        We are a group of educators, designers and developers who firmly believe that open-access and information archival is essential to improve pedagogical practices. We are open to collaborations and cooperations, do not hesitate to <a href="mailto:team@mail.cosyll.org">get in touch</a>!
       </p>
       <p>
         <h2 className="text-xl font-bold mt-6 mb-3">Terms and Policy</h2>

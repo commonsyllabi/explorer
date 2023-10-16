@@ -18,7 +18,7 @@ const TermsOfUse: NextPage = () => {
                 Cosyll is a digital platform for the archival, sharing and browsing of higher-education syllabi by educators.
             </p>
             <p className="my-2">
-                You can contact us by phone at +491751152518, email at admin@common-syllabi.org, or by mail to Elsenstraße 52, Berlin, Berlin 10245, Germany.
+                You can contact us by phone at +491751152518, email at admin@mail.cosyll.org, or by mail to Elsenstraße 52, Berlin, Berlin 10245, Germany.
             </p>
 
             <p className="my-2">
@@ -26,7 +26,7 @@ const TermsOfUse: NextPage = () => {
             </p>
 
             <p className="my-2">
-                We will provide you with prior notice of any scheduled changes to the Services you are using. The modified Legal Terms will become effective upon posting or notifying you by admin@common-syllabi.org, as stated in the email message. By continuing to use the Services after the effective date of any changes, you agree to be bound by the modified terms.
+                We will provide you with prior notice of any scheduled changes to the Services you are using. The modified Legal Terms will become effective upon posting or notifying you by admin@mail.cosyll.org, as stated in the email message. By continuing to use the Services after the effective date of any changes, you agree to be bound by the modified terms.
             </p>
 
             <p className="my-2">
@@ -103,7 +103,7 @@ const TermsOfUse: NextPage = () => {
                 Except as set out in this section or elsewhere in our Legal Terms, no part of the Services and no Content or Marks may be copied, reproduced, aggregated, republished, uploaded, posted, publicly displayed, encoded, translated, transmitted, distributed, sold, licensed, or otherwise exploited for any commercial purpose whatsoever, without our express prior written permission.
             </p>
             <p className="my-2">
-                If you wish to make any use of the Services, Content, or Marks other than as set out in this section or elsewhere in our Legal Terms, please address your request to: <a href="mailto:admin@common-syllabi.org" className="underline">admin@common-syllabi.org</a>. If we ever grant you the permission to post, reproduce, or publicly display any part of our Services or Content, you must identify us as the owners or licensors of the Services, Content, or Marks and ensure that any copyright or proprietary notice appears or is visible on posting, reproducing, or displaying our Content.
+                If you wish to make any use of the Services, Content, or Marks other than as set out in this section or elsewhere in our Legal Terms, please address your request to: <a href="mailto:admin@mail.cosyll.org" className="underline">admin@mail.cosyll.org</a>. If we ever grant you the permission to post, reproduce, or publicly display any part of our Services or Content, you must identify us as the owners or licensors of the Services, Content, or Marks and ensure that any copyright or proprietary notice appears or is visible on posting, reproducing, or displaying our Content.
             </p>
             <p className="my-2">
                 We reserve all rights not expressly granted to you in and to the Services, Content, and Marks.
@@ -321,7 +321,7 @@ const TermsOfUse: NextPage = () => {
                     Berlin, Berlin 10245<br />
                     Germany<br />
                     Phone: +491751152518<br />
-                    admin@common-syllabi.org<br />
+                    admin@mail.cosyll.org<br />
                 </div>
             </p>
         </div>

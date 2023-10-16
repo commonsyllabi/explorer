@@ -89,7 +89,7 @@ func CreateUser(c echo.Context) error {
 
 	var host string
 	if os.Getenv("API_MODE") == "release" {
-		host = "https://explorer.common-syllabi.org"
+		host = "https://cosyll.org"
 	} else {
 		host = "http://localhost:3000"
 	}

@@ -60,7 +60,7 @@ const PrivacyPolicy: NextPage = () => {
                     Berlin, Berlin 10245<br />
                     Germany<br />
                     Phone: +491751152518<br />
-                    admin@common-syllabi.org<br />
+                    admin@mail.cosyll.org<br />
                 </div>
             </p>
 

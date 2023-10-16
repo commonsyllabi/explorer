@@ -13,7 +13,7 @@ import (
 	"github.com/mailgun/mailgun-go/v4"
 )
 
-const DOMAIN = "mail.common-syllabi.org"
+const DOMAIN = "mail.cosyll.org"
 
 var (
 	_, b, _, _ = runtime.Caller(0)
@@ -80,7 +80,7 @@ func SendMail(_dest string, _subject string, _template string, _data Payload) er
 	mg := mailgun.NewMailgun(DOMAIN, os.Getenv("MAILGUN_PRIVATE_API_KEY"))
 	mg.SetAPIBase(mailgun.APIBaseEU) //-- rgpd mon amour
 
-	sender := "Cosyll <cosyll@mail.common-syllabi.org>"
+	sender := "Cosyll <cosyll@mail.cosyll.org>"
 	subject := _subject
 	recipient := _dest
 	message := mg.NewMessage(sender, subject, "", recipient)
