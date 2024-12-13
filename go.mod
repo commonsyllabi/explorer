@@ -15,8 +15,8 @@ require (
 	github.com/mailgun/mailgun-go/v4 v4.8.1
 	github.com/rs/zerolog v1.27.0
 	github.com/stretchr/testify v1.8.0
-	golang.org/x/crypto v0.0.0-20220722155217-630584e8d5aa
-	golang.org/x/text v0.4.0
+	golang.org/x/crypto v0.31.0
+	golang.org/x/text v0.21.0
 	gopkg.in/yaml.v2 v2.4.0
 	gorm.io/driver/postgres v1.0.8
 	gorm.io/gorm v1.21.4
@@ -60,8 +60,8 @@ require (
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.1 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
-	golang.org/x/net v0.1.0 // indirect
-	golang.org/x/sys v0.1.0 // indirect
+	golang.org/x/net v0.21.0 // indirect
+	golang.org/x/sys v0.28.0 // indirect
 	golang.org/x/time v0.0.0-20220722155302-e5dcc9cfc0b9 // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	google.golang.org/grpc v1.48.0 // indirect
