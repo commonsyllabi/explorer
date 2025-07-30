@@ -1,4 +1,4 @@
-FROM golang:1.18-alpine AS go
+FROM golang:1.20-alpine AS go
 
 RUN mkdir /app
 COPY go.mod /app
