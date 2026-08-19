@@ -1,6 +1,6 @@
 import GlobalNav from "components/commons/GlobalNav";
 
-import localFont from '@next/font/local'
+import localFont from 'next/font/local'
 import Footer from "components/commons/Footer";
 
 export const inter = localFont({
