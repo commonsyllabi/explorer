@@ -10,7 +10,7 @@ require (
 	github.com/golang-migrate/migrate/v4 v4.15.2
 	github.com/google/uuid v1.3.0
 	github.com/gosimple/slug v1.12.0
-	github.com/labstack/echo/v4 v4.8.0
+	github.com/labstack/echo/v4 v4.9.0
 	github.com/lib/pq v1.10.6
 	github.com/mailgun/mailgun-go/v4 v4.8.1
 	github.com/rs/zerolog v1.27.0
